@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class PlayerForward : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 vec;
-
-        Ray r = Camera.main.ScreenPointToRay(mousePos);
+        Vector3 m_MousePos = Input.mousePosition;
+        Ray r = Camera.main.ScreenPointToRay(m_MousePos);
         RaycastHit rh;
 
-        Physics.Raycast(r, out rh);
+        if (Physics.Raycast(r, out rh,1000.0f))
+        {
+            Vector3 vFinal = rh.point;
+            Vector3 v = vFinal - this.transform.position;
+            v.y = 0.0f;
 
-        vec = rh.point - this.transform.position;
-        transform.forward = vec.normalized;
+            v.Normalize();
+            transform.forward = v;
+        }
     }
 }
