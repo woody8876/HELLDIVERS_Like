@@ -6,19 +6,25 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class SupplyRequester : MonoBehaviour
 {
+    public SupplyRequesterData Data { get { return m_Data; } }
+
     [SerializeField] private GameObject m_Display;
     [SerializeField] private SupplyRequesterData m_Data;
     private Rigidbody m_Rigidbody;
 
     public void Init(SupplyRequesterData data)
     {
-        m_Data = data;
+        data.CopyTo(ref m_Data);
     }
 
     // Use this for initialization
     private void Start()
     {
         m_Rigidbody = this.GetComponent<Rigidbody>();
+        if (m_Display != null)
+        {
+            m_Display = Instantiate(m_Display, this.transform);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,7 +42,7 @@ public class SupplyRequester : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         Instantiate(m_Data.Item, this.transform.position, Quaternion.identity, null);
-        DestroyImmediate(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
     // Set with default value
