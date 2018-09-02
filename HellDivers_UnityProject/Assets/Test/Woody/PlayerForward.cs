@@ -25,4 +25,17 @@ public class PlayerForward : MonoBehaviour {
             transform.forward = v;
         }
     }
+    //public void OnDrawGizmos()
+    //{
+    //    if (Input.GetMouseButton(1))
+    //    {
+    //        Vector3 vPos = this.transform.position;
+    //        Vector3 vFor = this.transform.forward;
+            
+    //        Vector3 target = vPos + vFor;
+
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawLine(this.transform.position, target);
+    //    }
+    //}
 }
