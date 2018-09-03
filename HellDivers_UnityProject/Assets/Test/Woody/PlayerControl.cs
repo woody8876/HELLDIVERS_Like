@@ -26,11 +26,9 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         m_CharacterController = GetComponent<CharacterController>();
-        //Cursor.visible = false;
         LineRenderGameObject = GameObject.Find("Line");
         lineRenderer = (LineRenderer)LineRenderGameObject.GetComponent("LineRenderer");
         m_Body = GameObject.FindGameObjectWithTag("Player");
-
     }
 
 
@@ -43,6 +41,8 @@ public class PlayerControl : MonoBehaviour
         m_MousePos = Input.mousePosition;
         r = Camera.main.ScreenPointToRay(m_MousePos);
         
+
+        //紅外線
         if (Input.GetMouseButton(1))
         {
             m_Speed = 1f;
@@ -68,6 +68,7 @@ public class PlayerControl : MonoBehaviour
         m_CharcterMove += Physics.gravity * Time.deltaTime;
         m_CharacterController.Move(m_CharcterMove);
 
+        //角色面相移動的方向
         if (Input.GetMouseButton(1) == false)
         {
             m_CharcterMove.y = 0.0f;
@@ -86,7 +87,7 @@ public class PlayerControl : MonoBehaviour
     {
         Vector3 target1;
         target1 = m_Body.transform.forward * 10 + this.transform.position;
-       Gizmos.DrawLine(this.transform.position, target1);
+        Gizmos.DrawLine(this.transform.position, target1);
     }
 }
 
