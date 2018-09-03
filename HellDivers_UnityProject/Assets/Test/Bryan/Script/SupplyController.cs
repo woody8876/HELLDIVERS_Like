@@ -5,6 +5,8 @@ using UnityEngine;
 public class SupplyController : MonoBehaviour
 {
     [SerializeField] private GameObject source;
+    [SerializeField] private SupplyRequester[] requesters;
+    [SerializeField] private Transform launchPos;
 
     public void Init()
     {
@@ -21,31 +23,64 @@ public class SupplyController : MonoBehaviour
     {
         if (Input.GetButtonDown("SupplyRequest"))
         {
-            core = StartCoroutine(CheckInputCode());
+            ckeckInputCore = StartCoroutine(CheckInputCode());
         }
 
         if (Input.GetButtonUp("SupplyRequest"))
         {
-            StopCoroutine(core);
-            Debug.Log("Stop check code input.");
+            StopCoroutine(ckeckInputCore);
         }
     }
 
     private IEnumerator CheckInputCode()
     {
-        Debug.Log("Start check code input.");
-
-        ERequestCode? input = null;
-        codeInputCount = 0;
         Open.Clear();
+
         foreach (SupplyRequester s in requesters)
         {
             Open.Add(s);
         }
-        yield return new WaitUntil(() => { return GetInputCode(out input); });
 
-        codeInputCount++;
-        Debug.Log("Get input succeed.");
+        int codeInputCount = 0;
+        bool GetSucceed = false;
+        SupplyRequester SRActived = null;
+        ERequestCode? input = null;
+
+        while (Open.Count > 0 && GetSucceed == false)
+        {
+            yield return new WaitUntil(() =>
+            {
+                GetInputCode(out input);
+                return input == null;
+            });
+            yield return new WaitUntil(() => { return GetInputCode(out input); });
+
+            codeInputCount++;
+            for (int i = 0; i < Open.Count; i++)
+            {
+                if (Open[i].Data.RequestCode[codeInputCount - 1] == input)
+                {
+                    if (Open[i].Data.RequestCode.Length == codeInputCount)
+                    {
+                        SRActived = Open[i];
+                        GetSucceed = true;
+                        Debug.Log("succeed.");
+
+                        break;
+                    }
+                    continue;
+                }
+                else
+                {
+                    Open.RemoveAt(i);
+                }
+            }
+        }
+
+        if (SRActived != null)
+        {
+            Instantiate(SRActived.gameObject, launchPos);
+        }
     }
 
     private bool GetInputCode(out ERequestCode? input)
@@ -75,9 +110,6 @@ public class SupplyController : MonoBehaviour
         return false;
     }
 
-    private Coroutine core;
-    private int codeInputCount;
+    private Coroutine ckeckInputCore;
     private List<SupplyRequester> Open = new List<SupplyRequester>();
-
-    [SerializeField] private SupplyRequester[] requesters;
 }

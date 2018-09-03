@@ -21,10 +21,29 @@ public class SupplyRequester : MonoBehaviour
     private void Start()
     {
         m_Rigidbody = this.GetComponent<Rigidbody>();
+        m_Rigidbody.isKinematic = true;
+
         if (m_Display != null)
         {
             m_Display = Instantiate(m_Display, this.transform);
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Vector3 vDir = this.transform.forward;
+            vDir.y += 1;
+            m_Rigidbody.isKinematic = false;
+            Throw(vDir, 500.0f);
+        }
+    }
+
+    public void Throw(Vector3 direction, float size)
+    {
+        Vector3 force = direction.normalized * size;
+        m_Rigidbody.AddForce(force);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -51,12 +70,4 @@ public class SupplyRequester : MonoBehaviour
     {
         m_Data = null;
     }
-}
-
-public enum RequestCode
-{
-    Up,
-    Down,
-    Left,
-    Right
 }
