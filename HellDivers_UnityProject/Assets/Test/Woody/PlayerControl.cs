@@ -2,35 +2,91 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControl : MonoBehaviour {
+public class PlayerControl : MonoBehaviour
+{
 
     private float m_Speed;
-    private float m_WalkSpeed=3f;
-    private float m_RunSpeed=6f;
+    private float m_WalkSpeed = 3f;
+    private float m_RunSpeed = 6f;
+
     private float m_MoveHorizontal;
     private float m_MoveVertical;
     private Vector3 m_CharcterMove;
     private CharacterController m_CharacterController;
-    
 
-    // Use this for initialization
-    void Start () {
+    Vector3 m_MousePos;
+    Ray r;
+    RaycastHit rh;
+    private GameObject m_Body;
+
+    private GameObject LineRenderGameObject;
+    private LineRenderer lineRenderer;
+    private int lineLength = 2;
+
+    void Start()
+    {
         m_CharacterController = GetComponent<CharacterController>();
+        //Cursor.visible = false;
+        LineRenderGameObject = GameObject.Find("Line");
+        lineRenderer = (LineRenderer)LineRenderGameObject.GetComponent("LineRenderer");
+        m_Body = GameObject.FindGameObjectWithTag("Player");
+
     }
-	
-	// Update is called once per frame
-	void Update () {
 
-        m_MoveHorizontal =Input.GetAxis("Horizontal");
-        m_MoveVertical=Input.GetAxis("Vertical");
 
+    void Update()
+    {
+        m_MoveHorizontal = Input.GetAxis("Horizontal");
+        m_MoveVertical = Input.GetAxis("Vertical");
         m_Speed = (Input.GetKey(KeyCode.LeftShift)) ? m_RunSpeed : m_WalkSpeed;
 
-        m_CharcterMove = (this.transform.forward * m_MoveVertical + this.transform.right * m_MoveHorizontal) * m_Speed * Time.deltaTime;
-        m_CharacterController.Move(m_CharcterMove);
+        m_MousePos = Input.mousePosition;
+        r = Camera.main.ScreenPointToRay(m_MousePos);
         
+        if (Input.GetMouseButton(1))
+        {
+            m_Speed = 1f;
+            LineRenderInit();
+            lineRenderer.SetPosition(0, Vector3.forward * 100f);
 
+            if (Physics.Raycast(r, out rh, 1000.0f))
+            {
+                Vector3 vTarget = rh.point;
+                Vector3 vForward = vTarget - m_Body.transform.position;
+                vForward.y = 0.0f;
+
+                vForward.Normalize();
+                m_Body.transform.forward = vForward;
+            }
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            lineRenderer.enabled = false;
+        }
+
+        m_CharcterMove = (this.transform.forward * m_MoveVertical + this.transform.right * m_MoveHorizontal) * m_Speed * Time.deltaTime;
+        m_CharcterMove += Physics.gravity * Time.deltaTime;
+        m_CharacterController.Move(m_CharcterMove);
+
+        if (Input.GetMouseButton(1) == false)
+        {
+            m_CharcterMove.y = 0.0f;
+            m_Body.transform.forward = m_CharcterMove;
+        }
     }
-    
+    private void LineRenderInit()
+    {
+        lineRenderer.enabled = true;
+        lineRenderer.useWorldSpace = false;
+        lineRenderer.startWidth = 0.1f;
+        lineRenderer.endWidth = 0.1f;
+        lineRenderer.positionCount = lineLength;
+    }
+    private void OnDrawGizmos()
+    {
+        Vector3 target1;
+        target1 = m_Body.transform.forward * 10 + this.transform.position;
+       Gizmos.DrawLine(this.transform.position, target1);
+    }
 }
 
