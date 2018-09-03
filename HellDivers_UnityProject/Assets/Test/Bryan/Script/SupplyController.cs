@@ -43,7 +43,6 @@ public class SupplyController : MonoBehaviour
 
         int codeInputCount = 0;
         bool GetSucceed = false;
-        SupplyRequester SRActived = null;
         ERequestCode? input = null;
 
         while (Open.Count > 0 && GetSucceed == false)
@@ -62,10 +61,8 @@ public class SupplyController : MonoBehaviour
                 {
                     if (Open[i].Data.RequestCode.Length == codeInputCount)
                     {
-                        SRActived = Open[i];
+                        Instantiate(Open[i].gameObject, launchPos);
                         GetSucceed = true;
-                        Debug.Log("succeed.");
-
                         break;
                     }
                     continue;
@@ -76,11 +73,6 @@ public class SupplyController : MonoBehaviour
                 }
             }
         }
-
-        if (SRActived != null)
-        {
-            Instantiate(SRActived.gameObject, launchPos);
-        }
     }
 
     private bool GetInputCode(out ERequestCode? input)
@@ -90,24 +82,26 @@ public class SupplyController : MonoBehaviour
             input = ERequestCode.Up;
             return true;
         }
-        if (Input.GetAxisRaw("Vertical") < 0)
+        else if (Input.GetAxisRaw("Vertical") < 0)
         {
             input = ERequestCode.Down;
             return true;
         }
-        if (Input.GetAxisRaw("Horizontal") < 0)
+        else if (Input.GetAxisRaw("Horizontal") < 0)
         {
             input = ERequestCode.Left;
             return true;
         }
-        if (Input.GetAxisRaw("Horizontal") > 0)
+        else if (Input.GetAxisRaw("Horizontal") > 0)
         {
             input = ERequestCode.Right;
             return true;
         }
-
-        input = null;
-        return false;
+        else
+        {
+            input = null;
+            return false;
+        }
     }
 
     private Coroutine ckeckInputCore;

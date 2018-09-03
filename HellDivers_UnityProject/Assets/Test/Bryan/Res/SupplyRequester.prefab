@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1458500651675558}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.19, y: 2.88, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Display: {fileID: 1892541678490196, guid: 1595525286577bc4590863213650159a, type: 2}
-  m_Data: {fileID: 11400000, guid: 4fd0eb0a4b0d6864781016e26641238c, type: 2}
+  m_Data: {fileID: 11400000, guid: ecada3b9644d61d42a239556a6e97633, type: 2}
 --- !u!135 &135491550938964588
 SphereCollider:
   m_ObjectHideFlags: 1
