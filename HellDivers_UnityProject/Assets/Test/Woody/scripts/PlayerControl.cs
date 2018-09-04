@@ -8,6 +8,7 @@ public class PlayerControl : MonoBehaviour
     private float m_MoveHorizontal;
     private float m_MoveVertical;
     private Vector3 m_CharcterMove;
+    private Vector3 m_StandForward;
     private float m_Speed;
     private float m_SlowSpeed = 1.5f;
     private float m_WalkSpeed = 3f;
@@ -40,36 +41,51 @@ public class PlayerControl : MonoBehaviour
 
         m_MousePos = Input.mousePosition;
         r = Camera.main.ScreenPointToRay(m_MousePos);
-        
 
-        //紅外線
-        if (Input.GetMouseButton(1))
-        {
-            m_Speed = 1f;
-            LineRenderInit();
-            lineRenderer.SetPosition(0, Vector3.forward * 50f);
 
-            if (Physics.Raycast(r, out rh, 1000.0f))
-            {
-                Vector3 vTarget = rh.point;
-                Vector3 vForward = vTarget - m_Body.transform.position;
-                vForward.y = 0.0f;
-
-                vForward.Normalize();
-                m_Body.transform.forward = vForward;
-            }
-        }
-        
         m_CharcterMove = (this.transform.forward * m_MoveVertical + this.transform.right * m_MoveHorizontal) * m_Speed * Time.deltaTime;
         m_CharcterMove += Physics.gravity * Time.deltaTime;
         m_CharacterController.Move(m_CharcterMove);
 
+
+        //紅外線
+        if (Input.GetMouseButton(1))
+        {
+            m_CharacterController.Move(m_CharcterMove*-0.5f);
+            LineRenderInit();
+            lineRenderer.SetPosition(0,Vector3.forward * 50f);
+            FaceToRay(r,rh,1000);
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
+
         //角色面相移動的方向
         if (Input.GetMouseButton(1) == false)
         {
-            lineRenderer.enabled = false;
-            m_CharcterMove.y = 0.0f;
-            m_Body.transform.forward = m_CharcterMove;
+            if (Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.S) == false && Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false)
+            {
+
+            }
+            else
+            {
+                m_CharcterMove.y = 0.0f;
+                m_Body.transform.forward = m_CharcterMove;
+            }
+        }
+    }
+
+    private void FaceToRay(Ray r,RaycastHit rh,int Distance)
+    {
+        if (Physics.Raycast(r, out rh, 1000.0f))
+        {
+            Vector3 vTarget = rh.point;
+            Vector3 vForward = vTarget - m_Body.transform.position;
+            vForward.y = 0.0f;
+
+            vForward.Normalize();
+            m_Body.transform.forward = vForward;
         }
     }
     private void LineRenderInit()
