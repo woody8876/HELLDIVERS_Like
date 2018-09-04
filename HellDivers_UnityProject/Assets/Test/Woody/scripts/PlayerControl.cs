@@ -5,13 +5,13 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
 
-    private float m_Speed;
-    private float m_WalkSpeed = 3f;
-    private float m_RunSpeed = 6f;
-
     private float m_MoveHorizontal;
     private float m_MoveVertical;
     private Vector3 m_CharcterMove;
+    private float m_Speed;
+    private float m_SlowSpeed = 1.5f;
+    private float m_WalkSpeed = 3f;
+    private float m_RunSpeed = 6f;
     private CharacterController m_CharacterController;
 
     Vector3 m_MousePos;
@@ -47,7 +47,7 @@ public class PlayerControl : MonoBehaviour
         {
             m_Speed = 1f;
             LineRenderInit();
-            lineRenderer.SetPosition(0, Vector3.forward * 100f);
+            lineRenderer.SetPosition(0, Vector3.forward * 50f);
 
             if (Physics.Raycast(r, out rh, 1000.0f))
             {
@@ -59,11 +59,7 @@ public class PlayerControl : MonoBehaviour
                 m_Body.transform.forward = vForward;
             }
         }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            lineRenderer.enabled = false;
-        }
-
+        
         m_CharcterMove = (this.transform.forward * m_MoveVertical + this.transform.right * m_MoveHorizontal) * m_Speed * Time.deltaTime;
         m_CharcterMove += Physics.gravity * Time.deltaTime;
         m_CharacterController.Move(m_CharcterMove);
@@ -71,6 +67,7 @@ public class PlayerControl : MonoBehaviour
         //角色面相移動的方向
         if (Input.GetMouseButton(1) == false)
         {
+            lineRenderer.enabled = false;
             m_CharcterMove.y = 0.0f;
             m_Body.transform.forward = m_CharcterMove;
         }
