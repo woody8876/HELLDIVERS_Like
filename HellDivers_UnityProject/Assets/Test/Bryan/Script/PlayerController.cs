@@ -24,7 +24,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical")) Move();
+        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+        {
+            Move();
+        }
+        else
+        {
+            if (Controller.isGrounded == false)
+            {
+                Controller.Move(Physics.gravity * Time.deltaTime);
+            }
+        }
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
     }
