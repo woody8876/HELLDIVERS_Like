@@ -6,8 +6,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
-    /// Set character walk speed.
+    /// Set character walking speed.
     /// Runing speed is double the speed.
+    /// Default value = 1.1f
     /// </summary>
     public float Speed { get { return m_Speed; } set { m_Speed = value; } }
 
@@ -31,12 +32,9 @@ public class PlayerController : MonoBehaviour
         {
             Move();
         }
-        else
+        else if (m_Controller.isGrounded == false)
         {
-            if (m_Controller.isGrounded == false)
-            {
-                m_Controller.Move(Physics.gravity * Time.deltaTime);
-            }
+            m_Controller.Move(Physics.gravity * Time.deltaTime);
         }
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
@@ -46,7 +44,7 @@ public class PlayerController : MonoBehaviour
      * Character move with input "Horizontal" & "Vertical".
      * Direction is reference to camera position.
      * If doesn't have camera, it's reference to world position.
-     ----------------------------------------------------------*/
+     -----------------------------------------------------------*/
 
     private void Move()
     {
@@ -101,6 +99,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    #region Private Variable
+
     private CharacterController m_Controller;
     private Transform m_Cam;
     private Vector3 m_CamFoward;
@@ -108,6 +108,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Move;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
+
+    #endregion Private Variable
 
 #if UNITY_EDITOR
 
