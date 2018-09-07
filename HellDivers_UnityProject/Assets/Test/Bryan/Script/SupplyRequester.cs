@@ -6,16 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class SupplyRequester : MonoBehaviour
 {
-    public SupplyRequesterData Data { get { return m_Data; } }
-
     [SerializeField] private GameObject m_Display;
-    [SerializeField] private SupplyRequesterData m_Data;
-    private Rigidbody m_Rigidbody;
-
-    public void Init(SupplyRequesterData data)
-    {
-        data.CopyTo(ref m_Data);
-    }
+    [SerializeField] private GameObject m_Item;
+    [SerializeField] private float m_ActTime;
 
     // Use this for initialization
     private void Start()
@@ -29,18 +22,11 @@ public class SupplyRequester : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void SetData(SupplyRequesterData src)
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            Vector3 vDir = this.transform.forward;
-            vDir.y += 1;
-            m_Rigidbody.isKinematic = false;
-            Throw(vDir, 500.0f);
-        }
     }
 
-    public void Throw(Vector3 direction, float size)
+    public void ThrowOut(Vector3 direction, float size)
     {
         Vector3 force = direction.normalized * size;
         m_Rigidbody.AddForce(force);
@@ -52,22 +38,16 @@ public class SupplyRequester : MonoBehaviour
         {
             m_Rigidbody.isKinematic = true;
             this.transform.up = Vector3.up;
-            StartCoroutine(StartActivate(m_Data.AcivateTime));
+            StartCoroutine(StartActivationProcess(m_ActTime));
         }
     }
 
-    private IEnumerator StartActivate(float waitTime)
+    private IEnumerator StartActivationProcess(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
 
-        Instantiate(m_Data.Item, this.transform.position, Quaternion.identity, null);
         this.gameObject.SetActive(false);
     }
 
-    // Set with default value
-    // Only called in editor mode
-    private void Reset()
-    {
-        m_Data = null;
-    }
+    private Rigidbody m_Rigidbody;
 }

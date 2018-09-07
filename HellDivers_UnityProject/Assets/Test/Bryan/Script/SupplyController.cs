@@ -4,18 +4,37 @@ using UnityEngine;
 
 public class SupplyController : MonoBehaviour
 {
-    [SerializeField] private GameObject source;
-    [SerializeField] private SupplyRequester[] requesters;
-    [SerializeField] private Transform launchPos;
+    public Transform LaunchPos { get { return m_tLaunchPos; } set { m_tLaunchPos = value; } }
+    public GameObject Display { get { return m_gDisplay; } set { m_gDisplay = value; } }
 
-    public void Init()
+    [SerializeField] private GameObject m_gDisplay;
+    [SerializeField] private Transform m_tLaunchPos;
+    [SerializeField] private SupplyRequester[] m_Requesters = new SupplyRequester[2];
+
+    public bool SetRequester(int index, SupplyRequester requester)
     {
-        requesters = new SupplyRequester[2];
+        for (int i = 0; i < m_Requesters.Length; i++)
+        {
+            if (m_Requesters[i] == requester)
+            {
+                Debug.LogFormat("{0} : Already has this requester({1}), at index({2})",
+                                this.gameObject.name, requester.gameObject.name, i);
+                return false;
+            }
+        }
+
+        m_Requesters[index] = requester;
+        return true;
     }
 
     // Use this for initialization
     private void Start()
     {
+        m_tLaunchPos = this.transform.Find("RightHand");
+        if (m_tLaunchPos == null)
+        {
+            m_tLaunchPos = this.transform;
+        }
     }
 
     // Update is called once per frame
@@ -23,57 +42,74 @@ public class SupplyController : MonoBehaviour
     {
         if (Input.GetButtonDown("SupplyRequest"))
         {
-            ckeckInputCore = StartCoroutine(CheckInputCode());
+            m_cCkeckInput = StartCoroutine(CheckInputCode());
         }
 
         if (Input.GetButtonUp("SupplyRequest"))
         {
-            StopCoroutine(ckeckInputCore);
+            if (m_cCkeckInput != null)
+            {
+                StopCoroutine(m_cCkeckInput);
+            }
         }
     }
 
+    /*-----------------------------------------
+     * Check input key to the requesters codes.
+     * Step by step.
+     ------------------------------------------*/
+
     private IEnumerator CheckInputCode()
     {
-        Open.Clear();
+        m_OpenList.Clear();
 
-        foreach (SupplyRequester s in requesters)
+        foreach (SupplyRequester s in m_Requesters)
         {
-            Open.Add(s);
+            if (s != null)
+            {
+                m_OpenList.Add(s);
+            }
         }
 
-        int codeInputCount = 0;
-        bool GetSucceed = false;
+        int inputCount = 0;
         ERequestCode? input = null;
-
-        while (Open.Count > 0 && GetSucceed == false)
+        while (m_OpenList.Count > 0)
         {
             yield return new WaitUntil(() =>
             {
                 GetInputCode(out input);
                 return input == null;
             });
-            yield return new WaitUntil(() => { return GetInputCode(out input); });
 
-            codeInputCount++;
-            for (int i = 0; i < Open.Count; i++)
+            yield return new WaitUntil(() =>
             {
-                if (Open[i].Data.RequestCode[codeInputCount - 1] == input)
-                {
-                    if (Open[i].Data.RequestCode.Length == codeInputCount)
-                    {
-                        Instantiate(Open[i].gameObject, launchPos);
-                        GetSucceed = true;
-                        break;
-                    }
-                    continue;
-                }
-                else
-                {
-                    Open.RemoveAt(i);
-                }
+                return GetInputCode(out input);
+            });
+
+            inputCount++;
+
+            for (int i = 0; i < m_OpenList.Count; i++)
+            {
+                //if (m_OpenList[i].Data.RequestCode[inputCount - 1] == input)
+                //{
+                //    if (m_OpenList[i].Data.RequestCode.Length == inputCount)
+                //    {
+                //        Instantiate(m_OpenList[i].gameObject, m_tLaunchPos);
+                //        yield break;
+                //    }
+                //    continue;
+                //}
+                //else
+                //{
+                //    m_OpenList.RemoveAt(i);
+                //}
             }
         }
     }
+
+    /*---------------------------
+     * Get request code by input.
+     ----------------------------*/
 
     private bool GetInputCode(out ERequestCode? input)
     {
@@ -104,6 +140,6 @@ public class SupplyController : MonoBehaviour
         }
     }
 
-    private Coroutine ckeckInputCore;
-    private List<SupplyRequester> Open = new List<SupplyRequester>();
+    private Coroutine m_cCkeckInput;
+    private List<SupplyRequester> m_OpenList = new List<SupplyRequester>();
 }
