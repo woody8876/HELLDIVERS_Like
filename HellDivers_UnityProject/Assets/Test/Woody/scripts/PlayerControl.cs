@@ -7,8 +7,8 @@ public class PlayerControl : MonoBehaviour
 {
     public float Speed { get { return m_Speed; } set { m_Speed = value; } }
 
-    [SerializeField] private float m_Speed = 1.1f;
-    
+    [SerializeField] private float m_Speed = 5f;
+
     private void Start()
     {
         m_Controller = this.GetComponent<CharacterController>();
@@ -18,7 +18,7 @@ public class PlayerControl : MonoBehaviour
             m_Cam = Camera.main.transform;
         }
     }
-    
+
     private void Update()
     {
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
@@ -26,9 +26,9 @@ public class PlayerControl : MonoBehaviour
             Move();
         }
         else if (m_Controller.isGrounded == false)
-            {
-                m_Controller.Move(Physics.gravity * Time.deltaTime);
-            }
+        {
+            m_Controller.Move(Physics.gravity * Time.deltaTime);
+        }
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
     }
@@ -47,11 +47,7 @@ public class PlayerControl : MonoBehaviour
             m_Direction = Vector3.forward * v + Vector3.right * h;
         }
 
-        if (m_Direction.magnitude > 1)
-        {
-            m_Direction.Normalize();
-        }
-
+        m_Direction.Normalize();
         m_Move = m_Direction * m_Speed * Time.deltaTime;
 
         if (Input.GetButton("Run"))
@@ -63,11 +59,13 @@ public class PlayerControl : MonoBehaviour
         {
             m_Move += Physics.gravity * Time.deltaTime;
         }
+        Debug.Log(h);
+        Debug.Log(v);
 
         this.transform.forward = m_Direction;
         m_Controller.Move(m_Move);
     }
-    
+
 
     private void FaceDirection()
     {

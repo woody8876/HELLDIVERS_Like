@@ -48,7 +48,7 @@ public class AimLine : MonoBehaviour
             {
                 Vector3 mPos = MouseHit.point;
                 mPos.y = 0;
-                Vector3 ePos = m_Enitter.transform.localPosition;
+                Vector3 ePos = this.transform.position;
                 ePos.y = 0;
                 Vector3 Distance = mPos - ePos;
 
@@ -57,9 +57,13 @@ public class AimLine : MonoBehaviour
         }
         else if (m_LineRenderer.positionCount == 4)
         {
+            Debug.Log("4");
         }
-        
+        Debug.Log("Error");
+
         return new Vector3(0, 0, 0);
+
+
     }
 
     public void OpenAimLine()
@@ -71,14 +75,12 @@ public class AimLine : MonoBehaviour
         {
             Debug.Log("Can't find the Emitter");
             m_LineRenderer.SetPosition(0, this.transform.position);
-            m_LineRenderer.SetPosition(0, (SetLineLength()));
+            m_LineRenderer.SetPosition(1, (SetLineLength()));
             Debug.Log("Line");
         }
         else
         {
-            Vector3 Emitter = m_Enitter.transform.localPosition;
-            Emitter.y = 0;
-            m_LineRenderer.SetPosition(0, Emitter);
+            m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
             m_LineRenderer.SetPosition(1, (SetLineLength()));
         }
     }
