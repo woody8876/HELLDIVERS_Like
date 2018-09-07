@@ -11,22 +11,6 @@ public class SupplyController : MonoBehaviour
     [SerializeField] private Transform m_tLaunchPos;
     [SerializeField] private SupplyRequester[] m_Requesters = new SupplyRequester[2];
 
-    public bool SetRequester(int index, SupplyRequester requester)
-    {
-        for (int i = 0; i < m_Requesters.Length; i++)
-        {
-            if (m_Requesters[i] == requester)
-            {
-                Debug.LogFormat("{0} : Already has this requester({1}), at index({2})",
-                                this.gameObject.name, requester.gameObject.name, i);
-                return false;
-            }
-        }
-
-        m_Requesters[index] = requester;
-        return true;
-    }
-
     // Use this for initialization
     private void Start()
     {
@@ -90,19 +74,19 @@ public class SupplyController : MonoBehaviour
 
             for (int i = 0; i < m_OpenList.Count; i++)
             {
-                //if (m_OpenList[i].Data.RequestCode[inputCount - 1] == input)
-                //{
-                //    if (m_OpenList[i].Data.RequestCode.Length == inputCount)
-                //    {
-                //        Instantiate(m_OpenList[i].gameObject, m_tLaunchPos);
-                //        yield break;
-                //    }
-                //    continue;
-                //}
-                //else
-                //{
-                //    m_OpenList.RemoveAt(i);
-                //}
+                if (m_OpenList[i].Data.actCode[inputCount - 1] == input)
+                {
+                    if (m_OpenList[i].Data.actCode.Length == inputCount)
+                    {
+                        Instantiate(m_OpenList[i].gameObject, m_tLaunchPos);
+                        yield break;
+                    }
+                    continue;
+                }
+                else
+                {
+                    m_OpenList.RemoveAt(i);
+                }
             }
         }
     }
