@@ -126,7 +126,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4334912711527064, guid: 1c5bac186082d6443b750c9c62c42274, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 4.8
       objectReference: {fileID: 0}
     - target: {fileID: 4334912711527064, guid: 1c5bac186082d6443b750c9c62c42274, type: 2}
       propertyPath: m_LocalPosition.z
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 1404566265}
   - component: {fileID: 1404566264}
   - component: {fileID: 1404566263}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Floor
   m_TagString: Terrain
   m_Icon: {fileID: 0}

@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerControl : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    /// <summary>
+    /// Set character walking speed.
+    /// Runing speed is double the speed.
+    /// Default value = 1.1f
+    /// </summary>
     public float Speed { get { return m_Speed; } set { m_Speed = value; } }
 
     [SerializeField] private float m_Speed = 1.1f;
 
-    private AimLine m_AimLine;
-    
+    // Use this for initialization
     private void Start()
     {
         m_Controller = this.GetComponent<CharacterController>();
@@ -19,8 +23,6 @@ public class PlayerControl : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
-
-        m_AimLine = new AimLine();
     }
 
     // Update is called once per frame
@@ -31,22 +33,18 @@ public class PlayerControl : MonoBehaviour
             Move();
         }
         else if (m_Controller.isGrounded == false)
-            {
-                m_Controller.Move(Physics.gravity * Time.deltaTime);
-            }
+        {
+            m_Controller.Move(Physics.gravity * Time.deltaTime);
+        }
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
-
-        if (Input.GetMouseButton(1))
-        {
-            m_AimLine.Init();
-            m_AimLine.SetAimLine();
-        }
-        else if(Input.GetMouseButtonUp(1))
-        {
-            m_AimLine.CloseAimLine();
-        }
     }
+
+    /*----------------------------------------------------------
+     * Character move with input "Horizontal" & "Vertical".
+     * Direction is reference to camera position.
+     * If doesn't have camera, it's reference to world position.
+     -----------------------------------------------------------*/
 
     private void Move()
     {
@@ -82,7 +80,10 @@ public class PlayerControl : MonoBehaviour
         this.transform.forward = m_Direction;
         m_Controller.Move(m_Move);
     }
-    
+
+    /*---------------------------------
+     * Character face to mouse position
+     ----------------------------------*/
 
     private void FaceDirection()
     {
@@ -98,6 +99,8 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    #region Private Variable
+
     private CharacterController m_Controller;
     private Transform m_Cam;
     private Vector3 m_CamFoward;
@@ -105,6 +108,8 @@ public class PlayerControl : MonoBehaviour
     private Vector3 m_Move;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
+
+    #endregion Private Variable
 
 #if UNITY_EDITOR
 
