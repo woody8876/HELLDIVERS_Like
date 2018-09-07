@@ -8,8 +8,6 @@ public class PlayerControl : MonoBehaviour
     public float Speed { get { return m_Speed; } set { m_Speed = value; } }
 
     [SerializeField] private float m_Speed = 1.1f;
-
-    private AimLine m_AimLine;
     
     private void Start()
     {
@@ -19,11 +17,8 @@ public class PlayerControl : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
-
-        m_AimLine = new AimLine();
     }
-
-    // Update is called once per frame
+    
     private void Update()
     {
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
@@ -36,16 +31,6 @@ public class PlayerControl : MonoBehaviour
             }
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
-
-        if (Input.GetMouseButton(1))
-        {
-            m_AimLine.Init();
-            m_AimLine.SetAimLine();
-        }
-        else if(Input.GetMouseButtonUp(1))
-        {
-            m_AimLine.CloseAimLine();
-        }
     }
 
     private void Move()
