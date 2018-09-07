@@ -10,19 +10,56 @@ public class AimLine : MonoBehaviour
 
     private void Start()
     {
-
+        m_LineRenderTransform = transform.Find("LineRender");
+        if (m_LineRenderTransform == null)
+        {
+            Debug.Log("Can't find the LineRender");
+        }
+        else
+        {
+            m_LineRenderer = (LineRenderer)m_LineRenderTransform.GetComponent("LineRenderer");
+        }
     }
     private void Update()
     {
         if (Input.GetMouseButton(1))
         {
-            SetAimLineInfo(false, 0.1f, 0.1f, 2);
+            SetAimLineInfo(true);
             OpenAimLine();
         }
         else if (Input.GetMouseButtonUp(1))
         {
             CloseAimLine();
         }
+    }
+    public void SetAimLineInfo(bool straight)
+    {
+        m_LineRenderer.positionCount = straight ? 2 : 4;
+    }
+    public Vector3 SetLineLength()
+    {
+        if (m_LineRenderer.positionCount == 2)
+        {
+            //return new Vector3(0, 0, 50f);
+            Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit MouseHit;
+
+            if (Physics.Raycast(MouseRay, out MouseHit, 1000.0f, 1 << LayerMask.NameToLayer("Terrain")))
+            {
+                Vector3 mPos = MouseHit.point;
+                mPos.y = 0;
+                Vector3 ePos = m_Enitter.transform.localPosition;
+                ePos.y = 0;
+                Vector3 Distance = mPos - ePos;
+
+                return new Vector3(0, 0, Distance.magnitude);
+            }
+        }
+        else if (m_LineRenderer.positionCount == 4)
+        {
+        }
+        
+        return new Vector3(0, 0, 0);
     }
 
     public void OpenAimLine()
@@ -39,7 +76,9 @@ public class AimLine : MonoBehaviour
         }
         else
         {
-            m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
+            Vector3 Emitter = m_Enitter.transform.localPosition;
+            Emitter.y = 0;
+            m_LineRenderer.SetPosition(0, Emitter);
             m_LineRenderer.SetPosition(1, (SetLineLength()));
         }
     }
@@ -48,44 +87,5 @@ public class AimLine : MonoBehaviour
         m_LineRenderer.enabled = false;
     }
 
-    public void SetAimLineInfo(bool useWorld, float startWidth, float endWidth, int positionCount)
-    {
-        m_LineRenderTransform = transform.Find("LineRender");
-        if (m_LineRenderTransform == null)
-        {
-            Debug.Log("Can't find the LineRender");
-        }
-        else
-        {
-            m_LineRenderer = (LineRenderer)m_LineRenderTransform.GetComponent("LineRenderer");
-        }
-        m_LineRenderer.useWorldSpace = useWorld;
-        m_LineRenderer.startWidth = startWidth;
-        m_LineRenderer.endWidth = endWidth;
-        m_LineRenderer.positionCount = positionCount;
-    }
-    public Vector3 SetLineLength()
-    {
-        if (m_LineRenderer.positionCount == 2)
-        {
-            //return new Vector3(0, 0, 50f);
-            Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit MouseHit;
-
-            if (Physics.Raycast(MouseRay, out MouseHit, 1000.0f, 1 << LayerMask.NameToLayer("Terrain")))
-            {
-                Vector3 Distance = MouseHit.point - m_Enitter.transform.position;
-                Vector3 tPos = m_Enitter.transform.localPosition;
-                tPos.z += Distance.magnitude;
-                return tPos;
-            }
-        }
-        else if (m_LineRenderer.positionCount == 4)
-        {
-        }
-
-
-        return new Vector3(0, 0, 0);
-    }
 }
 
