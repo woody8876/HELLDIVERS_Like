@@ -19,7 +19,7 @@ public class ObjectPool : MonoBehaviour {
 
     private Dictionary<int, List<GameObjectData>> m_dObjectDitc;
 
-    private void Awake()
+    public ObjectPool()
     {
         if (m_Instance == null)
         {
