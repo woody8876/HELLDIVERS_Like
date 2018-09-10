@@ -30,17 +30,21 @@ public class PlayerControl : MonoBehaviour
             m_Controller.Move(Physics.gravity * Time.deltaTime);
         }
 
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+        }
     }
 
     private void Move()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
+
         if (m_Cam != null)
         {
             m_CamFoward = Vector3.Scale(m_Cam.forward, Vector3.forward + Vector3.right);
-            m_Direction = m_CamFoward * v + m_Cam.right * h;
+            m_Direction = m_CamFoward.normalized * v + m_Cam.right * h;
         }
         else
         {
@@ -59,8 +63,6 @@ public class PlayerControl : MonoBehaviour
         {
             m_Move += Physics.gravity * Time.deltaTime;
         }
-        Debug.Log(h);
-        Debug.Log(v);
 
         this.transform.forward = m_Direction;
         m_Controller.Move(m_Move);
