@@ -7,21 +7,21 @@ public class SupplyController : MonoBehaviour
     /// <summary>
     /// Set supply requester spawn position. (Right hand / Left hand)
     /// </summary>
-    public Transform LaunchPos { get { return m_tLaunchPos; } set { m_tLaunchPos = value; } }
+    public Transform LaunchPos { get { return _LaunchPos; } set { _LaunchPos = value; } }
 
-    public GameObject Display { get { return m_gDisplay; } set { m_gDisplay = value; } }
+    public GameObject Display { get { return _Display; } set { _Display = value; } }
 
-    [SerializeField] private GameObject m_gDisplay;
-    [SerializeField] private Transform m_tLaunchPos;
-    [SerializeField] private SupplyRequester[] m_Requesters = new SupplyRequester[2];
+    [SerializeField] private GameObject _Display;
+    [SerializeField] private Transform _LaunchPos;
+    [SerializeField] private SupplyRequester[] _Requesters = new SupplyRequester[2];
 
     // Use this for initialization
     private void Start()
     {
-        m_tLaunchPos = this.transform.Find("RightHand");
-        if (m_tLaunchPos == null)
+        _LaunchPos = this.transform.Find("RightHand");
+        if (_LaunchPos == null)
         {
-            m_tLaunchPos = this.transform;
+            _LaunchPos = this.transform;
         }
     }
 
@@ -30,14 +30,14 @@ public class SupplyController : MonoBehaviour
     {
         if (Input.GetButtonDown("SupplyRequest"))
         {
-            m_cCkeckInput = StartCoroutine(CheckInputCode());
+            _CkeckInput = StartCoroutine(CheckInputCode());
         }
 
         if (Input.GetButtonUp("SupplyRequest"))
         {
-            if (m_cCkeckInput != null)
+            if (_CkeckInput != null)
             {
-                StopCoroutine(m_cCkeckInput);
+                StopCoroutine(_CkeckInput);
             }
         }
     }
@@ -49,19 +49,19 @@ public class SupplyController : MonoBehaviour
 
     private IEnumerator CheckInputCode()
     {
-        m_OpenList.Clear();
+        _OpenList.Clear();
 
-        foreach (SupplyRequester s in m_Requesters)
+        foreach (SupplyRequester s in _Requesters)
         {
             if (s != null)
             {
-                m_OpenList.Add(s);
+                _OpenList.Add(s);
             }
         }
 
         int inputCount = 0;
         ERequestCode? input = null;
-        while (m_OpenList.Count > 0)
+        while (_OpenList.Count > 0)
         {
             yield return new WaitUntil(() =>
             {
@@ -76,20 +76,20 @@ public class SupplyController : MonoBehaviour
 
             inputCount++;
 
-            for (int i = 0; i < m_OpenList.Count; i++)
+            for (int i = 0; i < _OpenList.Count; i++)
             {
-                if (m_OpenList[i].Data.actCode[inputCount - 1] == input)
+                if (_OpenList[i].Data.actCode[inputCount - 1] == input)
                 {
-                    if (m_OpenList[i].Data.actCode.Length == inputCount)
+                    if (_OpenList[i].Data.actCode.Length == inputCount)
                     {
-                        Instantiate(m_OpenList[i].gameObject, m_tLaunchPos);
+                        Instantiate(_OpenList[i].gameObject, _LaunchPos);
                         yield break;
                     }
                     continue;
                 }
                 else
                 {
-                    m_OpenList.RemoveAt(i);
+                    _OpenList.RemoveAt(i);
                 }
             }
         }
@@ -128,6 +128,6 @@ public class SupplyController : MonoBehaviour
         }
     }
 
-    private Coroutine m_cCkeckInput;
-    private List<SupplyRequester> m_OpenList = new List<SupplyRequester>();
+    private Coroutine _CkeckInput;
+    private List<SupplyRequester> _OpenList = new List<SupplyRequester>();
 }
