@@ -5,10 +5,9 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 400000}
-  - 114: {fileID: 11400000}
+  - component: {fileID: 400000}
   m_Layer: 0
   m_Name: b009
   m_TagString: Untagged
@@ -28,87 +27,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f742ccbd25717e438dd6fdea4d66bad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TrailData:
-    TrailMaterial: {fileID: 2100000, guid: f865db157005bee40ab54c505f6b11a0, type: 2}
-    Lifetime: .699999988
-    SizeOverLife:
-      serializedVersion: 2
-      m_Curve:
-      - time: 0
-        value: .0294668935
-        inSlope: 0
-        outSlope: -.0407005288
-        tangentMode: 21
-      - time: 1
-        value: -.0112336362
-        inSlope: -.0407005288
-        outSlope: 0
-        tangentMode: 21
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-    ColorOverLife:
-      key0:
-        serializedVersion: 2
-        rgba: 4278237183
-      key1:
-        serializedVersion: 2
-        rgba: 4286182655
-      key2:
-        serializedVersion: 2
-        rgba: 4282729797
-      key3:
-        serializedVersion: 2
-        rgba: 4285098345
-      key4:
-        serializedVersion: 2
-        rgba: 16777215
-      key5:
-        serializedVersion: 2
-        rgba: 0
-      key6:
-        serializedVersion: 2
-        rgba: 0
-      key7:
-        serializedVersion: 2
-        rgba: 0
-      ctime0: 578
-      ctime1: 18890
-      ctime2: 43369
-      ctime3: 57825
-      ctime4: 65535
-      ctime5: 0
-      ctime6: 0
-      ctime7: 0
-      atime0: 0
-      atime1: 19082
-      atime2: 43369
-      atime3: 57825
-      atime4: 65535
-      atime5: 65535
-      atime6: 0
-      atime7: 0
-      m_NumColorKeys: 5
-      m_NumAlphaKeys: 5
-    StretchSizeToFit: 0
-    StretchColorToFit: 0
-    MaterialTileLength: 0
-    UseForwardOverride: 0
-    ForwardOverride: {x: 0, y: 0, z: 0}
-    ForwardOverrideRelative: 0
-  Emit: 1
-  MaxNumberOfPoints: 50
-  MinVertexDistance: .100000001
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -120,4 +39,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
