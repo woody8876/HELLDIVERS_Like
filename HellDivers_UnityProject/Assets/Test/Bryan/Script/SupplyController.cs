@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class SupplyController : MonoBehaviour
 {
+    /// <summary>
+    /// Set supply requester spawn position. (Right hand / Left hand)
+    /// </summary>
     public Transform LaunchPos { get { return m_tLaunchPos; } set { m_tLaunchPos = value; } }
+
     public GameObject Display { get { return m_gDisplay; } set { m_gDisplay = value; } }
 
     [SerializeField] private GameObject m_gDisplay;
