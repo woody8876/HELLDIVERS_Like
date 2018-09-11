@@ -1,4 +1,4 @@
-﻿    ///2018.09.02
+﻿///2018.09.10
 ///Ivan.CC
 ///
 /// Bullet behaviour.
@@ -10,55 +10,37 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
     [SerializeField] private eWeaponType m_Type;
-         
-    private WeaponController m_WC;
-
-    private List<float> m_WeaponData = new List<float>();
-
-    private Vector3 m_vRegion;
-    private Vector3 m_vOrigine;
-    private BoxCollider m_Region;
-
+//    [SerializeField] private data
     //Bullet's speed
-    private float m_fSpeed;
-    
+    private float m_fSpeed = 100;
 
+    Weapon m_weapon;
  //========================================================================
     void Start () {
-        m_WC = new WeaponController();
-        m_WC.Init();
-        m_WeaponData = m_WC.WeaponInfo(m_Type, m_WC.m_iLevel);
-        m_vRegion = new Vector3(m_WeaponData[4], m_WeaponData[5], 0);
-        m_vOrigine = new Vector3(1, 1, 2);
-        m_Region = GetComponent<BoxCollider>();
-        m_fSpeed = 100;
-        
+        m_weapon = new Weapon();
     }
 
     // Update is called once per frame
     void Update () {
-        Translate();
         StartCoroutine(BulletDeath());
-    }
-
-    //Bullet translate 
-    private void Translate()
-    {
-        this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
-        m_Region.size = m_Region.size + m_vRegion * Time.deltaTime;                 
     }
 
     private void OnTriggerEnter(Collider other)
     {
         this.gameObject.SetActive(false);
-        other.gameObject.SetActive(false);
     }
 
     IEnumerator BulletDeath()
     {
+
+        this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
+        m_weapon.m_Weapon_CurrentActives.Add(this.gameObject);
         yield return new WaitForSeconds(1);
-        m_vRegion = m_vOrigine;
+        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, m_weapon.m_Weapon_CurrentActives[0]);
+        m_weapon.m_Weapon_CurrentActives.RemoveAt(0);
         this.gameObject.SetActive(false);
+
     }
+
 
 }

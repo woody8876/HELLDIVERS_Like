@@ -254,7 +254,6 @@ GameObject:
   - component: {fileID: 936864666}
   - component: {fileID: 936864665}
   - component: {fileID: 936864664}
-  - component: {fileID: 936864668}
   - component: {fileID: 936864669}
   m_Layer: 0
   m_Name: Main Camera
@@ -319,29 +318,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 936864663}
-  m_LocalRotation: {x: -0.70710677, y: -0.0000000018626449, z: 0.000000005587935,
-    w: -0.7071068}
-  m_LocalPosition: {x: 8.840554, y: 19.944885, z: -0.7438631}
+  m_LocalRotation: {x: 0.24808656, y: 0.5202931, z: -0.16112208, w: 0.8011167}
+  m_LocalPosition: {x: -3.4142332, y: 6.444478, z: -4.0124216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &936864668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 936864663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac634c078aff9a047b0c18add18bb68e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FirstWeapon: 0
-  SecondWeapon: 2
-  FirstWeaponLevel: 1
-  SecondWeaponLevel: 1
 --- !u!114 &936864669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,6 +520,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90770a5a6e995f54e9cfaf0627c31ed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_WeaponNum: 0
+  weaponData:
+  - m_iAmmo: 3
+    m_fDamage: 10
+    m_fCoolTime: 1
+    m_fRefillTime: 1
+    m_Weapon_CurrentActives: []
+  - m_iAmmo: 20
+    m_fDamage: 20
+    m_fCoolTime: 1
+    m_fRefillTime: 5
+    m_Weapon_CurrentActives: []
+  EWeapon: 0000000002000000
 --- !u!1 &1578360255
 GameObject:
   m_ObjectHideFlags: 0
