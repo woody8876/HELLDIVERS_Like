@@ -6,7 +6,7 @@ using UnityEngine;
 public class SupplyRequesterData : ScriptableObject
 {
     public string id;
-    public string item;
+    public GameObject item;
     public float coolDownTime;
     public float actTime;
     public ERequestCode[] actCode;
