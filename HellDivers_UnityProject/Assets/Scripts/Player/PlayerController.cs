@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Bryan
+namespace HELLDIVERS
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
@@ -16,9 +16,23 @@ namespace Bryan
 
         [SerializeField] private float m_Speed = 1.1f;
 
+        #region Private Variable
+
+        private CharacterController m_Controller;
+        private Animator m_Animator;
+        private Transform m_Cam;
+        private Vector3 m_CamFoward;
+        private Vector3 m_Direction;
+        private Vector3 m_Move;
+        private Ray m_MouseRay;
+        private RaycastHit m_MouseHit;
+
+        #endregion Private Variable
+
         // Use this for initialization
         private void Start()
         {
+            m_Animator = this.GetComponent<Player>().Anima;
             m_Controller = this.GetComponent<CharacterController>();
 
             if (Camera.main != null)
@@ -40,6 +54,8 @@ namespace Bryan
             }
 
             if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) FaceDirection();
+
+            UpdateAnima();
         }
 
         /*----------------------------------------------------------
@@ -101,17 +117,17 @@ namespace Bryan
             }
         }
 
-        #region Private Variable
+        private void UpdateAnima()
+        {
+            float speed = Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical"));
+            m_Animator.SetFloat("speed", speed);
 
-        private CharacterController m_Controller;
-        private Transform m_Cam;
-        private Vector3 m_CamFoward;
-        private Vector3 m_Direction;
-        private Vector3 m_Move;
-        private Ray m_MouseRay;
-        private RaycastHit m_MouseHit;
-
-        #endregion Private Variable
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+            {
+                float animaSpeed = (Input.GetButton("Run")) ? 1.5f : 1.0f;
+                m_Animator.speed = animaSpeed;
+            }
+        }
 
 #if UNITY_EDITOR
 
