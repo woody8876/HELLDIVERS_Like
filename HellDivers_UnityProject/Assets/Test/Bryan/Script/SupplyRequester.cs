@@ -6,9 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class SupplyRequester : MonoBehaviour
 {
+    public SupplyRequesterData Data { get { return m_Data; } }
+
     [SerializeField] private GameObject m_Display;
     [SerializeField] private GameObject m_Item;
     [SerializeField] private float m_ActTime;
+    [SerializeField] private SupplyRequesterData m_Data;
 
     // Use this for initialization
     private void Start()
@@ -22,12 +25,18 @@ public class SupplyRequester : MonoBehaviour
         }
     }
 
-    public void SetData(SupplyRequesterData src)
+    private void Update()
     {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            ThrowOut(this.transform.forward, 1000f);
+        }
     }
 
     public void ThrowOut(Vector3 direction, float size)
     {
+        this.transform.parent = null;
+        m_Rigidbody.isKinematic = false;
         Vector3 force = direction.normalized * size;
         m_Rigidbody.AddForce(force);
     }

@@ -1,0 +1,343 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!74 &7400000
+AnimationClip:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: F001_start
+  serializedVersion: 4
+  m_AnimationType: 2
+  m_Compressed: 0
+  m_UseHighQualityCurve: 1
+  m_RotationCurves: []
+  m_CompressedRotationCurves: []
+  m_PositionCurves: []
+  m_ScaleCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: {x: 0, y: 0, z: 0}
+        inSlope: {x: 108.000008, y: 108.000008, z: 108.000008}
+        outSlope: {x: 108.000008, y: 108.000008, z: 108.000008}
+        tangentMode: 0
+      - time: .25
+        value: {x: 9, y: 9, z: 9}
+        inSlope: {x: 1.14440918e-05, y: 1.14440918e-05, z: 1.14440918e-05}
+        outSlope: {x: 1.14440918e-05, y: 1.14440918e-05, z: 1.14440918e-05}
+        tangentMode: 479414552
+      - time: .333333343
+        value: {x: 0, y: 0, z: 0}
+        inSlope: {x: -107.999985, y: -107.999985, z: -107.999985}
+        outSlope: {x: -107.999985, y: -107.999985, z: -107.999985}
+        tangentMode: 5
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    path: Effect/gun2_h
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: {x: 0, y: 0, z: 0}
+        inSlope: {x: 108.000008, y: 108.000008, z: 108.000008}
+        outSlope: {x: 108.000008, y: 108.000008, z: 108.000008}
+        tangentMode: 0
+      - time: .25
+        value: {x: 9, y: 9, z: 9}
+        inSlope: {x: 1.14440918e-05, y: 1.14440918e-05, z: 1.14440918e-05}
+        outSlope: {x: 1.14440918e-05, y: 1.14440918e-05, z: 1.14440918e-05}
+        tangentMode: 479163820
+      - time: .333333343
+        value: {x: 0, y: 0, z: 0}
+        inSlope: {x: -107.999985, y: -107.999985, z: -107.999985}
+        outSlope: {x: -107.999985, y: -107.999985, z: -107.999985}
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    path: Effect/gun2_v
+  m_FloatCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: .0333333351
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_IsActive
+    path: Effect
+    classID: 1
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: .25
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: EmissionModule.enabled
+    path: Effect/fire_ball
+    classID: 198
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .0333333351
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: 1.25
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: EmissionModule.enabled
+    path: Effect/smoke
+    classID: 198
+    script: {fileID: 0}
+  m_PPtrCurves: []
+  m_SampleRate: 60
+  m_WrapMode: 0
+  m_Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_AnimationClipSettings:
+    serializedVersion: 2
+    m_StartTime: 0
+    m_StopTime: 1.25
+    m_OrientationOffsetY: 0
+    m_Level: 0
+    m_CycleOffset: 0
+    m_LoopTime: 0
+    m_LoopBlend: 0
+    m_LoopBlendOrientation: 0
+    m_LoopBlendPositionY: 0
+    m_LoopBlendPositionXZ: 0
+    m_KeepOriginalOrientation: 0
+    m_KeepOriginalPositionY: 1
+    m_KeepOriginalPositionXZ: 0
+    m_HeightFromFeet: 0
+    m_Mirror: 0
+  m_EditorCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: .0333333351
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_IsActive
+    path: Effect
+    classID: 1
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.x
+    path: Effect/gun2_h
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.y
+    path: Effect/gun2_h
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.z
+    path: Effect/gun2_h
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.x
+    path: Effect/gun2_v
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.y
+    path: Effect/gun2_v
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .166666672
+        value: 0
+        inSlope: 108.000008
+        outSlope: 108.000008
+        tangentMode: 10
+      - time: .25
+        value: 9
+        inSlope: 1.14440918e-05
+        outSlope: 1.14440918e-05
+        tangentMode: 10
+      - time: .333333343
+        value: 0
+        inSlope: -107.999985
+        outSlope: -107.999985
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: m_LocalScale.z
+    path: Effect/gun2_v
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: .25
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: EmissionModule.enabled
+    path: Effect/fire_ball
+    classID: 198
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: .0333333351
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      - time: 1.25
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 31
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+    attribute: EmissionModule.enabled
+    path: Effect/smoke
+    classID: 198
+    script: {fileID: 0}
+  m_EulerEditorCurves: []
+  m_Events: []
