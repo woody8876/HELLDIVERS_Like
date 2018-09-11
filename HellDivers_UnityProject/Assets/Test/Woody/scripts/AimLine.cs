@@ -21,6 +21,7 @@ public class AimLine : MonoBehaviour
         {
             m_LineRenderer = (LineRenderer)m_LineRenderTransform.GetComponent("LineRenderer");
         }
+        SetAimLineInfo(true);
     }
     private void Update()
     {
@@ -42,6 +43,10 @@ public class AimLine : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 設定直線或曲線
+    /// </summary>
+    /// <param name="straight"></param>
     public void SetAimLineInfo(bool straight)
     {
         m_LineRenderer.positionCount = straight ? straightPosCount : spinePosCount;
@@ -56,30 +61,24 @@ public class AimLine : MonoBehaviour
         {
             Debug.Log("Can't find the Emitter");
             m_LineRenderer.SetPosition(0, this.transform.position);
-            m_LineRenderer.SetPosition(1, (SetLineLength()));
+            m_LineRenderer.SetPosition(1, (GetLastPosition()));
         }
         else if(m_LineRenderer.positionCount == straightPosCount)
         {
             m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
-            m_LineRenderer.SetPosition(1, (SetLineLength()));
+            m_LineRenderer.SetPosition(1, (GetLastPosition()));
         }
         else if (m_LineRenderer.positionCount == spinePosCount)
         {
-            Vector3 vPosition0;
-            Vector3 vPosition1;
-            Vector3 vPosition2;
-            Vector3 vPosition3;
-            Vector3 vPosition4;
-
-            vPosition0 = m_Enitter.transform.localPosition - m_Enitter.transform.forward;
-            vPosition1 = m_Enitter.transform.localPosition;
-            vPosition2 = (SetLineLength() + m_Enitter.transform.localPosition) / 3;
+            Vector3 vPosition0 = m_Enitter.transform.localPosition ;
+            Vector3 vPosition1 = m_Enitter.transform.localPosition ;
+            Vector3 vPosition2 = (GetLastPosition() + m_Enitter.transform.localPosition) / 3;
             vPosition2.y = 10f;
-            vPosition3 = (SetLineLength() + m_Enitter.transform.localPosition) / 3 * 2;
+            Vector3 vPosition3 = (GetLastPosition() + m_Enitter.transform.localPosition) / 3 * 2;
             vPosition3.y = 10f;
-            vPosition4 = SetLineLength();
-
-            float test=50f;
+            Vector3 vPosition4 = GetLastPosition();
+            
+            float test = 50;
 
             for (int i = 0; i < spinePosCount; i++)
             {
@@ -88,21 +87,17 @@ public class AimLine : MonoBehaviour
                 Vector3 pos3 = Vector3.Lerp(vPosition2, vPosition3, i / test);
                 Vector3 pos4 = Vector3.Lerp(vPosition3, vPosition4, i / test);
 
-                var pos1_0 = Vector3.Lerp(pos1, pos2, i / test);
-                var pos1_1 = Vector3.Lerp(pos2, pos3, i / test);
-                var pos1_2 = Vector3.Lerp(pos3, pos4, i / test);
+                Vector3 pos1_0 = Vector3.Lerp(pos1, pos2, i / test);
+                Vector3 pos1_1 = Vector3.Lerp(pos2, pos3, i / test);
+                Vector3 pos1_2 = Vector3.Lerp(pos3, pos4, i / test);
 
-                var pos2_0 = Vector3.Lerp(pos1_0, pos1_1, i / test);
-                var pos2_1 = Vector3.Lerp(pos1_1, pos1_2, i / test);
+                Vector3 pos2_0 = Vector3.Lerp(pos1_0, pos1_1, i / test);
+                Vector3 pos2_1 = Vector3.Lerp(pos1_1, pos1_2, i / test);
 
-                Vector3 find = Vector3.Lerp(pos2_0, pos2_1, i / 25f);
-
+                Vector3 find = Vector3.Lerp(pos2_0, pos2_1, i / test);
+                
                 m_LineRenderer.SetPosition(i, find);
             }
-            //m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
-            //m_LineRenderer.SetPosition(1, vPosition1);
-            //m_LineRenderer.SetPosition(2, vPosition2);
-            //m_LineRenderer.SetPosition(3, (SetLineLength()));
         }
     }
     private void CloseAimLine()
@@ -110,7 +105,7 @@ public class AimLine : MonoBehaviour
         m_LineRenderer.enabled = false;
     }
 
-    private Vector3 SetLineLength()
+    private Vector3 GetLastPosition()
     {
         if (m_LineRenderer.positionCount == straightPosCount)
         {
@@ -133,7 +128,6 @@ public class AimLine : MonoBehaviour
                 return new Vector3(0, 0, Distance.magnitude);
             }
         }
-
         return new Vector3(0, 0, 0);
     }
 }
