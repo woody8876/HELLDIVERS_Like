@@ -5,7 +5,7 @@ using UnityEngine;
 public class StratagemController : MonoBehaviour
 {
     private Transform LaunchPos { get; set; }
-    private GameObject _Display;
+    private GameObject _Display = null;
     private StratagemData[] datas = new StratagemData[2];
 
     public bool SetStratage(int index, StratagemData data)

@@ -117,6 +117,10 @@ namespace HELLDIVERS
             }
         }
 
+        /*---------------------------------
+         * Character Animations.
+         ----------------------------------*/
+
         private void UpdateAnima()
         {
             float speed = Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical"));

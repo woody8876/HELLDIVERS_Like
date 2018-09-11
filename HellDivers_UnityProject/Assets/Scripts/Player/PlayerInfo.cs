@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class PlayerInfo
 {
-    public int Rank { get; set; }
-    public float Hp { get; set; }
-    public string DisplayID { get; set; }
-    public int[] WeaponId { get; set; }
-    public int[] StratagemId { get; set; }
+    public int Rank;
+    public float Hp;
+    public string DisplayID;
+    public int[] WeaponId;
+    public int[] StratagemId;
 }

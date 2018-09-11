@@ -5,9 +5,12 @@ using UnityEngine;
 namespace HELLDIVERS
 {
     [RequireComponent(typeof(PlayerController))]
+    [RequireComponent(typeof(Weapon_Battle))]
     public class Player : MonoBehaviour
     {
-        public PlayerInfo Info { get; private set; }
+        [SerializeField] private PlayerInfo m_Info;
+        public PlayerInfo Info { get { return m_Info; } }
+
         public GameObject Display { get; private set; }
         public Animator Anima { get; private set; }
 
