@@ -4,21 +4,36 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
-    private Transform LaunchPos { get; set; }
-    private GameObject _Display = null;
-    private StratagemData[] datas = new StratagemData[2];
+    private PlayerInfo m_playerInfo;
+    private Transform m_LaunchPos { get; set; }
+    private GameObject m_Display = null;
+    [SerializeField] private StratagemData[] datas = new StratagemData[2];
 
-    public bool SetStratage(int index, StratagemData data)
+    public bool SetStratageData(int[] dataKeys)
     {
-        datas[index] = data;
+        for (int i = 0; i < dataKeys.Length; i++)
+        {
+            SetStratageData(i, dataKeys[i]);
+        }
+        return true;
+    }
+
+    public bool SetStratageData(int index, int dataKey)
+    {
+        datas[index] = GameData.Instance.StratagemTable[dataKey];
         return true;
     }
 
     // Use this for initialization
     private void Start()
     {
-        LaunchPos = this.transform.Find("RightHand");
-        if (LaunchPos == null) LaunchPos = this.transform;
+        Player p = GetComponent<Player>();
+        if (p != null)
+        {
+            m_playerInfo = p.Info;
+            SetStratageData(m_playerInfo.StratagemId);
+            m_LaunchPos = p.Parts.LaunchPoint;
+        }
     }
 
     // Update is called once per frame
@@ -54,11 +69,11 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Code[inputCount - 1] == input)
+                if (_Open[i].code[inputCount - 1] == input)
                 {
-                    if (_Open[i].Code.Length == inputCount)
+                    if (_Open[i].code.Length == inputCount)
                     {
-                        Instantiate(_Display, LaunchPos);
+                        Instantiate(m_Display, m_LaunchPos);
                         yield break;
                     }
                     continue;
