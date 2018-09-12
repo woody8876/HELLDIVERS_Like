@@ -65,7 +65,6 @@ public class AimLine : MonoBehaviour
         {
             m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
             m_LineRenderer.SetPosition(1, GetLastPosition());
-            Debug.Log(m_LineRenderer.enabled);
 
         }
         else if (m_LineRenderer.positionCount == spinePosCount)
@@ -108,7 +107,6 @@ public class AimLine : MonoBehaviour
     {
         if (m_LineRenderer.positionCount == straightPosCount)
         {
-            Debug.Log("straight");
             return new Vector3(0, 0, 50);
         }
         else if (m_LineRenderer.positionCount == spinePosCount)
