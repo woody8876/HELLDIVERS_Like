@@ -80,21 +80,21 @@ public class AimLine : MonoBehaviour
 
             for (int i = 0; i < spinePosCount; i++)
             {
-                Vector3 pos1 = Vector3.Lerp(vPosition0, vPosition1, i / test);
-                Vector3 pos2 = Vector3.Lerp(vPosition1, vPosition2, i / test);
-                Vector3 pos3 = Vector3.Lerp(vPosition2, vPosition3, i / test);
-                Vector3 pos4 = Vector3.Lerp(vPosition3, vPosition4, i / test);
+                Vector3 firstPosLerp1 = Vector3.Lerp(vPosition0, vPosition1, i / test);
+                Vector3 firstPosLerp2 = Vector3.Lerp(vPosition1, vPosition2, i / test);
+                Vector3 firstPosLerp3 = Vector3.Lerp(vPosition2, vPosition3, i / test);
+                Vector3 firstPosLerp4 = Vector3.Lerp(vPosition3, vPosition4, i / test);
 
-                Vector3 pos1_0 = Vector3.Lerp(pos1, pos2, i / test);
-                Vector3 pos1_1 = Vector3.Lerp(pos2, pos3, i / test);
-                Vector3 pos1_2 = Vector3.Lerp(pos3, pos4, i / test);
+                Vector3 secondPosLerp1 = Vector3.Lerp(firstPosLerp1, firstPosLerp2, i / test);
+                Vector3 secondPosLerp2 = Vector3.Lerp(firstPosLerp2, firstPosLerp3, i / test);
+                Vector3 secondPosLerp3 = Vector3.Lerp(firstPosLerp3, firstPosLerp4, i / test);
 
-                Vector3 pos2_0 = Vector3.Lerp(pos1_0, pos1_1, i / test);
-                Vector3 pos2_1 = Vector3.Lerp(pos1_1, pos1_2, i / test);
+                Vector3 thirdPosLerp1 = Vector3.Lerp(secondPosLerp1, secondPosLerp2, i / test);
+                Vector3 thirdPosLerp2 = Vector3.Lerp(secondPosLerp2, secondPosLerp3, i / test);
 
-                Vector3 find = Vector3.Lerp(pos2_0, pos2_1, i / test);
+                Vector3 finalPos = Vector3.Lerp(thirdPosLerp1, thirdPosLerp2, i / test);
 
-                m_LineRenderer.SetPosition(i, find);
+                m_LineRenderer.SetPosition(i, finalPos);
             }
         }
     }
