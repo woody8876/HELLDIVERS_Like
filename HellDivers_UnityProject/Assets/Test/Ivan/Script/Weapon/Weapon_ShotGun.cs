@@ -30,7 +30,7 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
         }
     }
 
-    public void Refill()
+    public void Reload()
     {
     }
 }

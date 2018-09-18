@@ -20,7 +20,7 @@ public enum eWeaponType { FirstOne = -1,
 public interface IWeaponBehaviour
 {
     void Shot(Vector3 pos, Vector3 vec);
-    void Refill();
+    void Reload();
 }
 
 
@@ -38,7 +38,7 @@ public class WeaponFactory {
         Vector3 pos = Vector3.zero;
         Vector3 vec = Vector3.forward;
         weaponBehaviour.Shot( pos, vec);
-        weaponBehaviour.Refill();
+        weaponBehaviour.Reload();
         return weaponBehaviour;
     }
 }
