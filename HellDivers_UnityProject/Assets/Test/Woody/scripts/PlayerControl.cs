@@ -71,16 +71,23 @@ public class PlayerControl : MonoBehaviour
 
     private void FaceDirection()
     {
-        m_MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(m_MouseRay, out m_MouseHit, 1000.0f, 1 << LayerMask.NameToLayer("Terrain")))
-        {
-            m_Direction = m_MouseHit.point - this.transform.position;
-            m_Direction.y = 0.0f;
+        float vHigh = Camera.main.transform.position.y - this.transform.position.y;
 
-            if (m_Direction.magnitude < 0.1f) return;
+        Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 vMouseRay = MouseRay.direction;
 
-            m_Controller.transform.forward = m_Direction;
-        }
+        vMouseRay.Normalize();
+        float angle = Vector3.Dot(new Vector3(0, -1, 0), vMouseRay);
+
+        float distance = vHigh / angle;
+        Vector3 endPoint = MouseRay.GetPoint(distance);
+        m_Direction = endPoint - this.transform.position;
+        m_Direction.y = 0.0f;
+
+        if (m_Direction.magnitude < 0.1f) return;
+        m_Controller.transform.forward = m_Direction;
+
+        
     }
 
     private CharacterController m_Controller;
