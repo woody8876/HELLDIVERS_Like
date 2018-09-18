@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class AimLine : MonoBehaviour
 {
-    private Transform m_LineRenderTransform;
+    private GameObject m_GoLineRender;
+    private LineRenderer m_LineRender;
     private Transform m_Enitter;
-    private LineRenderer m_LineRenderer;
-    private GameObject m_LineRender;
     private int straightPosCount = 2;
     private int spinePosCount = 50;
 
     private void Start()
     {
-        m_LineRender =  Resources.Load("LineRender") as GameObject;
-        m_LineRender = Instantiate(m_LineRender, this.transform);
-        m_LineRenderer = m_LineRender.GetComponent<LineRenderer>();
+        m_GoLineRender =  Resources.Load("LineRender") as GameObject;
+        m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
+        m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
         
         SetAimLineInfo(true);
     }
@@ -45,29 +44,29 @@ public class AimLine : MonoBehaviour
     /// <param name="straight"></param>
     public void SetAimLineInfo(bool straight)
     {
-        m_LineRenderer.positionCount = straight ? straightPosCount : spinePosCount;
+        m_LineRender.positionCount = straight ? straightPosCount : spinePosCount;
     }
 
     private void OpenAimLine()
     {
         
-        m_LineRenderer.enabled = true;
+        m_LineRender.enabled = true;
         
         m_Enitter = transform.Find("Emitter");
 
         if (m_Enitter == null)
         {
             Debug.Log("Can't find the Emitter");
-            m_LineRenderer.SetPosition(0, new Vector3(0,0,0));
-            m_LineRenderer.SetPosition(1, (GetLastPosition()));
+            m_LineRender.SetPosition(0, new Vector3(0,0,0));
+            m_LineRender.SetPosition(1, (GetLastPosition()));
         }
-        if (m_LineRenderer.positionCount == straightPosCount)
+        if (m_LineRender.positionCount == straightPosCount)
         {
-            m_LineRenderer.SetPosition(0, m_Enitter.transform.localPosition);
-            m_LineRenderer.SetPosition(1, GetLastPosition());
+            m_LineRender.SetPosition(0, m_Enitter.transform.localPosition);
+            m_LineRender.SetPosition(1, GetLastPosition());
 
         }
-        else if (m_LineRenderer.positionCount == spinePosCount)
+        else if (m_LineRender.positionCount == spinePosCount)
         {
             Vector3 vPosition0 = m_Enitter.transform.localPosition;
             Vector3 vPosition1 = m_Enitter.transform.localPosition;
@@ -94,24 +93,36 @@ public class AimLine : MonoBehaviour
 
                 Vector3 finalPos = Vector3.Lerp(thirdPosLerp1, thirdPosLerp2, i / test);
 
-                m_LineRenderer.SetPosition(i, finalPos);
+                m_LineRender.SetPosition(i, finalPos);
             }
         }
     }
     private void CloseAimLine()
     {
-        m_LineRenderer.enabled = false;
+        m_LineRender.enabled = false;
     }
 
     private Vector3 GetLastPosition()
     {
-        if (m_LineRenderer.positionCount == straightPosCount)
+        if (m_LineRender.positionCount == straightPosCount)
         {
             return new Vector3(0, 0, 50);
         }
-        else if (m_LineRenderer.positionCount == spinePosCount)
+        else if (m_LineRender.positionCount == spinePosCount)
         {
-            return new Vector3(0, 0, 10);
+            float fHigh = Camera.main.transform.position.y - this.transform.position.y;
+
+            Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 vMouseRay = MouseRay.direction;
+            vMouseRay.Normalize();
+            float angle = Vector3.Dot(new Vector3(0, -1, 0), vMouseRay);
+
+            float distance = fHigh / angle;
+            Vector3 endPoint = MouseRay.GetPoint(distance);
+
+            Vector3 Distance = endPoint - this.transform.position;
+
+            return new Vector3(0, 0, Distance.magnitude);
         }
         return new Vector3(0, 0, 0);
     }

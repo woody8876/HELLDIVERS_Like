@@ -475,7 +475,13 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1735864854}
-    m_RemovedComponents: []
+    - target: {fileID: 114181899070800880, guid: bedf7ae5476be0f48b60749a6c765f0a,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114181899070800880, guid: bedf7ae5476be0f48b60749a6c765f0a, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: bedf7ae5476be0f48b60749a6c765f0a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1214425971
@@ -573,7 +579,6 @@ GameObject:
   - component: {fileID: 1373685132}
   - component: {fileID: 1373685131}
   - component: {fileID: 1373685130}
-  - component: {fileID: 1373685134}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -637,24 +642,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1373685129}
-  m_LocalRotation: {x: -0.5537156, y: -0.0010159491, z: 0.00067133835, w: -0.832705}
-  m_LocalPosition: {x: -4.3755507, y: 50.293777, z: -22.350658}
+  m_LocalRotation: {x: -0.46709365, y: 0.0039804736, z: -0.002102818, w: -0.88419646}
+  m_LocalPosition: {x: 17.75891, y: 42.80705, z: -9.33139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1373685134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1373685129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 997bb7ac06db2b84d8f3889f2916012d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &1735864854
 Mesh:
   m_ObjectHideFlags: 0
@@ -958,7 +952,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1940990619}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.84, y: 2.23, z: 4.38}
+  m_LocalPosition: {x: 17.03, y: 2.23, z: 9.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2126777912}
