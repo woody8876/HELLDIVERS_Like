@@ -19,6 +19,7 @@ public class Weapon_Rifle : Weapon, IWeaponBehaviour
             go.SetActive(true);
         }
         else { Debug.Log("There is no ammo."); }
+        
     }
     public void Reload()
     {
