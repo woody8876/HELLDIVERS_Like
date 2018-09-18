@@ -5,14 +5,21 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour {
 
     public Transform m_Player;
+    public float m_fPosX = 64.0f;
+    public float m_fPosY = 88.0f;
+    public float m_fPosZ = 56.5f;
+    public float m_fRotX = 45.0f;
+    public float m_fRotY = 48.0f;
+    public float m_fRotZ = 0.0f;
+
     Camera m_Cam;
     Ray m_rCam2Target; 
 // Use this for initialization
 void Start () {
         m_Cam = GetComponent<Camera>();
         m_Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        m_Cam.transform.position = new Vector3( m_Player.position.x - 64.0f, m_Player.position.y + 88.0f, m_Player.position.z - 56.5f);
-        m_Cam.transform.rotation = Quaternion.Euler(45, 48, 0);
+//        m_Cam.transform.position = new Vector3( m_Player.position.x - m_fPosX, m_Player.position.y + m_fPosY, m_Player.position.z - m_fPosZ);
+        m_Cam.transform.rotation = Quaternion.Euler(m_fRotX, m_fRotY, m_fRotZ);
         m_rCam2Target = new Ray(this.transform.position, this.transform.forward);
 
     }
@@ -20,7 +27,7 @@ void Start () {
 	// Update is called once per frame
 	void Update () {
         FollowTarget(m_Player);
-        StartCoroutine(CheckView());
+        //StartCoroutine(CheckView());
     }
 
     private void FollowTarget(Transform Target)
@@ -29,9 +36,9 @@ void Start () {
         float fMovingDis = (vCurCamPos - Target.position).magnitude;
         if (Mathf.Abs(fMovingDis ) > 5f)
         {
-            vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, Target.position.x - 64.0f, 10f * Time.deltaTime);
-            vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, Target.position.y + 88.0f, 10f * Time.deltaTime);
-            vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, Target.position.z - 56.5f, 10f * Time.deltaTime);
+            vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, Target.position.x - m_fPosX, 10f * Time.deltaTime);
+            vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, Target.position.y + m_fPosY, 10f * Time.deltaTime);
+            vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, Target.position.z - m_fPosZ, 10f * Time.deltaTime);
             m_Cam.transform.position = vCurCamPos;
         }
     }
