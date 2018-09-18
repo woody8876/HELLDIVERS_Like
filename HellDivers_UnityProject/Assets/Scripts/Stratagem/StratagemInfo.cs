@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class StratagemData
+public class StratagemInfo
 {
     public int id;
     public int rank;

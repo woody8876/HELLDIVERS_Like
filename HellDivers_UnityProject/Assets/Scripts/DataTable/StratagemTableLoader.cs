@@ -5,9 +5,11 @@ using UnityEngine;
 
 public static class StratagemDataLoader
 {
-    public static Dictionary<int, StratagemData> LoadData(string filePah)
+    public static string Path;
+
+    public static Dictionary<int, StratagemInfo> LoadData(string filePah)
     {
-        Dictionary<int, StratagemData> stratagemTable = new Dictionary<int, StratagemData>();
+        Dictionary<int, StratagemInfo> stratagemTable = new Dictionary<int, StratagemInfo>();
 
         if (_LoadDataBase(filePah, ref stratagemTable) == true)
         {
@@ -21,7 +23,7 @@ public static class StratagemDataLoader
         }
     }
 
-    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, StratagemData> table)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, StratagemInfo> table)
     {
         table.Clear();
 
@@ -33,7 +35,7 @@ public static class StratagemDataLoader
             {
                 string[] colum = line[i].Split(',');
 
-                StratagemData data = new StratagemData();
+                StratagemInfo data = new StratagemInfo();
                 data.id = int.Parse(colum[0]);
                 data.rank = int.Parse(colum[1]);
                 data.title = colum[2];
@@ -63,9 +65,9 @@ public static class StratagemDataLoader
         return codes;
     }
 
-    public static void Print(Dictionary<int, StratagemData> table)
+    public static void Print(Dictionary<int, StratagemInfo> table)
     {
-        foreach (KeyValuePair<int, StratagemData> d in table)
+        foreach (KeyValuePair<int, StratagemInfo> d in table)
         {
             string info = string.Format("Id:{0}, Titlle:{1}", d.Key, d.Value.title);
             Debug.Log(info);

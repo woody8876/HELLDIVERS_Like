@@ -1,14 +1,9 @@
-﻿///2018.09.02
-/// Ivan.C
-/// 
-/// Manage the Objects
-/// 
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool : MonoBehaviour {
-
+public class ObjectPool : MonoBehaviour
+{
     public class GameObjectData
     {
         public GameObject m_go;
@@ -28,7 +23,7 @@ public class ObjectPool : MonoBehaviour {
         }
         else
         {
-            DestroyImmediate(this.gameObject);
+            DestroyImmediate(this);
         }
     }
 
@@ -92,6 +87,5 @@ public class ObjectPool : MonoBehaviour {
                 break;
             }
         }
-
     }
 }

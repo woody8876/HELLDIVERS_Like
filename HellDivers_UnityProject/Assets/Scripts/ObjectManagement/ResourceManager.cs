@@ -1,9 +1,4 @@
-﻿///2018.09.02
-/// Ivan.C
-/// 
-/// Manage the resource loadinng from Asset
-/// 
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,12 +20,11 @@ public class ResourceManager
 
         if (o == null)
         {
-            string sFullPath = sPath + "/" + sName;            
-            o = Resources.Load(sFullPath);            
+            string sFullPath = sPath + "/" + sName;
+            o = Resources.Load(sFullPath);
         }
         AssetManager.m_Instance.AddAsset(t, sName, sPath, o);
         if (bInstatiate) { o = GameObject.Instantiate(o); }
         return o;
     }
-
 }

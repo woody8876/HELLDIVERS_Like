@@ -1,9 +1,4 @@
-﻿///2018.09.02
-/// Ivan.C
-///
-/// Manage the Asset data.
-///
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +33,7 @@ public class AssetManager
     /// <param name="o">asset </param>
     public void AddAsset(System.Type type, string sName, string sPath, Object o)
     {
-        List<AssetObject> pList= null;
+        List<AssetObject> pList = null;
         if (m_AssetMap.ContainsKey(type) == false)
         {
             pList = new List<AssetObject>();
@@ -100,5 +95,4 @@ public class AssetManager
         m_AssetMap.Clear();
         Resources.UnloadUnusedAssets();
     }
-
 }

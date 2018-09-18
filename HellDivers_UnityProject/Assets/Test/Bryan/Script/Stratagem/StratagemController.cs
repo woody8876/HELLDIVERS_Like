@@ -7,7 +7,7 @@ public class StratagemController : MonoBehaviour
     private PlayerInfo m_playerInfo;
     private Transform m_LaunchPos { get; set; }
     private GameObject m_Display = null;
-    [SerializeField] private StratagemData[] datas = new StratagemData[2];
+    [SerializeField] private StratagemInfo[] datas = new StratagemInfo[2];
 
     public bool SetStratageData(int[] dataKeys)
     {
@@ -45,7 +45,7 @@ public class StratagemController : MonoBehaviour
     {
         _Open.Clear();
 
-        foreach (StratagemData s in datas)
+        foreach (StratagemInfo s in datas)
         {
             if (s != null) _Open.Add(s);
         }
@@ -115,5 +115,5 @@ public class StratagemController : MonoBehaviour
         }
     }
 
-    private List<StratagemData> _Open = new List<StratagemData>();
+    private List<StratagemInfo> _Open = new List<StratagemInfo>();
 }

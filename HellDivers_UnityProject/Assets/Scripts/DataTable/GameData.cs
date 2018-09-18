@@ -13,9 +13,14 @@ public class GameData
 
     #region Tables
 
-    public Dictionary<int, StratagemData> StratagemTable;
+    public Dictionary<int, StratagemInfo> StratagemTable;
 
     #endregion Tables
+
+    public GameData()
+    {
+        StratagemTable = new Dictionary<int, StratagemInfo>();
+    }
 
     public void LoadGameData()
     {
