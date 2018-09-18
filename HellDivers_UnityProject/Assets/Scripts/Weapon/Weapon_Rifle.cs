@@ -20,7 +20,7 @@ public class Weapon_Rifle : Weapon, IWeaponBehaviour
         }
         else { Debug.Log("There is no ammo."); }
     }
-    public void Refill()
+    public void Reload()
     {
     }
 }

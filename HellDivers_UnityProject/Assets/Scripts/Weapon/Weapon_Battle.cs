@@ -38,7 +38,7 @@ public class Weapon_Battle : MonoBehaviour
 
     private void Update()
     {
-        Refilled();
+        Reloaded();
         Shoot();
         SwitchWeapon();
     }
@@ -61,18 +61,18 @@ public class Weapon_Battle : MonoBehaviour
     }
 
     /// <summary>
-    /// Refill the weapon which being used.
+    /// Reload the weapon which being used.
     /// </summary>
-    private void Refilled()
+    private void Reloaded()
     {
-        if (Input.GetButtonDown("Refill")) {
+        if (Input.GetButtonDown("Reload")) {
             StopCoroutine(m_cCoolDown);
-            m_cCoolDown = StartCoroutine(WaitRefilling()); }
+            m_cCoolDown = StartCoroutine(WaitReloading()); }
     }
-    IEnumerator WaitRefilling()
+    IEnumerator WaitReloading()
     {
-        weaponBehaviours[m_WeaponNum].Refill();
-        yield return new WaitForSeconds(weaponData[m_WeaponNum].m_fRefillTime);
+        weaponBehaviours[m_WeaponNum].Reload();
+        yield return new WaitForSeconds(weaponData[m_WeaponNum].m_fReloadTime);
         m_cCoolDown = null;
     }
 
