@@ -19,12 +19,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4334912711527064}
-  - component: {fileID: 143327629899615318}
-  - component: {fileID: 114798956299543086}
-  - component: {fileID: 114134152183168754}
+  - component: {fileID: 143514169937041076}
+  - component: {fileID: 114560787623236270}
+  - component: {fileID: 114824390044863622}
   m_Layer: 0
   m_Name: TestPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,13 +36,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1365564149540886}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 5.76, y: 4.27, z: -3.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114134152183168754
+--- !u!114 &114560787623236270
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -50,11 +50,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1365564149540886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38bb37e1d38aaa4791bb2e5805df6dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 348f6d0dd1b458041865eef22500cdd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Speed: 5
---- !u!114 &114798956299543086
+--- !u!114 &114824390044863622
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -67,11 +67,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Info:
     Rank: 0
-    Hp: 0
-    DisplayID: 
+    Hp: 100
+    DisplayID: ch01
     WeaponId: 
     StratagemId: 
---- !u!143 &143327629899615318
+--- !u!143 &143514169937041076
 CharacterController:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
