@@ -56,7 +56,7 @@ public class Weapon_Battle : MonoBehaviour
     IEnumerator WaitCooling()
     {
         weaponBehaviours[m_WeaponNum].Shot(m_tGunPos.position, m_tGunPos.forward);
-        yield return new WaitForSeconds(weaponData[m_WeaponNum].m_fCoolTime);
+        yield return new WaitForSeconds(weaponData[m_WeaponNum].FireRate);
         m_cCoolDown = null;
         yield break;
     }
@@ -111,11 +111,11 @@ public class Weapon_Battle : MonoBehaviour
         string m_sFirstWeapon = "Bullet_" + type.ToString();
         Object m_FirstWeapon = rm.LoadData(typeof(GameObject), "Prefabs", m_sFirstWeapon, false);
 
-        ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.m_iAmmo, (int)type + 100);
+        ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.Magazine, (int)type + 100);
         if (ObjectPool.m_Instance == null)
         {
             ObjectPool OP = GetComponent<ObjectPool>();
-            OP.InitGameObjects(m_FirstWeapon, weaponData.m_iAmmo, (int)type + 100);
+            OP.InitGameObjects(m_FirstWeapon, weaponData.Magazine, (int)type + 100);
         }
     }
 

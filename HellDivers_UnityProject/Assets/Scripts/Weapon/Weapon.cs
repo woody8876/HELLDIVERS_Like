@@ -9,13 +9,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Weapon  {
+public class Weapon : IWeaponBehaviour{
 
-    public int m_iAmmo;
-    public float m_fDamage;
-    public float m_fCoolTime;
-    public float m_fReloadTime;
+    public float Power { set; get; }
+    public float FireRate { set; get; }
+    public float Stability { set; get; }
+    public int Magazine { set; get; }
+    public float Range { set; get; }
+    public float ReloadTime { set; get; }
 
-    public List<GameObject> m_Weapon_CurrentActives = new List<GameObject>();
+    List<GameObject> _currentActive = new List<GameObject>();
+    public List<GameObject> m_Weapon_CurrentActives
+    {
+        set { _currentActive = value; }
+        get { return _currentActive; }
+    }
+
+    public virtual void Shot(Vector3 pos, Vector3 vec) { }
+    public virtual void Reload() { }
+
 
 }

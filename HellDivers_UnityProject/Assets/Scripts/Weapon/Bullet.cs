@@ -14,10 +14,12 @@ public class Bullet : MonoBehaviour {
     //Bullet's speed
     private float m_fSpeed = 100;
 
-    Weapon m_weapon;
- //========================================================================
+    WeaponFactory m_weaponFactory = new WeaponFactory();
+    IWeaponBehaviour weaponBehaviours;
+
+    //========================================================================
     void Start () {
-        m_weapon = new Weapon();
+        weaponBehaviours = m_weaponFactory.CreateWeapon(m_Type);
     }
 
     // Update is called once per frame
@@ -34,10 +36,10 @@ public class Bullet : MonoBehaviour {
     {
 
         this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
-        m_weapon.m_Weapon_CurrentActives.Add(this.gameObject);
+        weaponBehaviours.m_Weapon_CurrentActives.Add(this.gameObject);
         yield return new WaitForSeconds(1);
-        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, m_weapon.m_Weapon_CurrentActives[0]);
-        m_weapon.m_Weapon_CurrentActives.RemoveAt(0);
+        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, weaponBehaviours.m_Weapon_CurrentActives[0]);
+        weaponBehaviours.m_Weapon_CurrentActives.RemoveAt(0);
         this.gameObject.SetActive(false);
 
     }

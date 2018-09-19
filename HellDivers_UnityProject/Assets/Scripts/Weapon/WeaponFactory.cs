@@ -19,6 +19,13 @@ public enum eWeaponType { FirstOne = -1,
 
 public interface IWeaponBehaviour
 {
+    float Power { set; get; }
+    float FireRate { set; get; }
+    float Stability { set; get; }
+    int Magazine { set; get; }
+    float Range { set; get; }
+    float ReloadTime { set; get; }
+    List<GameObject> m_Weapon_CurrentActives { set; get; }
     void Shot(Vector3 pos, Vector3 vec);
     void Reload();
 }

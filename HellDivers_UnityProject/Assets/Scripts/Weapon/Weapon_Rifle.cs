@@ -7,9 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Rifle : Weapon, IWeaponBehaviour
+public class Weapon_Rifle : Weapon
 {
-    public void Shot(Vector3 pos, Vector3 vec)
+
+    public override void Shot(Vector3 pos, Vector3 vec)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)eWeaponType.Rifle + 100);
         if (go != null)
@@ -21,7 +22,7 @@ public class Weapon_Rifle : Weapon, IWeaponBehaviour
         else { Debug.Log("There is no ammo."); }
         
     }
-    public void Reload()
+    public override void Reload()
     {
     }
 }
