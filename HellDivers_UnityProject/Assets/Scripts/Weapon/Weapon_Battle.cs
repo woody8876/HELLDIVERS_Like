@@ -24,9 +24,10 @@ public class Weapon_Battle : MonoBehaviour
     Coroutine m_cCoolDown;
     //==================================================================================================
     // Use this for initialization
+
     private void Start()
     {
-        m_tGunPos = GameObject.FindGameObjectWithTag("Gun").GetComponent<Transform>();
+        m_tGunPos = GameObject.Find("LaunchPoint").GetComponent<Transform>();
         for (int i = 0; i < EWeapon.Count; i++)
         {
             WeaponLoader(EWeapon[i], weaponData[i]);
@@ -84,7 +85,7 @@ public class Weapon_Battle : MonoBehaviour
         if (Input.GetButtonDown("WeaponSwitch"))
         {
             if (m_WeaponNum == EWeapon.Count - 1) { m_WeaponNum = 0; }
-            else if (m_WeaponNum >= 0 || m_WeaponNum < EWeapon.Count) { m_WeaponNum++; }
+            else if (m_WeaponNum >= 0 || m_WeaponNum < EWeapon.Count - 1) { m_WeaponNum++; }
             else
             {
                 Debug.Log("Weapon's number is out of range");
@@ -110,11 +111,10 @@ public class Weapon_Battle : MonoBehaviour
         string m_sFirstWeapon = "Bullet_" + type.ToString();
         Object m_FirstWeapon = rm.LoadData(typeof(GameObject), "Prefabs", m_sFirstWeapon, false);
 
-        if (ObjectPool.m_Instance != null)
-            ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.m_iAmmo, (int)type + 100);
-        else
+        ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.m_iAmmo, (int)type + 100);
+        if (ObjectPool.m_Instance == null)
         {
-            ObjectPool OP = new ObjectPool();
+            ObjectPool OP = GetComponent<ObjectPool>();
             OP.InitGameObjects(m_FirstWeapon, weaponData.m_iAmmo, (int)type + 100);
         }
     }
