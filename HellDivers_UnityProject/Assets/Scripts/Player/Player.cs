@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[RequireComponent(typeof(Weapon_Battle))]
-[RequireComponent(typeof(StratagemController))]
+//[RequireComponent(typeof(StratagemController))]
 [RequireComponent(typeof(PlayerController))]
 public class Player : MonoBehaviour
 {
