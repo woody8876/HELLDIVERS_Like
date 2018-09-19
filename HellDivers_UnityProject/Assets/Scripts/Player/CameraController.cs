@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour {
-
-    Transform m_Player;
+public class CameraController : MonoBehaviour
+{
+    public Transform m_Player;
     public float m_fPosX = 64.0f;
     public float m_fPosY = 88.0f;
     public float m_fPosZ = 56.5f;
@@ -12,17 +12,20 @@ public class CameraController : MonoBehaviour {
     public float m_fRotY = 48.0f;
     public float m_fRotZ = 0.0f;
 
-    Camera m_Cam;
-// Use this for initialization
-void Start () {
+    private Camera m_Cam;
+
+    // Use this for initialization
+    private void Start()
+    {
         m_Cam = GetComponent<Camera>();
         m_Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         m_Cam.transform.rotation = Quaternion.Euler(m_fRotX, m_fRotY, m_fRotZ);
         m_Cam.fieldOfView = 15f;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    private void Update()
+    {
         FollowTarget(m_Player);
         StartCoroutine(CheckView());
     }
@@ -36,7 +39,7 @@ void Start () {
         m_Cam.transform.position = vCurCamPos;
     }
 
-    IEnumerator CheckView()
+    private IEnumerator CheckView()
     {
         yield return new WaitForSeconds(0.5f);
         if (Physics.Raycast(this.transform.position, m_Player.position - this.transform.position, 1000f, 1 << LayerMask.NameToLayer("Water")))
@@ -51,12 +54,13 @@ void Start () {
         else
         {
             Collider[] AroundWall = Physics.OverlapSphere(m_Player.position, 20f, 1 << LayerMask.NameToLayer("Water"));
-            foreach(Collider c in AroundWall)
+            foreach (Collider c in AroundWall)
             {
                 c.gameObject.GetComponent<Renderer>().enabled = true;
             }
         }
     }
+
     //private void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.red;
