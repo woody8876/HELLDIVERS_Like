@@ -13,11 +13,10 @@ public class Weapon_Battle : MonoBehaviour
     //The serial number of the play's equipment
     [SerializeField] int m_WeaponNum = 0;
 
-    public Weapon[] weaponData;
+    int[] m_Ammo;
 
     //Weapons' types and numbers of the player equipment.
     [SerializeField] List<eWeaponType> EWeapon;
-
     WeaponFactory m_weaponFactory = new WeaponFactory();
     List<IWeaponBehaviour> weaponBehaviours = new List<IWeaponBehaviour>();
     Transform m_tGunPos;
@@ -30,8 +29,9 @@ public class Weapon_Battle : MonoBehaviour
         m_tGunPos = GameObject.Find("LaunchPoint").GetComponent<Transform>();
         for (int i = 0; i < EWeapon.Count; i++)
         {
-            WeaponLoader(EWeapon[i], weaponData[i]);
             weaponBehaviours.Add(m_weaponFactory.CreateWeapon(EWeapon[i]));
+            WeaponLoader(EWeapon[i], weaponBehaviours[i]);
+            m_Ammo[i] = weaponBehaviours[i].Capacity;
         }
         Debug.Log(weaponBehaviours[0]);
         Debug.Log(weaponBehaviours[1]);
@@ -56,7 +56,7 @@ public class Weapon_Battle : MonoBehaviour
     IEnumerator WaitCooling()
     {
         weaponBehaviours[m_WeaponNum].Shot(m_tGunPos.position, m_tGunPos.forward);
-        yield return new WaitForSeconds(weaponData[m_WeaponNum].FireRate);
+        yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].FireRate);
         m_cCoolDown = null;
         yield break;
     }
@@ -73,8 +73,12 @@ public class Weapon_Battle : MonoBehaviour
     IEnumerator WaitReloading()
     {
         weaponBehaviours[m_WeaponNum].Reload();
-        yield return new WaitForSeconds(weaponData[m_WeaponNum].m_fReloadTime);
+        if (m_Ammo[m_WeaponNum] == 0)
+        {
+            yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].Empty_Reload_Speed);
+        }
         m_cCoolDown = null;
+
     }
 
     /// <summary>
@@ -101,7 +105,7 @@ public class Weapon_Battle : MonoBehaviour
     /// </summary>
     /// <param name="type">Weapon type</param>
     /// <param name="weaponData">Data in calss "Weapon".</param>
-    public void WeaponLoader(eWeaponType type, Weapon weaponData)
+    public void WeaponLoader(eWeaponType type, IWeaponBehaviour weaponData)
     {
         AssetManager AssetManager = new AssetManager();
         AssetManager.Init();
@@ -111,11 +115,11 @@ public class Weapon_Battle : MonoBehaviour
         string m_sFirstWeapon = "Bullet_" + type.ToString();
         Object m_FirstWeapon = rm.LoadData(typeof(GameObject), "Prefabs", m_sFirstWeapon, false);
 
-        ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.Magazine, (int)type + 100);
+        ObjectPool.m_Instance.InitGameObjects(m_FirstWeapon, weaponData.Capacity, (int)type + 100);
         if (ObjectPool.m_Instance == null)
         {
             ObjectPool OP = GetComponent<ObjectPool>();
-            OP.InitGameObjects(m_FirstWeapon, weaponData.Magazine, (int)type + 100);
+            OP.InitGameObjects(m_FirstWeapon, weaponData.Capacity, (int)type + 100);
         }
     }
 
