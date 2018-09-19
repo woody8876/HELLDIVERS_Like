@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Weapon_Battle))]
+//[RequireComponent(typeof(Weapon_Battle))]
 [RequireComponent(typeof(StratagemController))]
 [RequireComponent(typeof(PlayerControl))]
 public class Player : MonoBehaviour
