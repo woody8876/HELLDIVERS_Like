@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerControl : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public float Speed { get { return m_Speed; } set { m_Speed = value; } }
 

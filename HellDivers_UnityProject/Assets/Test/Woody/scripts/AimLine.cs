@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class AimLine : MonoBehaviour
 {
+    #region private variable
     private GameObject m_GoLineRender;
     private LineRenderer m_LineRender;
     private Transform m_Enitter;
     private int straightPosCount = 2;
     private int spinePosCount = 50;
-
+    #endregion
+    
     private void Start()
     {
         m_GoLineRender =  Resources.Load("LineRender") as GameObject;
