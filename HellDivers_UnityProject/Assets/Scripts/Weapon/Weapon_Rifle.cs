@@ -18,11 +18,13 @@ public class Weapon_Rifle : Weapon
             go.transform.position = pos;
             go.transform.forward = vec;
             go.SetActive(true);
+            _iAmmo--;
         }
         else { Debug.Log("There is no ammo."); }
         
     }
     public override void Reload()
     {
+        _iAmmo = Capacity;
     }
 }

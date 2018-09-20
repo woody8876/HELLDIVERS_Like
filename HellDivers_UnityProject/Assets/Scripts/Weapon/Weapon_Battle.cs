@@ -13,7 +13,7 @@ public class Weapon_Battle : MonoBehaviour
     //The serial number of the play's equipment
     [SerializeField] int m_WeaponNum = 0;
 
-    int[] m_Ammo;
+    int[] m_Mags;
 
     //Weapons' types and numbers of the player equipment.
     [SerializeField] List<eWeaponType> EWeapon;
@@ -31,7 +31,7 @@ public class Weapon_Battle : MonoBehaviour
         {
             weaponBehaviours.Add(m_weaponFactory.CreateWeapon(EWeapon[i]));
             WeaponLoader(EWeapon[i], weaponBehaviours[i]);
-            m_Ammo[i] = weaponBehaviours[i].Capacity;
+            m_Mags[i] = weaponBehaviours[i].Start_Mags;
         }
         Debug.Log(weaponBehaviours[0]);
         Debug.Log(weaponBehaviours[1]);
@@ -55,6 +55,7 @@ public class Weapon_Battle : MonoBehaviour
     }
     IEnumerator WaitCooling()
     {
+        if (weaponBehaviours[m_WeaponNum].Ammo <= 0) { yield break; }
         weaponBehaviours[m_WeaponNum].Shot(m_tGunPos.position, m_tGunPos.forward);
         yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].FireRate);
         m_cCoolDown = null;
@@ -69,14 +70,15 @@ public class Weapon_Battle : MonoBehaviour
         if (Input.GetButtonDown("Reload")) {
             StopCoroutine(m_cCoolDown);
             m_cCoolDown = StartCoroutine(WaitReloading()); }
+        
     }
     IEnumerator WaitReloading()
     {
+        if (weaponBehaviours[m_WeaponNum].Ammo == weaponBehaviours[m_WeaponNum].Capacity) { yield break; }
+        else if (weaponBehaviours[m_WeaponNum].Ammo == 0) { yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].Empty_Reload_Speed); }
+        else if (weaponBehaviours[m_WeaponNum].Ammo > 0) { yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].Tactical_Reload_Speed); }
         weaponBehaviours[m_WeaponNum].Reload();
-        if (m_Ammo[m_WeaponNum] == 0)
-        {
-            yield return new WaitForSeconds(weaponBehaviours[m_WeaponNum].Empty_Reload_Speed);
-        }
+
         m_cCoolDown = null;
 
     }
@@ -96,6 +98,14 @@ public class Weapon_Battle : MonoBehaviour
                 m_WeaponNum = 0;
             }
             Debug.Log(m_WeaponNum);
+        }
+    }
+
+    private void PickUpMgas(GameObject item)
+    {
+        if (Input.GetButtonDown("Pick"))
+        {
+
         }
     }
 

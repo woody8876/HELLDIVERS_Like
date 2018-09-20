@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964127, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -123,9 +123,9 @@ GameObject:
   m_Component:
   - component: {fileID: 223108242}
   m_Layer: 0
-  m_Name: BulletPos
-  m_TagString: Gun
-  m_Icon: {fileID: 0}
+  m_Name: LaunchPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 223108241}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1534823436}
@@ -521,18 +521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_WeaponNum: 0
-  weaponData:
-  - m_iAmmo: 3
-    m_fDamage: 10
-    m_fCoolTime: 1
-    m_fRefillTime: 1
-    m_Weapon_CurrentActives: []
-  - m_iAmmo: 20
-    m_fDamage: 20
-    m_fCoolTime: 1
-    m_fRefillTime: 5
-    m_Weapon_CurrentActives: []
-  EWeapon: 0000000002000000
+  EWeapon: 01000000
 --- !u!1 &1578360255
 GameObject:
   m_ObjectHideFlags: 0

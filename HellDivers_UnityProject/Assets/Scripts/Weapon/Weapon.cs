@@ -35,6 +35,12 @@ public class Weapon : IWeaponBehaviour{
         get { return _currentActive; }
     }
 
+    protected int _iAmmo;
+    public int Ammo {
+        set {_iAmmo = Capacity ;} 
+        get { return _iAmmo; } }
+    
+    
     #region Behaviours
     public virtual void Shot(Vector3 pos, Vector3 vec) { }
     public virtual void Reload() { }

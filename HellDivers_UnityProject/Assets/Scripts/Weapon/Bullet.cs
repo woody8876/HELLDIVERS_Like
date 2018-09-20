@@ -10,7 +10,6 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
     [SerializeField] private eWeaponType m_Type;
-//    [SerializeField] private data
     //Bullet's speed
     private float m_fSpeed = 100;
 
@@ -34,14 +33,12 @@ public class Bullet : MonoBehaviour {
 
     IEnumerator BulletDeath()
     {
-
         this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
         weaponBehaviours.m_Weapon_CurrentActives.Add(this.gameObject);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(weaponBehaviours.RANGE/100);
         ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, weaponBehaviours.m_Weapon_CurrentActives[0]);
         weaponBehaviours.m_Weapon_CurrentActives.RemoveAt(0);
         this.gameObject.SetActive(false);
-
     }
 
 

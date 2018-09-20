@@ -28,6 +28,7 @@ public interface IWeaponBehaviour
     float Explosion_Damage { set; get; }
     float FireRate { set; get; }
     int Capacity { set; get; }
+    int Ammo { set; get; }
     int Start_Mags { set; get; }
     int Max_Mags { set; get; }
     float Empty_Reload_Speed { set; get; }
