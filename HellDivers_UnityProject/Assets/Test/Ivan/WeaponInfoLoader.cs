@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class WeaponInfoLoader  {
 
-	
-
-
-
-
+    public static Dictionary<int, Weapon> LoadData(string filePath)
+    {
+        Dictionary<int, Weapon> weaponInfo = new Dictionary<int, Weapon>();
+        if (_LoadDataBase(filePath, ref weaponInfo) == true)
+        {
+            Debug.Log("WeaponInfo has been load.");
+            return weaponInfo;
+        }
+        else
+        {
+            Debug.Log("WeaponInfo load failed.");
+            return null;
+        }
+    }
 
     private static bool _LoadDataBase(string tablePsth, ref Dictionary<int, Weapon> Info)
     {
-
+        Info.Clear();
         TextAsset datas = Resources.Load<TextAsset>(tablePsth);
         if (datas != null)
         {
