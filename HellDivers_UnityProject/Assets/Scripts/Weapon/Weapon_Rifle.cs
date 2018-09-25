@@ -10,13 +10,16 @@ using UnityEngine;
 public class Weapon_Rifle : Weapon
 {
 
-    public override void Shot(Vector3 pos, Vector3 vec)
+    public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot)
     {
+        float fCurSpread = Min_Spread + fSpreadperShot;
+        if (fCurSpread > Max_Spread) fCurSpread = Max_Spread;
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)eWeaponType.Assault_Rifles + 100);
         if (go != null)
         {
             go.transform.position = pos;
             go.transform.forward = vec;
+            go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             _iAmmo--;
         }

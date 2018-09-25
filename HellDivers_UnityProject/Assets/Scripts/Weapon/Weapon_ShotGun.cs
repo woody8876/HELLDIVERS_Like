@@ -9,7 +9,8 @@ using UnityEngine;
 
 public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 {
-    public override void Shot(Vector3 pos, Vector3 vec)
+
+    public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot)
     {
         for (int i = 0; i < 10; i++)
         {

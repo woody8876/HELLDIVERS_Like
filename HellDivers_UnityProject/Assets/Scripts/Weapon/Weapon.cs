@@ -10,6 +10,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class Weapon : IWeaponBehaviour{
+    
     #region WeaponInfo
     public float Damage { set; get; }
     public float Center_Damage { set; get; }
@@ -36,13 +37,21 @@ public class Weapon : IWeaponBehaviour{
     }
 
     protected int _iAmmo;
-    public int Ammo {
+    public int Ammo
+    {
         set {_iAmmo = Capacity ;} 
-        get { return _iAmmo; } }
-    
-    
+        get { return _iAmmo; }
+    }
+    protected float _fSpread;
+    public float Spread
+    {
+        set { _fSpread = Min_Spread; }
+        get { return _fSpread; }
+    }
+
+
     #region Behaviours
-    public virtual void Shot(Vector3 pos, Vector3 vec) { }
+    public virtual void Shot(Vector3 pos, Vector3 vec, float spread) { }
     public virtual void Reload() { }
     #endregion
 

@@ -19,14 +19,14 @@ public class WeaponInfoLoader  {
         }
     }
 
-    private static bool _LoadDataBase(string tablePsth, ref Dictionary<int, Weapon> Info)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, Weapon> Info)
     {
         Info.Clear();
-        TextAsset datas = Resources.Load<TextAsset>(tablePsth);
+        TextAsset datas = Resources.Load<TextAsset>(tablePath);
         if (datas != null)
         {
             string[] lines = datas.text.Split('\n');
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 1; i < lines.Length - 1; i++)
             {
                 string[] weaponInfo = lines[i].Split(',');
                 int index;
