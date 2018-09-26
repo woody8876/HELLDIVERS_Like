@@ -6,8 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private PlayerInfo m_Info;
-    public PlayerInfo Info { get { return m_Info; } }
+    public PlayerInfo Info { get; set; }
     public PlayerParts Parts { get; set; }
     public GameObject Display { get; private set; }
     public Animator Anima { get; private set; }
@@ -27,6 +26,14 @@ public class Player : MonoBehaviour
             Anima = Display.GetComponent<Animator>();
             Parts = Display.GetComponent<PlayerParts>();
             m_AnimationController = this.gameObject.AddComponent<PlayerAnimationsContorller>();
+        }
+
+        if (Info.WeaponId.Count > 0)
+        {
+        }
+
+        if (Info.StratagemId.Count > 0)
+        {
         }
     }
 
