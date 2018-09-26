@@ -22,6 +22,9 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        GameObject playerGo = new GameObject();
+        playerGo.name = "Player";
+        playerGo.AddComponent<Player>();
     }
 
     // Update is called once per frame

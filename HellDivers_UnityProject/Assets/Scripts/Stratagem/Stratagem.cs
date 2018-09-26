@@ -101,7 +101,7 @@ public class Stratagem : MonoBehaviour
     private void Start()
     {
         m_Player = this.GetComponent<Player>();
-        m_LaunchPos = (m_Player == null) ? this.transform : m_Player.Parts.LaunchPoint;
+        m_LaunchPos = (m_Player == null) ? this.transform : m_Player.Parts.RightHand;
 
         _InitByDefaultSetting();
 
