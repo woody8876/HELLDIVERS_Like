@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964127, b: 0.57481724, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 223108241}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00008, y: 0.12828, z: 0.2996}
+  m_LocalPosition: {x: -0.00007998945, y: 0.12828001, z: 0.2996001}
   m_LocalScale: {x: 0.2000001, y: 0.2, z: 0.2000001}
   m_Children:
   - {fileID: 612297605}
@@ -156,13 +156,26 @@ GameObject:
   - component: {fileID: 502203071}
   - component: {fileID: 502203070}
   - component: {fileID: 502203069}
-  m_Layer: 0
+  - component: {fileID: 502203068}
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &502203068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 502203067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcae0f0474e954145a828bfefa26ae1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_iHP: 1000
 --- !u!54 &502203069
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -238,8 +251,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 502203067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.49, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 23, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -392,6 +405,10 @@ Prefab:
     - target: {fileID: 400008, guid: 7a741cf3d8ef07946a696aad38704d9c, type: 3}
       propertyPath: m_LocalScale.z
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400018, guid: 7a741cf3d8ef07946a696aad38704d9c, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a741cf3d8ef07946a696aad38704d9c, type: 3}
@@ -626,7 +643,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90770a5a6e995f54e9cfaf0627c31ed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EWeapon: 01000000
 --- !u!1 &1578360255
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,16 +20,18 @@ public class Weapon_Battle : MonoBehaviour
     public Dictionary < eWeaponType,IWeaponBehaviour> weaponBehaviours = new Dictionary<eWeaponType, IWeaponBehaviour>();
 
     #region Private member
-    [SerializeField]
-    private List<eWeaponType> EWeapon;
+    private List<eWeaponType> EWeapon = new List<eWeaponType>();
     private List<int> m_CurMags = new List<int>();
     private WeaponFactory m_weaponFactory = new WeaponFactory();
+    private Player m_playerInfo;
     private delegate void ActiveState();
     private ActiveState m_ActiveState;
+    private GameObject m_Effect;
     private Animator m_effect;
     private Transform m_tGunPos;
     private Coroutine m_cCoolDown;
     private int m_WeaponNum = 0;
+    private float m_fDamage;
     private float m_fSpreadIncrease;
     private bool m_bAutoFire = true;
     #endregion
@@ -37,9 +39,18 @@ public class Weapon_Battle : MonoBehaviour
     private void Start()
     {
         m_Instance = this;
-        m_effect = GameObject.Find("Gun_Effect").GetComponent<Animator>();
         m_tGunPos = GameObject.Find("LaunchPoint").GetComponent<Transform>();
+        m_playerInfo = GetComponent<Player>();
         m_ActiveState = IdleState;
+        if (m_playerInfo.Info.WeaponId.Length > 0)
+        {
+            for (int i = 0; i < m_playerInfo.Info.WeaponId.Length; i++)
+            {
+                Debug.Log((eWeaponType)m_playerInfo.Info.WeaponId[i]);
+                EWeapon.Add((eWeaponType)m_playerInfo.Info.WeaponId[i]);
+                Debug.Log((eWeaponType)m_playerInfo.Info.WeaponId[i]);
+            }
+        }
         for (int i = 0; i < EWeapon.Count; i++)
         {
             //Create weapon and add it into list
@@ -48,6 +59,7 @@ public class Weapon_Battle : MonoBehaviour
             WeaponLoader(EWeapon[i], weaponBehaviours[EWeapon[i]]);
             //Initial mags
             m_CurMags.Add(weaponBehaviours[EWeapon[i]].Start_Mags);
+            m_effect = m_Effect.GetComponent<Animator>();
             Debug.Log(m_CurMags[i]);
             Debug.Log(weaponBehaviours[EWeapon[i]]);
         }
@@ -92,9 +104,10 @@ public class Weapon_Battle : MonoBehaviour
     }
     IEnumerator WaitCooling()
     {
+        m_Effect.transform.position = m_tGunPos.position;
         m_effect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
-        weaponBehaviours[EWeapon[m_WeaponNum]].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease);
+        weaponBehaviours[EWeapon[m_WeaponNum]].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease,ref m_fDamage);
         Debug.Log(m_fSpreadIncrease);
         yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].FireRate);
         Debug.Log("Shot");
@@ -161,7 +174,9 @@ public class Weapon_Battle : MonoBehaviour
         rm.Init();
 
         string m_sWeapon = "Bullet_" + type.ToString();
+        string m_sEffect = "Effect_" + type.ToString();
         Object m_Weapon = rm.LoadData(typeof(GameObject), "Prefabs", m_sWeapon, false);
+        m_Effect = rm.LoadData(typeof(GameObject), "Prefabs", m_sEffect, true) as GameObject;
 
         ObjectPool.m_Instance.InitGameObjects(m_Weapon, weaponData.Capacity, (int)type + 100);
         if (ObjectPool.m_Instance == null)
@@ -170,7 +185,6 @@ public class Weapon_Battle : MonoBehaviour
             OP.InitGameObjects(m_Weapon, weaponData.Capacity, (int)type + 100);
         }
     }
-
     /// <summary>
     /// For player equip weapons 
     /// </summary>
@@ -182,13 +196,4 @@ public class Weapon_Battle : MonoBehaviour
         return weaponBehaviour;
     }
 
-
-
-
-
-
 }
-
-
-
-

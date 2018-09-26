@@ -39,7 +39,7 @@ public interface IWeaponBehaviour
     float RANGE { set; get; }
     float FireMode { set; get; }
     List<GameObject> m_Weapon_CurrentActives { set; get; }
-    void Shot(Vector3 pos, Vector3 vec, float spread);
+    void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
     void Reload();
 }
 
@@ -80,7 +80,8 @@ public class WeaponFactory {
 
         Vector3 pos = Vector3.zero;
         Vector3 vec = Vector3.forward;
-        weaponBehaviour.Shot( pos, vec, 0f);
+        float damage = 0f;
+        weaponBehaviour.Shot( pos, vec, 0f, ref damage);
         weaponBehaviour.Reload();
         return weaponBehaviour;
     }

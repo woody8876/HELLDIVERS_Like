@@ -13,9 +13,7 @@ public class Bullet : MonoBehaviour {
     
     //Bullet's speed
     private float m_fSpeed = 100;
-
     Renderer m_bullet;
-
     //========================================================================
     void Start () {
         m_bullet = this.gameObject.GetComponent<Renderer>();
@@ -28,7 +26,7 @@ public class Bullet : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        m_bullet.enabled = false;
+        //m_bullet.enabled = false;
     }
 
     IEnumerator BulletDeath()

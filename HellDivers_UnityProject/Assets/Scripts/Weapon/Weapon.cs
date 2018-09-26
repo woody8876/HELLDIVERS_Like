@@ -28,14 +28,13 @@ public class Weapon : IWeaponBehaviour{
     public float FireMode { set; get; }
     #endregion
 
-
+    #region Bullet status
     List<GameObject> _currentActive = new List<GameObject>();
     public List<GameObject> m_Weapon_CurrentActives
     {
         set { _currentActive = value; }
         get { return _currentActive; }
     }
-
     protected int _iAmmo;
     public int Ammo
     {
@@ -48,13 +47,22 @@ public class Weapon : IWeaponBehaviour{
         set { _fSpread = Min_Spread; }
         get { return _fSpread; }
     }
-
+    #endregion
 
     #region Behaviours
-    public virtual void Shot(Vector3 pos, Vector3 vec, float spread) { }
+    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) {  }
     public virtual void Reload() { }
     #endregion
 
-
+    protected bool CheckHit(Vector3 pos, Vector3 vec)
+    {
+        RaycastHit raycastHit;
+        if (Physics.Raycast(pos, vec, out raycastHit, RANGE, 1 << LayerMask.NameToLayer("Enemy")))
+        {
+            Debug.Log("Hit");
+            return true;
+        }
+        return false;
+    }
 
 }
