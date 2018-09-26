@@ -14,6 +14,8 @@ public enum StratagemCode
 
 public class Stratagem : MonoBehaviour
 {
+    public string ID { get; set; }
+
     private Player m_Player;
     private Transform m_LaunchPos;
     private StratagemInfo m_Info;
