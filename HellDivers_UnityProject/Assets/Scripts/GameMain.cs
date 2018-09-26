@@ -7,8 +7,8 @@ public class GameMain : MonoBehaviour
 #pragma warning disable
     private AssetManager assetManager = new AssetManager();
     private ResourceManager resourceManager = new ResourceManager();
-    private ObjectPool objectPool;
     private GameData gameData = new GameData();
+    private ObjectPool objectPool;
 #pragma warning disable
 
     private void Awake()
