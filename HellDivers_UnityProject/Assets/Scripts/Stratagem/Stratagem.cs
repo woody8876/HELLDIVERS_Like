@@ -42,7 +42,7 @@ public class Stratagem : MonoBehaviour
     /// <summary>
     /// Initialize by using stratagem data which in the stratagem table.
     /// </summary>
-    public void Init(string Id)
+    public void Init(int Id)
     {
         StratagemInfo newInfo;
 

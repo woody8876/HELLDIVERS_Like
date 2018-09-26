@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class StratagemInfo
 {
-    public string id;
+    public int id;
     public int rank;
     public string title;
     public StratagemType type;

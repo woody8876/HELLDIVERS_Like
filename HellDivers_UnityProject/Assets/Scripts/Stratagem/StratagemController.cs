@@ -9,6 +9,8 @@ public class StratagemController : MonoBehaviour
     private GameObject m_Display = null;
     [SerializeField] private StratagemInfo[] datas = new StratagemInfo[2];
 
+    private List<Stratagem> m_Stratagems;
+
     // Use this for initialization
     private void Start()
     {
@@ -17,6 +19,20 @@ public class StratagemController : MonoBehaviour
         {
             m_playerInfo = p.Info;
             m_LaunchPos = p.Parts.LaunchPoint;
+        }
+
+        if (p.Info.StratagemId.Count > 0)
+        {
+            m_Stratagems = new List<Stratagem>();
+
+            for (int i = 0; i < p.Info.StratagemId.Count; i++)
+            {
+                GameObject go = new GameObject();
+                Stratagem s = go.AddComponent<Stratagem>();
+                s.Init(p.Info.StratagemId[i]);
+
+                m_Stratagems.Add(s);
+            }
         }
     }
 
