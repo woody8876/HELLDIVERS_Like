@@ -11,6 +11,7 @@ public enum ePlayerAnimationState
     ANI_DEATH,
     ANI_ROLL
 };
+
 public enum ePlayerAttack
 {
     ANI_IDLE,
@@ -20,29 +21,30 @@ public enum ePlayerAttack
     ANI_ORI,
     ANI_GETHURT
 }
+
 public class PlayerAnimationsContorller : MonoBehaviour
 {
-
     private Animator m_Animator;
     public static ePlayerAnimationState m_MoveState;
     public static ePlayerAttack m_AttackState;
     private Transform m_Cam;
     private Vector3 m_CamFoward;
     private Vector3 m_Direction;
-    bool bThrow;
-    float m_Right;
-    float m_Forward;
-    void Start()
+    private bool bThrow;
+    private float m_Right;
+    private float m_Forward;
+
+    private void Start()
     {
         if (Camera.main != null)
         {
             m_Cam = Camera.main.transform;
         }
-        m_Animator = this.GetComponent<Animator>();
+        m_Animator = this.GetComponent<Player>().Anima;
         m_AttackState = ePlayerAttack.ANI_GUNPLAY;
     }
 
-    void Update()
+    private void Update()
     {
         MovrDirection();
         DisplayMoveState();
@@ -63,6 +65,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetTrigger("Roll");
         }
     }
+
     private void MovrDirection()
     {
         float h = Input.GetAxis("Horizontal");
@@ -103,6 +106,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetFloat("WalkRight", m_Right);
         }
     }
+
     private void DisplayAttackState()
     {
         if (m_AttackState == ePlayerAttack.ANI_THROW)
@@ -129,6 +133,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             }
         }
     }
+
     private void CheckState()
     {
         if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
