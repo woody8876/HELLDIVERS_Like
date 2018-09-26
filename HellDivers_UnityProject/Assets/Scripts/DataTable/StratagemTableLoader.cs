@@ -7,9 +7,9 @@ public static class StratagemDataLoader
 {
     public static string Path;
 
-    public static Dictionary<int, StratagemInfo> LoadData(string filePah)
+    public static Dictionary<string, StratagemInfo> LoadData(string filePah)
     {
-        Dictionary<int, StratagemInfo> stratagemTable = new Dictionary<int, StratagemInfo>();
+        Dictionary<string, StratagemInfo> stratagemTable = new Dictionary<string, StratagemInfo>();
 
         if (_LoadDataBase(filePah, ref stratagemTable) == true)
         {
@@ -23,7 +23,7 @@ public static class StratagemDataLoader
         }
     }
 
-    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, StratagemInfo> table)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<string, StratagemInfo> table)
     {
         table.Clear();
 
@@ -36,7 +36,7 @@ public static class StratagemDataLoader
                 string[] colum = line[i].Split(',');
 
                 StratagemInfo data = new StratagemInfo();
-                data.id = int.Parse(colum[0]);
+                data.id = colum[0];
                 data.rank = int.Parse(colum[1]);
                 data.title = colum[2];
                 data.type = (StratagemType)Enum.Parse(typeof(StratagemType), colum[3]);
