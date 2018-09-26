@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Stratagem : MonoBehaviour
 {
+    private Player m_Player;
     private StratagemInfo m_Info;
     private GameObject m_Go;
     private GameObject m_Item;
@@ -13,10 +14,11 @@ public class Stratagem : MonoBehaviour
 
     private float m_CurrentTime = 0.0f;
 
+    public StratagemState State { get { return m_State; } }
+    private StratagemState m_State = StratagemState.Standby;
+
     private string _DEFAULT_DISPLAY = "st00";
     private string _DEFAULT_ITEM = "i00";
-    private StratagemState m_State = StratagemState.Standby;
-    public StratagemState State { get { return m_State; } }
 
     public enum StratagemState
     {
@@ -31,18 +33,24 @@ public class Stratagem : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        m_Player = this.GetComponent<Player>();
+        if (m_Player != null)
+        {
+            m_LaunchPos = m_Player.Parts.LaunchPoint;
+        }
+
         m_Go = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Startagems", _DEFAULT_DISPLAY, true) as GameObject;
         m_Go.transform.parent = this.transform;
         m_Go.SetActive(false);
-
-        m_Item = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Items", _DEFAULT_ITEM, true) as GameObject;
-        m_Item.transform.parent = this.transform;
-        m_Item.SetActive(false);
 
         m_Rigidbody = m_Go.GetComponent<Rigidbody>();
         m_Rigidbody.isKinematic = true;
 
         m_Anima = m_Go.GetComponent<Animator>();
+
+        m_Item = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Items", _DEFAULT_ITEM, true) as GameObject;
+        m_Item.transform.parent = this.transform;
+        m_Item.SetActive(false);
     }
 
     private void Update()
