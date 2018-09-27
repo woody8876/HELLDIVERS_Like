@@ -27,19 +27,13 @@ public class Player : MonoBehaviour
             Parts = Display.GetComponent<PlayerParts>();
             m_AnimationController = this.gameObject.AddComponent<PlayerAnimationsContorller>();
         }
-
-        if (Info.WeaponId.Count > 0)
-        {
-        }
-
-        if (Info.StratagemId.Count > 0)
-        {
-        }
     }
 
     // Use this for initialization
     private void Start()
     {
+        m_Weapon = this.gameObject.AddComponent<Weapon_Battle>();
+        m_Stratagem = this.gameObject.AddComponent<StratagemController>();
     }
 
     // Update is called once per frame

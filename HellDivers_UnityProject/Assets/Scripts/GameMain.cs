@@ -27,16 +27,16 @@ public class GameMain : MonoBehaviour
             Rank = 1,
             DisplayID = "ch01",
             Hp = 100,
-            WeaponId =
-                null,
-            //new List<int> { 0, 1 },
+            WeaponId = new List<int> { 1 },
             StratagemId = null
         };
 
         GameObject playerGo = new GameObject();
         playerGo.name = "Player";
         Player p = playerGo.AddComponent<Player>();
+        p.enabled = false;
         p.Info = playerInfo;
+        p.enabled = true;
     }
 
     // Update is called once per frame
