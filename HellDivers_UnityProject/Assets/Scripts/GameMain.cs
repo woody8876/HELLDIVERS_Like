@@ -22,9 +22,21 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        PlayerInfo playerInfo = new PlayerInfo()
+        {
+            Rank = 1,
+            DisplayID = "ch01",
+            Hp = 100,
+            WeaponId = new List<int> { 1 },
+            StratagemId = null
+        };
+
         GameObject playerGo = new GameObject();
         playerGo.name = "Player";
-        playerGo.AddComponent<Player>();
+        Player p = playerGo.AddComponent<Player>();
+        p.enabled = false;
+        p.Info = playerInfo;
+        p.enabled = true;
     }
 
     // Update is called once per frame

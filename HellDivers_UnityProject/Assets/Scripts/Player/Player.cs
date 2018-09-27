@@ -6,8 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private PlayerInfo m_Info;
-    public PlayerInfo Info { get { return m_Info; } }
+    public PlayerInfo Info { get; set; }
     public PlayerParts Parts { get; set; }
     public GameObject Display { get; private set; }
     public Animator Anima { get; private set; }
@@ -33,6 +32,8 @@ public class Player : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        m_Weapon = this.gameObject.AddComponent<Weapon_Battle>();
+        m_Stratagem = this.gameObject.AddComponent<StratagemController>();
     }
 
     // Update is called once per frame

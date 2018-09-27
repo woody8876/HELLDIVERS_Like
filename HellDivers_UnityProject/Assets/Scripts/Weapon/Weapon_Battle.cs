@@ -7,24 +7,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Weapon_Battle : MonoBehaviour
 {
     //Weapons' types and numbers of the player equipment.
 
     #region Singleton
+
     private static Weapon_Battle m_Instance;
     public static Weapon_Battle Instance { get { return m_Instance; } }
+
     #endregion Singleton
 
-    public Dictionary < eWeaponType,IWeaponBehaviour> weaponBehaviours = new Dictionary<eWeaponType, IWeaponBehaviour>();
+    public Dictionary<eWeaponType, IWeaponBehaviour> weaponBehaviours = new Dictionary<eWeaponType, IWeaponBehaviour>();
 
     #region Private member
+
     private List<eWeaponType> EWeapon = new List<eWeaponType>();
     private List<int> m_CurMags = new List<int>();
     private WeaponFactory m_weaponFactory = new WeaponFactory();
     private Player m_playerInfo;
+
     private delegate void ActiveState();
+
     private ActiveState m_ActiveState;
     private GameObject m_Effect;
     private Animator m_effect;
@@ -34,17 +38,19 @@ public class Weapon_Battle : MonoBehaviour
     private float m_fDamage;
     private float m_fSpreadIncrease;
     private bool m_bAutoFire = true;
-    #endregion
+
+    #endregion Private member
+
     //==================================================================================================
     private void Start()
     {
         m_Instance = this;
-        m_tGunPos = GameObject.Find("LaunchPoint").GetComponent<Transform>();
+        m_tGunPos = this.GetComponent<Player>().Parts.LaunchPoint;
         m_playerInfo = GetComponent<Player>();
         m_ActiveState = IdleState;
-        if (m_playerInfo.Info.WeaponId.Length > 0)
+        if (m_playerInfo.Info.WeaponId.Count > 0)
         {
-            for (int i = 0; i < m_playerInfo.Info.WeaponId.Length; i++)
+            for (int i = 0; i < m_playerInfo.Info.WeaponId.Count; i++)
             {
                 Debug.Log((eWeaponType)m_playerInfo.Info.WeaponId[i]);
                 EWeapon.Add((eWeaponType)m_playerInfo.Info.WeaponId[i]);
@@ -64,11 +70,14 @@ public class Weapon_Battle : MonoBehaviour
             Debug.Log(weaponBehaviours[EWeapon[i]]);
         }
     }
+
     private void Update()
     {
         m_ActiveState();
     }
-    //=============================================================================================================================================    
+
+    //=============================================================================================================================================
+
     #region WeaponBehaviours
 
     private void IdleState()
@@ -89,6 +98,7 @@ public class Weapon_Battle : MonoBehaviour
             m_ActiveState = SwitchWeaponState;
         }
     }
+
     private void ShootState()
     {
         if (weaponBehaviours[EWeapon[m_WeaponNum]].Ammo <= 0 || !Input.GetButton("Fire1"))
@@ -102,12 +112,13 @@ public class Weapon_Battle : MonoBehaviour
         m_bAutoFire = false;
         m_cCoolDown = StartCoroutine(WaitCooling());
     }
-    IEnumerator WaitCooling()
+
+    private IEnumerator WaitCooling()
     {
         m_Effect.transform.position = m_tGunPos.position;
         m_effect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
-        weaponBehaviours[EWeapon[m_WeaponNum]].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease,ref m_fDamage);
+        weaponBehaviours[EWeapon[m_WeaponNum]].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
         Debug.Log(m_fSpreadIncrease);
         yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].FireRate);
         Debug.Log("Shot");
@@ -116,6 +127,7 @@ public class Weapon_Battle : MonoBehaviour
         m_fSpreadIncrease += weaponBehaviours[EWeapon[m_WeaponNum]].Spread_Increase_per_shot;
         yield break;
     }
+
     private void ReloadState()
     {
         if (weaponBehaviours[EWeapon[m_WeaponNum]].Ammo >= weaponBehaviours[EWeapon[m_WeaponNum]].Capacity || m_CurMags[m_WeaponNum] <= 0)
@@ -125,9 +137,10 @@ public class Weapon_Battle : MonoBehaviour
         }
         if (m_cCoolDown != null) StopCoroutine(m_cCoolDown);
         Debug.Log("Reload");
-        m_cCoolDown = StartCoroutine(WaitReloading());        
+        m_cCoolDown = StartCoroutine(WaitReloading());
     }
-    IEnumerator WaitReloading()
+
+    private IEnumerator WaitReloading()
     {
         if (Input.GetButtonUp("Reload")) { m_ActiveState = IdleState; }
 
@@ -156,11 +169,12 @@ public class Weapon_Battle : MonoBehaviour
     {
         if (Input.GetButtonDown("Pick"))
         {
-
         }
     }
-    #endregion
-    //=============================================================================================================================================    
+
+    #endregion WeaponBehaviours
+
+    //=============================================================================================================================================
     /// <summary>
     /// Load weapon from Objectpool.
     /// </summary>
@@ -185,8 +199,9 @@ public class Weapon_Battle : MonoBehaviour
             OP.InitGameObjects(m_Weapon, weaponData.Capacity, (int)type + 100);
         }
     }
+
     /// <summary>
-    /// For player equip weapons 
+    /// For player equip weapons
     /// </summary>
     /// <param name="weaponType">weapon type</param>
     /// <returns></returns>
@@ -195,5 +210,4 @@ public class Weapon_Battle : MonoBehaviour
         IWeaponBehaviour weaponBehaviour = m_weaponFactory.CreateWeapon(weaponType);
         return weaponBehaviour;
     }
-
 }
