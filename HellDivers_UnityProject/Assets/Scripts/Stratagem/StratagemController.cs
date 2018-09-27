@@ -21,7 +21,7 @@ public class StratagemController : MonoBehaviour
             m_LaunchPos = p.Parts.LaunchPoint;
         }
 
-        if (p.Info.StratagemId.Count > 0)
+        if (p.Info.StratagemId != null)
         {
             m_Stratagems = new List<Stratagem>();
 
