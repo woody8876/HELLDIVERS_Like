@@ -51,32 +51,33 @@ public class PlayerController : MonoBehaviour
         }
 
         #region DisplayAnimation
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (PlayerAnimationsContorller.m_AttackState != ePlayerAttack.ANI_THROWSTANDBY)
         {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GUNPLAY;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_THROW;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_RELOAD;
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GETHURT;
-        }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_DEATH;
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_THROW;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_RELOAD;
+            }
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_DEATH;
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_ROLL;
+            PlayerAnimationsContorller.m_AnyState = ePlayerAnyState.ANI_ROLL;
         }
-
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlayerAnimationsContorller.m_AnyState = ePlayerAnyState.ANI_GETHURT;
+        }
         #endregion DisplayAnimation
     }
 

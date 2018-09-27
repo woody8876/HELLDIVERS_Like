@@ -8,8 +8,7 @@ public enum ePlayerAnimationState
     ANI_WALK,
     ANI_RUN,
     ANI_WALKSHOOT,
-    ANI_DEATH,
-    ANI_ROLL
+    ANI_DEATH
 };
 
 public enum ePlayerAttack
@@ -17,16 +16,25 @@ public enum ePlayerAttack
     ANI_IDLE,
     ANI_GUNPLAY,
     ANI_THROW,
+    ANI_THROWSTANDBY,
     ANI_RELOAD,
     ANI_ORI,
     ANI_GETHURT
-}
+};
+
+public enum ePlayerAnyState
+{
+    ANI_IDLE,
+    ANI_GETHURT,
+    ANI_ROLL
+};
 
 public class PlayerAnimationsContorller : MonoBehaviour
 {
     private Animator m_Animator;
     public static ePlayerAnimationState m_MoveState;
     public static ePlayerAttack m_AttackState;
+    public static ePlayerAnyState m_AnyState;
     private Transform m_Cam;
     private Vector3 m_CamFoward;
     private Vector3 m_Direction;
@@ -40,8 +48,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
-        m_Animator = this.GetComponent<Player>().Anima;
+        m_Animator = this.GetComponent<Animator>();
+        //m_Animator = this.GetComponent<Player>().Anima;
         m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+        m_AnyState = ePlayerAnyState.ANI_IDLE;
     }
 
     private void Update()
@@ -54,14 +64,14 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetBool("Death", true);
         }
-        if (m_AttackState == ePlayerAttack.ANI_GETHURT)
+        if (m_AnyState == ePlayerAnyState.ANI_GETHURT)
         {
-            m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+            m_AnyState = ePlayerAnyState.ANI_IDLE;
             m_Animator.SetTrigger("GetHurt");
         }
-        if (m_MoveState == ePlayerAnimationState.ANI_ROLL)
+        if (m_AnyState == ePlayerAnyState.ANI_ROLL)
         {
-            m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+            m_AnyState = ePlayerAnyState.ANI_IDLE;
             m_Animator.SetTrigger("Roll");
         }
     }
@@ -111,9 +121,8 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         if (m_AttackState == ePlayerAttack.ANI_THROW)
         {
-            m_AttackState = ePlayerAttack.ANI_IDLE;
+            m_AttackState = ePlayerAttack.ANI_THROWSTANDBY;
             m_Animator.SetTrigger("ThrowStandBy");
-            bThrow = true;
         }
         else if (m_AttackState == ePlayerAttack.ANI_RELOAD)
         {
@@ -126,9 +135,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
             {
                 m_Animator.SetBool("Shoot", true);
             }
-            else if (bThrow)
+            else if (m_AttackState == ePlayerAttack.ANI_THROWSTANDBY)
             {
-                bThrow = false;
+                m_AttackState = ePlayerAttack.ANI_GUNPLAY;
                 m_Animator.SetTrigger("ThrowOut");
             }
         }
