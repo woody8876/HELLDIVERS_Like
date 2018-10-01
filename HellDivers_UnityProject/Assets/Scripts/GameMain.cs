@@ -28,7 +28,7 @@ public class GameMain : MonoBehaviour
             DisplayID = "ch01",
             Hp = 100,
             WeaponId = new List<int> { 1 },
-            StratagemId = null
+            StratagemId = new List<int> { 1, 1 }
         };
 
         GameObject playerGo = new GameObject();

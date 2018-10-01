@@ -15,6 +15,7 @@ public class GameData
 
     public Dictionary<int, StratagemInfo> StratagemTable;
     public Dictionary<int, Weapon> WeaponInfoTable;
+
     #endregion Tables
 
     public GameData()
@@ -33,7 +34,7 @@ public class GameData
 
         #region Init Tables
 
-        StratagemTable = StratagemDataLoader.LoadData("Table/StartagemTable");
+        StratagemTable = StratagemDataLoader.LoadData("Table/StratagemTable");
         WeaponInfoTable = WeaponInfoLoader.LoadData("Table/WeaponInfoTable");
 
         #endregion Init Tables

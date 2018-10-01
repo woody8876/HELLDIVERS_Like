@@ -4,34 +4,31 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
+    private Player m_Player;
     private PlayerInfo m_playerInfo;
-    private Transform m_LaunchPos { get; set; }
     private GameObject m_Display = null;
-    [SerializeField] private StratagemInfo[] datas = new StratagemInfo[2];
 
     private List<Stratagem> m_Stratagems;
 
     // Use this for initialization
     private void Start()
     {
-        Player p = GetComponent<Player>();
-        if (p != null)
+        m_Player = GetComponent<Player>();
+        if (m_Player != null)
         {
-            m_playerInfo = p.Info;
-            m_LaunchPos = p.Parts.LaunchPoint;
-        }
+            m_playerInfo = m_Player.Info;
 
-        if (p.Info.StratagemId != null)
-        {
-            m_Stratagems = new List<Stratagem>();
-
-            for (int i = 0; i < p.Info.StratagemId.Count; i++)
+            if (m_Player.Info.StratagemId != null)
             {
-                GameObject go = new GameObject();
-                Stratagem s = go.AddComponent<Stratagem>();
-                s.Init(p.Info.StratagemId[i]);
+                m_Stratagems = new List<Stratagem>();
 
-                m_Stratagems.Add(s);
+                for (int i = 0; i < m_Player.Info.StratagemId.Count; i++)
+                {
+                    GameObject go = new GameObject("Stratagem");
+                    Stratagem s = go.AddComponent<Stratagem>();
+                    s.SetStratagemInfo(m_Player.Info.StratagemId[i], m_Player.Parts.RightHand);
+                    m_Stratagems.Add(s);
+                }
             }
         }
     }
@@ -45,13 +42,14 @@ public class StratagemController : MonoBehaviour
     {
         _Open.Clear();
 
-        foreach (StratagemInfo s in datas)
+        foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null) _Open.Add(s);
+            if (s != null)
+                _Open.Add(s);
         }
 
         int inputCount = 0;
-        StratagemCode? input = null;
+        StratagemInfo.eCode? input = null;
         while (_Open.Count > 0)
         {
             yield return new WaitUntil(() =>
@@ -69,11 +67,11 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].code[inputCount - 1] == input)
+                if (_Open[i].Info.code[inputCount - 1] == input)
                 {
-                    if (_Open[i].code.Length == inputCount)
+                    if (_Open[i].Info.code.Length == inputCount)
                     {
-                        Instantiate(m_Display, m_LaunchPos);
+                        /// Show Stratagem Agent
                         yield break;
                     }
                     continue;
@@ -86,26 +84,26 @@ public class StratagemController : MonoBehaviour
         }
     }
 
-    private bool GetInputCode(out StratagemCode? input)
+    private bool GetInputCode(out StratagemInfo.eCode? input)
     {
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-            input = StratagemCode.Up;
+            input = StratagemInfo.eCode.Up;
             return true;
         }
         else if (Input.GetAxisRaw("Vertical") < 0)
         {
-            input = StratagemCode.Down;
+            input = StratagemInfo.eCode.Down;
             return true;
         }
         else if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            input = StratagemCode.Left;
+            input = StratagemInfo.eCode.Left;
             return true;
         }
         else if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            input = StratagemCode.Right;
+            input = StratagemInfo.eCode.Right;
             return true;
         }
         else
@@ -115,5 +113,5 @@ public class StratagemController : MonoBehaviour
         }
     }
 
-    private List<StratagemInfo> _Open = new List<StratagemInfo>();
+    private List<Stratagem> _Open = new List<Stratagem>();
 }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StratagrmSetting", menuName = "StratagrmSetting", order = 100)]
+[CreateAssetMenu(fileName = "StratagemSetting", menuName = "StratagemSetting", order = 100)]
 public class StratagemSetting : ScriptableObject
 {
-    public string StratagemFilePath = "Startagems";
-    public string ItemFilePath = "Items";
-    public GameObject DefaultStratagemDisplay;
+    public string DisplayFolder = "Stratagems";
+    public string ItemFolder = "Items";
+    public GameObject DefaultDisplay;
     public GameObject DefaultItem;
 }
