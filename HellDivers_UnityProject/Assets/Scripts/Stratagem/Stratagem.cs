@@ -8,7 +8,7 @@ public class Stratagem : MonoBehaviour
     #region Properties
 
     public StratagemInfo Info { get; private set; }
-    public EState State { get { return state; } }
+    public EState State { get { return m_State; } }
     public int UsesCount { get { return m_iUsesCount; } }
     public float CoolTimer { get { return m_fCoolTimer; } }
     public float ActTimer { get { return m_fActTimer; } }
@@ -21,12 +21,11 @@ public class Stratagem : MonoBehaviour
     private GameObject m_Display;
     private Rigidbody m_Rigidbody;
     private Animator m_Animator;
-
     private float m_Radius = 0.1f;
-    private int m_iUsesCount = 0;
-    private float m_fCoolTimer = 0.0f;
-    private float m_fActTimer = 0.0f;
-
+    private int m_iUsesCount;
+    private float m_fCoolTimer;
+    private float m_fActTimer;
+    private EState m_State = EState.Standby;
     private DoState m_DoState;
 
     #endregion PrivateVariable
@@ -58,10 +57,16 @@ public class Stratagem : MonoBehaviour
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
 
+        Reset();
+        return true;
+    }
+
+    private void Reset()
+    {
         m_iUsesCount = 0;
         m_fCoolTimer = 0.0f;
         m_fActTimer = 0.0f;
-        return true;
+        m_State = EState.Standby;
     }
 
     /// <summary>
@@ -84,6 +89,15 @@ public class Stratagem : MonoBehaviour
 
     #region Interaction
 
+    public void GetReady()
+    {
+        this.transform.parent = m_LaunchPos;
+        this.transform.localPosition = Vector3.zero;
+        m_Animator.SetTrigger("Start");
+
+        m_State = EState.Ready;
+    }
+
     /// <summary>
     /// Add force to this gameobject for throw it out.
     /// </summary>
@@ -92,6 +106,11 @@ public class Stratagem : MonoBehaviour
         this.transform.parent = null;
         m_Rigidbody.isKinematic = true;
         m_Rigidbody.AddForce(force);
+
+        m_State = EState.ThrowOut;
+        m_DoState = DoThrowOut;
+
+        m_iUsesCount++;
     }
 
     #endregion Interaction
@@ -106,7 +125,7 @@ public class Stratagem : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
         if (m_DoState != null) m_DoState();
     }
@@ -116,8 +135,6 @@ public class Stratagem : MonoBehaviour
     #region StateMachine
 
     private delegate void DoState();
-
-    private EState state = EState.Standby;
 
     public enum EState
     {

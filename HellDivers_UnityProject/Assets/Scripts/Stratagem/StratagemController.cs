@@ -36,6 +36,14 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            StartCoroutine(CheckInputCode());
+        }
+        else if (Input.GetKeyUp(KeyCode.Q))
+        {
+            StopCoroutine(CheckInputCode());
+        }
     }
 
     private IEnumerator CheckInputCode()
@@ -71,7 +79,7 @@ public class StratagemController : MonoBehaviour
                 {
                     if (_Open[i].Info.code.Length == inputCount)
                     {
-                        /// Show Stratagem Agent
+                        _Open[i].GetReady();
                         yield break;
                     }
                     continue;
