@@ -32,10 +32,8 @@ public class Bullet : MonoBehaviour {
     IEnumerator BulletDeath()
     {
         this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
-        Weapon_Battle.Instance.weaponBehaviours[m_Type].m_Weapon_CurrentActives.Add(this.gameObject);
-        yield return new WaitForSeconds(Weapon_Battle.Instance.weaponBehaviours[m_Type].RANGE /m_fSpeed);
-        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, Weapon_Battle.Instance.weaponBehaviours[m_Type].m_Weapon_CurrentActives[0]);
-        Weapon_Battle.Instance.weaponBehaviours[m_Type].m_Weapon_CurrentActives.RemoveAt(0);
+        yield return new WaitForSeconds(Weapon_Battle.weaponBehaviours[m_Type].weaponInfo().Range/m_fSpeed);
+        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, this.gameObject);
         this.gameObject.SetActive(false);
     }
 

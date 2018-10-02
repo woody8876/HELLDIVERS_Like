@@ -55,6 +55,7 @@ public class SteeringBehaviours
         data.m_bMove = true;
         return true;
     }
+
     /// <summary>
     /// Let NPC move to his target
     /// </summary>
@@ -90,7 +91,7 @@ public class SteeringBehaviours
         //List<Obstacle> m_AvoidTargets = Main.m_Instance.GetObstacles();
         Transform tMover = data.m_Go.transform;
         Vector3 curPos = tMover.position;
-        Collider[] m_AvoidTargets = Physics.OverlapSphere(curPos, 10.0f);
+        Collider[] m_AvoidTargets = Physics.OverlapSphere(curPos, 30.0f, 1<< LayerMask.NameToLayer("Terrain"));
         Vector3 curForward = tMover.forward;
         Vector3 vMover2Obs;
 
@@ -106,7 +107,7 @@ public class SteeringBehaviours
         float fFinalDot = 0.0f;
         int iCount = m_AvoidTargets.Length;
 
-        float fMinDist = 10000.0f;
+        float fMinDist = 100.0f;
         for (int i = 0; i < iCount; i++)
         {
             vMover2Obs = m_AvoidTargets[i].transform.position - curPos;
@@ -114,7 +115,7 @@ public class SteeringBehaviours
             fDist = vMover2Obs.magnitude;
             vMover2Obs.Normalize();
             fDot = Vector3.Dot(vMover2Obs, curForward);
-            if (fDist < data.m_fProbeLength + m_AvoidTargets[i].bounds.size.magnitude && fDot < 0)
+            if (fDist < data.m_fProbeLength + m_AvoidTargets[i].bounds.size.magnitude && fDot > 0.5f)
             {
                 float fProjDist = fDist * fDot;
                 float fDotDist = Mathf.Sqrt(fDist * fDist - fProjDist * fProjDist);
@@ -161,10 +162,3 @@ public class SteeringBehaviours
 
     }
 }
-
-
-
-
-
-
-
