@@ -14,13 +14,13 @@ public class GameData
     #region Tables
 
     public Dictionary<int, StratagemInfo> StratagemTable;
-    public Dictionary<int, Weapon> WeaponInfoTable;
+    public Dictionary<int, WeaponInfo> WeaponInfoTable;
     #endregion Tables
 
     public GameData()
     {
         StratagemTable = new Dictionary<int, StratagemInfo>();
-        WeaponInfoTable = new Dictionary<int, Weapon>();
+        WeaponInfoTable = new Dictionary<int, WeaponInfo>();
     }
 
     public void LoadGameData()
