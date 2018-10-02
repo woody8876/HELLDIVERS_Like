@@ -65,7 +65,7 @@ public class AimLine : MonoBehaviour
         if (m_LineRender.positionCount == straightPosCount)
         {
             m_LineRender.SetPosition(0, m_Enitter.transform.localPosition);
-            m_LineRender.SetPosition(1, GetLastPosition());
+            m_LineRender.SetPosition(1, new Vector3(0, 0, 50));
 
         }
         else if (m_LineRender.positionCount == spinePosCount)
@@ -73,9 +73,9 @@ public class AimLine : MonoBehaviour
             Vector3 vPosition0 = m_Enitter.transform.localPosition;
             Vector3 vPosition1 = m_Enitter.transform.localPosition;
             Vector3 vPosition2 = (GetLastPosition() + m_Enitter.transform.localPosition) / 3;
-            vPosition2.y = 10f;
+            vPosition2.y = m_Enitter.transform.position.y + 2f;
             Vector3 vPosition3 = (GetLastPosition() + m_Enitter.transform.localPosition) / 3 * 2;
-            vPosition3.y = 10f;
+            vPosition3.y = m_Enitter.transform.position.y + 2f;
             Vector3 vPosition4 = GetLastPosition();
             float test = 50;
 

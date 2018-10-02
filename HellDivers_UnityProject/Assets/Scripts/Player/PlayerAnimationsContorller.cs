@@ -15,11 +15,12 @@ public enum ePlayerAttack
 {
     ANI_IDLE,
     ANI_GUNPLAY,
+    ANI_SHOOT,
+    ANI_SWITCHWEAPON,
     ANI_THROW,
     ANI_THROWSTANDBY,
-    ANI_RELOAD,
-    ANI_ORI,
-    ANI_GETHURT
+    ANI_THROWOUT,
+    ANI_RELOAD
 };
 
 public enum ePlayerAnyState
@@ -38,9 +39,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private Transform m_Cam;
     private Vector3 m_CamFoward;
     private Vector3 m_Direction;
-    private bool bThrow;
     private float m_Right;
     private float m_Forward;
+    float cSpeed = 0f;
 
     private void Start()
     {
@@ -62,7 +63,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         CheckState();
         if (m_MoveState == ePlayerAnimationState.ANI_DEATH)
         {
-            m_Animator.SetBool("Death", true);
+            m_Animator.SetTrigger("Death");
         }
         if (m_AnyState == ePlayerAnyState.ANI_GETHURT)
         {
@@ -97,18 +98,31 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void DisplayMoveState()
     {
+        
+        float minSpeed = 0f;
+        float maxSpeed = 2f;
+        float addSpeed = 5f;
+
+        if (cSpeed > 2) cSpeed = maxSpeed;
+        if (cSpeed < 0) cSpeed = minSpeed;
+
+        
+
         if (m_MoveState == ePlayerAnimationState.ANI_IDLE)
         {
-            m_Animator.SetFloat("Move", 0);
+            cSpeed = Mathf.MoveTowards(cSpeed, 0f, addSpeed * 2 * Time.deltaTime);
         }
         else if (m_MoveState == ePlayerAnimationState.ANI_WALK)
         {
-            m_Animator.SetFloat("Move", 1);
+            cSpeed = Mathf.MoveTowards(cSpeed, 1f, addSpeed * Time.deltaTime);
         }
         else if (m_MoveState == ePlayerAnimationState.ANI_RUN)
         {
-            m_Animator.SetFloat("Move", 2);
+            cSpeed = Mathf.MoveTowards(cSpeed, 2f, addSpeed * Time.deltaTime);
         }
+
+        m_Animator.SetFloat("Move", cSpeed);
+
         if (m_MoveState == ePlayerAnimationState.ANI_WALKSHOOT)
         {
             m_Animator.SetBool("WalkShoot", true);
@@ -119,7 +133,12 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void DisplayAttackState()
     {
-        if (m_AttackState == ePlayerAttack.ANI_THROW)
+        if (m_AttackState == ePlayerAttack.ANI_SWITCHWEAPON)
+        {
+            m_Animator.SetTrigger("SwitchWeapon");
+            m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+        }
+        else if (m_AttackState == ePlayerAttack.ANI_THROW)
         {
             m_AttackState = ePlayerAttack.ANI_THROWSTANDBY;
             m_Animator.SetTrigger("ThrowStandBy");
@@ -129,17 +148,14 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_AttackState = ePlayerAttack.ANI_GUNPLAY;
             m_Animator.SetTrigger("Reload");
         }
-        else if (Input.GetMouseButton(0))
+        else if (m_AttackState == ePlayerAttack.ANI_SHOOT)
         {
-            if (m_AttackState == ePlayerAttack.ANI_GUNPLAY)
-            {
-                m_Animator.SetBool("Shoot", true);
-            }
-            else if (m_AttackState == ePlayerAttack.ANI_THROWSTANDBY)
-            {
-                m_AttackState = ePlayerAttack.ANI_GUNPLAY;
-                m_Animator.SetTrigger("ThrowOut");
-            }
+            m_Animator.SetBool("Shoot", true);
+        }
+        else if (m_AttackState == ePlayerAttack.ANI_THROWOUT)
+        {
+            m_AttackState = ePlayerAttack.ANI_GUNPLAY;
+            m_Animator.SetTrigger("ThrowOut");
         }
     }
 
@@ -147,6 +163,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
         {
+            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GUNPLAY;
             m_Animator.SetBool("WalkShoot", false);
             m_Animator.SetBool("Shoot", false);
         }
@@ -155,4 +172,5 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetBool("WalkShoot", false);
         }
     }
+
 }
