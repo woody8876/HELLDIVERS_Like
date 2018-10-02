@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        this.tag = "Player";
+
         Display = Resources.Load("Characters/Ch00/ch00") as GameObject;
         Display = Instantiate(Display, this.transform);
         Display.transform.position -= Vector3.up;
@@ -32,8 +34,6 @@ public class Player : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        m_Weapon = this.gameObject.AddComponent<Weapon_Battle>();
-        m_Stratagem = this.gameObject.AddComponent<StratagemController>();
     }
 
     // Update is called once per frame

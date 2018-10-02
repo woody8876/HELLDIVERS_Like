@@ -19,13 +19,16 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
             {
                 go.transform.position = pos;
                 go.transform.forward = vec;
-                go.transform.Rotate(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+                go.transform.Rotate(
+                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread), 
+                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread), 
+                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread));
                 go.SetActive(true);
-                _iAmmo--;
+                weaponInfo()._iAmmo--;
                 Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
                 if (CheckHit(pos, go.transform.forward))
                 {
-                    damage = Damage;
+                    damage = weaponInfo().Damage;
                 }
 
             }
@@ -39,6 +42,6 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 
     public override void Reload()
     {
-        _iAmmo++;
+        weaponInfo()._iAmmo++;
     }
 }

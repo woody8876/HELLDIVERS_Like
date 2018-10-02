@@ -2,242 +2,197 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StratagemType
-{
-    Undefine = -1, Supply, Defensive, Offensive, Special
-}
-
-public enum StratagemCode
-{
-    Up, Down, Left, Right
-}
-
+[RequireComponent(typeof(Rigidbody))]
 public class Stratagem : MonoBehaviour
 {
-    public string ID { get; set; }
+    #region Properties
 
-    private Player m_Player;
+    public StratagemInfo Info { get; private set; }
+    public EState State { get { return m_eState; } }
+    public int UsesCount { get { return m_iUsesCount; } }
+    public bool IsCooling { get { return m_isCooling; } }
+    public float CoolTimer { get { return m_fCoolTimer; } }
+    public float ActTimer { get { return m_fActivationTimer; } }
+
+    #endregion Properties
+
+    #region PrivateVariable
+
     private Transform m_LaunchPos;
-    private StratagemInfo m_Info;
     private GameObject m_Display;
-    private GameObject m_Item;
     private Rigidbody m_Rigidbody;
-    private Animator m_Anima;
-
-    public StratagemState State { get { return m_State; } }
-    private StratagemState m_State = StratagemState.Standby;
-    private int m_Uses = 0;
-    private float m_CoolingTime = 0.0f;
-    private float m_ActingTime = 0.0f;
-
-    public enum StratagemState
-    {
-        Standby, Ready, Activating, Cooling
-    }
-
-    private delegate void DoState();
-
+    private Animator m_Animator;
+    private float m_fRadius = 0.1f;
+    private int m_iUsesCount;
+    private bool m_isCooling;
+    private float m_fCoolTimer;
+    private float m_fActivationTimer;
+    private EState m_eState = EState.Standby;
     private DoState m_DoState;
 
+    #endregion PrivateVariable
+
+    #region Initializer
+
     /// <summary>
-    /// Initialize by using stratagem data which in the stratagem table.
+    /// Setup stratagem with id form gamedata table.
     /// </summary>
-    public void Init(int Id)
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public bool SetStratagemInfo(int id, Transform launchPos)
     {
-        StratagemInfo newInfo;
+        StratagemInfo newInfo = GetInfoFromGameData(id);
+        if (newInfo == null || newInfo == this.Info) return false;
+        this.Info = newInfo;
 
-        if (GameData.Instance.StratagemTable.ContainsKey(Id) == false)
+        GameObject o = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.display) as GameObject;
+        if (m_Display != o)
         {
-            Debug.LogWarningFormat("Stratagem init faild : ID doesn't exist [{0}]", Id);
-            return;
+            if (o == null) o = StratagemSystem.DefaultDisplay;
+
+            DestroyImmediate(m_Display);
+            m_Display = Instantiate(o, this.transform.position, Quaternion.identity, this.transform);
+            m_Animator = m_Display.GetComponent<Animator>();
         }
 
-        newInfo = GameData.Instance.StratagemTable[Id];
+        m_LaunchPos = launchPos;
+        this.transform.parent = m_LaunchPos;
+        this.transform.localPosition = Vector3.zero;
 
-        if (m_Info == newInfo)
-        {
-            Debug.LogFormat("Stratagem has already set info = [{0}]", Id);
-            return;
-        }
-
-        if (m_Info.display != newInfo.display)
-        {
-            GameObject display = ResourceManager.m_Instance.LoadData(typeof(GameObject), _DefaultSetting.StratagemFilePath, m_Info.display) as GameObject;
-
-            if (display != null)
-            {
-                _SetDisplay(display);
-            }
-            else
-            {
-                string fullPath = _DefaultSetting.StratagemFilePath + "/" + m_Info.display;
-                Debug.LogWarningFormat("Load stratagem display object faild : Resource doesn't exist ({0}) (Use default object)", fullPath);
-
-                _SetDisplay(_DefaultSetting.DefaultStratagemDisplay);
-            }
-        }
-
-        if (m_Info.item != newInfo.item)
-        {
-            GameObject item = ResourceManager.m_Instance.LoadData(typeof(GameObject), _DefaultSetting.ItemFilePath, m_Info.item) as GameObject;
-
-            if (item != null)
-            {
-                _SetItem(item);
-            }
-            else
-            {
-                string fullPath = _DefaultSetting.StratagemFilePath + "/" + m_Info.display;
-                Debug.LogWarningFormat("Load stratagem item object faild : Resource doesn't exist ({0} (Use default object))", fullPath);
-
-                _SetItem(_DefaultSetting.DefaultItem);
-            }
-        }
-
-        m_Info = newInfo;
+        Reset();
+        return true;
     }
+
+    /// <summary>
+    /// Reset the (State = Standby) & (Timers = 0).
+    /// </summary>
+    private void Reset()
+    {
+        m_iUsesCount = 0;
+        m_fCoolTimer = 0.0f;
+        m_fActivationTimer = 0.0f;
+        m_eState = EState.Standby;
+    }
+
+    /// <summary>
+    /// Get stratagem info with id from game data tables. If it does not exist return null.
+    /// </summary>
+    /// <param name="id">stratagem id which in the table</param>
+    /// <returns></returns>
+    private StratagemInfo GetInfoFromGameData(int id)
+    {
+        if (GameData.Instance.StratagemTable.ContainsKey(id) == false)
+        {
+            Debug.LogErrorFormat("Stratagem Error : Can't found ID : [{0}] from game data", id);
+            return null;
+        }
+
+        return GameData.Instance.StratagemTable[id];
+    }
+
+    #endregion Initializer
+
+    #region MonoBehaviour
 
     // Use this for initialization
     private void Start()
     {
-        m_Player = this.GetComponent<Player>();
-        m_LaunchPos = (m_Player == null) ? this.transform : m_Player.Parts.RightHand;
-
-        _InitByDefaultSetting();
-
-        m_DoState = _DoStandby;
+        m_Rigidbody = this.GetComponent<Rigidbody>();
+        m_Rigidbody.isKinematic = true;
     }
 
+    // Update is called once per frame
     private void Update()
     {
-        m_DoState();
+        if (m_DoState != null) m_DoState();
+        if (IsCooling) DoCoolDown();
     }
 
-    private void _CheckStandby()
+    #endregion MonoBehaviour
+
+    #region Public Function
+
+    /// <summary>
+    /// Show the stratagem object & set launchPos as parent.
+    /// </summary>
+    public void GetReady()
     {
+        if (IsCooling || State != EState.Standby) return;
+
+        this.transform.parent = m_LaunchPos;
+        this.transform.localPosition = Vector3.zero;
+        m_Animator.SetTrigger("Start");
+
+        m_eState = EState.Ready;
     }
 
-    private void _DoStandby()
+    /// <summary>
+    /// Add force to this gameobject for throw it out.
+    /// </summary>
+    public void Throw(Vector3 force)
     {
-    }
+        if (IsCooling || State != EState.Ready) return;
 
-    private void _DoReady()
-    {
-    }
-
-    private void _DoCooling()
-    {
-        if (m_CoolingTime >= m_Info.cooldown)
-        {
-            m_CoolingTime = 0.0f;
-
-            m_State = StratagemState.Standby;
-            m_DoState = _DoStandby;
-            return;
-        }
-        m_CoolingTime += Time.deltaTime;
-    }
-
-    private void _DoActivating()
-    {
-        if (m_ActingTime >= m_Info.activation)
-        {
-            m_ActingTime = 0.0f;
-
-            m_Display.SetActive(false);
-            Instantiate(m_Item, this.transform.position, Quaternion.identity, null);
-
-            m_State = StratagemState.Cooling;
-            m_DoState = _DoCooling;
-            return;
-        }
-        m_ActingTime += Time.deltaTime;
-    }
-
-    public void ThrowOut(Vector3 direction, float size)
-    {
         this.transform.parent = null;
-        m_Rigidbody.isKinematic = false;
-        Vector3 force = direction.normalized * size;
+        m_Rigidbody.isKinematic = true;
         m_Rigidbody.AddForce(force);
+        m_isCooling = true;
+        m_iUsesCount++;
+        m_Animator.SetTrigger("Throw");
+
+        m_DoState = DoThrowOut;
+        m_eState = EState.ThrowOut;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    #endregion Public Function
+
+    #region StateMachine
+
+    private delegate void DoState();
+
+    public enum EState
     {
-        if (collision.transform.tag == "Terrain")
+        Standby, Ready, ThrowOut, Activating
+    }
+
+    private void DoActivation()
+    {
+        if (m_fActivationTimer >= Info.activation)
+        {
+            m_Animator.SetTrigger("End");
+            m_DoState = null;
+            m_eState = EState.Standby;
+        }
+        m_fActivationTimer += Time.deltaTime;
+    }
+
+    private void DoThrowOut()
+    {
+        RaycastHit raycastHit;
+        Physics.SphereCast(this.transform.position, m_fRadius, Vector3.down, out raycastHit);
+        if (raycastHit.transform.tag == "Terrain")
         {
             m_Rigidbody.isKinematic = true;
-            this.transform.up = Vector3.up;
-            if (m_State == StratagemState.Ready)
-            {
-                m_State = StratagemState.Activating;
-                Invoke("DoActivation", m_Info.activation);
-            }
+            this.transform.rotation = Quaternion.Euler(Vector3.zero);
+            m_Animator.SetTrigger("Land");
+
+            m_eState = EState.Activating;
         }
+
+#if UNITY_EDITOR
+        Gizmos.DrawWireSphere(this.transform.position, m_fRadius);
+#endif
     }
 
-    /// <summary>
-    /// Initialize the stratagem object with the default objects which is setting in the setting file.
-    /// </summary>
-    private void _InitByDefaultSetting()
+    private void DoCoolDown()
     {
-        if (ResourceManager.m_Instance != null)
+        if (m_fCoolTimer >= Info.cooldown)
         {
-            _DefaultSetting = ResourceManager.m_Instance.LoadData(typeof(StratagemSetting), "", "StratagemSetting") as StratagemSetting;
+            m_fCoolTimer = 0.0f;
+            m_isCooling = false;
         }
-        else
-        {
-            Debug.Log("Resource Manager doesn't exist. Load data by Resource.Load method");
-            _DefaultSetting = Resources.Load("StratagemSetting") as StratagemSetting;
-        }
-
-        if (_DefaultSetting == null)
-        {
-            Debug.LogWarning("Stratgem setting file missing.");
-            return;
-        }
-
-        _SetDisplay(_DefaultSetting.DefaultStratagemDisplay);
-        _SetItem(_DefaultSetting.DefaultItem);
+        m_fCoolTimer += Time.deltaTime;
     }
 
-    /// <summary>
-    /// Setup stratagem display object.
-    /// And update the Rigidbody, Animator.
-    /// </summary>
-    private void _SetDisplay(GameObject display)
-    {
-        if (m_Display != display)
-        {
-            if (m_Display != null)
-                DestroyImmediate(m_Display);
-
-            m_Display = Instantiate(display);
-            m_Display.transform.parent = this.transform;
-            m_Display.SetActive(false);
-
-            m_Rigidbody = m_Display.GetComponent<Rigidbody>();
-            m_Rigidbody.isKinematic = true;
-
-            m_Anima = m_Display.GetComponent<Animator>();
-        }
-    }
-
-    /// <summary>
-    /// Setup the target item.
-    /// </summary>
-    private void _SetItem(GameObject item)
-    {
-        if (m_Item != item)
-        {
-            if (m_Item != null)
-                DestroyImmediate(m_Item);
-
-            m_Item = Instantiate(item);
-            m_Item.transform.parent = this.transform;
-            m_Item.SetActive(false);
-        }
-    }
-
-    private StratagemSetting _DefaultSetting;
+    #endregion StateMachine
 }
