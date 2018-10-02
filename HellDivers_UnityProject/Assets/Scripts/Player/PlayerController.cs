@@ -105,6 +105,23 @@ public class PlayerController : MonoBehaviour
 
         m_Move = m_Direction * m_Speed * Time.deltaTime;
 
+        float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
+        float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
+
+        if (fAngle > 80)
+        {
+            if (dotTurnRight >= 0)
+            {
+                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNRIGHT90;
+                Debug.Log("Turn Right");
+            }
+            else if (dotTurnRight < 0)
+            {
+                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNLEFT90;
+                Debug.Log("Turn Left");
+            }
+
+        }
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALKSHOOT;
@@ -119,28 +136,21 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+
+
         if (m_Controller.isGrounded == false)
         {
             m_Move += Physics.gravity * Time.deltaTime;
         }
 
-        float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
-        float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
-        //if (fAngle > 15)
-        //{
-        //    if (dotTurnRight >= 0)
-        //    {
-        //        Debug.Log("Turn Right");
-        //    }
-        //    if (dotTurnRight < 0)
-        //    {
-        //        Debug.Log("Turn Left");
-        //    }
-        //}
 
-        this.transform.forward = m_Direction;
+        if (fAngle < 80)
+        {
+        }
+            this.transform.forward = m_Direction;
+            m_Controller.Move(m_Move);
 
-        m_Controller.Move(m_Move);
+       
     }
 
     private void FaceDirection()

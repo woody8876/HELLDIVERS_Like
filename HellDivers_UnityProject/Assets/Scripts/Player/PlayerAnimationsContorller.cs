@@ -8,6 +8,8 @@ public enum ePlayerAnimationState
     ANI_WALK,
     ANI_RUN,
     ANI_WALKSHOOT,
+    ANI_TURNRIGHT90,
+    ANI_TURNLEFT90,
     ANI_DEATH
 };
 
@@ -106,7 +108,23 @@ public class PlayerAnimationsContorller : MonoBehaviour
         if (cSpeed > 2) cSpeed = maxSpeed;
         if (cSpeed < 0) cSpeed = minSpeed;
 
-        
+        if(m_MoveState == ePlayerAnimationState.ANI_TURNRIGHT90)
+        {
+            m_Animator.SetBool("bTurn", true);
+            m_Animator.SetFloat("Turn", 0);
+
+            AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.normalizedTime >= 1.0f)
+            {
+                m_Animator.SetBool("bTurn", false);
+            }
+        }
+        else if (m_MoveState == ePlayerAnimationState.ANI_TURNLEFT90)
+        {
+            m_Animator.SetBool("bTurn",true);
+            m_Animator.SetFloat("Turn", 1);
+            m_Animator.SetBool("bTurn", false);
+        }
 
         if (m_MoveState == ePlayerAnimationState.ANI_IDLE)
         {
