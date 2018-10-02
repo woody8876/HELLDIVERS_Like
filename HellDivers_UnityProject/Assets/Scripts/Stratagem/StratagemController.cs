@@ -4,33 +4,23 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
-    private PlayerInfo m_playerInfo;
-    private Transform m_LaunchPos { get; set; }
-    private GameObject m_Display = null;
-    [SerializeField] private StratagemInfo[] datas = new StratagemInfo[2];
-
-    private List<Stratagem> m_Stratagems;
+    [SerializeField] private List<Stratagem> m_Stratagems;
 
     // Use this for initialization
     private void Start()
     {
         Player p = GetComponent<Player>();
-        if (p != null)
-        {
-            m_playerInfo = p.Info;
-            m_LaunchPos = p.Parts.LaunchPoint;
-        }
 
+        // Init form player info.
         if (p.Info.StratagemId != null)
         {
             m_Stratagems = new List<Stratagem>();
 
             for (int i = 0; i < p.Info.StratagemId.Count; i++)
             {
-                GameObject go = new GameObject();
+                GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
                 Stratagem s = go.AddComponent<Stratagem>();
-                s.Init(p.Info.StratagemId[i]);
-
+                s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
                 m_Stratagems.Add(s);
             }
         }
@@ -39,81 +29,59 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetButtonDown("Stratagem"))
+        {
+            StartCoroutine(CheckInputCode());
+        }
+        else if (Input.GetButtonUp("Stratagem"))
+        {
+            StopCoroutine(CheckInputCode());
+        }
     }
 
     private IEnumerator CheckInputCode()
     {
         _Open.Clear();
 
-        foreach (StratagemInfo s in datas)
+        foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null) _Open.Add(s);
+            if (s != null && s.State == Stratagem.EState.Standby)
+                _Open.Add(s);
         }
 
         int inputCount = 0;
-        StratagemCode? input = null;
+        StratagemInfo.eCode? input = null;
         while (_Open.Count > 0)
         {
-            yield return new WaitUntil(() =>
-            {
-                GetInputCode(out input);
-                return input == null;
-            });
-
-            yield return new WaitUntil(() =>
-            {
-                return GetInputCode(out input);
-            });
-
+            yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
+            yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
             inputCount++;
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].code[inputCount - 1] == input)
+                if (_Open[i].Info.code[inputCount - 1] == input)
                 {
-                    if (_Open[i].code.Length == inputCount)
+                    if (_Open[i].Info.code.Length == inputCount)
                     {
-                        Instantiate(m_Display, m_LaunchPos);
+                        _Open[i].GetReady();
                         yield break;
                     }
                     continue;
                 }
                 else
-                {
-                    _Open.RemoveAt(i);
-                }
+                { _Open.RemoveAt(i); }
             }
         }
     }
 
-    private bool GetInputCode(out StratagemCode? input)
+    private StratagemInfo.eCode? GetInputCode()
     {
-        if (Input.GetAxisRaw("Vertical") > 0)
-        {
-            input = StratagemCode.Up;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Vertical") < 0)
-        {
-            input = StratagemCode.Down;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            input = StratagemCode.Left;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            input = StratagemCode.Right;
-            return true;
-        }
-        else
-        {
-            input = null;
-            return false;
-        }
+        if (Input.GetAxisRaw("Vertical") > 0) { return StratagemInfo.eCode.Up; }
+        else if (Input.GetAxisRaw("Vertical") < 0) { return StratagemInfo.eCode.Down; }
+        else if (Input.GetAxisRaw("Horizontal") < 0) { return StratagemInfo.eCode.Left; }
+        else if (Input.GetAxisRaw("Horizontal") > 0) { return StratagemInfo.eCode.Right; }
+        else { return null; }
     }
 
-    private List<StratagemInfo> _Open = new List<StratagemInfo>();
+    private List<Stratagem> _Open = new List<Stratagem>();
 }

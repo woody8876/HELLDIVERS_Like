@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Move;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
-
+    private bool bChange;
     #endregion Private Variable
 
     private void Start()
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
+        bChange = true;
     }
 
     private void Update()
@@ -44,39 +45,41 @@ public class PlayerController : MonoBehaviour
         {
             m_Controller.Move(Physics.gravity * Time.deltaTime);
         }
-
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             FaceDirection();
+            Attack();
         }
-
         #region DisplayAnimation
+        if (PlayerAnimationsContorller.m_AttackState != ePlayerAttack.ANI_THROWSTANDBY)
+        {
+            if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2)))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_SWITCHWEAPON;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_THROW;
+                Debug.Log("Press");
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_RELOAD;
+            }
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_DEATH;
+            }
+        }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GUNPLAY;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_THROW;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_RELOAD;
+            PlayerAnimationsContorller.m_AnyState = ePlayerAnyState.ANI_ROLL;
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_GETHURT;
+            PlayerAnimationsContorller.m_AnyState = ePlayerAnyState.ANI_GETHURT;
         }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_DEATH;
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_ROLL;
-        }
-
         #endregion DisplayAnimation
     }
 
@@ -102,6 +105,23 @@ public class PlayerController : MonoBehaviour
 
         m_Move = m_Direction * m_Speed * Time.deltaTime;
 
+        float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
+        float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
+
+        if (fAngle > 80)
+        {
+            if (dotTurnRight >= 0)
+            {
+                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNRIGHT90;
+                Debug.Log("Turn Right");
+            }
+            else if (dotTurnRight < 0)
+            {
+                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNLEFT90;
+                Debug.Log("Turn Left");
+            }
+
+        }
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALKSHOOT;
@@ -111,18 +131,26 @@ public class PlayerController : MonoBehaviour
             PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALK;
             if (Input.GetButton("Run"))
             {
-                m_Move *= 2.0f;
+                m_Move *= 3.0f;
                 PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_RUN;
             }
         }
+
+
 
         if (m_Controller.isGrounded == false)
         {
             m_Move += Physics.gravity * Time.deltaTime;
         }
-        this.transform.forward = m_Direction;
 
-        m_Controller.Move(m_Move);
+
+        if (fAngle < 80)
+        {
+        }
+            this.transform.forward = m_Direction;
+            m_Controller.Move(m_Move);
+
+       
     }
 
     private void FaceDirection()
@@ -142,6 +170,21 @@ public class PlayerController : MonoBehaviour
 
         if (m_Direction.magnitude < 0.1f) return;
         m_Controller.transform.forward = m_Direction;
+    }
+
+    private void Attack()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            if (PlayerAnimationsContorller.m_AttackState == ePlayerAttack.ANI_GUNPLAY)
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_SHOOT;
+            }
+            if (PlayerAnimationsContorller.m_AttackState == ePlayerAttack.ANI_THROWSTANDBY)
+            {
+                PlayerAnimationsContorller.m_AttackState = ePlayerAttack.ANI_THROWOUT;
+            }
+        }
     }
 
 #if UNITY_EDITOR

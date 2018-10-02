@@ -35,15 +35,19 @@ public static class StratagemDataLoader
             {
                 string[] colum = line[i].Split(',');
 
-                StratagemInfo data = new StratagemInfo();
-                data.id = int.Parse(colum[0]);
-                data.rank = int.Parse(colum[1]);
-                data.title = colum[2];
-                data.type = (StratagemType)Enum.Parse(typeof(StratagemType), colum[3]);
-                data.code = _GetCodes(colum[4]);
-                data.uses = int.Parse(colum[5]);
-                data.cooldown = float.Parse(colum[6]);
-                data.activation = float.Parse(colum[7]);
+                StratagemInfo data = new StratagemInfo()
+                {
+                    id = int.Parse(colum[0]),
+                    rank = int.Parse(colum[1]),
+                    title = colum[2],
+                    type = (StratagemInfo.eType)Enum.Parse(typeof(StratagemInfo.eType), colum[3]),
+                    code = _GetCodes(colum[4]),
+                    uses = int.Parse(colum[5]),
+                    cooldown = float.Parse(colum[6]),
+                    activation = float.Parse(colum[7]),
+                    display = colum[8]
+                };
+
                 table.Add(data.id, data);
             }
 
@@ -53,13 +57,13 @@ public static class StratagemDataLoader
         return false;
     }
 
-    private static StratagemCode[] _GetCodes(string code)
+    private static StratagemInfo.eCode[] _GetCodes(string code)
     {
-        StratagemCode[] codes = new StratagemCode[code.Length];
+        StratagemInfo.eCode[] codes = new StratagemInfo.eCode[code.Length];
 
         for (int i = 0; i < code.Length; i++)
         {
-            codes[i] = (StratagemCode)Enum.Parse(typeof(StratagemCode), code[i].ToString());
+            codes[i] = (StratagemInfo.eCode)Enum.Parse(typeof(StratagemInfo.eCode), code[i].ToString());
         }
 
         return codes;

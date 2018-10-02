@@ -51,7 +51,9 @@ public class Weapon : IWeaponBehaviour{
     protected WeaponInfo _weaponInfo;
 
     #region Bullet status
-    List<GameObject> _currentActive = new List<GameObject>();
+
+    private List<GameObject> _currentActive = new List<GameObject>();
+
     public List<GameObject> m_Weapon_CurrentActives
     {
         set { _currentActive = value; }
@@ -65,6 +67,7 @@ public class Weapon : IWeaponBehaviour{
     public virtual void Reload() { }
     #endregion
 
+
     protected bool CheckHit(Vector3 pos, Vector3 vec)
     {
         RaycastHit raycastHit;
@@ -75,5 +78,4 @@ public class Weapon : IWeaponBehaviour{
         }
         return false;
     }
-
 }
