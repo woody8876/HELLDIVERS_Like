@@ -126,17 +126,17 @@ public class PlayerController : MonoBehaviour
 
         float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
         float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
-        if (fAngle > 15)
-        {
-            if (dotTurnRight >= 0)
-            {
-                Debug.Log("Turn Right");
-            }
-            if (dotTurnRight < 0)
-            {
-                Debug.Log("Turn Left");
-            }
-        }
+        //if (fAngle > 15)
+        //{
+        //    if (dotTurnRight >= 0)
+        //    {
+        //        Debug.Log("Turn Right");
+        //    }
+        //    if (dotTurnRight < 0)
+        //    {
+        //        Debug.Log("Turn Left");
+        //    }
+        //}
 
         this.transform.forward = m_Direction;
 
