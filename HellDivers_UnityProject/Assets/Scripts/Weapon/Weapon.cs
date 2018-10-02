@@ -9,9 +9,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Weapon : IWeaponBehaviour{
-    
+public class Weapon : IWeaponBehaviour
+{
     #region WeaponInfo
+
     public float Damage { set; get; }
     public float Center_Damage { set; get; }
     public float Explosion_Damage { set; get; }
@@ -26,33 +27,48 @@ public class Weapon : IWeaponBehaviour{
     public float Spread_Increase_per_shot { set; get; }
     public float RANGE { set; get; }
     public float FireMode { set; get; }
-    #endregion
+
+    #endregion WeaponInfo
 
     #region Bullet status
-    List<GameObject> _currentActive = new List<GameObject>();
+
+    private List<GameObject> _currentActive = new List<GameObject>();
+
     public List<GameObject> m_Weapon_CurrentActives
     {
         set { _currentActive = value; }
         get { return _currentActive; }
     }
+
     protected int _iAmmo;
+
     public int Ammo
     {
-        set {_iAmmo = Capacity ;} 
+        set { _iAmmo = Capacity; }
         get { return _iAmmo; }
     }
+
     protected float _fSpread;
+
     public float Spread
     {
         set { _fSpread = Min_Spread; }
         get { return _fSpread; }
     }
-    #endregion
+
+    #endregion Bullet status
 
     #region Behaviours
-    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) {  }
-    public virtual void Reload() { }
-    #endregion
+
+    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage)
+    {
+    }
+
+    public virtual void Reload()
+    {
+    }
+
+    #endregion Behaviours
 
     protected bool CheckHit(Vector3 pos, Vector3 vec)
     {
@@ -64,5 +80,4 @@ public class Weapon : IWeaponBehaviour{
         }
         return false;
     }
-
 }

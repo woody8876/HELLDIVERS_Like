@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerInfo
 {
+    public string Name;
     public int Rank;
     public float Hp;
     public string DisplayID;

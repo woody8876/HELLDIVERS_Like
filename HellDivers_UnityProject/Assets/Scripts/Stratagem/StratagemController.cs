@@ -4,25 +4,24 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
-    private List<Stratagem> m_Stratagems;
+    [SerializeField] private List<Stratagem> m_Stratagems;
 
     // Use this for initialization
     private void Start()
     {
         Player p = GetComponent<Player>();
-        if (p != null)
-        {
-            if (p.Info.StratagemId != null)
-            {
-                m_Stratagems = new List<Stratagem>();
 
-                for (int i = 0; i < p.Info.StratagemId.Count; i++)
-                {
-                    GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
-                    Stratagem s = go.AddComponent<Stratagem>();
-                    s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
-                    m_Stratagems.Add(s);
-                }
+        // Init form player info.
+        if (p.Info.StratagemId != null)
+        {
+            m_Stratagems = new List<Stratagem>();
+
+            for (int i = 0; i < p.Info.StratagemId.Count; i++)
+            {
+                GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
+                Stratagem s = go.AddComponent<Stratagem>();
+                s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
+                m_Stratagems.Add(s);
             }
         }
     }
@@ -30,11 +29,11 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetButtonDown("Stratagem"))
         {
             StartCoroutine(CheckInputCode());
         }
-        else if (Input.GetKeyUp(KeyCode.Q))
+        else if (Input.GetButtonUp("Stratagem"))
         {
             StopCoroutine(CheckInputCode());
         }

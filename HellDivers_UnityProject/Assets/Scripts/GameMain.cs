@@ -31,12 +31,8 @@ public class GameMain : MonoBehaviour
             StratagemId = new List<int> { 1, 1 }
         };
 
-        GameObject playerGo = new GameObject();
-        playerGo.name = "Player";
-        Player p = playerGo.AddComponent<Player>();
-        p.enabled = false;
-        p.Info = playerInfo;
-        p.enabled = true;
+        GameObject playerGo = new GameObject("Player", typeof(Player), typeof(Weapon_Battle), typeof(StratagemController));
+        playerGo.GetComponent<Player>().Info = playerInfo;
     }
 
     // Update is called once per frame

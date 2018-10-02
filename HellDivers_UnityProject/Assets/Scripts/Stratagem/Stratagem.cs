@@ -8,7 +8,7 @@ public class Stratagem : MonoBehaviour
     #region Properties
 
     public StratagemInfo Info { get; private set; }
-    public EState State { get { return m_State; } }
+    public EState State { get { return m_eState; } }
     public int UsesCount { get { return m_iUsesCount; } }
     public bool IsCooling { get { return m_isCooling; } }
     public float CoolTimer { get { return m_fCoolTimer; } }
@@ -22,12 +22,12 @@ public class Stratagem : MonoBehaviour
     private GameObject m_Display;
     private Rigidbody m_Rigidbody;
     private Animator m_Animator;
-    private float m_Radius = 0.1f;
+    private float m_fRadius = 0.1f;
     private int m_iUsesCount;
     private bool m_isCooling;
     private float m_fCoolTimer;
     private float m_fActivationTimer;
-    private EState m_State = EState.Standby;
+    private EState m_eState = EState.Standby;
     private DoState m_DoState;
 
     #endregion PrivateVariable
@@ -63,12 +63,15 @@ public class Stratagem : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Reset the (State = Standby) & (Timers = 0).
+    /// </summary>
     private void Reset()
     {
         m_iUsesCount = 0;
         m_fCoolTimer = 0.0f;
         m_fActivationTimer = 0.0f;
-        m_State = EState.Standby;
+        m_eState = EState.Standby;
     }
 
     /// <summary>
@@ -109,6 +112,9 @@ public class Stratagem : MonoBehaviour
 
     #region Public Function
 
+    /// <summary>
+    /// Show the stratagem object & set launchPos as parent.
+    /// </summary>
     public void GetReady()
     {
         if (IsCooling || State != EState.Standby) return;
@@ -117,7 +123,7 @@ public class Stratagem : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         m_Animator.SetTrigger("Start");
 
-        m_State = EState.Ready;
+        m_eState = EState.Ready;
     }
 
     /// <summary>
@@ -135,7 +141,7 @@ public class Stratagem : MonoBehaviour
         m_Animator.SetTrigger("Throw");
 
         m_DoState = DoThrowOut;
-        m_State = EState.ThrowOut;
+        m_eState = EState.ThrowOut;
     }
 
     #endregion Public Function
@@ -155,7 +161,7 @@ public class Stratagem : MonoBehaviour
         {
             m_Animator.SetTrigger("End");
             m_DoState = null;
-            m_State = EState.Standby;
+            m_eState = EState.Standby;
         }
         m_fActivationTimer += Time.deltaTime;
     }
@@ -163,18 +169,18 @@ public class Stratagem : MonoBehaviour
     private void DoThrowOut()
     {
         RaycastHit raycastHit;
-        Physics.SphereCast(this.transform.position, m_Radius, Vector3.down, out raycastHit);
+        Physics.SphereCast(this.transform.position, m_fRadius, Vector3.down, out raycastHit);
         if (raycastHit.transform.tag == "Terrain")
         {
             m_Rigidbody.isKinematic = true;
             this.transform.rotation = Quaternion.Euler(Vector3.zero);
             m_Animator.SetTrigger("Land");
 
-            m_State = EState.Activating;
+            m_eState = EState.Activating;
         }
 
 #if UNITY_EDITOR
-        Gizmos.DrawWireSphere(this.transform.position, m_Radius);
+        Gizmos.DrawWireSphere(this.transform.position, m_fRadius);
 #endif
     }
 
