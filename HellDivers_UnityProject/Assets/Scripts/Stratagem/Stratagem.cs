@@ -10,8 +10,9 @@ public class Stratagem : MonoBehaviour
     public StratagemInfo Info { get; private set; }
     public EState State { get { return m_State; } }
     public int UsesCount { get { return m_iUsesCount; } }
+    public bool IsCooling { get { return m_isCooling; } }
     public float CoolTimer { get { return m_fCoolTimer; } }
-    public float ActTimer { get { return m_fActTimer; } }
+    public float ActTimer { get { return m_fActivationTimer; } }
 
     #endregion Properties
 
@@ -23,8 +24,9 @@ public class Stratagem : MonoBehaviour
     private Animator m_Animator;
     private float m_Radius = 0.1f;
     private int m_iUsesCount;
+    private bool m_isCooling;
     private float m_fCoolTimer;
-    private float m_fActTimer;
+    private float m_fActivationTimer;
     private EState m_State = EState.Standby;
     private DoState m_DoState;
 
@@ -65,7 +67,7 @@ public class Stratagem : MonoBehaviour
     {
         m_iUsesCount = 0;
         m_fCoolTimer = 0.0f;
-        m_fActTimer = 0.0f;
+        m_fActivationTimer = 0.0f;
         m_State = EState.Standby;
     }
 
@@ -87,10 +89,30 @@ public class Stratagem : MonoBehaviour
 
     #endregion Initializer
 
-    #region Interaction
+    #region MonoBehaviour
+
+    // Use this for initialization
+    private void Start()
+    {
+        m_Rigidbody = this.GetComponent<Rigidbody>();
+        m_Rigidbody.isKinematic = true;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (m_DoState != null) m_DoState();
+        if (IsCooling) DoCoolDown();
+    }
+
+    #endregion MonoBehaviour
+
+    #region Public Function
 
     public void GetReady()
     {
+        if (IsCooling || State != EState.Standby) return;
+
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
         m_Animator.SetTrigger("Start");
@@ -103,34 +125,20 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public void Throw(Vector3 force)
     {
+        if (IsCooling || State != EState.Ready) return;
+
         this.transform.parent = null;
         m_Rigidbody.isKinematic = true;
         m_Rigidbody.AddForce(force);
-
-        m_State = EState.ThrowOut;
-        m_DoState = DoThrowOut;
-
+        m_isCooling = true;
         m_iUsesCount++;
+        m_Animator.SetTrigger("Throw");
+
+        m_DoState = DoThrowOut;
+        m_State = EState.ThrowOut;
     }
 
-    #endregion Interaction
-
-    #region MonoBehaviour
-
-    // Use this for initialization
-    private void Start()
-    {
-        m_Rigidbody = this.GetComponent<Rigidbody>();
-        m_Rigidbody.isKinematic = true;
-    }
-
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-        if (m_DoState != null) m_DoState();
-    }
-
-    #endregion MonoBehaviour
+    #endregion Public Function
 
     #region StateMachine
 
@@ -138,11 +146,18 @@ public class Stratagem : MonoBehaviour
 
     public enum EState
     {
-        Standby, Ready, ThrowOut, Activating, CoolingDown
+        Standby, Ready, ThrowOut, Activating
     }
 
-    public void ToReady()
+    private void DoActivation()
     {
+        if (m_fActivationTimer >= Info.activation)
+        {
+            m_Animator.SetTrigger("End");
+            m_DoState = null;
+            m_State = EState.Standby;
+        }
+        m_fActivationTimer += Time.deltaTime;
     }
 
     private void DoThrowOut()
@@ -153,6 +168,9 @@ public class Stratagem : MonoBehaviour
         {
             m_Rigidbody.isKinematic = true;
             this.transform.rotation = Quaternion.Euler(Vector3.zero);
+            m_Animator.SetTrigger("Land");
+
+            m_State = EState.Activating;
         }
 
 #if UNITY_EDITOR
@@ -165,6 +183,7 @@ public class Stratagem : MonoBehaviour
         if (m_fCoolTimer >= Info.cooldown)
         {
             m_fCoolTimer = 0.0f;
+            m_isCooling = false;
         }
         m_fCoolTimer += Time.deltaTime;
     }

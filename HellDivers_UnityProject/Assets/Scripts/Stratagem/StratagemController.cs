@@ -4,29 +4,23 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
-    private Player m_Player;
-    private PlayerInfo m_playerInfo;
-    private GameObject m_Display = null;
-
     private List<Stratagem> m_Stratagems;
 
     // Use this for initialization
     private void Start()
     {
-        m_Player = GetComponent<Player>();
-        if (m_Player != null)
+        Player p = GetComponent<Player>();
+        if (p != null)
         {
-            m_playerInfo = m_Player.Info;
-
-            if (m_Player.Info.StratagemId != null)
+            if (p.Info.StratagemId != null)
             {
                 m_Stratagems = new List<Stratagem>();
 
-                for (int i = 0; i < m_Player.Info.StratagemId.Count; i++)
+                for (int i = 0; i < p.Info.StratagemId.Count; i++)
                 {
-                    GameObject go = new GameObject("Stratagem");
+                    GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
                     Stratagem s = go.AddComponent<Stratagem>();
-                    s.SetStratagemInfo(m_Player.Info.StratagemId[i], m_Player.Parts.RightHand);
+                    s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
                     m_Stratagems.Add(s);
                 }
             }
@@ -52,7 +46,7 @@ public class StratagemController : MonoBehaviour
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null)
+            if (s != null && s.State == Stratagem.EState.Standby)
                 _Open.Add(s);
         }
 
@@ -60,17 +54,8 @@ public class StratagemController : MonoBehaviour
         StratagemInfo.eCode? input = null;
         while (_Open.Count > 0)
         {
-            yield return new WaitUntil(() =>
-            {
-                GetInputCode(out input);
-                return input == null;
-            });
-
-            yield return new WaitUntil(() =>
-            {
-                return GetInputCode(out input);
-            });
-
+            yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
+            yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
             inputCount++;
 
             for (int i = 0; i < _Open.Count; i++)
@@ -85,40 +70,18 @@ public class StratagemController : MonoBehaviour
                     continue;
                 }
                 else
-                {
-                    _Open.RemoveAt(i);
-                }
+                { _Open.RemoveAt(i); }
             }
         }
     }
 
-    private bool GetInputCode(out StratagemInfo.eCode? input)
+    private StratagemInfo.eCode? GetInputCode()
     {
-        if (Input.GetAxisRaw("Vertical") > 0)
-        {
-            input = StratagemInfo.eCode.Up;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Vertical") < 0)
-        {
-            input = StratagemInfo.eCode.Down;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            input = StratagemInfo.eCode.Left;
-            return true;
-        }
-        else if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            input = StratagemInfo.eCode.Right;
-            return true;
-        }
-        else
-        {
-            input = null;
-            return false;
-        }
+        if (Input.GetAxisRaw("Vertical") > 0) { return StratagemInfo.eCode.Up; }
+        else if (Input.GetAxisRaw("Vertical") < 0) { return StratagemInfo.eCode.Down; }
+        else if (Input.GetAxisRaw("Horizontal") < 0) { return StratagemInfo.eCode.Left; }
+        else if (Input.GetAxisRaw("Horizontal") > 0) { return StratagemInfo.eCode.Right; }
+        else { return null; }
     }
 
     private List<Stratagem> _Open = new List<Stratagem>();
