@@ -43,6 +43,8 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private Vector3 m_Direction;
     private float m_Right;
     private float m_Forward;
+    private float m_TurnAmount;
+    private float m_ForwardAmount;
     float cSpeed = 0f;
 
     private void Start()
@@ -78,7 +80,19 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetTrigger("Roll");
         }
     }
-
+    public void Move(Vector3 move)
+    {
+        move = transform.InverseTransformDirection(move);
+        m_TurnAmount = Mathf.Atan2(move.x, move.z);
+        m_ForwardAmount = move.z;
+        ApplyExtraTurnRotation();
+    }
+    void ApplyExtraTurnRotation()
+    {
+        // help the character turn faster (this is in addition to root rotation in the animation)
+        float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
+        transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+    }
     private void MovrDirection()
     {
         float h = Input.GetAxis("Horizontal");
@@ -96,6 +110,8 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
         m_Right = Vector3.Dot(this.transform.right, m_Direction.normalized);
         m_Forward = Vector3.Dot(this.transform.forward, m_Direction.normalized);
+        //Debug.Log(m_Right);
+        Debug.Log(m_Forward);
     }
 
     private void DisplayMoveState()
@@ -108,23 +124,23 @@ public class PlayerAnimationsContorller : MonoBehaviour
         if (cSpeed > 2) cSpeed = maxSpeed;
         if (cSpeed < 0) cSpeed = minSpeed;
 
-        if(m_MoveState == ePlayerAnimationState.ANI_TURNRIGHT90)
-        {
-            m_Animator.SetBool("bTurn", true);
-            m_Animator.SetFloat("Turn", 0);
+        //if(m_MoveState == ePlayerAnimationState.ANI_TURNRIGHT90)
+        //{
+        //    m_Animator.SetBool("bTurn", true);
+        //    m_Animator.SetFloat("Turn", 0);
 
-            AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
-            if (info.normalizedTime >= 1.0f)
-            {
-                m_Animator.SetBool("bTurn", false);
-            }
-        }
-        else if (m_MoveState == ePlayerAnimationState.ANI_TURNLEFT90)
-        {
-            m_Animator.SetBool("bTurn",true);
-            m_Animator.SetFloat("Turn", 1);
-            m_Animator.SetBool("bTurn", false);
-        }
+        //    AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+        //    if (info.normalizedTime >= 1.0f)
+        //    {
+        //        m_Animator.SetBool("bTurn", false);
+        //    }
+        //}
+        //else if (m_MoveState == ePlayerAnimationState.ANI_TURNLEFT90)
+        //{
+        //    m_Animator.SetBool("bTurn",true);
+        //    m_Animator.SetFloat("Turn", 1);
+        //    m_Animator.SetBool("bTurn", false);
+        //}
 
         if (m_MoveState == ePlayerAnimationState.ANI_IDLE)
         {
@@ -190,5 +206,5 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetBool("WalkShoot", false);
         }
     }
-
+    
 }

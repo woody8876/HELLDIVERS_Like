@@ -18,10 +18,12 @@ public class PlayerController : MonoBehaviour
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
     private bool bChange;
+    private PlayerAnimationsContorller PAC;
     #endregion Private Variable
 
     private void Start()
     {
+        PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
 
         if (Camera.main != null)
@@ -102,26 +104,14 @@ public class PlayerController : MonoBehaviour
         {
             m_Direction.Normalize();
         }
+        PAC.Move(m_Direction);
 
-        m_Move = m_Direction * m_Speed * Time.deltaTime;
+        //m_Move = m_Direction * m_Speed * Time.deltaTime;
 
         float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
         float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
 
-        if (fAngle > 80)
-        {
-            if (dotTurnRight >= 0)
-            {
-                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNRIGHT90;
-                Debug.Log("Turn Right");
-            }
-            else if (dotTurnRight < 0)
-            {
-                //PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_TURNLEFT90;
-                Debug.Log("Turn Left");
-            }
 
-        }
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALKSHOOT;
@@ -144,13 +134,10 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (fAngle < 80)
-        {
-        }
-            this.transform.forward = m_Direction;
-            m_Controller.Move(m_Move);
+        this.transform.forward = m_Direction;
+        m_Controller.Move(m_Move);
 
-       
+
     }
 
     private void FaceDirection()
@@ -196,4 +183,5 @@ public class PlayerController : MonoBehaviour
     }
 
 #endif
+
 }
