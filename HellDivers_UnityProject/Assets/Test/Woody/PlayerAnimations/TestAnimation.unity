@@ -2763,7 +2763,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2105263025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 804f4085b8a0c5e4d85344c31b802de0, type: 3}
+  m_Script: {fileID: 11500000, guid: a1c2a60ddeec41d41bd547ba9bfa8880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2105263027
@@ -2774,10 +2774,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2105263025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f7829661405fb94ab60ea0559d44ff3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a9374bb2c961504a8f335573146c145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 0
 --- !u!114 &2105263028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2820,7 +2819,7 @@ Animator:
   m_GameObject: {fileID: 2105263025}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: eb1432be680939444b75915f72a35147, type: 3}
-  m_Controller: {fileID: 9100000, guid: 2da1cdc993b9d9747bba1a4db880165e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 23ad2f2ca581b4a448482b717947c7e8, type: 2}
   m_CullingMode: 2
   m_UpdateMode: 2
   m_ApplyRootMotion: 1

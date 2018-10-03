@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Move;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
-    private bool bChange;
     private PlayerAnimationsContorller PAC;
     #endregion Private Variable
 
@@ -30,7 +29,7 @@ public class PlayerController : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
-        bChange = true;
+        
     }
 
     private void Update()
@@ -106,25 +105,8 @@ public class PlayerController : MonoBehaviour
         }
         PAC.Move(m_Direction);
 
-        //m_Move = m_Direction * m_Speed * Time.deltaTime;
-
         float fAngle = Vector3.Angle(this.transform.forward, m_Direction.normalized);
         float dotTurnRight = Vector3.Dot(this.transform.right, m_Direction.normalized);
-
-
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-        {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALKSHOOT;
-        }
-        else
-        {
-            PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_WALK;
-            if (Input.GetButton("Run"))
-            {
-                m_Move *= 3.0f;
-                PlayerAnimationsContorller.m_MoveState = ePlayerAnimationState.ANI_RUN;
-            }
-        }
 
 
 
@@ -132,12 +114,6 @@ public class PlayerController : MonoBehaviour
         {
             m_Move += Physics.gravity * Time.deltaTime;
         }
-
-
-        this.transform.forward = m_Direction;
-        m_Controller.Move(m_Move);
-
-
     }
 
     private void FaceDirection()
