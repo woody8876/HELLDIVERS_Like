@@ -8,8 +8,8 @@ public class AniTest : MonoBehaviour
     private float m_TurnAmount;
     private float m_ForwardAmount;
     private Animator m_Animator;
-    private float m_Right;
-    private float m_Forward;
+    private float m_BattleRight;
+    private float m_BattleForward;
 
     private void Start()
     {
@@ -28,11 +28,13 @@ public class AniTest : MonoBehaviour
 
         else if (fighting)
         {
+            Vector3 currentMove = direction;
             direction = transform.InverseTransformDirection(direction);
             m_TurnAmount = Mathf.Atan2(direction.x, direction.z);
-            m_Right = Vector3.Dot(this.transform.right, move.normalized);
-            m_Forward = Vector3.Dot(this.transform.forward, move.normalized);
-            move = m_Forward * Vector3.forward + m_Right * Vector3.right;
+            m_BattleRight = Vector3.Dot(this.transform.right, move.normalized);
+            m_BattleForward = Vector3.Dot(this.transform.forward, move.normalized);
+            move = currentMove;
+            //move = m_Forward * Vector3.forward + m_Right * Vector3.right;
         }
         ApplyExtraTurnRotation();
         UpdateAnimator(move, fighting);
@@ -48,15 +50,17 @@ public class AniTest : MonoBehaviour
         if (!fighting)
         {
             m_Animator.SetBool("WalkShoot", false);
-            m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+            m_Animator.SetBool("RotateStart", false);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
         }
         else if (fighting)
         {
+            if(Vector3.Angle(this.transform.forward, move) > 20) m_Animator.SetBool("RotateStart", true);
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
-            m_Animator.SetFloat("WalkForward", m_Forward, 0.1f, Time.deltaTime);
-            m_Animator.SetFloat("WalkRight", m_Right, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkRight", m_BattleRight, 0.1f, Time.deltaTime);
         }
     }
 }

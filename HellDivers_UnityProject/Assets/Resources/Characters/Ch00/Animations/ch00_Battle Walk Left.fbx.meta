@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 42f2effdb0076304292bd8575aa936b3
+guid: 9f41c77a4aca57b43956ff4d37c02f22
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -135,8 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: mixamo.com
-    7400002: Rifle Walk
+    7400000: Battle Walk Left
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -166,10 +165,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Walk
+      name: Battle Walk Left
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 31
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

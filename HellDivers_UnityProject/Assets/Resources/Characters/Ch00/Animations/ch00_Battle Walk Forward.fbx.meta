@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f9ea2d7b9e632ca49bca1e3ee0b6f605
+guid: f8db5bffd45a1bc408afd25b20d507d2
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -135,7 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Rifle Aiming Idle
+    7400000: Battle Walk Forward
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -165,10 +165,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Aiming Idle
+      name: Battle Walk Forward
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 93
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

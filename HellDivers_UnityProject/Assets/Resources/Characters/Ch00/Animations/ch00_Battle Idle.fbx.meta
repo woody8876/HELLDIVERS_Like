@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4d4314df5146cd24184831eae77d6cdc
+guid: e1c90ab9215097042b6e0e9219ed6459
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -135,7 +135,8 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Rifle Run
+    7400000: mixamo.com
+    7400002: Battle Idle
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -165,10 +166,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Rifle Run
+      name: Battle Idle
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 20
+      lastFrame: 93
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
