@@ -45,17 +45,14 @@ public class Stratagem : MonoBehaviour
     [SerializeField] private StratagemInfo m_Info;
     private Transform m_LaunchPos;
     private GameObject m_Display;
-    private Rigidbody m_Rigidbody;
     private Animator m_Animator;
+    private Rigidbody m_Rigidbody;
     private float m_Radius = 0.25f;
+    private eState m_eState = eState.Idle;
     private int m_UsesCount;
     private bool m_IsCooling;
     private float m_CoolTimer;
     private float m_ActivationTimer;
-    private eState m_eState = eState.Idle;
-    private DoState m_DoState;
-
-    private delegate void DoState();
 
     #endregion Private Variable
 
