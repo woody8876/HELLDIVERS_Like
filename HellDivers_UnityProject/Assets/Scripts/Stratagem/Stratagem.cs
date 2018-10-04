@@ -143,7 +143,7 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public void GetReady()
     {
-        if (m_UsesCount >= Info.uses) return;
+        if (m_UsesCount >= Info.uses && Info.uses >= 0) return;
         if (IsCooling || State != eState.Idle) return;
 
         this.transform.parent = m_LaunchPos;
@@ -167,7 +167,7 @@ public class Stratagem : MonoBehaviour
         m_IsCooling = true;
         m_Animator.SetTrigger("Throw");
 
-        // Uses add count. ( Info.uses = -1 ) is meaning for Unlimited.
+        // Uses add count. ( Info.uses = -1 ) is meaning for unlimited.
         if (Info.uses != -1) m_UsesCount++;
 
         // Start the cooldown timer.
