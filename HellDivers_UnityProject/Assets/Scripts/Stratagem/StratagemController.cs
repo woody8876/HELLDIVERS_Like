@@ -7,6 +7,8 @@ public class StratagemController : MonoBehaviour
     [SerializeField] private List<Stratagem> m_Stratagems;
     private Stratagem m_CurrentStratagem;
 
+    #region MonoBehaviour
+
     // Use this for initialization
     private void Start()
     {
@@ -19,10 +21,8 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < p.Info.StratagemId.Count; i++)
             {
-                GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
-                Stratagem s = go.AddComponent<Stratagem>();
-                s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
-                m_Stratagems.Add(s);
+                // Creat stratagem with player info.
+                AddNewStratagemObject(p.Info.StratagemId[i], p.Parts.RightHand);
             }
         }
     }
@@ -49,13 +49,34 @@ public class StratagemController : MonoBehaviour
         }
     }
 
+    #endregion MonoBehaviour
+
+    #region Public Function
+
+    /// <summary>
+    /// Add a stratagem object by id key which is in the gamedata.stratagem table.
+    /// </summary>
+    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
+    public void AddNewStratagemObject(int id, Transform launchPos)
+    {
+        GameObject go = new GameObject(string.Format("Stratagem ({0})", id));
+        Stratagem s = go.AddComponent<Stratagem>();
+        s.SetStratagemInfo(id, launchPos);
+        m_Stratagems.Add(s);
+    }
+
+    #endregion Public Function
+
+    #region Check Input Code
+
     private IEnumerator CheckInputCode()
     {
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.State == Stratagem.EState.Idle)
+            if (s != null && s.State == Stratagem.eState.Idle)
                 _Open.Add(s);
         }
 
@@ -95,4 +116,6 @@ public class StratagemController : MonoBehaviour
     }
 
     private List<Stratagem> _Open = new List<Stratagem>();
+
+    #endregion Check Input Code
 }

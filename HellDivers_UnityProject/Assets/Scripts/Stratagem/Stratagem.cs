@@ -16,7 +16,7 @@ public class Stratagem : MonoBehaviour
     /// <summary>
     /// The current state of the stratagem.
     /// </summary>
-    public EState State { get { return m_eState; } }
+    public eState State { get { return m_eState; } }
 
     /// <summary>
     /// Represention of this has been used how many times.
@@ -40,7 +40,7 @@ public class Stratagem : MonoBehaviour
 
     #endregion Properties
 
-    #region PrivateVariable
+    #region Private Variable
 
     [SerializeField] private StratagemInfo m_Info;
     private Transform m_LaunchPos;
@@ -52,19 +52,20 @@ public class Stratagem : MonoBehaviour
     private bool m_IsCooling;
     private float m_CoolTimer;
     private float m_ActivationTimer;
-    private EState m_eState = EState.Idle;
+    private eState m_eState = eState.Idle;
     private DoState m_DoState;
 
     private delegate void DoState();
 
-    #endregion PrivateVariable
+    #endregion Private Variable
 
     #region Initializer
 
     /// <summary>
-    /// Setup stratagem by id which is in the gamedata.stratagem table.
+    /// Setup stratagem by id key which is in the gamedata.stratagem table.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
     /// <returns></returns>
     public bool SetStratagemInfo(int id, Transform launchPos)
     {
@@ -98,14 +99,14 @@ public class Stratagem : MonoBehaviour
         m_UsesCount = 0;
         m_CoolTimer = 0.0f;
         m_ActivationTimer = 0.0f;
-        m_eState = EState.Idle;
+        m_eState = eState.Idle;
         StopAllCoroutines();
     }
 
     /// <summary>
-    /// Get stratagem info by id which is in the gamedata.stratagem tables. If it does not exist return null.
+    /// Get stratagem info by id key which is in the gamedata.stratagem tables. If it does not exist return null.
     /// </summary>
-    /// <param name="id">stratagem id which in the table</param>
+    /// <param name="id">The id key which in the stratagem  table</param>
     /// <returns></returns>
     private StratagemInfo GetInfoFromGameData(int id)
     {
@@ -132,7 +133,7 @@ public class Stratagem : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (m_eState == EState.ThrowOut) DoThrowOut();
+        if (m_eState == eState.ThrowOut) DoThrowOut();
     }
 
     #endregion MonoBehaviour
@@ -146,13 +147,13 @@ public class Stratagem : MonoBehaviour
     public void GetReady()
     {
         if (m_UsesCount >= Info.uses) return;
-        if (IsCooling || State != EState.Idle) return;
+        if (IsCooling || State != eState.Idle) return;
 
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
         m_Animator.SetTrigger("Start");
 
-        m_eState = EState.Ready;
+        m_eState = eState.Ready;
     }
 
     /// <summary>
@@ -161,7 +162,7 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public void Throw(Vector3 force)
     {
-        if (IsCooling || State != EState.Ready) return;
+        if (IsCooling || State != eState.Ready) return;
 
         this.transform.parent = null;
         m_Rigidbody.isKinematic = false;
@@ -176,17 +177,17 @@ public class Stratagem : MonoBehaviour
         if (Info.cooldown > 0) StartCoroutine(DoCoolDown(Info.cooldown));
 
         // Translate to ThrowOut state.
-        m_eState = EState.ThrowOut;
+        m_eState = eState.ThrowOut;
     }
 
     #endregion Public Function
 
-    #region StateMachine
+    #region Finite State Machine
 
     /// <summary>
     /// Representation the stratagem object current statement.
     /// </summary>
-    public enum EState
+    public enum eState
     {
         /// <summary>
         /// It's the start state.
@@ -214,7 +215,7 @@ public class Stratagem : MonoBehaviour
         Activating
     }
 
-    /*-------------------------------------------------------------------------------
+    /*--------------------------------------------------------------------------------
      * In ThrowOut state, checking the stratagem object is land on "Terrain" or not. *
      * When it landed successfully, then translate to Activating state.              *
      --------------------------------------------------------------------------------*/
@@ -231,19 +232,20 @@ public class Stratagem : MonoBehaviour
                 this.transform.rotation = Quaternion.Euler(Vector3.zero);
                 m_Animator.SetTrigger("Land");
 
+                // Start the activation timer.
                 StartCoroutine(DoActivating(Info.activation));
             }
         }
     }
 
-    /*---------------------------------------------------------------------
+    /*----------------------------------------------------------------------
      * It's a timer for activaing process.                                 *
      * When the "End" animation was finished, than translate to Idle state *
      ----------------------------------------------------------------------*/
 
     private IEnumerator DoActivating(float targetTime)
     {
-        m_eState = EState.Activating;
+        m_eState = eState.Activating;
 
         m_ActivationTimer = 0.0f;
         while (m_ActivationTimer < targetTime)
@@ -260,18 +262,19 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
-        m_eState = EState.Idle;
+        m_eState = eState.Idle;
         yield break;
     }
 
-    /*----------------------------------------
+    /*-----------------------------------------
      * It's a timer for cooling down process. *
      -----------------------------------------*/
 
     private IEnumerator DoCoolDown(float targetTime)
     {
-        m_CoolTimer = 0.0f;
         m_IsCooling = true;
+
+        m_CoolTimer = 0.0f;
         while (m_CoolTimer < targetTime)
         {
             yield return new WaitForSeconds(Time.deltaTime);
@@ -281,11 +284,11 @@ public class Stratagem : MonoBehaviour
         yield break;
     }
 
-    #endregion StateMachine
+    #endregion Finite State Machine
 
 #if UNITY_EDITOR
 
-    #region DebugDraw
+    #region Debug Draw
 
     public bool ShowDebugInfo;
 
@@ -293,9 +296,9 @@ public class Stratagem : MonoBehaviour
     {
         if (ShowDebugInfo)
         {
-            if (State == EState.ThrowOut) Gizmos.DrawWireSphere(this.transform.position, m_Radius);
+            if (State == eState.ThrowOut) Gizmos.DrawWireSphere(this.transform.position, m_Radius);
 
-            if (State == EState.Activating)
+            if (State == eState.Activating)
             {
                 string actMessage = string.Format("{0} Act : {1}", Info.title, m_ActivationTimer);
                 style.normal.textColor = Color.red;
@@ -320,7 +323,7 @@ public class Stratagem : MonoBehaviour
 
             switch (State)
             {
-                case EState.Idle:
+                case eState.Idle:
                     {
                         if (m_UsesCount >= Info.uses)
                         {
@@ -337,7 +340,7 @@ public class Stratagem : MonoBehaviour
                         break;
                     }
 
-                case EState.ThrowOut:
+                case eState.ThrowOut:
                     {
                         Message = string.Format("{0} /{1} throw out", this.name, Info.title);
                         style.normal.textColor = Color.gray;
@@ -345,7 +348,7 @@ public class Stratagem : MonoBehaviour
                         break;
                     }
 
-                case EState.Ready:
+                case eState.Ready:
                     {
                         Message = string.Format("{0} /{1} ready", this.name, Info.title);
                         style.normal.textColor = Color.gray;
@@ -353,7 +356,7 @@ public class Stratagem : MonoBehaviour
                         break;
                     }
 
-                case EState.Activating:
+                case eState.Activating:
                     {
                         Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.title, m_ActivationTimer, Info.activation);
                         style.normal.textColor = Color.red;
@@ -376,7 +379,7 @@ public class Stratagem : MonoBehaviour
 
     private GUIStyle style = new GUIStyle();
 
-    #endregion DebugDraw
+    #endregion Debug Draw
 
 #endif
 }
