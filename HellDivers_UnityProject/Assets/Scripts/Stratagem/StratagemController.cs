@@ -5,6 +5,7 @@ using UnityEngine;
 public class StratagemController : MonoBehaviour
 {
     [SerializeField] private List<Stratagem> m_Stratagems;
+    private Stratagem m_CurrentStratagem;
 
     // Use this for initialization
     private void Start()
@@ -29,6 +30,15 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (m_CurrentStratagem != null)
+            {
+                m_CurrentStratagem.Throw(new Vector3(0.0f, 500.0f, 300.0f));
+                m_CurrentStratagem = null;
+            }
+        }
+
         if (Input.GetButtonDown("Stratagem"))
         {
             StartCoroutine(CheckInputCode());
@@ -45,7 +55,7 @@ public class StratagemController : MonoBehaviour
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.State == Stratagem.EState.Standby)
+            if (s != null && s.State == Stratagem.EState.Idle)
                 _Open.Add(s);
         }
 
@@ -63,7 +73,8 @@ public class StratagemController : MonoBehaviour
                 {
                     if (_Open[i].Info.code.Length == inputCount)
                     {
-                        _Open[i].GetReady();
+                        m_CurrentStratagem = _Open[i];
+                        m_CurrentStratagem.GetReady();
                         yield break;
                     }
                     continue;
