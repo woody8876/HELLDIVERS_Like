@@ -55,11 +55,17 @@ public class StratagemController : MonoBehaviour
 
     /// <summary>
     /// Add a stratagem object by id key which is in the gamedata.stratagem table.
+    /// If the id already in the controller will be pass.
     /// </summary>
     /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
     public void AddNewStratagemObject(int id, Transform launchPos)
     {
+        for (int i = 0; i < m_Stratagems.Count; i++)
+        {
+            if (m_Stratagems[i].Info.id == id) return;
+        }
+
         GameObject go = new GameObject(string.Format("Stratagem ({0})", id));
         Stratagem s = go.AddComponent<Stratagem>();
         s.SetStratagemInfo(id, launchPos);
@@ -70,13 +76,20 @@ public class StratagemController : MonoBehaviour
 
     #region Check Input Code
 
+    /*---------------------------------------------------------
+     * Cllect all stratagem which has input code.             *
+     * Check input with info step by step.                    *
+     * The final result have to all match up info with input. *
+     * Finaly store in the m_CurrentStratagem.                *
+     ---------------------------------------------------------*/
+
     private IEnumerator CheckInputCode()
     {
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.State == Stratagem.eState.Idle)
+            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle)
                 _Open.Add(s);
         }
 
@@ -105,6 +118,10 @@ public class StratagemController : MonoBehaviour
             }
         }
     }
+
+    /*---------------------------
+     * Define the input result. *
+     ---------------------------*/
 
     private StratagemInfo.eCode? GetInputCode()
     {
