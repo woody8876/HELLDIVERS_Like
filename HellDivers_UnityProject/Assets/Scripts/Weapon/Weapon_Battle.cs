@@ -37,12 +37,20 @@ public class Weapon_Battle : MonoBehaviour
     //==================================================================================================
     private void Start()
     {
-        m_tGunPos = this.GetComponent<Player>().Parts.LaunchPoint;
-        m_playerInfo = GetComponent<Player>();
         m_ActiveState = IdleState;
+        m_playerInfo = GetComponent<Player>() ;
+        if (m_playerInfo == null) return;
+        m_tGunPos = m_playerInfo.Parts.LaunchPoint;
         if (m_playerInfo.Info.WeaponId.Count > 0)
         {
-            for (int i = 0; i < m_playerInfo.Info.WeaponId.Count; i++) { EWeapon.Add((eWeaponType)m_playerInfo.Info.WeaponId[i]); }
+            for (int i = 0; i < m_playerInfo.Info.WeaponId.Count; i++)
+            {
+                EWeapon.Add((eWeaponType)m_playerInfo.Info.WeaponId[i]);
+            }
+        }
+        else
+        {
+            EWeapon.Add((eWeaponType)1);
         }
         for (int i = 0; i < EWeapon.Count; i++)
         {
@@ -185,4 +193,5 @@ public class Weapon_Battle : MonoBehaviour
         IWeaponBehaviour weaponBehaviour = m_weaponFactory.CreateWeapon(weaponType);
         return weaponBehaviour;
     }
+
 }

@@ -4,41 +4,79 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform m_Player;
-    public float m_fPosX = 64.0f;
-    public float m_fPosY = 88.0f;
-    public float m_fPosZ = 56.5f;
-    public float m_fRotX = 45.0f;
-    public float m_fRotY = 48.0f;
+    public float m_fPosX = 0.0f;
+    public float m_fPosY = 10.0f;
+    public float m_fPosZ = -7.5f;
+    public float m_fRotX = 60.0f;
+    public float m_fRotY = 0.0f;
     public float m_fRotZ = 0.0f;
 
-    private Camera m_Cam;
+    public float K = 4;
+    public float L;
 
+    private Vector3 m_vPrePos;
+    private Vector3 m_vCurPos;
+
+    public Transform m_Player;
+
+    private Camera m_Cam;
     // Use this for initialization
     private void Start()
     {
-        m_Cam = GetComponent<Camera>();
-        m_Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        m_Cam = Camera.main.GetComponent<Camera>();
+        m_Cam.transform.position = new Vector3(m_fPosX, m_fPosY, m_fPosZ);
         m_Cam.transform.rotation = Quaternion.Euler(m_fRotX, m_fRotY, m_fRotZ);
-        m_Cam.fieldOfView = 15f;
+        m_Cam.fieldOfView = 60f;
+        if (m_Player == null) m_Player = this.transform;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        FollowTarget(m_Player);
-        StartCoroutine(CheckView());
+//        if (m_Player != null)
+            m_vPrePos = m_Player.position;
     }
 
-    private void FollowTarget(Transform Target)
+    private void LateUpdate()
+    {
+//        if (m_Player != null)
+            m_vCurPos = m_Player.position;
+        if (!CameraMove()) { FollowTarget(m_vCurPos); }
+    }
+
+    public Vector3 SetTarget(Transform m_player)
+    {
+        return m_player.position;
+    }
+        
+
+    private bool CameraMove()
+    {
+        if(m_vCurPos != m_vPrePos)
+        {
+            Vector3 vCurCamPos = m_Cam.transform.position;
+            Vector3 Direc = m_vCurPos - m_vPrePos;
+            vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, vCurCamPos.x + Direc.x * K, L);
+            vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, vCurCamPos.y + Direc.y * K, L);
+            vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, vCurCamPos.z + Direc.z * 0.75f * K, L);
+            m_Cam.transform.position = vCurCamPos;
+            L -= 0.1f * Time.deltaTime;
+            if (L < 0.1f) L = 0.1f;
+            return true;
+        }
+        L = 0.5f;
+        return false;
+    }
+    private void FollowTarget(Vector3 Target)
     {
         Vector3 vCurCamPos = m_Cam.transform.position;
-        vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, Target.position.x - m_fPosX, 3f * Time.deltaTime);
-        vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, Target.position.y + m_fPosY, 3f * Time.deltaTime);
-        vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, Target.position.z - m_fPosZ, 3f * Time.deltaTime);
+        vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, Target.x + m_fPosX, 2f * Time.deltaTime);
+        vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, Target.y + m_fPosY, 2f * Time.deltaTime);
+        vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, Target.z + m_fPosZ, 2f * Time.deltaTime);
         m_Cam.transform.position = vCurCamPos;
     }
 
+    //Use to turn off the obstacle's mesh if which is on the way
     private IEnumerator CheckView()
     {
         yield return new WaitForSeconds(0.5f);

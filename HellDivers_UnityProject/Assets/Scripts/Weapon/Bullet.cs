@@ -13,10 +13,10 @@ public class Bullet : MonoBehaviour {
     
     //Bullet's speed
     private float m_fSpeed = 100;
-    Renderer m_bullet;
+    //Renderer m_bullet;
     //========================================================================
     void Start () {
-        m_bullet = this.gameObject.GetComponent<Renderer>();
+        //m_bullet = this.gameObject.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -34,7 +34,6 @@ public class Bullet : MonoBehaviour {
         this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
         yield return new WaitForSeconds(Weapon_Battle.weaponBehaviours[m_Type].weaponInfo().Range/m_fSpeed);
         ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, this.gameObject);
-        this.gameObject.SetActive(false);
     }
 
 
