@@ -141,10 +141,12 @@ public class Stratagem : MonoBehaviour
 
     /// <summary>
     /// Show the stratagem object & reset to the launch position.
+    /// Translate to Ready state.
     /// </summary>
     public void GetReady()
     {
-        if (IsCooling || State != EState.Idle || m_UsesCount >= Info.uses) return;
+        if (m_UsesCount >= Info.uses) return;
+        if (IsCooling || State != EState.Idle) return;
 
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
@@ -155,6 +157,7 @@ public class Stratagem : MonoBehaviour
 
     /// <summary>
     /// Add force to this gameobject for throw it out.
+    /// Translate to Throw out state.
     /// </summary>
     public void Throw(Vector3 force)
     {
@@ -164,8 +167,10 @@ public class Stratagem : MonoBehaviour
         m_Rigidbody.isKinematic = false;
         m_Rigidbody.AddForce(force);
         m_IsCooling = true;
-        m_UsesCount++;
         m_Animator.SetTrigger("Throw");
+
+        // Uses add count. ( Info.uses = -1 ) is meaning for Unlimited.
+        if (Info.uses != -1) m_UsesCount++;
 
         // Start the cooldown timer.
         if (Info.cooldown > 0) StartCoroutine(DoCoolDown(Info.cooldown));
@@ -178,9 +183,35 @@ public class Stratagem : MonoBehaviour
 
     #region StateMachine
 
+    /// <summary>
+    /// Representation the stratagem object current statement.
+    /// </summary>
     public enum EState
     {
-        Idle, Ready, ThrowOut, Activating
+        /// <summary>
+        /// It's the start state.
+        /// Hide display object, Do nothing.
+        /// Next state is Ready state.
+        /// </summary>
+        Idle,
+
+        /// <summary>
+        /// Display on the launch position.
+        /// Waiting for throw it out.
+        /// </summary>
+        Ready,
+
+        /// <summary>
+        /// The stratagem is out of launch position root.
+        /// Checking the terrain for landing.
+        /// </summary>
+        ThrowOut,
+
+        /// <summary>
+        /// After land on terrain, start counting timer.
+        /// When time's up, spawn the traget item, and back to Idle state.
+        /// </summary>
+        Activating
     }
 
     /*-------------------------------------------------------------------------------
@@ -299,7 +330,7 @@ public class Stratagem : MonoBehaviour
                         }
                         else
                         {
-                            Message = string.Format("{0} /{1} standby", this.name, Info.title);
+                            Message = string.Format("{0} /{1} Idle", this.name, Info.title);
                             style.normal.textColor = Color.gray;
                             GUI.Label(rect, Message, style);
                         }
