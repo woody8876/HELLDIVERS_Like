@@ -15,10 +15,9 @@ public class AniTest : MonoBehaviour
     {
         m_Animator = this.GetComponent<Animator>();
     }
-
-    public void Move(Vector3 move, Vector3 direction, bool run, bool fighting)
+    public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle, bool attack)
     {
-        if (!fighting)
+        if (!inBattle)
         {
             move = transform.InverseTransformDirection(move);
             m_ForwardAmount = move.z;
@@ -26,7 +25,7 @@ public class AniTest : MonoBehaviour
             if (run) m_ForwardAmount *= 2;
         }
 
-        else if (fighting)
+        else if (inBattle)
         {
             Vector3 currentMove = direction;
             direction = transform.InverseTransformDirection(direction);
@@ -34,10 +33,9 @@ public class AniTest : MonoBehaviour
             m_BattleRight = Vector3.Dot(this.transform.right, move.normalized);
             m_BattleForward = Vector3.Dot(this.transform.forward, move.normalized);
             move = currentMove;
-            //move = m_Forward * Vector3.forward + m_Right * Vector3.right;
         }
         ApplyExtraTurnRotation();
-        UpdateAnimator(move, fighting);
+        UpdateAnimator(move, inBattle, attack);
     }
 
     void ApplyExtraTurnRotation()
@@ -45,16 +43,16 @@ public class AniTest : MonoBehaviour
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
-    void UpdateAnimator(Vector3 move, bool fighting)
+    void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
     {
-        if (!fighting)
+        if (!inBattle)
         {
             m_Animator.SetBool("WalkShoot", false);
             m_Animator.SetBool("RotateStart", false);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
         }
-        else if (fighting)
+        else if (inBattle)
         {
             if(Vector3.Angle(this.transform.forward, move) > 20) m_Animator.SetBool("RotateStart", true);
             m_Animator.SetBool("WalkShoot", true);

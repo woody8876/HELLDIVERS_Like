@@ -17,7 +17,8 @@ public class ControllerTest : MonoBehaviour
     #endregion Private Variable
 
     private bool bRun = false;
-    private bool bFighting = false;
+    private bool bInBattle = false;
+    private bool bAttack = false;
 
     private void Start()
     {
@@ -57,11 +58,15 @@ public class ControllerTest : MonoBehaviour
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             FaceDirection();
-            bFighting = true;
+            bInBattle = true;
+            if (Input.GetMouseButtonDown(0))
+            {
+                bAttack = true;
+            }
         }
-        else bFighting = false;
+        else bInBattle = false;
 
-        PAC.Move(m_Move, m_Direction, bRun, bFighting);
+        PAC.Move(m_Move, m_Direction, bRun, bInBattle, bAttack);
     }
 
     private void FaceDirection()
@@ -81,7 +86,6 @@ public class ControllerTest : MonoBehaviour
         if (m_Direction.magnitude > 1) m_Direction.Normalize();
     }
 #if UNITY_EDITOR
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
