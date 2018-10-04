@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerTest : MonoBehaviour {
+public class ControllerTest : MonoBehaviour
+{
 
-#region Private Variable
+    #region Private Variable
     private CharacterController m_Controller;
     private Transform m_Cam;
     private Vector3 m_CamForward;
-    private Vector3 m_Direction;
     private Vector3 m_Move;
+    private Vector3 m_Direction;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
     private AniTest PAC;
-#endregion Private Variable
+    #endregion Private Variable
+
+    private bool bRun = false;
+    private bool bFighting = false;
 
     private void Start()
     {
@@ -24,12 +28,17 @@ public class ControllerTest : MonoBehaviour {
         {
             m_Cam = Camera.main.transform;
         }
-
     }
-    private void Update()
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void Move()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
+
 
         if (m_Cam != null)
         {
@@ -40,9 +49,37 @@ public class ControllerTest : MonoBehaviour {
         {
             m_Move = v * Vector3.forward + h * Vector3.right;
         }
-        PAC.Move(m_Move);
+
+        bRun = (Input.GetButton("Run")) ? true : false;
+
+        if (m_Move.magnitude > 1) m_Move.Normalize();
+
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+            bFighting = true;
+        }
+        else bFighting = false;
+
+        PAC.Move(m_Move, m_Direction, bRun, bFighting);
     }
 
+    private void FaceDirection()
+    {
+        float vHigh = Camera.main.transform.position.y - this.transform.position.y;
+        Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 vMouseRay = MouseRay.direction;
+        vMouseRay.Normalize();
+
+        float angle = Vector3.Dot(new Vector3(0, -1, 0), vMouseRay);
+        float distance = vHigh / angle;
+        Vector3 endPoint = MouseRay.GetPoint(distance);
+
+        m_Direction = endPoint - this.transform.position;
+        m_Direction.y = 0.0f;
+        if (m_Direction.magnitude < 0.1f) return;
+        if (m_Direction.magnitude > 1) m_Direction.Normalize();
+    }
 #if UNITY_EDITOR
 
     private void OnDrawGizmos()

@@ -43,8 +43,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private Vector3 m_Direction;
     private float m_Right;
     private float m_Forward;
-    private float m_TurnAmount;
-    private float m_ForwardAmount;
     float cSpeed = 0f;
 
     private void Start()
@@ -80,30 +78,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetTrigger("Roll");
         }
     }
-    public void Move(Vector3 move)
-    {
-        move = transform.InverseTransformDirection(move);
-        m_TurnAmount = Mathf.Atan2(move.x, move.z);
-        m_ForwardAmount = move.z;
-        ApplyExtraTurnRotation();
-        UpdateAnimator(move);
-    }
-    void ApplyExtraTurnRotation()
-    {
-        float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
-        transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
-    }
-    void UpdateAnimator(Vector3 move)
-    {
-        m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-        m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 
-        float runCycle =
-            Mathf.Repeat(
-                m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + 0.2f, 1);
-
-        m_Animator.speed = 1;
-    }
     private void MovrDirection()
     {
         float h = Input.GetAxis("Horizontal");
@@ -125,13 +100,31 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void DisplayMoveState()
     {
-
+        
         float minSpeed = 0f;
         float maxSpeed = 2f;
         float addSpeed = 5f;
 
         if (cSpeed > 2) cSpeed = maxSpeed;
         if (cSpeed < 0) cSpeed = minSpeed;
+
+        if(m_MoveState == ePlayerAnimationState.ANI_TURNRIGHT90)
+        {
+            m_Animator.SetBool("bTurn", true);
+            m_Animator.SetFloat("Turn", 0);
+
+            AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.normalizedTime >= 1.0f)
+            {
+                m_Animator.SetBool("bTurn", false);
+            }
+        }
+        else if (m_MoveState == ePlayerAnimationState.ANI_TURNLEFT90)
+        {
+            m_Animator.SetBool("bTurn",true);
+            m_Animator.SetFloat("Turn", 1);
+            m_Animator.SetBool("bTurn", false);
+        }
 
         if (m_MoveState == ePlayerAnimationState.ANI_IDLE)
         {

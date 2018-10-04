@@ -8,18 +8,34 @@ public class AniTest : MonoBehaviour
     private float m_TurnAmount;
     private float m_ForwardAmount;
     private Animator m_Animator;
+    private float m_Right;
+    private float m_Forward;
+
     private void Start()
     {
         m_Animator = this.GetComponent<Animator>();
     }
 
-    public void Move(Vector3 move)
+    public void Move(Vector3 move, Vector3 direction, bool run, bool fighting)
     {
-        move = transform.InverseTransformDirection(move);
-        m_TurnAmount = Mathf.Atan2(move.x, move.z);
-        m_ForwardAmount = move.z;
+        if (!fighting)
+        {
+            move = transform.InverseTransformDirection(move);
+            m_ForwardAmount = move.z;
+            m_TurnAmount = Mathf.Atan2(move.x, move.z);
+            if (run) m_ForwardAmount *= 2;
+        }
+
+        else if (fighting)
+        {
+            direction = transform.InverseTransformDirection(direction);
+            m_TurnAmount = Mathf.Atan2(direction.x, direction.z);
+            m_Right = Vector3.Dot(this.transform.right, move.normalized);
+            m_Forward = Vector3.Dot(this.transform.forward, move.normalized);
+            move = m_Forward * Vector3.forward + m_Right * Vector3.right;
+        }
         ApplyExtraTurnRotation();
-        UpdateAnimator(move);
+        UpdateAnimator(move, fighting);
     }
 
     void ApplyExtraTurnRotation()
@@ -27,9 +43,20 @@ public class AniTest : MonoBehaviour
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
-    void UpdateAnimator(Vector3 move)
+    void UpdateAnimator(Vector3 move, bool fighting)
     {
-        m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-        m_Animator.SetFloat("Turn", m_TurnAmount/1.57f, 0.1f, Time.deltaTime);
+        if (!fighting)
+        {
+            m_Animator.SetBool("WalkShoot", false);
+            m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
+        }
+        else if (fighting)
+        {
+            m_Animator.SetBool("WalkShoot", true);
+            m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkForward", m_Forward, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkRight", m_Right, 0.1f, Time.deltaTime);
+        }
     }
 }
