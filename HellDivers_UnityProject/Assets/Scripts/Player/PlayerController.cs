@@ -69,6 +69,10 @@ public class PlayerController : MonoBehaviour
         }
         else bInBattle = false;
 
+        if (true)
+        {
+
+        }
         PAC.Move(m_Move, m_Direction, bRun, bInBattle, bAttack);
     }
 
