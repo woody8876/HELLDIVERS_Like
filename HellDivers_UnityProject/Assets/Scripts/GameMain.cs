@@ -28,17 +28,6 @@ public class GameMain : MonoBehaviour
     private void Start()
     {
         AddPlayer(m_playerInfo);
-
-        //if (m_playerInfo != null)
-        //{
-        //GameObject playerGo = Resources.Load("Characters/Ch01/ch01") as GameObject;
-        //playerGo = Instantiate(playerGo, this.transform.parent);
-        //playerGo.transform.position -= Vector3.up;
-        //playerGo.AddComponent<Player>();
-        //playerGo.GetComponent<Player>().Info = m_playerInfo;
-        //GameObject playerGo = new GameObject("Player", typeof(Player));
-        //playerGo.GetComponent<Player>().Info = m_playerInfo;
-        //}
     }
 
     // Update is called once per frame
