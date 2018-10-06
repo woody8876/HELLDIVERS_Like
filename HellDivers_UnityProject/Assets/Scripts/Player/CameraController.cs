@@ -11,15 +11,16 @@ public class CameraController : MonoBehaviour
     public float m_fRotY = 0.0f;
     public float m_fRotZ = 0.0f;
 
-    public float K = 4;
+    public float K;
     public float L;
 
+    public Transform m_Player;
+    private Camera m_Cam;
     private Vector3 m_vPrePos;
     private Vector3 m_vCurPos;
+    private Vector3 m_vDirection;
+    private bool m_bDire;
 
-    public Transform m_Player;
-
-    private Camera m_Cam;
     // Use this for initialization
     private void Start()
     {
@@ -33,40 +34,53 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-//        if (m_Player != null)
-            m_vPrePos = m_Player.position;
+        m_vPrePos = m_Player.position;
     }
 
     private void LateUpdate()
     {
-//        if (m_Player != null)
-            m_vCurPos = m_Player.position;
-        if (!CameraMove()) { FollowTarget(m_vCurPos); }
+        m_vCurPos = m_Player.position;
+        if (!CameraMoved()) { FollowTarget(m_vCurPos); }
     }
 
     public Vector3 SetTarget(Transform m_player)
     {
         return m_player.position;
     }
-        
 
-    private bool CameraMove()
+
+    //private bool CameraMove()
+    //{
+    //    if(m_vCurPos != m_vPrePos)
+    //    {
+    //        Vector3 vCurCamPos = m_Cam.transform.position;
+    //        Vector3 Direc = m_vCurPos - m_vPrePos;
+    //        vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, vCurCamPos.x + Direc.x * K, L);
+    //        vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, vCurCamPos.y + Direc.y * K, L);
+    //        vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, vCurCamPos.z + Direc.z * 0.75f * K, L);
+    //        m_Cam.transform.position = vCurCamPos;
+    //        L -= 0.1f * Time.deltaTime;
+    //        if (L < 0.1f) L = 0.1f;
+    //        return true;
+    //    }
+    //    L = 0.5f;
+    //    return false;
+    //}
+    private bool CameraMoved()
     {
-        if(m_vCurPos != m_vPrePos)
+        if (m_vCurPos != m_vPrePos)
         {
             Vector3 vCurCamPos = m_Cam.transform.position;
             Vector3 Direc = m_vCurPos - m_vPrePos;
-            vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, vCurCamPos.x + Direc.x * K, L);
-            vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, vCurCamPos.y + Direc.y * K, L);
-            vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, vCurCamPos.z + Direc.z * 0.75f * K, L);
+            Direc.Normalize();
+            vCurCamPos.x = Mathf.Lerp (vCurCamPos.x, m_vCurPos.x + Direc.x * K + m_fPosX, L);
+            vCurCamPos.z = Mathf.Lerp (vCurCamPos.z, m_vCurPos.z + Direc.z * K * 0.75f + m_fPosZ, L * 0.75f);
             m_Cam.transform.position = vCurCamPos;
-            L -= 0.1f * Time.deltaTime;
-            if (L < 0.1f) L = 0.1f;
             return true;
         }
-        L = 0.5f;
         return false;
     }
+
     private void FollowTarget(Vector3 Target)
     {
         Vector3 vCurCamPos = m_Cam.transform.position;
