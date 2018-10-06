@@ -292,8 +292,6 @@ GameObject:
   - component: {fileID: 95496215402139182}
   - component: {fileID: 143033676911226046}
   - component: {fileID: 114685507022940852}
-  - component: {fileID: 114321886840742354}
-  - component: {fileID: 114425107521016900}
   m_Layer: 0
   m_Name: ch01
   m_TagString: Player
@@ -2001,28 +1999,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114321886840742354
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1328587470451250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24107a0b741affd4caf3c58efeb7d3a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114425107521016900
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1328587470451250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211be94d7ddea0c4e8ecba60e88f3e7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114685507022940852
 MonoBehaviour:
   m_ObjectHideFlags: 1
