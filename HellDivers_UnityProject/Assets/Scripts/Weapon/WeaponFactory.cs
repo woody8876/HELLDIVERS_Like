@@ -42,7 +42,7 @@ public class WeaponFactory {
                 weaponBehaviour = new Weapon_ShotGun();
                 break;
             default:
-                weaponBehaviour = null;
+                weaponBehaviour = new Weapon_Rifle();
                 break;
         }
 
