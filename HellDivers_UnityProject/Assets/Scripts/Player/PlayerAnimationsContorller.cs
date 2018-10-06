@@ -48,6 +48,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator = this.GetComponent<Player>().Anima;
         }
     }
+
     public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle, bool attack)
     {
         if (!inBattle)
@@ -57,7 +58,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_TurnAmount = Mathf.Atan2(move.x, move.z);
             if (run) m_ForwardAmount *= 2;
         }
-
         else if (inBattle)
         {
             Vector3 currentMove = direction;
@@ -68,15 +68,20 @@ public class PlayerAnimationsContorller : MonoBehaviour
             move = currentMove;
         }
         ApplyExtraTurnRotation();
-        UpdateAnimator(move, inBattle, attack);
+
+        if (m_Animator != null)
+        {
+            UpdateAnimator(move, inBattle, attack);
+        }
     }
 
-    void ApplyExtraTurnRotation()
+    private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
     }
-    void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
+
+    private void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
     {
         if (!inBattle)
         {

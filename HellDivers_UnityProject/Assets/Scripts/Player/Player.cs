@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(CameraController))]
 public class Player : MonoBehaviour
 {
     public PlayerInfo Info { get; set; }
@@ -18,23 +17,24 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         this.tag = "Player";
+    }
 
-        //Display = Resources.Load("Characters/Ch00/ch01") as GameObject;
-        //Display = Instantiate(Display, this.transform);
-        //Display.transform.position -= Vector3.up;
+    public bool Init(PlayerInfo playerInfo)
+    {
+        if (playerInfo == null) return false;
 
-        //if (Display != null)
-        //{
-            Anima = Display.GetComponent<Animator>();
-            Parts = Display.GetComponent<PlayerParts>();
+        Info = playerInfo;
 
-            Camera.main.GetComponent<CameraController>().m_Player = Display.transform;
-        //}
+        Anima = GetComponent<Animator>();
+        Parts = GetComponent<PlayerParts>();
+
+        return true;
     }
 
     // Use this for initialization
     private void Start()
     {
+        Camera.main.GetComponent<CameraController>().m_Player = this.transform;
     }
 
     // Update is called once per frame
