@@ -29,7 +29,7 @@ public class GameMain : MonoBehaviour
     {
         if (m_playerInfo != null)
         {
-            GameObject playerGo = Resources.Load("Characters/Ch00/ch01") as GameObject;
+            GameObject playerGo = Resources.Load("Characters/Ch01/ch01") as GameObject;
             playerGo = Instantiate(playerGo, this.transform.parent);
             playerGo.transform.position -= Vector3.up;
             playerGo.AddComponent<Player>();
