@@ -35,15 +35,17 @@ public class CameraController : MonoBehaviour
         if (m_Player == this.transform) { return; }
         m_vPrePos = m_Player.position;
     }
-
     private void LateUpdate()
     {
         if (m_Player == this.transform) { return; }
         m_vCurPos = m_Player.position;
+        Debug.Log(CameraMove());
+        Debug.LogFormat("PrePos: {0} || CurPos: {1}", m_vPrePos, m_vCurPos);
         if (!CameraMove()) { FollowTarget(m_vCurPos); }
     }
+    
 
-    public Vector3 SetTarget(Transform m_player)
+    public Vector3 SetTarget(Transform m_player, int[] a)
     {
         return m_player.position;
     }
