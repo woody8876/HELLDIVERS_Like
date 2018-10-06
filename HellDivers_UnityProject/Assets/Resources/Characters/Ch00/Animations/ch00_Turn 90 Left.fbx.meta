@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 61172891d2c881b45995e8bfe49cac34
+guid: 7b25420ca47a3264095a0773861bbd16
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -180,7 +180,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -238,7 +238,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: 
+    rootMotionBoneName: mixamorig:Hips
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
