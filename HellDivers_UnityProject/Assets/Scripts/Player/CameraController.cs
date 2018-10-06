@@ -32,11 +32,13 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (m_Player == this.transform) { return; }
         m_vPrePos = m_Player.position;
     }
 
     private void LateUpdate()
     {
+        if (m_Player == this.transform) { return; }
         m_vCurPos = m_Player.position;
         if (!CameraMove()) { FollowTarget(m_vCurPos); }
     }
