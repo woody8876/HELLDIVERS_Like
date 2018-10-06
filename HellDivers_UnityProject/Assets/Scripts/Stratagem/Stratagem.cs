@@ -163,7 +163,7 @@ public class Stratagem : MonoBehaviour
 
         this.transform.parent = null;
         m_Rigidbody.isKinematic = false;
-        m_Rigidbody.AddForce(force);
+        m_Rigidbody.AddRelativeForce(force);
         m_IsCooling = true;
         m_Animator.SetTrigger("Throw");
 

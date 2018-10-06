@@ -34,7 +34,8 @@ public class StratagemController : MonoBehaviour
         {
             if (m_CurrentStratagem != null)
             {
-                m_CurrentStratagem.Throw(new Vector3(0.0f, 500.0f, 300.0f));
+                Vector3 force = new Vector3(0.0f, 100.0f, 400.0f);
+                m_CurrentStratagem.Throw(force);
                 m_CurrentStratagem = null;
             }
         }
