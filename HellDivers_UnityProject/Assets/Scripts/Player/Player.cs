@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(StratagemController))]
+[RequireComponent(typeof(Weapon_Battle))]
+[RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(CameraController))]
@@ -12,10 +15,6 @@ public class Player : MonoBehaviour
     public PlayerParts Parts { get; set; }
     public GameObject Display { get; private set; }
     public Animator Anima { get; private set; }
-
-    private PlayerAnimationsContorller m_AnimationController;
-    private Weapon_Battle m_Weapon;
-    private StratagemController m_Stratagem;
 
     private void Awake()
     {
@@ -29,9 +28,9 @@ public class Player : MonoBehaviour
         {
             Anima = Display.GetComponent<Animator>();
             Parts = Display.GetComponent<PlayerParts>();
+            
             m_AnimationController = this.gameObject.AddComponent<PlayerAnimationsContorller>();
             Camera.main.GetComponent<CameraController>().m_Player = Display.transform ;
-            
         }
     }
 

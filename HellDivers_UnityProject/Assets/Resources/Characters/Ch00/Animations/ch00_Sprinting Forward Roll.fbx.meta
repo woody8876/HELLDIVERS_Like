@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 274a0e258c6adfe41996bdbc94f92394
+guid: 296e6390debc71a42b4004dcc38d6ec9
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Dreyar
+    100000: //RootNode
     100002: mixamorig:Head
     100004: mixamorig:HeadTop_End
     100006: mixamorig:Hips
@@ -69,8 +69,7 @@ ModelImporter:
     100126: mixamorig:Spine
     100128: mixamorig:Spine1
     100130: mixamorig:Spine2
-    100132: //RootNode
-    400000: Dreyar
+    400000: //RootNode
     400002: mixamorig:Head
     400004: mixamorig:HeadTop_End
     400006: mixamorig:Hips
@@ -136,13 +135,8 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    400132: //RootNode
-    2100000: dreyar_M
-    4300000: Dreyar
-    7400000: mixamo.com
-    7400002: RollTets
+    7400000: Sprinting Forward Roll
     9500000: //RootNode
-    13700000: Dreyar
   externalObjects: {}
   materials:
     importMaterials: 0
@@ -162,7 +156,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -171,7 +165,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: Sprinting Forward Roll
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 35
@@ -186,9 +180,9 @@ ModelImporter:
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
@@ -239,7 +233,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    rootMotionBoneName: 
+    rootMotionBoneName: mixamorig:Hips
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
