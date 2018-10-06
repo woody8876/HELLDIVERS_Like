@@ -1043,6 +1043,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cca8a694dec4c4cbf874321d735dc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerInfo:
+    Name: 
+    Rank: 0
+    Hp: 0
+    DisplayID: 
+    WeaponId: 
+    StratagemId: 
 --- !u!114 &936864669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1060,8 +1067,8 @@ MonoBehaviour:
   m_fRotX: 60
   m_fRotY: 0
   m_fRotZ: 0
-  K: 4
-  L: 0
+  K: 10
+  L: 0.03
   m_Player: {fileID: 0}
 --- !u!1 &995170883
 GameObject:
