@@ -5,6 +5,9 @@ using UnityEngine;
 public class StratagemController : MonoBehaviour
 {
     [SerializeField] private List<Stratagem> m_Stratagems;
+    private Stratagem m_CurrentStratagem;
+
+    #region MonoBehaviour
 
     // Use this for initialization
     private void Start()
@@ -18,10 +21,8 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < p.Info.StratagemId.Count; i++)
             {
-                GameObject go = new GameObject(string.Format("Stratagem ({0})", i));
-                Stratagem s = go.AddComponent<Stratagem>();
-                s.SetStratagemInfo(p.Info.StratagemId[i], p.Parts.RightHand);
-                m_Stratagems.Add(s);
+                // Creat stratagem with player info.
+                AddNewStratagemObject(p.Info.StratagemId[i], p.Parts.RightHand);
             }
         }
     }
@@ -29,6 +30,15 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (m_CurrentStratagem != null)
+            {
+                m_CurrentStratagem.Throw(new Vector3(0.0f, 500.0f, 300.0f));
+                m_CurrentStratagem = null;
+            }
+        }
+
         if (Input.GetButtonDown("Stratagem"))
         {
             StartCoroutine(CheckInputCode());
@@ -39,13 +49,47 @@ public class StratagemController : MonoBehaviour
         }
     }
 
+    #endregion MonoBehaviour
+
+    #region Public Function
+
+    /// <summary>
+    /// Add a stratagem object by id key which is in the gamedata.stratagem table.
+    /// If the id already in the controller will be pass.
+    /// </summary>
+    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
+    public void AddNewStratagemObject(int id, Transform launchPos)
+    {
+        for (int i = 0; i < m_Stratagems.Count; i++)
+        {
+            if (m_Stratagems[i].Info.id == id) return;
+        }
+
+        GameObject go = new GameObject(string.Format("Stratagem ({0})", id));
+        Stratagem s = go.AddComponent<Stratagem>();
+        s.SetStratagemInfo(id, launchPos);
+        m_Stratagems.Add(s);
+    }
+
+    #endregion Public Function
+
+    #region Check Input Code
+
+    /*---------------------------------------------------------
+     * Cllect all stratagem which has input code.             *
+     * Check input with info step by step.                    *
+     * The final result have to all match up info with input. *
+     * Finaly store in the m_CurrentStratagem.                *
+     ---------------------------------------------------------*/
+
     private IEnumerator CheckInputCode()
     {
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.State == Stratagem.EState.Standby)
+            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle)
                 _Open.Add(s);
         }
 
@@ -63,7 +107,8 @@ public class StratagemController : MonoBehaviour
                 {
                     if (_Open[i].Info.code.Length == inputCount)
                     {
-                        _Open[i].GetReady();
+                        m_CurrentStratagem = _Open[i];
+                        m_CurrentStratagem.GetReady();
                         yield break;
                     }
                     continue;
@@ -73,6 +118,10 @@ public class StratagemController : MonoBehaviour
             }
         }
     }
+
+    /*---------------------------
+     * Define the input result. *
+     ---------------------------*/
 
     private StratagemInfo.eCode? GetInputCode()
     {
@@ -84,4 +133,6 @@ public class StratagemController : MonoBehaviour
     }
 
     private List<Stratagem> _Open = new List<Stratagem>();
+
+    #endregion Check Input Code
 }

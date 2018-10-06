@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Supply : MonoBehaviour
+public class StratagemSupply : MonoBehaviour
 {
     private GameObject m_Display;
     private Animator m_Animator;

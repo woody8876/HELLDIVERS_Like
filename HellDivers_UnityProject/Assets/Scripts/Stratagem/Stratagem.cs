@@ -1,49 +1,74 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Stratagem : MonoBehaviour
 {
     #region Properties
 
-    public StratagemInfo Info { get; private set; }
-    public EState State { get { return m_eState; } }
-    public int UsesCount { get { return m_iUsesCount; } }
-    public bool IsCooling { get { return m_isCooling; } }
-    public float CoolTimer { get { return m_fCoolTimer; } }
-    public float ActTimer { get { return m_fActivationTimer; } }
+    /// <summary>
+    /// The info is used to initilize the stratagem.
+    /// </summary>
+    public StratagemInfo Info { get { return m_Info; } }
+
+    /// <summary>
+    /// The current state of the stratagem.
+    /// </summary>
+    public eState State { get { return m_eState; } }
+
+    /// <summary>
+    /// Represention of this has been used how many times.
+    /// </summary>
+    public int UsesCount { get { return m_UsesCount; } }
+
+    /// <summary>
+    /// Is the stratagem cooling down.
+    /// </summary>
+    public bool IsCooling { get { return m_IsCooling; } }
+
+    /// <summary>
+    /// The timer of CD time. It start when do Throw.
+    /// </summary>
+    public float CoolTimer { get { return m_CoolTimer; } }
+
+    /// <summary>
+    /// The timer of Activatoin. It start when do Land on "terrain"
+    /// </summary>
+    public float ActTimer { get { return m_ActivationTimer; } }
 
     #endregion Properties
 
-    #region PrivateVariable
+    #region Private Variable
 
+    [SerializeField] private StratagemInfo m_Info;
     private Transform m_LaunchPos;
     private GameObject m_Display;
-    private Rigidbody m_Rigidbody;
     private Animator m_Animator;
-    private float m_fRadius = 0.1f;
-    private int m_iUsesCount;
-    private bool m_isCooling;
-    private float m_fCoolTimer;
-    private float m_fActivationTimer;
-    private EState m_eState = EState.Standby;
-    private DoState m_DoState;
+    private Rigidbody m_Rigidbody;
+    private float m_Radius = 0.25f;
+    private eState m_eState = eState.Idle;
+    private int m_UsesCount;
+    private bool m_IsCooling;
+    private float m_CoolTimer;
+    private float m_ActivationTimer;
 
-    #endregion PrivateVariable
+    #endregion Private Variable
 
     #region Initializer
 
     /// <summary>
-    /// Setup stratagem with id form gamedata table.
+    /// Setup stratagem by id key which is in the gamedata.stratagem table.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
     /// <returns></returns>
     public bool SetStratagemInfo(int id, Transform launchPos)
     {
         StratagemInfo newInfo = GetInfoFromGameData(id);
-        if (newInfo == null || newInfo == this.Info) return false;
-        this.Info = newInfo;
+        if (newInfo == null || newInfo == m_Info) return false;
+        m_Info = newInfo;
 
         GameObject o = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.display) as GameObject;
         if (m_Display != o)
@@ -68,16 +93,17 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     private void Reset()
     {
-        m_iUsesCount = 0;
-        m_fCoolTimer = 0.0f;
-        m_fActivationTimer = 0.0f;
-        m_eState = EState.Standby;
+        m_UsesCount = 0;
+        m_CoolTimer = 0.0f;
+        m_ActivationTimer = 0.0f;
+        m_eState = eState.Idle;
+        StopAllCoroutines();
     }
 
     /// <summary>
-    /// Get stratagem info with id from game data tables. If it does not exist return null.
+    /// Get stratagem info by id key which is in the gamedata.stratagem tables. If it does not exist return null.
     /// </summary>
-    /// <param name="id">stratagem id which in the table</param>
+    /// <param name="id">The id key which in the stratagem  table</param>
     /// <returns></returns>
     private StratagemInfo GetInfoFromGameData(int id)
     {
@@ -102,10 +128,9 @@ public class Stratagem : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
-        if (m_DoState != null) m_DoState();
-        if (IsCooling) DoCoolDown();
+        if (m_eState == eState.ThrowOut) DoThrowOut();
     }
 
     #endregion MonoBehaviour
@@ -113,86 +138,245 @@ public class Stratagem : MonoBehaviour
     #region Public Function
 
     /// <summary>
-    /// Show the stratagem object & set launchPos as parent.
+    /// Show the stratagem object & reset to the launch position.
+    /// Translate to Ready state.
     /// </summary>
     public void GetReady()
     {
-        if (IsCooling || State != EState.Standby) return;
+        if (m_UsesCount >= Info.uses && Info.uses >= 0) return;
+        if (IsCooling || State != eState.Idle) return;
 
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
         m_Animator.SetTrigger("Start");
 
-        m_eState = EState.Ready;
+        m_eState = eState.Ready;
     }
 
     /// <summary>
     /// Add force to this gameobject for throw it out.
+    /// Translate to Throw out state.
     /// </summary>
     public void Throw(Vector3 force)
     {
-        if (IsCooling || State != EState.Ready) return;
+        if (IsCooling || State != eState.Ready) return;
 
         this.transform.parent = null;
-        m_Rigidbody.isKinematic = true;
+        m_Rigidbody.isKinematic = false;
         m_Rigidbody.AddForce(force);
-        m_isCooling = true;
-        m_iUsesCount++;
+        m_IsCooling = true;
         m_Animator.SetTrigger("Throw");
 
-        m_DoState = DoThrowOut;
-        m_eState = EState.ThrowOut;
+        // Uses add count. ( Info.uses = -1 ) is meaning for unlimited.
+        if (Info.uses != -1) m_UsesCount++;
+
+        // Start the cooldown timer.
+        if (Info.cooldown > 0) StartCoroutine(DoCoolDown(Info.cooldown));
+
+        // Translate to ThrowOut state.
+        m_eState = eState.ThrowOut;
     }
 
     #endregion Public Function
 
-    #region StateMachine
+    #region Finite State Machine
 
-    private delegate void DoState();
-
-    public enum EState
+    /// <summary>
+    /// Representation the stratagem object current statement.
+    /// </summary>
+    public enum eState
     {
-        Standby, Ready, ThrowOut, Activating
+        /// <summary>
+        /// It's the start state.
+        /// Hide display object, Do nothing.
+        /// Next state is Ready state.
+        /// </summary>
+        Idle,
+
+        /// <summary>
+        /// Display on the launch position.
+        /// Waiting for throw it out.
+        /// </summary>
+        Ready,
+
+        /// <summary>
+        /// The stratagem is out of launch position root.
+        /// Checking the terrain for landing.
+        /// </summary>
+        ThrowOut,
+
+        /// <summary>
+        /// After land on terrain, start counting timer.
+        /// When time's up, spawn the traget item, and back to Idle state.
+        /// </summary>
+        Activating
     }
 
-    private void DoActivation()
-    {
-        if (m_fActivationTimer >= Info.activation)
-        {
-            m_Animator.SetTrigger("End");
-            m_DoState = null;
-            m_eState = EState.Standby;
-        }
-        m_fActivationTimer += Time.deltaTime;
-    }
+    /*--------------------------------------------------------------------------------
+     * In ThrowOut state, checking the stratagem object is land on "Terrain" or not. *
+     * When it landed successfully, then translate to Activating state.              *
+     --------------------------------------------------------------------------------*/
 
     private void DoThrowOut()
     {
-        RaycastHit raycastHit;
-        Physics.SphereCast(this.transform.position, m_fRadius, Vector3.down, out raycastHit);
-        if (raycastHit.transform.tag == "Terrain")
-        {
-            m_Rigidbody.isKinematic = true;
-            this.transform.rotation = Quaternion.Euler(Vector3.zero);
-            m_Animator.SetTrigger("Land");
+        Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, m_Radius);
 
-            m_eState = EState.Activating;
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (hitColliders[i].gameObject.layer == LayerMask.NameToLayer("Terrain"))
+            {
+                m_Rigidbody.isKinematic = true;
+                this.transform.rotation = Quaternion.Euler(Vector3.zero);
+                m_Animator.SetTrigger("Land");
+
+                // Start the activation timer.
+                StartCoroutine(DoActivating(Info.activation));
+            }
         }
+    }
+
+    /*----------------------------------------------------------------------
+     * It's a timer for activaing process.                                 *
+     * When the "End" animation was finished, than translate to Idle state *
+     ----------------------------------------------------------------------*/
+
+    private IEnumerator DoActivating(float targetTime)
+    {
+        m_eState = eState.Activating;
+
+        m_ActivationTimer = 0.0f;
+        while (m_ActivationTimer < targetTime)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            m_ActivationTimer += Time.deltaTime;
+        }
+
+        m_Animator.SetTrigger("End");
+
+        yield return new WaitUntil(() =>
+        {
+            AnimatorStateInfo currentAnima = m_Animator.GetCurrentAnimatorStateInfo(0);
+            return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
+        });
+
+        m_eState = eState.Idle;
+        yield break;
+    }
+
+    /*-----------------------------------------
+     * It's a timer for cooling down process. *
+     -----------------------------------------*/
+
+    private IEnumerator DoCoolDown(float targetTime)
+    {
+        m_IsCooling = true;
+
+        m_CoolTimer = 0.0f;
+        while (m_CoolTimer < targetTime)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            m_CoolTimer += Time.deltaTime;
+        }
+        m_IsCooling = false;
+        yield break;
+    }
+
+    #endregion Finite State Machine
 
 #if UNITY_EDITOR
-        Gizmos.DrawWireSphere(this.transform.position, m_fRadius);
-#endif
-    }
 
-    private void DoCoolDown()
+    #region Debug Draw
+
+    public bool ShowDebugInfo;
+
+    private void OnDrawGizmos()
     {
-        if (m_fCoolTimer >= Info.cooldown)
+        if (ShowDebugInfo)
         {
-            m_fCoolTimer = 0.0f;
-            m_isCooling = false;
+            if (State == eState.ThrowOut) Gizmos.DrawWireSphere(this.transform.position, m_Radius);
+
+            if (State == eState.Activating)
+            {
+                string actMessage = string.Format("{0} Act : {1}", Info.title, m_ActivationTimer);
+                style.normal.textColor = Color.red;
+                Handles.Label(this.transform.position, actMessage, style);
+            }
+
+            if (IsCooling)
+            {
+                string coolMessage = string.Format("{0} CD : {1}", Info.title, m_CoolTimer);
+                style.normal.textColor = Color.black;
+                Handles.Label(m_LaunchPos.position, coolMessage, style);
+            }
         }
-        m_fCoolTimer += Time.deltaTime;
     }
 
-    #endregion StateMachine
+    private void OnGUI()
+    {
+        if (ShowDebugInfo)
+        {
+            string Message;
+            Rect rect = new Rect(10, 10, 100, 20);
+
+            switch (State)
+            {
+                case eState.Idle:
+                    {
+                        if (m_UsesCount >= Info.uses)
+                        {
+                            Message = string.Format("{0} /{1} out of uses", this.name, Info.title);
+                            style.normal.textColor = Color.red;
+                            GUI.Label(rect, Message, style);
+                        }
+                        else
+                        {
+                            Message = string.Format("{0} /{1} Idle", this.name, Info.title);
+                            style.normal.textColor = Color.gray;
+                            GUI.Label(rect, Message, style);
+                        }
+                        break;
+                    }
+
+                case eState.ThrowOut:
+                    {
+                        Message = string.Format("{0} /{1} throw out", this.name, Info.title);
+                        style.normal.textColor = Color.gray;
+                        GUI.Label(rect, Message, style);
+                        break;
+                    }
+
+                case eState.Ready:
+                    {
+                        Message = string.Format("{0} /{1} ready", this.name, Info.title);
+                        style.normal.textColor = Color.gray;
+                        GUI.Label(rect, Message, style);
+                        break;
+                    }
+
+                case eState.Activating:
+                    {
+                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.title, m_ActivationTimer, Info.activation);
+                        style.normal.textColor = Color.red;
+                        GUI.Label(rect, Message, style);
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            if (IsCooling)
+            {
+                Message = string.Format("{0} /{1} CD : {2} / {3}", this.name, Info.title, m_CoolTimer, Info.cooldown);
+                style.normal.textColor = Color.black;
+                rect.y *= 3;
+                GUI.Label(rect, Message, style);
+            }
+        }
+    }
+
+    private GUIStyle style = new GUIStyle();
+
+    #endregion Debug Draw
+
+#endif
 }
