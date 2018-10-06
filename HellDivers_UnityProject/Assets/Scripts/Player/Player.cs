@@ -8,7 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(CameraController))]
-
 public class Player : MonoBehaviour
 {
     public PlayerInfo Info { get; set; }
@@ -28,9 +27,8 @@ public class Player : MonoBehaviour
         {
             Anima = Display.GetComponent<Animator>();
             Parts = Display.GetComponent<PlayerParts>();
-            
-            m_AnimationController = this.gameObject.AddComponent<PlayerAnimationsContorller>();
-            Camera.main.GetComponent<CameraController>().m_Player = Display.transform ;
+
+            Camera.main.GetComponent<CameraController>().m_Player = Display.transform;
         }
     }
 
