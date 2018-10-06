@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     {
         this.tag = "Player";
 
-        Display = Resources.Load("Characters/Ch00/ch00") as GameObject;
+        Display = Resources.Load("Characters/Ch00/ch01") as GameObject;
         Display = Instantiate(Display, this.transform);
         Display.transform.position -= Vector3.up;
 
