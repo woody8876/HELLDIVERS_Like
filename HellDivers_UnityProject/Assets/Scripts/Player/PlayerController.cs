@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private Transform m_Cam;
     private Vector3 m_CamForward;
     private Vector3 m_Move;
+    private Vector3 m_Fall;
     private Vector3 m_Direction;
     private Ray m_MouseRay;
     private RaycastHit m_MouseHit;
@@ -49,10 +50,13 @@ public class PlayerController : MonoBehaviour
         {
             m_Move = v * Vector3.forward + h * Vector3.right;
         }
-
-        bRun = (Input.GetButton("Run")) ? true : false;
-
         if (m_Move.magnitude > 1) m_Move.Normalize();
+
+        if (m_Controller.isGrounded == false)
+        {
+            m_Move += Physics.gravity * Time.deltaTime;
+        }
+        bRun = (Input.GetButton("Run")) ? true : false;
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
@@ -66,6 +70,12 @@ public class PlayerController : MonoBehaviour
         else bInBattle = false;
 
         PAC.Move(m_Move, m_Direction, bRun, bInBattle, bAttack);
+
+        if (m_Controller.isGrounded == false)
+        {
+            m_Fall += Physics.gravity * Time.deltaTime;
+        }
+        m_Controller.Move(m_Fall);
     }
 
     private void FaceDirection()
