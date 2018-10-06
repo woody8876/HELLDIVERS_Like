@@ -18,8 +18,6 @@ public class CameraController : MonoBehaviour
     private Camera m_Cam;
     private Vector3 m_vPrePos;
     private Vector3 m_vCurPos;
-    private Vector3 m_vDirection;
-    private bool m_bDire;
 
     // Use this for initialization
     private void Start()
@@ -40,7 +38,7 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         m_vCurPos = m_Player.position;
-        if (!CameraMoved()) { FollowTarget(m_vCurPos); }
+        if (!CameraMove()) { FollowTarget(m_vCurPos); }
     }
 
     public Vector3 SetTarget(Transform m_player)
@@ -48,33 +46,15 @@ public class CameraController : MonoBehaviour
         return m_player.position;
     }
 
-
-    //private bool CameraMove()
-    //{
-    //    if(m_vCurPos != m_vPrePos)
-    //    {
-    //        Vector3 vCurCamPos = m_Cam.transform.position;
-    //        Vector3 Direc = m_vCurPos - m_vPrePos;
-    //        vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, vCurCamPos.x + Direc.x * K, L);
-    //        vCurCamPos.y = Mathf.Lerp(vCurCamPos.y, vCurCamPos.y + Direc.y * K, L);
-    //        vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, vCurCamPos.z + Direc.z * 0.75f * K, L);
-    //        m_Cam.transform.position = vCurCamPos;
-    //        L -= 0.1f * Time.deltaTime;
-    //        if (L < 0.1f) L = 0.1f;
-    //        return true;
-    //    }
-    //    L = 0.5f;
-    //    return false;
-    //}
-    private bool CameraMoved()
+    private bool CameraMove()
     {
         if (m_vCurPos != m_vPrePos)
         {
             Vector3 vCurCamPos = m_Cam.transform.position;
             Vector3 Direc = m_vCurPos - m_vPrePos;
             Direc.Normalize();
-            vCurCamPos.x = Mathf.Lerp (vCurCamPos.x, m_vCurPos.x + Direc.x * K + m_fPosX, L);
-            vCurCamPos.z = Mathf.Lerp (vCurCamPos.z, m_vCurPos.z + Direc.z * K * 0.75f + m_fPosZ, L * 0.75f);
+            vCurCamPos.x = Mathf.Lerp(vCurCamPos.x, m_vCurPos.x + Direc.x * K + m_fPosX, L);
+            vCurCamPos.z = Mathf.Lerp(vCurCamPos.z, m_vCurPos.z + Direc.z * K * 0.75f + m_fPosZ, L * 0.75f);
             m_Cam.transform.position = vCurCamPos;
             return true;
         }
