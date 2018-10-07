@@ -83,6 +83,7 @@ public class Stratagem : MonoBehaviour
         m_LaunchPos = launchPos;
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
+        this.transform.localEulerAngles = Vector3.zero;
 
         Reset();
         return true;
@@ -148,6 +149,7 @@ public class Stratagem : MonoBehaviour
 
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
+        this.transform.localEulerAngles = Vector3.zero;
         m_Animator.SetTrigger("Start");
 
         m_eState = eState.Ready;

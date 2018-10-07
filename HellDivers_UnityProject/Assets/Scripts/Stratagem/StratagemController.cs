@@ -30,9 +30,9 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (m_CurrentStratagem != null)
         {
-            if (m_CurrentStratagem != null)
+            if (Input.GetButtonDown("Fire1"))
             {
                 Vector3 force = new Vector3(0.0f, 100.0f, 400.0f);
                 m_CurrentStratagem.Throw(force);
@@ -40,13 +40,16 @@ public class StratagemController : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Stratagem"))
+        if (m_Stratagems != null)
         {
-            StartCoroutine(CheckInputCode());
-        }
-        else if (Input.GetButtonUp("Stratagem"))
-        {
-            StopCoroutine(CheckInputCode());
+            if (Input.GetButtonDown("Stratagem"))
+            {
+                StartCoroutine(CheckInputCode());
+            }
+            else if (Input.GetButtonUp("Stratagem"))
+            {
+                StopCoroutine(CheckInputCode());
+            }
         }
     }
 
