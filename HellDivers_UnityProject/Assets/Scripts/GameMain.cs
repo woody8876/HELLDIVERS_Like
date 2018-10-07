@@ -27,15 +27,23 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        if (m_playerInfo != null)
-        {
-            GameObject playerGo = new GameObject("Player", typeof(Player));
-            playerGo.GetComponent<Player>().Info = m_playerInfo;
-        }
+        AddPlayer(m_playerInfo);
     }
 
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    public bool AddPlayer(PlayerInfo playerInfo)
+    {
+        if (playerInfo == null) return false;
+
+        GameObject playerGo = Resources.Load("Characters/Ch01/ch01") as GameObject;
+        playerGo = Instantiate(playerGo);
+        Player p = playerGo.AddComponent<Player>();
+        p.Init(playerInfo);
+
+        return true;
     }
 }
