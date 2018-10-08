@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HELLDIVERS
+namespace Bryan.Test
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour

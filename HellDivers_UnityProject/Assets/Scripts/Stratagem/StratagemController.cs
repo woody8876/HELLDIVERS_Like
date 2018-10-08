@@ -4,8 +4,70 @@ using UnityEngine;
 
 public class StratagemController : MonoBehaviour
 {
+    #region Private Variable
+
     [SerializeField] private List<Stratagem> m_Stratagems;
+
+    // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
+
+    #endregion Private Variable
+
+    #region Public Function
+
+    /// <summary>
+    /// Add a stratagem object by id key which is in the gamedata.stratagem table.
+    /// If the id already in the controller will be pass.
+    /// </summary>
+    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
+    public bool AddStratagem(int id, Transform launchPos)
+    {
+        for (int i = 0; i < m_Stratagems.Count; i++)
+        {
+            if (m_Stratagems[i].Info.id == id) return false;
+        }
+
+        GameObject go = new GameObject(string.Format("Stratagem ({0})", id));
+        Stratagem s = go.AddComponent<Stratagem>();
+        s.SetStratagemInfo(id, launchPos);
+        m_Stratagems.Add(s);
+        return true;
+    }
+
+    public bool RemoveStratagemAt(int index)
+    {
+        Stratagem target = null;
+        if (index < 0 || index >= m_Stratagems.Count) return false;
+
+        target = m_Stratagems[index];
+        m_Stratagems.RemoveAt(index);
+
+        DestroyImmediate(target.gameObject);
+        return true;
+    }
+
+    public bool RemoveByID(int id)
+    {
+        Stratagem target = null;
+        for (int i = 0; i < m_Stratagems.Count; i++)
+        {
+            if (m_Stratagems[i].Info.id == id)
+            {
+                target = m_Stratagems[i];
+                break;
+            }
+        }
+
+        if (target == null) return false;
+
+        m_Stratagems.Remove(target);
+        DestroyImmediate(target.gameObject);
+
+        return false;
+    }
+
+    #endregion Public Function
 
     #region MonoBehaviour
 
@@ -22,7 +84,7 @@ public class StratagemController : MonoBehaviour
             for (int i = 0; i < p.Info.StratagemId.Count; i++)
             {
                 // Creat stratagem with player info.
-                AddNewStratagemObject(p.Info.StratagemId[i], p.Parts.RightHand);
+                AddStratagem(p.Info.StratagemId[i], p.Parts.RightHand);
             }
         }
     }
@@ -54,29 +116,6 @@ public class StratagemController : MonoBehaviour
     }
 
     #endregion MonoBehaviour
-
-    #region Public Function
-
-    /// <summary>
-    /// Add a stratagem object by id key which is in the gamedata.stratagem table.
-    /// If the id already in the controller will be pass.
-    /// </summary>
-    /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
-    /// <param name="launchPos">The spawn transform root.</param>
-    public void AddNewStratagemObject(int id, Transform launchPos)
-    {
-        for (int i = 0; i < m_Stratagems.Count; i++)
-        {
-            if (m_Stratagems[i].Info.id == id) return;
-        }
-
-        GameObject go = new GameObject(string.Format("Stratagem ({0})", id));
-        Stratagem s = go.AddComponent<Stratagem>();
-        s.SetStratagemInfo(id, launchPos);
-        m_Stratagems.Add(s);
-    }
-
-    #endregion Public Function
 
     #region Check Input Code
 
