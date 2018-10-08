@@ -11,6 +11,8 @@ namespace Bryan.Character
     [RequireComponent(typeof(CharacterController))]
     public class Player : MonoBehaviour
     {
+        #region Private Variable
+
 #pragma warning disable
         private PlayerData m_Data;
         private PlayerController m_PlayerController;
@@ -21,9 +23,18 @@ namespace Bryan.Character
         private Animator m_Animator;
 #pragma warning disable
 
+        #endregion Private Variable
+
         public void Initialize(PlayerData data)
         {
             m_Data = data;
+        }
+
+        #region MonoBehaviour
+
+        private void Awake()
+        {
+            this.tag = "Player";
         }
 
         // Use this for initialization
@@ -40,5 +51,7 @@ namespace Bryan.Character
         private void Update()
         {
         }
+
+        #endregion MonoBehaviour
     }
 }
