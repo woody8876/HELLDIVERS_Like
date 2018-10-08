@@ -41,7 +41,7 @@ public class WeaponInfo
     public int _iAmmo;
     public int Ammo
     {
-        set { _iAmmo = Capacity; }
+        protected set { _iAmmo = Capacity; }
         get { return _iAmmo; }
     }
 }
