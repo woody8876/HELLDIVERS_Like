@@ -25,7 +25,6 @@ public class Weapon_Battle : MonoBehaviour
 
     private List<eWeaponType> EWeapon = new List<eWeaponType>();
     private List<int> m_CurMags = new List<int>();
-    private List<int> m_CurAmmo = new List<int>();
 
     private int m_WeaponNum = 0;
     private float m_fDamage;
@@ -57,7 +56,6 @@ public class Weapon_Battle : MonoBehaviour
             weaponBehaviours.Add(EWeapon[i], m_weaponFactory.CreateWeapon(EWeapon[i]));
             WeaponLoader(EWeapon[i], weaponBehaviours[EWeapon[i]]);
             //Initial ammo and mags
-            m_CurAmmo.Add(weaponBehaviours[EWeapon[i]].weaponInfo().Capacity);
             m_CurMags.Add(weaponBehaviours[EWeapon[i]].weaponInfo().Start_Mags);
             Debug.Log(m_CurMags[i]);
             Debug.Log(weaponBehaviours[EWeapon[i]]);
@@ -83,7 +81,7 @@ public class Weapon_Battle : MonoBehaviour
 
     private void ShootState()
     {
-        if (m_CurAmmo[m_WeaponNum]<= 0 || !Input.GetButton("Fire1"))
+        if (weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Ammo <= 0 || !Input.GetButton("Fire1"))
         {
             Debug.Log("Ammo");
             m_bAutoFire = true;
@@ -113,7 +111,7 @@ public class Weapon_Battle : MonoBehaviour
 
     private void ReloadState()
     {
-        if (m_CurAmmo[m_WeaponNum] >= weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Capacity || m_CurMags[m_WeaponNum] <= 0)
+        if (weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Ammo >= weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Capacity || m_CurMags[m_WeaponNum] <= 0)
         {
             m_ActiveState = IdleState;
             return;
@@ -127,8 +125,8 @@ public class Weapon_Battle : MonoBehaviour
     {
         if (Input.GetButtonUp("Reload")) { m_ActiveState = IdleState; }
 
-        if (m_CurAmmo[m_WeaponNum] <= 0) { yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Empty_Reload_Speed); }
-        else if (m_CurAmmo[m_WeaponNum] > 0) { yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Tactical_Reload_Speed); }
+        if (weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Ammo <= 0) { yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Empty_Reload_Speed); }
+        else if (weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Ammo > 0) { yield return new WaitForSeconds(weaponBehaviours[EWeapon[m_WeaponNum]].weaponInfo().Tactical_Reload_Speed); }
         weaponBehaviours[EWeapon[m_WeaponNum]].Reload();
         m_CurMags[m_WeaponNum]--;
         Debug.Log(m_CurMags[m_WeaponNum]);
@@ -172,8 +170,8 @@ public class Weapon_Battle : MonoBehaviour
 
         string m_sWeapon = "Bullet_" + type.ToString();
         string m_sEffect = "Effect_" + type.ToString();
-        Object m_Weapon = rm.LoadData(typeof(GameObject), "Prefabs", m_sWeapon, false);
-        m_Effect = rm.LoadData(typeof(GameObject), "Prefabs", m_sEffect, true) as GameObject;
+        Object m_Weapon = rm.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
+        m_Effect = rm.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
 
         ObjectPool.m_Instance.InitGameObjects(m_Weapon, weaponData.weaponInfo().Capacity, (int)type + 100);
         if (ObjectPool.m_Instance == null)

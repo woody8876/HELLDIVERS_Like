@@ -78,7 +78,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
-        transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+        transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
     private void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
