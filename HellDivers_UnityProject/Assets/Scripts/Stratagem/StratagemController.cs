@@ -13,9 +13,16 @@ public class StratagemController : MonoBehaviour
 
     #endregion Define Inputs
 
+    #region Properties
+
+    public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
+    public List<Stratagem> Stratagems { get { return m_Stratagems; } }
+
+    #endregion Properties
+
     #region Private Variable
 
-    [SerializeField] private List<Stratagem> m_Stratagems;
+    [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
 
     // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
@@ -105,11 +112,16 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Clean up all stratagems in the controller.
     /// </summary>
-    public void CleanUp()
+    public void Clear()
     {
+        if (m_Stratagems.Count <= 0) return;
+
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            DestroyImmediate(m_Stratagems[i].gameObject);
+            if (m_Stratagems[i] != null)
+            {
+                DestroyImmediate(m_Stratagems[i].gameObject);
+            }
         }
 
         m_Stratagems.Clear();
@@ -119,12 +131,6 @@ public class StratagemController : MonoBehaviour
     #endregion Public Function
 
     #region MonoBehaviour
-
-    // Use this for initialization
-    private void Start()
-    {
-        m_Stratagems = new List<Stratagem>();
-    }
 
     // Update is called once per frame
     private void Update()
@@ -138,7 +144,7 @@ public class StratagemController : MonoBehaviour
             }
         }
 
-        if (m_Stratagems != null)
+        if (m_Stratagems.Count > 0)
         {
             if (Input.GetButtonDown(m_InputStartCode))
             {
@@ -171,6 +177,8 @@ public class StratagemController : MonoBehaviour
             if (s != null && s.Info != null && s.State == Stratagem.eState.Idle)
                 _Open.Add(s);
         }
+
+        if (_Open.Count <= 0) yield break;
 
         int inputCount = 0;
         StratagemInfo.eCode? input = null;

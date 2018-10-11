@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Bryan.Test
 {
+    [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
@@ -32,7 +33,7 @@ namespace Bryan.Test
         // Use this for initialization
         private void Start()
         {
-            m_Animator = this.GetComponent<Player>().Anima;
+            m_Animator = this.GetComponent<Animator>();
             m_Controller = this.GetComponent<CharacterController>();
 
             if (Camera.main != null)

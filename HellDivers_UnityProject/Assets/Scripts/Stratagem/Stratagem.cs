@@ -75,13 +75,24 @@ public class Stratagem : MonoBehaviour
 
         if (newInfo.display != m_Info.display)
         {
-            GameObject o = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.display) as GameObject;
-            if (m_Display != o)
+            GameObject go;
+
+            if (ResourceManager.m_Instance == null)
             {
-                if (o == null) o = StratagemSystem.DefaultDisplay;
+                Debug.LogWarningFormat("Stratagem Warning ({0}) : ResourcesManager doesn't exist, Using Resource.Load()", this.gameObject.name);
+                go = Resources.Load(string.Format("{0}/{1}", StratagemSystem.DisplayFolder, newInfo.display)) as GameObject;
+            }
+            else
+            {
+                go = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.display) as GameObject;
+            }
+
+            if (m_Display != go)
+            {
+                if (go == null) go = StratagemSystem.DefaultDisplay;
 
                 DestroyImmediate(m_Display);
-                m_Display = Instantiate(o, this.transform.position, Quaternion.identity, this.transform);
+                m_Display = Instantiate(go, this.transform.position, Quaternion.identity, this.transform);
                 m_Animator = m_Display.GetComponent<Animator>();
             }
         }
