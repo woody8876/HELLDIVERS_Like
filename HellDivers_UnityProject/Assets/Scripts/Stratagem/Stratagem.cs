@@ -8,6 +8,9 @@ public class Stratagem : MonoBehaviour
 {
     #region Properties
 
+    /// <summary>
+    /// Set the transform root for launch postion.
+    /// </summary>
     public Transform LaunchPos { get { return m_LaunchPos; } set { m_LaunchPos = value; } }
 
     /// <summary>
@@ -210,7 +213,7 @@ public class Stratagem : MonoBehaviour
     #region Finite State Machine
 
     /// <summary>
-    /// Representation the stratagem object current statement.
+    /// Representation of the stratagem object current statement.
     /// </summary>
     public enum eState
     {
