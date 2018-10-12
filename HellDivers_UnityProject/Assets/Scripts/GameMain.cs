@@ -29,7 +29,8 @@ public class GameMain : MonoBehaviour
     {
         if (m_PlayerData != null)
         {
-            PlayerCreater.CreatMainPlayer(m_PlayerData);
+            GameObject player = PlayerCreater.CreatMainPlayer(m_PlayerData);
+            if (player != null) Camera.main.GetComponent<CameraFollowing>().FocusOnTheTarget(player.transform);
         }
     }
 

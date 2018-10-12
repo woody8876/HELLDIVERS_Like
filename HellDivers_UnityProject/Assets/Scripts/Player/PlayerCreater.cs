@@ -4,15 +4,15 @@ using UnityEngine;
 
 public static class PlayerCreater
 {
-    public static bool CreatMainPlayer(PlayerInfo data)
+    public static GameObject CreatMainPlayer(PlayerInfo data)
     {
-        if (data == null) return false;
+        if (data == null) return null;
 
         GameObject playerGo = Resources.Load("Characters/Ch01/ch01") as GameObject;
         playerGo = GameObject.Instantiate(playerGo);
         Player p = playerGo.AddComponent<Player>();
         p.Initialize(data);
 
-        return true;
+        return playerGo;
     }
 }
