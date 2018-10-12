@@ -45,14 +45,20 @@ public class ObjectPool
         }
     }
 
+    public void RemoveObjectFromPool(int iType)
+    {
+        if (m_dObjectDitc.ContainsKey(iType) == false) { return; }
+        List<GameObjectData> pList;
+        pList = m_dObjectDitc[iType];
+        pList.Clear();
+    }
+
     public GameObject LoadGameObjectFromPool(int iType)
     {
-        List<GameObjectData> pList;
         if (m_dObjectDitc.ContainsKey(iType) == false) { return null; }
-        else { pList = m_dObjectDitc[iType]; }
-
+        List<GameObjectData> pList;
+        pList = m_dObjectDitc[iType];
         GameObject rgo = null;
-
         for (int i = 0; i < pList.Count; i++)
         {
             if (pList[i].m_bUse == false)
@@ -67,10 +73,9 @@ public class ObjectPool
 
     public void UnLoadObjectToPool(int iType, GameObject go)
     {
-        List<GameObjectData> pList;
         if (m_dObjectDitc.ContainsKey(iType) == false) { return; }
-        else { pList = m_dObjectDitc[iType]; }
-
+        List<GameObjectData> pList;
+        pList = m_dObjectDitc[iType];
         for (int i = 0; i < pList.Count; i++)
         {
             if (pList[i].m_go == go)

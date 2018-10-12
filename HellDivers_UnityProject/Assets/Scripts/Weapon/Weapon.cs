@@ -10,6 +10,7 @@ using UnityEngine;
 
 public class WeaponInfo
 {
+    #region Stauts
     public float _Damage;
     public float Damage { get { return _Damage; } }
     public float _Center_Damage;
@@ -38,31 +39,50 @@ public class WeaponInfo
     public float Range { get { return _Range; } }
     public float _FireMode;
     public float FireMode { get { return _FireMode; } }
-    public int _iAmmo;
+
+    #endregion
+
+    private int m_Ammo;
     public int Ammo
     {
-        protected set { _iAmmo = Capacity; }
-        get { return _iAmmo; }
+        get { return m_Ammo; }
+        set
+        {
+            if (value > Capacity) m_Ammo = Capacity;
+            else if (value < 0) m_Ammo = 0;
+            else m_Ammo = value;
+        }
     }
+    public int Mag { get { return m_Ammo / Capacity; } }
+
+    public void Shoot(int cost)
+    {
+        Ammo -= cost;
+    }
+
+
+    private int _iAmmo;
+    public int Ammoss { get { return _iAmmo; } }
+    public int Mags { get; private set; }
+    public void InitAmmo() { _iAmmo = Capacity; }
+    public void InitMags() { Mags = _Start_Mags; }
+    public void UseItem(int item) { item--; }
+    public void AddItem(int item) { item++; }
 }
 
 [System.Serializable]
 public class Weapon : IWeaponBehaviour{
+
+    public int Ammo { get { return _weaponInfo.Ammo; } }
     protected WeaponInfo _weaponInfo;
-
-    #region Bullet status
-
-    private List<GameObject> _currentActive = new List<GameObject>();
-
-    public List<GameObject> m_Weapon_CurrentActives
-    {
-        set { _currentActive = value; }
-        get { return _currentActive; }
-    }
-    #endregion
+    //#region Bullet status
+    //private List<GameObject> _currentActive = new List<GameObject>();
+    //public List<GameObject> m_Weapon_CurrentActives { set { _currentActive = value; } get { return _currentActive; } }
+    //#endregion
 
     #region Behaviours
     public virtual WeaponInfo weaponInfo() { return _weaponInfo; }
+    public virtual void Init(eWeaponType type) { }
     public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) {  }
     public virtual void Reload() { }
     #endregion

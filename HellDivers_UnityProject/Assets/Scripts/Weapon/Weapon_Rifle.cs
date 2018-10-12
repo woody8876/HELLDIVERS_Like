@@ -15,6 +15,11 @@ public class Weapon_Rifle : Weapon
         return _weaponInfo;
     }
 
+    public override void Init(eWeaponType type)
+    {
+        _weaponInfo = GameData.Instance.WeaponInfoTable[(int)type];
+    }
+
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot,ref float damage)
     {
         float fCurSpread = _weaponInfo.Min_Spread + fSpreadperShot;
@@ -26,7 +31,7 @@ public class Weapon_Rifle : Weapon
             go.transform.forward = vec;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
-            _weaponInfo._iAmmo--;
+            weaponInfo().UseItem(weaponInfo().Ammo);
             Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
             if (CheckHit(pos, go.transform.forward)) { damage = _weaponInfo.Damage; }
             else { damage = 0; }
@@ -36,6 +41,7 @@ public class Weapon_Rifle : Weapon
     }
     public override void Reload()
     {
-        _weaponInfo._iAmmo = _weaponInfo.Capacity;
+        weaponInfo().InitAmmo();
+        weaponInfo().UseItem(weaponInfo().Mags);
     }
 }
