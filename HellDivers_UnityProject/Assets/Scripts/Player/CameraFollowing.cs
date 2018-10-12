@@ -6,6 +6,15 @@ using UnityEditor;
 [RequireComponent(typeof(Camera))]
 public class CameraFollowing : MonoBehaviour
 {
+    #region Define Inputs
+
+    private string m_InputAim = "Fire1";
+    private string m_InputHorizontal = "Horizontal";
+    private string m_InputVertical = "Vertical";
+    private string m_InputRun = "Run";
+
+    #endregion Define Inputs
+
     #region Porpeties
 
     public LinkedList<Transform> Targets { get { return m_Targets; } }
@@ -39,7 +48,7 @@ public class CameraFollowing : MonoBehaviour
 
     #region Public Function
 
-    public void FocusOnTheTarget(Transform t)
+    public void FocusOnTarget(Transform t)
     {
         m_Targets.Clear();
         m_Targets.AddFirst(t);
@@ -70,21 +79,23 @@ public class CameraFollowing : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (m_Targets.Count <= 0) return;
+
         UpdateDestination();
 
         if (m_Targets.Count == 1)
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetButton(m_InputAim))
             {
                 m_ExtraVec.x = m_Targets.First.Value.forward.x;
                 m_ExtraVec.y = m_Targets.First.Value.forward.z * 0.75f;
             }
             else
             {
-                float h = Input.GetAxis("Horizontal");
-                float v = Input.GetAxis("Vertical");
+                float h = Input.GetAxis(m_InputHorizontal);
+                float v = Input.GetAxis(m_InputVertical);
 
-                bool bRun = Input.GetButton("Run");
+                bool bRun = Input.GetButton(m_InputRun);
                 m_ExtraVec.x = (bRun) ? h * m_CamRunAdd : h * m_CamWalkAdd;
                 m_ExtraVec.y = (bRun) ? v * m_CamRunAdd : v * m_CamWalkAdd;
 
@@ -105,11 +116,11 @@ public class CameraFollowing : MonoBehaviour
         if (m_Targets.Count > 1)
         {
             m_Destination.Set(0, 0, 0);
-            foreach (Transform t in m_Targets)
+            foreach (Transform target in m_Targets)
             {
-                m_Destination += t.position;
+                m_Destination += target.position;
             }
-            m_Destination = m_Destination / m_Targets.Count;
+            m_Destination /= m_Targets.Count;
         }
         else
         {

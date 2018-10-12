@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
 
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
         m_StratagemController.AddStratagems(m_Data.stratagems.ToArray(), m_Parts.RightHand);
+
+        /// + Init weapons.
     }
 
     #region MonoBehaviour
