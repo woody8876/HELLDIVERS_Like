@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponInfoLoader  {
+public class WeaponInfoLoader : WeaponInfo{
 
     public static Dictionary<int, WeaponInfo> LoadData(string filePath)
     {
