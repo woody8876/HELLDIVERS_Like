@@ -22,17 +22,17 @@ public class PlayerInfo
         return clone;
     }
 
-    public void CopyTo(PlayerInfo data)
+    public void CopyTo(PlayerInfo other)
     {
-        data.username = this.username;
-        data.nickname = this.nickname;
-        data.rank = this.rank;
-        data.totalMissionFought = this.totalMissionFought;
-        data.totalMissionWon = this.totalMissionWon;
-        data.totalDeaths = this.totalDeaths;
-        data.totalShotsFired = this.totalShotsFired;
-        data.totalEnemiesKilled = this.totalEnemiesKilled;
-        data.weapons = this.weapons;
-        data.stratagems = this.stratagems;
+        other.username = this.username;
+        other.nickname = this.nickname;
+        other.rank = this.rank;
+        other.totalMissionFought = this.totalMissionFought;
+        other.totalMissionWon = this.totalMissionWon;
+        other.totalDeaths = this.totalDeaths;
+        other.totalShotsFired = this.totalShotsFired;
+        other.totalEnemiesKilled = this.totalEnemiesKilled;
+        other.weapons = this.weapons;
+        other.stratagems = this.stratagems;
     }
 }

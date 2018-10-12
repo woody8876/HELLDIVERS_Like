@@ -5,13 +5,38 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraFollowing : MonoBehaviour
 {
+    #region Porpeties
+
+    public LinkedList<Transform> Targets { get { return m_Targets; } }
+
+    public float Speed
+    {
+        get { return m_CamLerp; }
+        set
+        {
+            if (value > 1) m_CamLerp = 1.0f;
+            else if (value < 0) m_CamLerp = 0.0f;
+            m_CamLerp = value;
+        }
+    }
+
+    #endregion Porpeties
+
+    #region Private Variable
+
     private LinkedList<Transform> m_Targets;
     private Camera m_Cam;
     private Vector3 m_Destination;
     [SerializeField] private float m_Height = 10.0f;
     [SerializeField] private float m_CamRotX = 60.0f;
-    [SerializeField] private float m_CamLerp;
-    private Vector3 m_ExtraVec;
+    [SerializeField] private float m_CamLerp = 0.1f;
+    [SerializeField] private float m_CamWalkAdd;
+    [SerializeField] private float m_CamRunAdd;
+    private Vector2 m_ExtraVec;
+
+    #endregion Private Variable
+
+    #region Public Function
 
     public void FocusOnTheTarget(Transform t)
     {
@@ -29,6 +54,8 @@ public class CameraFollowing : MonoBehaviour
         m_Targets.Remove(t);
     }
 
+    #endregion Public Function
+
     // Use this for initialization
     private void Start()
     {
@@ -41,11 +68,33 @@ public class CameraFollowing : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        UpdateTheDestination();
-        MoveToTheDestination();
+        UpdateDestination();
+
+        if (m_Targets.Count == 1)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                m_ExtraVec.x = m_Targets.First.Value.forward.x;
+                m_ExtraVec.y = m_Targets.First.Value.forward.z * 0.75f;
+            }
+            else
+            {
+                float h = Input.GetAxis("Vertical");
+                float v = Input.GetAxis("Horizontial");
+
+                bool bRun = Input.GetButton("Run");
+                m_ExtraVec.x = (bRun) ? h * m_CamRunAdd : h * m_CamWalkAdd;
+                m_ExtraVec.y = (bRun) ? v * m_CamRunAdd : v * m_CamWalkAdd;
+
+                if (m_ExtraVec.y <= 0) m_ExtraVec.y *= 1.25f;
+            }
+            AddOnDestination(m_ExtraVec.x, m_ExtraVec.y);
+        }
+
+        MoveToDestination();
     }
 
-    private void UpdateTheDestination()
+    private void UpdateDestination()
     {
         if (m_Targets.Count > 1)
         {
@@ -65,7 +114,13 @@ public class CameraFollowing : MonoBehaviour
         m_Destination.z += -Mathf.Tan((90 - m_CamRotX) * Mathf.Deg2Rad) * (m_Height - 1f);
     }
 
-    private void MoveToTheDestination()
+    private void AddOnDestination(float x, float z)
+    {
+        m_Destination.x += x;
+        m_Destination.z += z;
+    }
+
+    private void MoveToDestination()
     {
         Vector3 currentPos = this.transform.position;
         currentPos = Vector3.Lerp(currentPos, m_Destination, m_CamLerp);
