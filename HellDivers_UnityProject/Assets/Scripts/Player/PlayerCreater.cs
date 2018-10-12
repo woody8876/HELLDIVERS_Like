@@ -8,7 +8,7 @@ public static class PlayerCreater
     {
         if (data == null) return null;
 
-        GameObject playerGo = Resources.Load("Characters/Ch01/ch01") as GameObject;
+        GameObject playerGo = Resources.Load("Characters/Ch00/ch00") as GameObject;
         playerGo = GameObject.Instantiate(playerGo);
         Player p = playerGo.AddComponent<Player>();
         p.Initialize(data);
