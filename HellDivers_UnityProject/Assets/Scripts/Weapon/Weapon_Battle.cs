@@ -70,6 +70,13 @@ public class Weapon_Battle : MonoBehaviour
 
     //=============================================================================================================================================
 
+    public void AddWeapon(eWeaponType type)
+    {
+        weaponBehaviours
+    }
+
+
+
     #region WeaponBehaviours
 
     private void IdleState()
