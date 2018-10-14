@@ -23,6 +23,7 @@ public enum eWeaponType { FirstOne = -1,
 public interface IWeaponBehaviour
 {
     WeaponInfo weaponInfo();
+    void Init(int weaponType);
     void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
     void Reload();
 }
@@ -48,9 +49,11 @@ public class WeaponFactory {
 
         #region WeaponBehaviour 
         float damage = 0f;
-        weaponBehaviour.weaponInfo();
-        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f, ref damage);
-        weaponBehaviour.Reload();
+        int ID = 0;
+        //weaponBehaviour.weaponInfo();
+        //weaponBehaviour.Init(ID);
+        //weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f, ref damage);
+        //weaponBehaviour.Reload();
         #endregion
 
         return weaponBehaviour;

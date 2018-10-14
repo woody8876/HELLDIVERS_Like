@@ -29,7 +29,7 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
                     Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread), 
                     Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread));
                 go.SetActive(true);
-                weaponInfo().UseItem(weaponInfo().Ammo);
+                weaponInfo().Ammo--;
                 Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
                 if (CheckHit(pos, go.transform.forward))
                 {
@@ -47,6 +47,6 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 
     public override void Reload()
     {
-        weaponInfo().AddItem(weaponInfo().Ammo);
+        weaponInfo().Mags--;
     }
 }

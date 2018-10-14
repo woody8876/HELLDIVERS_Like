@@ -19,6 +19,7 @@ public class WeaponController : MonoBehaviour
     {
         if (m_dActiveWeapon.ContainsKey(weaponType) == true) { return; }
         m_dActiveWeapon.Add(weaponType, m_weaponFactory.CreateWeapon(weaponType));
+        m_dActiveWeapon[weaponType].weaponInfo().Mags = GameData.Instance.WeaponInfoTable[(int)weaponType].Start_Mags;
         WeaponLoader(weaponType, m_dActiveWeapon[weaponType]);
         CurrentWeapon = weaponType;
     }
@@ -70,6 +71,8 @@ public class WeaponController : MonoBehaviour
 
     private void ReloadState()
     {
+        Debug.Log("Reloading...");
+        Debug.Log("Mags :" + m_dActiveWeapon[CurrentWeapon].weaponInfo().Mags);
         if (m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo >= m_dActiveWeapon[CurrentWeapon].weaponInfo().Capacity || m_dActiveWeapon[CurrentWeapon].weaponInfo().Mags <= 0)
         {
             m_ActiveState = IdleState;
@@ -161,11 +164,13 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    public void PickUpMgas(eWeaponType weaponType)
+    public void PickUpMgas(int ItemID)
     {
+        eWeaponType weaponType = eWeaponType.FirstOne;
+        
         if (m_dActiveWeapon.ContainsKey(weaponType) == false) { return; }
         if (m_dActiveWeapon[weaponType].weaponInfo().Mags >= m_dActiveWeapon[weaponType].weaponInfo().Max_Mags) { return; }
-        m_dActiveWeapon[weaponType].weaponInfo().AddItem(m_dActiveWeapon[weaponType].weaponInfo().Mags);
+        m_dActiveWeapon[weaponType].weaponInfo().Mags++;
     }
 
     public eWeaponType CurrentWeapon { get; private set; } 
