@@ -13,13 +13,14 @@ public class WeaponController : MonoBehaviour
     public void InitWeapon(Transform GunPos)
     {
         m_tGunPos = GunPos;
+        m_Effect.transform.parent = GunPos;
         m_effect = m_Effect.GetComponent<Animator>();
     }
-    public void AddWeapon(eWeaponType weaponType)
+    public void AddWeapon(eWeaponType weaponType, int weaponID)
     {
         if (m_dActiveWeapon.ContainsKey(weaponType) == true) { return; }
-        m_dActiveWeapon.Add(weaponType, m_weaponFactory.CreateWeapon(weaponType));
-        m_dActiveWeapon[weaponType].weaponInfo().Mags = GameData.Instance.WeaponInfoTable[(int)weaponType].Start_Mags;
+        m_dActiveWeapon.Add(weaponType, m_weaponFactory.CreateWeapon(weaponType, weaponID));
+        m_dActiveWeapon[weaponType].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[weaponID].Start_Mags;
         WeaponLoader(weaponType, m_dActiveWeapon[weaponType]);
         CurrentWeapon = weaponType;
     }
@@ -42,7 +43,7 @@ public class WeaponController : MonoBehaviour
 
     private void ShootState()
     {
-        if (m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo <= 0 || !Input.GetButton("Fire1"))
+        if (m_dActiveWeapon[CurrentWeapon].weaponInfo.Ammo <= 0 || !Input.GetButton("Fire1"))
         {
             Debug.Log("Ammo");
             m_bAutoFire = true;
@@ -61,10 +62,10 @@ public class WeaponController : MonoBehaviour
         m_effect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
         m_dActiveWeapon[CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
-        yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo().FireRate);
-        Debug.Log((m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo));
-        m_bAutoFire = (m_dActiveWeapon[CurrentWeapon].weaponInfo().FireMode == 0) ? false : true;
-        m_fSpreadIncrease += m_dActiveWeapon[CurrentWeapon].weaponInfo().Spread_Increase_per_shot;
+        yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo.FireRate);
+        Debug.Log((m_dActiveWeapon[CurrentWeapon].weaponInfo.Ammo));
+        m_bAutoFire = (m_dActiveWeapon[CurrentWeapon].weaponInfo.FireMode == 0) ? false : true;
+        m_fSpreadIncrease += m_dActiveWeapon[CurrentWeapon].weaponInfo.Spread_Increase_per_shot;
         m_cCoolDown = null;
         yield break;
     }
@@ -72,8 +73,8 @@ public class WeaponController : MonoBehaviour
     private void ReloadState()
     {
         Debug.Log("Reloading...");
-        Debug.Log("Mags :" + m_dActiveWeapon[CurrentWeapon].weaponInfo().Mags);
-        if (m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo >= m_dActiveWeapon[CurrentWeapon].weaponInfo().Capacity || m_dActiveWeapon[CurrentWeapon].weaponInfo().Mags <= 0)
+        Debug.Log("Mags :" + m_dActiveWeapon[CurrentWeapon].weaponInfo.Mags);
+        if (m_dActiveWeapon[CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[CurrentWeapon].weaponInfo.Capacity || m_dActiveWeapon[CurrentWeapon].weaponInfo.Mags <= 0)
         {
             m_ActiveState = IdleState;
             return;
@@ -87,8 +88,8 @@ public class WeaponController : MonoBehaviour
     {
         if (Input.GetButtonUp("Reload")) { m_ActiveState = IdleState; }
 
-        if (m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo <= 0) { yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo().Empty_Reload_Speed); }
-        else if (m_dActiveWeapon[CurrentWeapon].weaponInfo().Ammo > 0) { yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo().Tactical_Reload_Speed); }
+        if (m_dActiveWeapon[CurrentWeapon].weaponInfo.Ammo <= 0) { yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo.Empty_Reload_Speed); }
+        else if (m_dActiveWeapon[CurrentWeapon].weaponInfo.Ammo > 0) { yield return new WaitForSeconds(m_dActiveWeapon[CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
         m_dActiveWeapon[CurrentWeapon].Reload();
         m_cCoolDown = null;
     }
@@ -141,6 +142,7 @@ public class WeaponController : MonoBehaviour
     {
         string m_sWeapon = "Bullet_" + type.ToString();
         string m_sEffect = "Effect_" + type.ToString();
+        int activeAmmo = (int)((weaponData.weaponInfo.Range * 0.01f)/ weaponData.weaponInfo.FireRate) + 1;
         Object m_Weapon;
         if (ResourceManager.m_Instance != null)
         {
@@ -155,12 +157,12 @@ public class WeaponController : MonoBehaviour
         }
         if (ObjectPool.m_Instance != null)
         {
-            ObjectPool.m_Instance.InitGameObjects(m_Weapon, weaponData.weaponInfo().Capacity, (int)type + 100);
+            ObjectPool.m_Instance.InitGameObjects(m_Weapon, activeAmmo, (int)type + 100);
         }
         else
         {
             ObjectPool OP = GetComponent<ObjectPool>();
-            OP.InitGameObjects(m_Weapon, weaponData.weaponInfo().Capacity, (int)type + 100);
+            OP.InitGameObjects(m_Weapon, activeAmmo, (int)type + 100);
         }
     }
 
@@ -169,8 +171,8 @@ public class WeaponController : MonoBehaviour
         eWeaponType weaponType = eWeaponType.FirstOne;
         
         if (m_dActiveWeapon.ContainsKey(weaponType) == false) { return; }
-        if (m_dActiveWeapon[weaponType].weaponInfo().Mags >= m_dActiveWeapon[weaponType].weaponInfo().Max_Mags) { return; }
-        m_dActiveWeapon[weaponType].weaponInfo().Mags++;
+        if (m_dActiveWeapon[weaponType].weaponInfo.Mags >= m_dActiveWeapon[weaponType].weaponInfo.Max_Mags) { return; }
+        m_dActiveWeapon[weaponType].weaponInfo.Mags++;
     }
 
     public eWeaponType CurrentWeapon { get; private set; } 

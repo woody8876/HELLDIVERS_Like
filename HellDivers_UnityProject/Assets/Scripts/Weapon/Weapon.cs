@@ -75,7 +75,7 @@ public class Weapon : IWeaponBehaviour{
     protected WeaponInfo _weaponInfo;
 
     #region Behaviours
-    public virtual WeaponInfo weaponInfo() { return _weaponInfo; }
+    public virtual WeaponInfo weaponInfo { get { return _weaponInfo; } }
     public virtual void Init(int weaponID) { _weaponInfo = GameData.Instance.WeaponInfoTable[(int)weaponID]; }
     public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) {  }
     public virtual void Reload() { }

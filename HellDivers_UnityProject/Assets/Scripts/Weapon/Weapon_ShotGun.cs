@@ -9,11 +9,7 @@ using UnityEngine;
 
 public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 {
-    public override WeaponInfo weaponInfo()
-    {
-        _weaponInfo = GameData.Instance.WeaponInfoTable[(int)eWeaponType.Shotguns];
-        return _weaponInfo;
-    }
+    public override WeaponInfo weaponInfo { get { return _weaponInfo; } }
 
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot , ref float damage)
     {
@@ -25,15 +21,15 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
                 go.transform.position = pos;
                 go.transform.forward = vec;
                 go.transform.Rotate(
-                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread), 
-                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread), 
-                    Random.Range(-weaponInfo().Min_Spread, weaponInfo().Min_Spread));
+                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
+                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
+                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread));
                 go.SetActive(true);
-                weaponInfo().Ammo--;
+                weaponInfo.Ammo--;
                 Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
                 if (CheckHit(pos, go.transform.forward))
                 {
-                    damage = weaponInfo().Damage;
+                    damage = weaponInfo.Damage;
                 }
 
             }
@@ -47,6 +43,6 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 
     public override void Reload()
     {
-        weaponInfo().Mags--;
+        weaponInfo.Mags--;
     }
 }

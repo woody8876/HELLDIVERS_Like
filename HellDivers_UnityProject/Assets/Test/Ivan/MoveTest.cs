@@ -10,7 +10,7 @@ public class MoveTest : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         weaponController = GetComponent<WeaponController>();
-        weaponController.AddWeapon(eWeaponType.Assault_Rifles);
+        weaponController.AddWeapon(eWeaponType.Assault_Rifles, 1);
         weaponController.InitWeapon(GunPos);
 	}
 	

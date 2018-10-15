@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class Weapon_Rifle : Weapon
 {
-    public override WeaponInfo weaponInfo() { return _weaponInfo; }
+    public override WeaponInfo weaponInfo { get { return _weaponInfo; } }
 
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot,ref float damage)
     {
@@ -22,7 +22,7 @@ public class Weapon_Rifle : Weapon
             go.transform.forward = vec;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
-            weaponInfo().Ammo--;
+            weaponInfo.Ammo--;
             Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
             if (CheckHit(pos, go.transform.forward)) { damage = _weaponInfo.Damage; }
             else { damage = 0; }
@@ -32,7 +32,7 @@ public class Weapon_Rifle : Weapon
     }
     public override void Reload()
     {
-        weaponInfo().Ammo = weaponInfo().Capacity;
-        weaponInfo().Mags--;
+        weaponInfo.Ammo = weaponInfo.Capacity;
+        weaponInfo.Mags--;
     }
 }
