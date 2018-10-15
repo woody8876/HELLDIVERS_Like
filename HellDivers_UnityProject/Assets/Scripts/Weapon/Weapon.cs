@@ -11,6 +11,8 @@ using UnityEngine;
 public class WeaponInfo
 {
     #region Stauts for setting
+    public int _ID;
+    public string _Title;
     public float _Damage;
     public float _Center_Damage;
     public float _Explosion_Damage;
@@ -28,6 +30,8 @@ public class WeaponInfo
     #endregion
 
     #region Status get only
+    public int ID { get { return _ID; } }
+    public string Title { get { return _Title; } }
     public float Damage { get { return _Damage; } }
     public float Center_Damage { get { return _Center_Damage; } }
     public float Explosion_Damage { get { return _Explosion_Damage; } }

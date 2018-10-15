@@ -31,10 +31,11 @@ public interface IWeaponBehaviour
 
 public class WeaponFactory {
 
-    public IWeaponBehaviour CreateWeapon(eWeaponType eType, int weaponID)
+    public IWeaponBehaviour CreateWeapon(int weaponID)
     {
+        int iType = (weaponID -1000)/100 ;
         IWeaponBehaviour weaponBehaviour;
-        switch (eType)
+        switch ((eWeaponType)iType)
         {
             case eWeaponType.Assault_Rifles:
                 weaponBehaviour = new Weapon_Rifle();

@@ -15,7 +15,7 @@ public class Weapon_Rifle : Weapon
     {
         float fCurSpread = _weaponInfo.Min_Spread + fSpreadperShot;
         if (fCurSpread > _weaponInfo.Max_Spread) fCurSpread = _weaponInfo.Max_Spread;
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)eWeaponType.Assault_Rifles + 100);
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
         if (go != null)
         {
             go.transform.position = pos;

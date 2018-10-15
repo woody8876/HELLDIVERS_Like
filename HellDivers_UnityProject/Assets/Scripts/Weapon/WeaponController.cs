@@ -16,19 +16,28 @@ public class WeaponController : MonoBehaviour
         m_Effect.transform.parent = GunPos;
         m_effect = m_Effect.GetComponent<Animator>();
     }
-    public void AddWeapon(eWeaponType weaponType, int weaponID)
+    public void AddMultiWeapons(List<int> WeaponsID)
     {
-        if (m_dActiveWeapon.ContainsKey(weaponType) == true) { return; }
-        m_dActiveWeapon.Add(weaponType, m_weaponFactory.CreateWeapon(weaponType, weaponID));
-        m_dActiveWeapon[weaponType].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[weaponID].Start_Mags;
-        WeaponLoader(weaponType, m_dActiveWeapon[weaponType]);
-        CurrentWeapon = weaponType;
+        for (int i = 0; i < WeaponsID.Count; i++)
+        {
+            AddWeapon(WeaponsID[i]);
+        }
     }
-    public void RemoveWeapon(eWeaponType weaponType)
+    public void AddWeapon(int weaponID)
     {
-        if (m_dActiveWeapon.ContainsKey(weaponType) == false) { return; }
-        m_dActiveWeapon.Remove(weaponType);
-        ObjectPool.m_Instance.RemoveObjectFromPool((int)weaponType + 100);
+        if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
+        if (m_dActiveWeapon.ContainsKey(weaponID) == true) { return; }
+        m_dActiveWeapon.Add(weaponID, m_weaponFactory.CreateWeapon(weaponID));
+        m_dActiveWeapon[weaponID].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[weaponID].Start_Mags;
+        WeaponLoader(m_dActiveWeapon[weaponID]);
+        CurrentWeapon = weaponID;
+    }
+    public void RemoveWeapon(int weaponID)
+    {
+        if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
+        if (m_dActiveWeapon.ContainsKey(weaponID) == false) { return; }
+        m_dActiveWeapon.Remove(weaponID);
+        ObjectPool.m_Instance.RemoveObjectFromPool(weaponID);
     }
     #endregion
     
@@ -58,7 +67,6 @@ public class WeaponController : MonoBehaviour
 
     private IEnumerator WaitCooling()
     {
-        m_Effect.transform.position = m_tGunPos.position;
         m_effect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
         m_dActiveWeapon[CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
@@ -96,34 +104,32 @@ public class WeaponController : MonoBehaviour
 
     private void SwitchWeaponState()
     {
-        int currentWeapon = (int)CurrentWeapon;
-        for (int i = currentWeapon + 1; i < (int)eWeaponType.LastOne; i++)
+        int[] keys = new int[m_dActiveWeapon.Count];
+        m_dActiveWeapon.Keys.CopyTo(keys, 0);
+        for (int i = 0; i< keys.Length; i++)
         {
-            if (m_dActiveWeapon.ContainsKey((eWeaponType)i))
+            if (i == keys.Length - 1)
             {
-                CurrentWeapon = (eWeaponType)i;
+                CurrentWeapon = keys[0];
+                m_ActiveState = IdleState;
+                return;
+            }
+            else if (keys[i] == CurrentWeapon)
+            {
+                CurrentWeapon = keys[i + 1];
                 m_ActiveState = IdleState;
                 return;
             }
         }
-        for (int i = 0; i < currentWeapon; i++)
-        {
-            if (m_dActiveWeapon.ContainsKey((eWeaponType)i))
-            {
-                CurrentWeapon = (eWeaponType)i;
-                m_ActiveState = IdleState;
-                return;
-            }
-        }
-        m_ActiveState = IdleState;
     }
     #endregion WeaponBehaviours
     
     #region MonoBehaviors
     private void Start()
     {
-        m_dActiveWeapon.Clear();
         m_ActiveState = IdleState;
+        m_dActiveWeapon.Clear();
+
     }
 
     private void Update()
@@ -138,10 +144,10 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     /// <param name="type">Weapon type</param>
     /// <param name="weaponData">Data in calss "Weapon".</param>
-    private void WeaponLoader(eWeaponType type, IWeaponBehaviour weaponData)
+    private void WeaponLoader(IWeaponBehaviour weaponData)
     {
-        string m_sWeapon = "Bullet_" + type.ToString();
-        string m_sEffect = "Effect_" + type.ToString();
+        string m_sWeapon = "Bullet_" + weaponData.weaponInfo.Title;
+        string m_sEffect = "Effect_" + weaponData.weaponInfo.Title;
         int activeAmmo = (int)((weaponData.weaponInfo.Range * 0.01f)/ weaponData.weaponInfo.FireRate) + 1;
         Object m_Weapon;
         if (ResourceManager.m_Instance != null)
@@ -157,25 +163,24 @@ public class WeaponController : MonoBehaviour
         }
         if (ObjectPool.m_Instance != null)
         {
-            ObjectPool.m_Instance.InitGameObjects(m_Weapon, activeAmmo, (int)type + 100);
+            ObjectPool.m_Instance.InitGameObjects(m_Weapon, activeAmmo, weaponData.weaponInfo.ID);
         }
         else
         {
             ObjectPool OP = GetComponent<ObjectPool>();
-            OP.InitGameObjects(m_Weapon, activeAmmo, (int)type + 100);
+            OP.InitGameObjects(m_Weapon, activeAmmo, weaponData.weaponInfo.ID);
         }
     }
 
-    public void PickUpMgas(int ItemID)
-    {
-        eWeaponType weaponType = eWeaponType.FirstOne;
-        
-        if (m_dActiveWeapon.ContainsKey(weaponType) == false) { return; }
-        if (m_dActiveWeapon[weaponType].weaponInfo.Mags >= m_dActiveWeapon[weaponType].weaponInfo.Max_Mags) { return; }
-        m_dActiveWeapon[weaponType].weaponInfo.Mags++;
-    }
+    //public void PickUpMgas(int ItemID)
+    //{
+    //    eWeaponType weaponType = eWeaponType.FirstOne;
+    //    if (m_dActiveWeapon.ContainsKey(weaponType) == false) { return; }
+    //    if (m_dActiveWeapon[weaponType].weaponInfo.Mags >= m_dActiveWeapon[weaponType].weaponInfo.Max_Mags) { return; }
+    //    m_dActiveWeapon[weaponType].weaponInfo.Mags++;
+    //}
 
-    public eWeaponType CurrentWeapon { get; private set; } 
+    public int CurrentWeapon { get; private set; } 
     
     #region Private member
     private WeaponFactory m_weaponFactory = new WeaponFactory();
@@ -187,7 +192,7 @@ public class WeaponController : MonoBehaviour
     private delegate void ActiveState();
     private ActiveState m_ActiveState;
 
-    private Dictionary<eWeaponType, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<eWeaponType, IWeaponBehaviour>();
+    private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();
 
     private float m_fDamage;
     private float m_fSpreadIncrease;

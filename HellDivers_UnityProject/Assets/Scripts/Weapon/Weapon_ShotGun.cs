@@ -15,7 +15,7 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)eWeaponType.Shotguns + 100);
+            GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
             if (go != null)
             {
                 go.transform.position = pos;
