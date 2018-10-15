@@ -17,14 +17,16 @@ public class EnemyAI : MonoBehaviour
     {
         data.m_vTarget = data.m_TargetObject.transform.position;
 
-        transform.position += SteeringBehaviours.GroupBehaviors(data) * Time.deltaTime * 10f;
-        SteeringBehaviours.Seek(data);
+        transform.position += SteeringBehaviours.GroupBehavior(data, 2 , true) * data.m_fRot;
+        transform.position += SteeringBehaviours.GroupBehavior(data, 5 , false) * data.m_fRot;
+        //SteeringBehaviours.Seek(data);
+        //SteeringBehaviours.Move(data);
+        if (SteeringBehaviours.CollisionAvoided(data) == false)
+        {
+       //     SteeringBehaviours.EnemiesAvoided(data);
+            SteeringBehaviours.Seek(data);
+        }
         SteeringBehaviours.Move(data);
-        //if (SteeringBehavior.CollisionAvoided(data) == false)
-        //{
-        //    SteeringBehavior.Seek(data);
-        //}
-        //SteeringBehavior.Move(data);
     }
 
     //private void OnDrawGizmos()

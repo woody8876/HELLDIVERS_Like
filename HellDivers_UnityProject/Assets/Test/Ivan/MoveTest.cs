@@ -16,8 +16,8 @@ public class MoveTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        m_vPos.x = Input.GetAxis("Horizontal");
-        m_vPos.z = Input.GetAxis("Vertical");
-        transform.position += m_vPos * Time.deltaTime * 10;
+        m_vPos.x = Input.GetAxis("Horizontal") * Time.deltaTime * 30;
+        m_vPos.z = Input.GetAxis("Vertical") * Time.deltaTime * 30;
+        transform.Translate(m_vPos);
 	}
 }

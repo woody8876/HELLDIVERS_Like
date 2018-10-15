@@ -16,7 +16,9 @@ public class SteeringBehaviours
         else if (data.m_fTempTurnForce < -data.m_fMaxRot) { data.m_fTempTurnForce = -data.m_fMaxRot; }
         Vector3 vOriF = vForward;
         vForward += vRight * data.m_fTempTurnForce;
+        vForward.y = 0;
         vForward.Normalize();
+
         t.forward = vForward;
         data.m_Speed = data.m_Speed + data.m_fMoveForce * Time.deltaTime;
         if (data.m_Speed < 0.001f)
@@ -27,9 +29,32 @@ public class SteeringBehaviours
         {
             data.m_Speed = data.m_fMaxSpeed;
         }
-        cPos = cPos + t.forward * data.m_Speed;
+        
+        cPos = cPos + (t.forward) * data.m_Speed;
         t.position = cPos;
 
+    }
+    static public bool EnemiesAvoided(AIData data)
+    {
+        Transform Mover = data.m_Go.transform;
+
+        if (Physics.Raycast(Mover.position, Mover.forward, data.m_fProbeLength * 2, 1<< LayerMask.NameToLayer("Enemies")))
+        {
+            Vector3 TargetDir = Vector3.forward;
+            Vector3 vCross = Vector3.Cross(Mover.forward, TargetDir);
+            float fTurnMag = Vector3.Dot(Mover.forward, TargetDir);
+
+            if (vCross.y > 0.0f) { fTurnMag = -fTurnMag; }
+            data.m_fTempTurnForce = fTurnMag;
+            float fTotalLen = data.m_fProbeLength + data.m_TargetObject.transform.localScale.magnitude;
+            float fRatio = TargetDir.magnitude / fTotalLen;
+            if (fRatio > 1.0f) { fRatio = 1.0f; }
+            data.m_fMoveForce = fRatio - 1.0f;
+            data.m_bMove = true;
+            data.m_bCol = false;
+            return true;
+        }
+        return false;
     }
 
     static public bool CollisionAvoided(AIData data)
@@ -44,11 +69,12 @@ public class SteeringBehaviours
         float fFinalDot;
         float fFinalDotDist;
         float fFinalProjDist;
-        float radius = data.m_fProbeLength * 3;
+        float radius = data.m_fRadius;
         float fMinDist = 1000.0f;
         Collider ColObject = null;
         Collider[] c = Physics.OverlapSphere(curPos, radius, 1 << LayerMask.NameToLayer("Terrain"));
-        Debug.Log(c.Length);
+
+        
         if (c.Length < 1)
         {
             data.m_bCol = false;
@@ -56,15 +82,22 @@ public class SteeringBehaviours
         }
         for (int i = 0; i < c.Length; i++)
         {
+            
             vec = c[i].transform.position - curPos;
             vec.y = 0;
             fDist = vec.magnitude;
-            if (fDist > radius * 0.5) continue;
+            vec.Normalize();
+            if (fDist > data.m_fProbeLength) continue;
+
             fDot = Vector3.Dot(vec, vForward);
             if (fDot < 0.0f) continue;
             float fProjectDist = fDist * fDot;
             float fDotDist = Mathf.Sqrt(fDist * fDist - fProjectDist * fProjectDist);
-            if (fDotDist > data.m_fRadius + c[i].transform.localScale.magnitude) continue;
+            if (fDotDist > data.m_fRadius + c[i].transform.localScale.magnitude)
+            {
+                continue;
+            }
+
             if (fDist < fMinDist)
             {
                 fMinDist = fDist;
@@ -77,7 +110,6 @@ public class SteeringBehaviours
         }
         if (ColObject != null)
         {
-            Debug.Log("11");
             Vector3 vCross = Vector3.Cross(vForward, TargetDir);
             float fTurnMag = Vector3.Dot(vForward, TargetDir);
 
@@ -107,7 +139,7 @@ public class SteeringBehaviours
         if (fDist2Target < data.m_fProbeLength)
         {
             data.m_fMoveForce = 0.0f;
-            data.m_fTempTurnForce = 0.0f;
+ //           data.m_fTempTurnForce = 0.0f;
             data.m_Speed = 0.0f;
             data.m_bMove = false;
             return false;
@@ -117,7 +149,7 @@ public class SteeringBehaviours
             fDotForward = 1.0f;
             data.m_Go.transform.forward = TargetDir;
             data.m_fTempTurnForce = 0.0f;
-            data.m_fRot = 0.0f;
+            //data.m_fRot = 0.0f;
         }
         else
         {
@@ -127,30 +159,31 @@ public class SteeringBehaviours
             if (fDist2Target < data.m_fProbeLength * 1.5f) fDotRight *= fDist2Target;
             data.m_fTempTurnForce = fDotRight;
         }
+
         data.m_fMoveForce = fDotForward;
         data.m_bMove = true;
         return true;
     }
 
-    static public Vector3 GroupBehaviors(AIData data)
+    static public Vector3 GroupBehavior(AIData data, float radius, bool Seperate)
     {
-        Vector3 m_vSepForward = Vector3.zero;
-        Vector3 m_vCohForward = Vector3.zero;
-        Transform Mover = data.m_Go.transform;
-        float radius = data.m_fRadius * 2;
+        Vector3 m_vForward = Vector3.zero;
+        Vector3 MoverPos = data.m_Go.transform.position;
+        float Radius = data.m_fRadius * radius;
         float distance;
-        Collider[] Partners = Physics.OverlapSphere(Mover.position, radius, 1 << LayerMask.NameToLayer("Enemies"));
-        for (int i = 0; i < Partners.Length; i++)
+        Collider[] Colliders = Physics.OverlapSphere(MoverPos, Radius, 1 << LayerMask.NameToLayer("Enemies"));
+        for (int i = 0; i < Colliders.Length; i++)
         {
-            Vector3 vec = (Partners[i].transform.position - Mover.position);
+            Vector3 vec = (Colliders[i].transform.position - MoverPos);
             distance = vec.magnitude;
             vec.Normalize();
-            m_vSepForward -= vec * (1 - distance / radius) * data.m_Speed * 50;
-            m_vCohForward += vec * distance / radius * data.m_Speed * 5;
+            m_vForward += vec * (distance / Radius + (Seperate? -1:0));
         }
-        m_vCohForward /= Partners.Length;
-        m_vSepForward /= Partners.Length;
-        return m_vSepForward + m_vCohForward;
+        m_vForward /= Colliders.Length;
+        m_vForward.y = 0;
+        return m_vForward;
     }
+
+
 
 }
