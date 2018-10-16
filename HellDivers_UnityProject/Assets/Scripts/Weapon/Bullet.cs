@@ -13,10 +13,15 @@ public class Bullet : MonoBehaviour {
     
     //Bullet's speed
     private float m_fSpeed = 100;
+    private float m_fRange;
+    private int m_iID;
+
     //Renderer m_bullet;
     //========================================================================
     void Start () {
         //m_bullet = this.gameObject.GetComponent<Renderer>();
+        m_fRange = GameData.Instance.WeaponInfoTable[(int)m_Type].Range;
+        m_iID = GameData.Instance.WeaponInfoTable[(int)m_Type].ID;
     }
 
     // Update is called once per frame
@@ -32,8 +37,8 @@ public class Bullet : MonoBehaviour {
     IEnumerator BulletDeath()
     {
         this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
-        yield return new WaitForSeconds(Weapon_Battle.weaponBehaviours[m_Type].weaponInfo().Range/m_fSpeed);
-        ObjectPool.m_Instance.UnLoadObjectToPool((int)m_Type + 100, this.gameObject);
+        yield return new WaitForSeconds(m_fRange/m_fSpeed);
+        ObjectPool.m_Instance.UnLoadObjectToPool(m_iID, this.gameObject);
     }
 
 

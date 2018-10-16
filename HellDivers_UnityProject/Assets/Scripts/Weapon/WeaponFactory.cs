@@ -22,7 +22,8 @@ public enum eWeaponType { FirstOne = -1,
 
 public interface IWeaponBehaviour
 {
-    WeaponInfo weaponInfo();
+    WeaponInfo weaponInfo { get; }
+    void Init(int weaponType);
     void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
     void Reload();
 }
@@ -30,10 +31,11 @@ public interface IWeaponBehaviour
 
 public class WeaponFactory {
 
-    public IWeaponBehaviour CreateWeapon(eWeaponType eType)
+    public IWeaponBehaviour CreateWeapon(int weaponID)
     {
+        int iType = (weaponID -1000)/100 ;
         IWeaponBehaviour weaponBehaviour;
-        switch (eType)
+        switch ((eWeaponType)iType)
         {
             case eWeaponType.Assault_Rifles:
                 weaponBehaviour = new Weapon_Rifle();
@@ -48,7 +50,7 @@ public class WeaponFactory {
 
         #region WeaponBehaviour 
         float damage = 0f;
-        weaponBehaviour.weaponInfo();
+        weaponBehaviour.Init(weaponID);
         weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f, ref damage);
         weaponBehaviour.Reload();
         #endregion

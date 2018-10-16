@@ -74,20 +74,20 @@ public class Stratagem : MonoBehaviour
         StratagemInfo newInfo;
         if (TryGetInfoFromGameData(id, out newInfo) == false) return false;
 
-        this.gameObject.name = string.Format("Stratagem {0}", m_Info.title);
+        this.gameObject.name = string.Format("Stratagem {0}", m_Info.Title);
 
-        if (newInfo.display != m_Info.display)
+        if (newInfo.DisplayID != m_Info.DisplayID)
         {
             GameObject go;
 
             if (ResourceManager.m_Instance == null)
             {
                 Debug.LogWarningFormat("Stratagem Warning ({0}) : ResourcesManager doesn't exist, Using Resource.Load()", this.gameObject.name);
-                go = Resources.Load(string.Format("{0}/{1}", StratagemSystem.DisplayFolder, newInfo.display)) as GameObject;
+                go = Resources.Load(string.Format("{0}/{1}", StratagemSystem.DisplayFolder, newInfo.DisplayID)) as GameObject;
             }
             else
             {
-                go = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.display) as GameObject;
+                go = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.DisplayID) as GameObject;
             }
 
             if (m_Display != go)
@@ -172,7 +172,7 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public void GetReady()
     {
-        if (m_UsesCount >= Info.uses && Info.uses >= 0) return;
+        if (m_UsesCount >= Info.Uses && Info.Uses >= 0) return;
         if (IsCooling || State != eState.Idle) return;
 
         this.transform.parent = m_LaunchPos;
@@ -199,10 +199,10 @@ public class Stratagem : MonoBehaviour
         m_Animator.SetTrigger("Throw");
 
         // Uses add count. ( Info.uses = -1 ) is meaning for unlimited.
-        if (Info.uses != -1) m_UsesCount++;
+        if (Info.Uses != -1) m_UsesCount++;
 
         // Start the cooldown timer.
-        if (Info.cooldown > 0) StartCoroutine(DoCoolDown(Info.cooldown));
+        if (Info.CoolDown > 0) StartCoroutine(DoCoolDown(Info.CoolDown));
 
         // Translate to ThrowOut state.
         m_eState = eState.ThrowOut;
@@ -261,7 +261,7 @@ public class Stratagem : MonoBehaviour
                 m_Animator.SetTrigger("Land");
 
                 // Start the activation timer.
-                StartCoroutine(DoActivating(Info.activation));
+                StartCoroutine(DoActivating(Info.Activation));
             }
         }
     }
@@ -328,14 +328,14 @@ public class Stratagem : MonoBehaviour
 
             if (State == eState.Activating)
             {
-                string actMessage = string.Format("{0} Act : {1}", Info.title, m_ActivationTimer);
+                string actMessage = string.Format("{0} Act : {1}", Info.Title, m_ActivationTimer);
                 style.normal.textColor = Color.red;
                 Handles.Label(this.transform.position, actMessage, style);
             }
 
             if (IsCooling)
             {
-                string coolMessage = string.Format("{0} CD : {1}", Info.title, m_CoolTimer);
+                string coolMessage = string.Format("{0} CD : {1}", Info.Title, m_CoolTimer);
                 style.normal.textColor = Color.black;
                 Handles.Label(m_LaunchPos.position, coolMessage, style);
             }
@@ -353,15 +353,15 @@ public class Stratagem : MonoBehaviour
             {
                 case eState.Idle:
                     {
-                        if (m_UsesCount >= Info.uses)
+                        if (m_UsesCount >= Info.Uses)
                         {
-                            Message = string.Format("{0} /{1} out of uses", this.name, Info.title);
+                            Message = string.Format("{0} /{1} out of uses", this.name, Info.Title);
                             style.normal.textColor = Color.red;
                             GUI.Label(rect, Message, style);
                         }
                         else
                         {
-                            Message = string.Format("{0} /{1} Idle", this.name, Info.title);
+                            Message = string.Format("{0} /{1} Idle", this.name, Info.Title);
                             style.normal.textColor = Color.gray;
                             GUI.Label(rect, Message, style);
                         }
@@ -370,7 +370,7 @@ public class Stratagem : MonoBehaviour
 
                 case eState.ThrowOut:
                     {
-                        Message = string.Format("{0} /{1} throw out", this.name, Info.title);
+                        Message = string.Format("{0} /{1} throw out", this.name, Info.Title);
                         style.normal.textColor = Color.gray;
                         GUI.Label(rect, Message, style);
                         break;
@@ -378,7 +378,7 @@ public class Stratagem : MonoBehaviour
 
                 case eState.Ready:
                     {
-                        Message = string.Format("{0} /{1} ready", this.name, Info.title);
+                        Message = string.Format("{0} /{1} ready", this.name, Info.Title);
                         style.normal.textColor = Color.gray;
                         GUI.Label(rect, Message, style);
                         break;
@@ -386,7 +386,7 @@ public class Stratagem : MonoBehaviour
 
                 case eState.Activating:
                     {
-                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.title, m_ActivationTimer, Info.activation);
+                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.Title, m_ActivationTimer, Info.Activation);
                         style.normal.textColor = Color.red;
                         GUI.Label(rect, Message, style);
                         break;
@@ -397,7 +397,7 @@ public class Stratagem : MonoBehaviour
 
             if (IsCooling)
             {
-                Message = string.Format("{0} /{1} CD : {2} / {3}", this.name, Info.title, m_CoolTimer, Info.cooldown);
+                Message = string.Format("{0} /{1} CD : {2} / {3}", this.name, Info.Title, m_CoolTimer, Info.CoolDown);
                 style.normal.textColor = Color.black;
                 rect.y *= 3;
                 GUI.Label(rect, Message, style);

@@ -43,7 +43,7 @@ public class StratagemController : MonoBehaviour
     {
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (m_Stratagems[i].Info.id == id) return false;
+            if (m_Stratagems[i].Info.ID == id) return false;
         }
 
         GameObject go = new GameObject("Stratagem");
@@ -94,7 +94,7 @@ public class StratagemController : MonoBehaviour
         Stratagem target = null;
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (m_Stratagems[i].Info.id == id)
+            if (m_Stratagems[i].Info.ID == id)
             {
                 target = m_Stratagems[i];
                 break;
@@ -190,9 +190,9 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Info.codes[inputCount - 1] == input)
+                if (_Open[i].Info.Codes[inputCount - 1] == input)
                 {
-                    if (_Open[i].Info.codes.Length == inputCount)
+                    if (_Open[i].Info.Codes.Length == inputCount)
                     {
                         m_CurrentStratagem = _Open[i];
                         m_CurrentStratagem.GetReady();
