@@ -261,7 +261,7 @@ public class Stratagem : MonoBehaviour
                 m_Animator.SetTrigger("Land");
 
                 // Start the activation timer.
-                StartCoroutine(DoActivating(Info.Activaion));
+                StartCoroutine(DoActivating(Info.Activation));
             }
         }
     }
@@ -386,7 +386,7 @@ public class Stratagem : MonoBehaviour
 
                 case eState.Activating:
                     {
-                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.Title, m_ActivationTimer, Info.Activaion);
+                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.Title, m_ActivationTimer, Info.Activation);
                         style.normal.textColor = Color.red;
                         GUI.Label(rect, Message, style);
                         break;

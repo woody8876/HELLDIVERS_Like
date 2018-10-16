@@ -8,15 +8,15 @@ public class StratagemInfo
 {
     #region Properties
 
-    public int ID { get { return id; } set { id = value; } }
-    public int Rank { get { return rank; } set { rank = (value < 0) ? 0 : value; } }
-    public string Title { get { return title; } set { title = value; } }
-    public eType Type { get { return type; } set { type = value; } }
-    public eCode[] Codes { get { return codes; } set { codes = value; } }
-    public int Uses { get { return uses; } set { uses = (value < -1) ? -1 : value; } }
-    public float CoolDown { get { return cooldown; } set { cooldown = value; } }
-    public float Activaion { get { return activation; } set { activation = value; } }
-    public string DisplayID { get { return displayId; } set { displayId = value; } }
+    public int ID { get { return id; } }
+    public int Rank { get { return rank; } }
+    public string Title { get { return title; } }
+    public eType Type { get { return type; } }
+    public eCode[] Codes { get { return codes; } }
+    public int Uses { get { return uses; } }
+    public float CoolDown { get { return cooldown; } }
+    public float Activation { get { return activation; } }
+    public string DisplayID { get { return displayId; } }
 
     #endregion Properties
 
