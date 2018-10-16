@@ -9,24 +9,20 @@ using UnityEngine;
 
 public class Weapon_Rifle : Weapon
 {
-    public override WeaponInfo weaponInfo()
-    {
-        _weaponInfo = GameData.Instance.WeaponInfoTable[(int)eWeaponType.Assault_Rifles];
-        return _weaponInfo;
-    }
+    public override WeaponInfo weaponInfo { get { return _weaponInfo; } }
 
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot,ref float damage)
     {
         float fCurSpread = _weaponInfo.Min_Spread + fSpreadperShot;
         if (fCurSpread > _weaponInfo.Max_Spread) fCurSpread = _weaponInfo.Max_Spread;
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)eWeaponType.Assault_Rifles + 100);
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
         if (go != null)
         {
             go.transform.position = pos;
             go.transform.forward = vec;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
-            _weaponInfo._iAmmo--;
+            weaponInfo.Ammo--;
             Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
             if (CheckHit(pos, go.transform.forward)) { damage = _weaponInfo.Damage; }
             else { damage = 0; }
@@ -36,6 +32,7 @@ public class Weapon_Rifle : Weapon
     }
     public override void Reload()
     {
-        _weaponInfo._iAmmo = _weaponInfo.Capacity;
+        weaponInfo.Ammo = weaponInfo.Capacity;
+        weaponInfo.Mags--;
     }
 }

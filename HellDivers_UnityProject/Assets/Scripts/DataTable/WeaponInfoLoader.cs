@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponInfoLoader : WeaponInfo{
+public class WeaponInfoLoader {
 
     public static Dictionary<int, WeaponInfo> LoadData(string filePath)
     {
@@ -29,9 +29,9 @@ public class WeaponInfoLoader : WeaponInfo{
             for (int i = 1; i < lines.Length - 1; i++)
             {
                 string[] weaponInfo = lines[i].Split(',');
-                int index;
                 WeaponInfo data = new WeaponInfo();
-                index = int.Parse(weaponInfo[1]);
+                data._ID = int.Parse(weaponInfo[0]);
+                data._Title = weaponInfo[1];
                 data._Damage = int.Parse(weaponInfo[2]);
                 data._Center_Damage = int.Parse(weaponInfo[3]);
                 data._Explosion_Damage = int.Parse(weaponInfo[4]);
@@ -46,7 +46,7 @@ public class WeaponInfoLoader : WeaponInfo{
                 data._Spread_Increase_per_shot = float.Parse(weaponInfo[13]);
                 data._Range = float.Parse(weaponInfo[14]);
                 data._FireMode = float.Parse(weaponInfo[15]);
-                Info.Add(index, data);
+                Info.Add(data._ID, data);
             }
             return true;
         }
