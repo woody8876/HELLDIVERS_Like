@@ -23,9 +23,11 @@ public enum eWeaponType { FirstOne = -1,
 public interface IWeaponBehaviour
 {
     WeaponInfo weaponInfo { get; }
+    GameObject WeaponLoader();
     void Init(int weaponType);
     void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
     void Reload();
+
 }
 
 
@@ -33,7 +35,7 @@ public class WeaponFactory {
 
     public IWeaponBehaviour CreateWeapon(int weaponID)
     {
-        int iType = (weaponID -1000)/100 ;
+        int iType = GameData.Instance.WeaponInfoTable[weaponID].Type;
         IWeaponBehaviour weaponBehaviour;
         switch ((eWeaponType)iType)
         {

@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 65208791925730086}
   - component: {fileID: 114728018287922786}
   m_Layer: 0
-  m_Name: Bullet_Assault-Rifles
+  m_Name: Bullet_Shotguns
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,5 +107,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6f4812c33d1804e83530344fd0323e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Type: 1
-  m_ID: 1101
+  m_Type: 3
+  m_ID: 1301

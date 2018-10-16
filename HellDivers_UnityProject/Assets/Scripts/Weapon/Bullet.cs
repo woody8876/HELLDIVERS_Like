@@ -10,6 +10,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
     [SerializeField] private eWeaponType m_Type;
+    [SerializeField] private int m_ID;
     
     //Bullet's speed
     private float m_fSpeed = 100;
@@ -20,8 +21,8 @@ public class Bullet : MonoBehaviour {
     //========================================================================
     void Start () {
         //m_bullet = this.gameObject.GetComponent<Renderer>();
-        m_fRange = GameData.Instance.WeaponInfoTable[(int)m_Type].Range;
-        m_iID = GameData.Instance.WeaponInfoTable[(int)m_Type].ID;
+        m_fRange = GameData.Instance.WeaponInfoTable[m_ID].Range;
+        m_iID = GameData.Instance.WeaponInfoTable[m_ID].ID;
     }
 
     // Update is called once per frame
