@@ -65,7 +65,7 @@ public class WeaponController : MonoBehaviour
     private void IdleState()
     {
         if (Input.GetButton("Fire1") && m_cCoolDown == null) { m_ActiveState = ShootState; }
-        else if (Input.GetButton("Reload")) { m_ActiveState = ReloadState; }
+        else if (Input.GetButton("Reload") && m_cCoolDown == null) { m_ActiveState = ReloadState; }
         else if (Input.GetButtonDown("WeaponSwitch")) { m_ActiveState = SwitchWeaponState; }
     }
 
@@ -94,7 +94,7 @@ public class WeaponController : MonoBehaviour
         m_bAutoFire = (m_dActiveWeapon[_CurrentWeapon ].weaponInfo.FireMode == 0) ? false : true;
         m_fSpreadIncrease += m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Spread_Increase_per_shot;
         m_cCoolDown = null;
-        yield break;
+//        yield break;
     }
 
     private void ReloadState()
@@ -105,9 +105,10 @@ public class WeaponController : MonoBehaviour
         {
             m_ActiveState = IdleState;
             return;
-        }
-        if (m_cCoolDown != null) StopCoroutine(m_cCoolDown);
+        }else if (m_bReloading) { return; }
+        //if (m_cCoolDown != null) StopCoroutine(m_cCoolDown);
         Debug.Log("Reload");
+        m_bReloading = true;
         m_cCoolDown = StartCoroutine(WaitReloading());
     }
 
@@ -116,8 +117,9 @@ public class WeaponController : MonoBehaviour
         if (Input.GetButtonUp("Reload")) { m_ActiveState = IdleState; }
 
         if (m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Ammo <= 0) { yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Empty_Reload_Speed); }
-        else if (m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Ammo > 0) { yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Tactical_Reload_Speed); }
+        else{ yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon ].weaponInfo.Tactical_Reload_Speed); }
         m_dActiveWeapon[_CurrentWeapon ].Reload();
+        m_bReloading = false;
         m_cCoolDown = null;
     }
 
@@ -193,6 +195,7 @@ public class WeaponController : MonoBehaviour
     private float m_fDamage;
     private float m_fSpreadIncrease;
     private bool m_bAutoFire = true;
+    private bool m_bReloading;
 
     #endregion Private member
 }
