@@ -48,20 +48,30 @@ public class CameraFollowing : MonoBehaviour
 
     #region Public Function
 
+    /// <summary>
+    /// Set focus on the target. And clear all processing targets.
+    /// </summary>
     public void FocusOnTarget(Transform t)
     {
         m_Targets.Clear();
         m_Targets.AddFirst(t);
     }
 
+    /// <summary>
+    /// Add a target.
+    /// </summary>
     public void AddTarget(Transform t)
     {
         m_Targets.AddLast(t);
     }
 
-    public void RemoveTarget(Transform t)
+    /// <summary>
+    /// Remove a target.
+    /// </summary>
+    public bool RemoveTarget(Transform t)
     {
-        m_Targets.Remove(t);
+        if (m_Targets.Remove(t)) return true;
+        else return false;
     }
 
     #endregion Public Function
