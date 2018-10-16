@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Move;
     private Vector3 m_Fall;
     private Vector3 m_Direction;
-    private Ray m_MouseRay;
-    private RaycastHit m_MouseHit;
     private PlayerAnimationsContorller m_PAC;
 
     private bool bRun = false;

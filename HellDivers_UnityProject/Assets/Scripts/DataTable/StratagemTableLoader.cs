@@ -34,21 +34,20 @@ public static class StratagemDataLoader
             for (int i = 1; i < line.Length - 1; i++)
             {
                 string[] colum = line[i].Split(',');
-
                 StratagemInfo data = new StratagemInfo()
                 {
-                    id = int.Parse(colum[0]),
-                    rank = int.Parse(colum[1]),
-                    title = colum[2],
-                    type = (StratagemInfo.eType)Enum.Parse(typeof(StratagemInfo.eType), colum[3]),
-                    codes = _GetCodes(colum[4]),
-                    uses = int.Parse(colum[5]),
-                    cooldown = float.Parse(colum[6]),
-                    activation = float.Parse(colum[7]),
-                    display = colum[8]
+                    ID = int.Parse(colum[0]),
+                    Rank = int.Parse(colum[1]),
+                    Title = colum[2],
+                    Type = (StratagemInfo.eType)Enum.Parse(typeof(StratagemInfo.eType), colum[3]),
+                    Codes = _GetCodes(colum[4]),
+                    Uses = int.Parse(colum[5]),
+                    CoolDown = float.Parse(colum[6]),
+                    Activaion = float.Parse(colum[7]),
+                    DisplayID = colum[8]
                 };
 
-                table.Add(data.id, data);
+                table.Add(data.ID, data);
             }
 
             return true;

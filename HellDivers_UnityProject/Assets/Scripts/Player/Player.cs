@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[RequireComponent(typeof(Weapon_Battle))]
+[RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(StratagemController))]
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     private PlayerParts m_Parts;
     private PlayerController m_PlayerController;
     private StratagemController m_StratagemController;
-    //private Weapon_Battle m_WeapoonBattle;
+    private WeaponController m_WeapoonController;
 #pragma warning disable
 
     #endregion Private Variable
@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
         m_Data = new PlayerInfo();
         m_Parts = GetComponent<PlayerParts>();
         m_PlayerController = GetComponent<PlayerController>();
-        //m_WeapoonBattle = GetComponent<Weapon_Battle>();
+        m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
     }
 
