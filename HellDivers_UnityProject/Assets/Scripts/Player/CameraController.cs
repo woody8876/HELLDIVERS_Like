@@ -27,7 +27,6 @@ public class CameraController : MonoBehaviour
         m_Cam = Camera.main.GetComponent<Camera>();
         m_Cam.transform.rotation = Quaternion.Euler(m_fRotX, 0, 0);
         fRotateX = Mathf.Tan((90 - m_fRotX) * Mathf.Deg2Rad) ;
-        Debug.Log(fRotateX * m_fPosY);
 
         m_Cam.fieldOfView = 60f;
         if (m_Player == null) m_Player = this.transform;

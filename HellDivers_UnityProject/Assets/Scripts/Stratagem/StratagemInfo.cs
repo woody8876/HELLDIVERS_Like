@@ -6,16 +6,30 @@ using UnityEngine;
 [System.Serializable]
 public class StratagemInfo
 {
-    public int id;
-    public int rank;
-    public string title;
-    public eType type;
-    public eCode[] codes;
-    public int uses;
-    public float cooldown;
-    public float activation;
-    public string display;
-    public string item;
+    #region Properties
+
+    public int ID { get { return id; } }
+    public int Rank { get { return rank; } }
+    public string Title { get { return title; } }
+    public eType Type { get { return type; } }
+    public eCode[] Codes { get { return codes; } }
+    public int Uses { get { return uses; } }
+    public float CoolDown { get { return cooldown; } }
+    public float Activation { get { return activation; } }
+    public string DisplayID { get { return displayId; } }
+
+    #endregion Properties
+
+    [SerializeField] private int id;
+    [SerializeField] private int rank;
+    [SerializeField] private string title;
+    [SerializeField] private eType type;
+    [SerializeField] private eCode[] codes;
+    [SerializeField] private int uses;
+    [SerializeField] private float cooldown;
+    [SerializeField] private float activation;
+    [SerializeField] private string displayId;
+    [SerializeField] private string resultId;
 
     public enum eType
     {
@@ -44,7 +58,7 @@ public class StratagemInfo
         info.uses = this.uses;
         info.cooldown = this.cooldown;
         info.activation = this.activation;
-        info.display = this.display;
-        info.item = this.item;
+        info.displayId = this.displayId;
+        info.resultId = this.resultId;
     }
 }
