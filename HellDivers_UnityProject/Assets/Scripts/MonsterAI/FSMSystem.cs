@@ -104,7 +104,6 @@ public class FSMSystem
 
     public void DoState()
     {
-        Debug.Log(m_currentState);
         m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
     }

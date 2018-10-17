@@ -124,7 +124,7 @@ public class FSMIdleState : FSMState
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        GameObject go = AIFunction.CheckEnemyInSight(data, ref bAttack);
+        GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
         if (go != null)
         {
             data.m_TargetObject = go;
@@ -178,18 +178,14 @@ public class FSMMoveToState : FSMState
 
     public override void Do(AIData data)
     {
-        if (SteeringBehavior.CollisionAvoid(data) == false)
-        {
-            SteeringBehavior.Seek(data);
-        }
-
-        SteeringBehavior.Move(data);
+        SteeringBehaviours.Seek(data);
+        SteeringBehaviours.Move(data);
     }
 
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        GameObject go = AIFunction.CheckEnemyInSight(data, ref bAttack);
+        GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
         if (go != null)
         {
             data.m_TargetObject = go;
@@ -232,18 +228,14 @@ public class FSMChaseState : FSMState
     public override void Do(AIData data)
     {
         data.m_vTarget = data.m_TargetObject.transform.position;
-        if (SteeringBehavior.CollisionAvoid(data) == false)
-        {
-            SteeringBehavior.Seek(data);
-        }
-
-        SteeringBehavior.Move(data);
+        SteeringBehaviours.Seek(data);
+        SteeringBehaviours.Move(data);
     }
 
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        bool bCheck = AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
         if (bCheck == false)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
@@ -293,7 +285,7 @@ public class FSMAttackState : FSMState
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        bool bCheck = AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
         if (bCheck == false)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
@@ -368,11 +360,11 @@ public class FSMWanderIdleState : FSMState
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist < data.m_fProbeLength)
+        if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
         }
-        if (m_fCurrentTime > m_fIdleTime && SteeringBehavior.CreatRandomTarget(data) == true)
+        if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Wander);
         }
@@ -395,14 +387,14 @@ public class FSMWanderState : FSMState
     }
     public override void Do(AIData data)
     {
-        SteeringBehavior.Seek(data);
-        SteeringBehavior.Move(data);
+        SteeringBehaviours.Seek(data);
+        SteeringBehaviours.Move(data);
     }
     public override void CheckCondition(AIData data)
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist < data.m_fProbeLength)
+        if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
         }
@@ -433,15 +425,15 @@ public class FSMFleeState : FSMState
 
     public override void Do(AIData data)
     {
-        SteeringBehavior.Flee(data);
-        SteeringBehavior.Move(data);
+        SteeringBehaviours.Flee(data);
+        SteeringBehaviours.Move(data);
     }
 
     public override void CheckCondition(AIData data)
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist > data.m_fProbeLength * 1.5f)
+        if (Dist > data.m_fPatrolVisionLength * 1.5f)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
         }
