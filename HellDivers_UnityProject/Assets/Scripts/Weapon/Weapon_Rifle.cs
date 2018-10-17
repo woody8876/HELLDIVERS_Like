@@ -13,8 +13,8 @@ public class Weapon_Rifle : Weapon
 
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot,ref float damage)
     {
-        float fCurSpread = _weaponInfo.Min_Spread + fSpreadperShot;
-        if (fCurSpread > _weaponInfo.Max_Spread) fCurSpread = _weaponInfo.Max_Spread;
+        float fCurSpread = weaponInfo.Min_Spread + fSpreadperShot;
+        if (fCurSpread > weaponInfo.Max_Spread) fCurSpread = weaponInfo.Max_Spread;
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
         if (go != null)
         {
@@ -24,7 +24,7 @@ public class Weapon_Rifle : Weapon
             go.SetActive(true);
             weaponInfo.Ammo--;
             Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
-            if (CheckHit(pos, go.transform.forward)) { damage = _weaponInfo.Damage; }
+            if (CheckHit(pos, go.transform.forward)) { damage = weaponInfo.Damage; }
             else { damage = 0; }
 
         }

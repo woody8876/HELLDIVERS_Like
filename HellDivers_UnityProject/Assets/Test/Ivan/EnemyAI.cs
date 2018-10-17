@@ -6,7 +6,7 @@ public class EnemyAI : MonoBehaviour
 {
 
     public AIData data = new AIData();
-
+    public Vector3 groupVec;
     // Use this for initialization
     void Start()
     {
@@ -16,17 +16,15 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         data.m_vTarget = data.m_TargetObject.transform.position;
-
-        transform.position += SteeringBehaviours.GroupBehavior(data, 2 , true) * data.m_fRot;
-        transform.position += SteeringBehaviours.GroupBehavior(data, 5 , false) * data.m_fRot;
+        groupVec = (SteeringBehaviours.GroupBehavior(data, 2, true) + SteeringBehaviours.GroupBehavior(data, 5, false)) * data.m_fRot;
         //SteeringBehaviours.Seek(data);
         //SteeringBehaviours.Move(data);
         if (SteeringBehaviours.CollisionAvoided(data) == false)
         {
-       //     SteeringBehaviours.EnemiesAvoided(data);
             SteeringBehaviours.Seek(data);
         }
         SteeringBehaviours.Move(data);
+        this.transform.position += groupVec ;
     }
 
     //private void OnDrawGizmos()

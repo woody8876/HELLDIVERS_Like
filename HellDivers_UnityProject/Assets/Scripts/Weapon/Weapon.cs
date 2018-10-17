@@ -12,6 +12,7 @@ public class WeaponInfo
 {
     #region Stauts for setting
     public int _ID;
+    public int _Type;
     public string _Title;
     public float _Damage;
     public float _Center_Damage;
@@ -31,11 +32,12 @@ public class WeaponInfo
 
     #region Status get only
     public int ID { get { return _ID; } }
+    public int Type { get { return _Type; } }
     public string Title { get { return _Title; } }
     public float Damage { get { return _Damage; } }
     public float Center_Damage { get { return _Center_Damage; } }
     public float Explosion_Damage { get { return _Explosion_Damage; } }
-    public float FireRate { get { return 1/(_FireRate * 0.017f); } }
+    public float FireRate { get { return 1 / (_FireRate * 0.017f); } }
     public int Capacity { get { return _Capacity; } }
     public int Start_Mags { get { return _Start_Mags; } }
     public int Max_Mags { get { return _Max_Mags; } }
@@ -74,15 +76,46 @@ public class WeaponInfo
 }
 
 [System.Serializable]
-public class Weapon : IWeaponBehaviour{
+public class Weapon : IWeaponBehaviour
+{
 
     protected WeaponInfo _weaponInfo;
+    protected virtual int activeAmmo { get { return (int)((weaponInfo.Range * 0.01f) / weaponInfo.FireRate) + 1; } }
 
     #region Behaviours
     public virtual WeaponInfo weaponInfo { get { return _weaponInfo; } }
     public virtual void Init(int weaponID) { _weaponInfo = GameData.Instance.WeaponInfoTable[(int)weaponID]; }
-    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) {  }
+    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) { }
     public virtual void Reload() { }
+    public virtual GameObject WeaponLoader()
+    {
+        string m_sWeapon = "Bullet_" + weaponInfo.Title;
+        string m_sEffect = "Effect_" + weaponInfo.Title;
+        Object m_Weapon;
+        GameObject effect;
+        if (ResourceManager.m_Instance != null)
+        {
+            m_Weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
+            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
+        }
+        else
+        {
+            Debug.LogWarning("No ResourceManager.");
+            m_Weapon = Resources.Load(m_sWeapon);
+            effect = Resources.Load(m_sEffect) as GameObject;
+        }
+
+        if (ObjectPool.m_Instance != null)
+        {
+            ObjectPool.m_Instance.InitGameObjects(m_Weapon, activeAmmo, weaponInfo.ID);
+        }
+        else
+        {
+            ObjectPool OP = new ObjectPool();
+            OP.InitGameObjects(m_Weapon, activeAmmo, weaponInfo.ID);
+        }
+        return effect;
+    }
     #endregion
 
 
