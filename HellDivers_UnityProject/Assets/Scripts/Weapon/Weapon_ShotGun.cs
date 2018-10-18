@@ -7,9 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_ShotGun : Weapon, IWeaponBehaviour
+public class Weapon_ShotGun : Weapon
 {
     public override WeaponInfo weaponInfo { get { return _weaponInfo; } }
+    protected override int activeAmmo { get { return base.activeAmmo * 10; } }
+    public override GameObject WeaponLoader() { return base.WeaponLoader(); }
 
     public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot , ref float damage)
     {
@@ -43,6 +45,7 @@ public class Weapon_ShotGun : Weapon, IWeaponBehaviour
 
     public override void Reload()
     {
+        weaponInfo.Ammo += 10;
         weaponInfo.Mags--;
     }
 }
