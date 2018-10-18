@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class AIData
@@ -19,7 +20,7 @@ public class AIData
     [HideInInspector] public float m_fMoveForce;
     [HideInInspector] public bool m_bCol;
     [HideInInspector] public bool m_bMove;
-
+    public NavMeshAgent navMeshAgent;
 
     public GameObject m_TargetObject;
     [HideInInspector]
@@ -35,15 +36,14 @@ public class AIData
     public float m_fAttack;
     public float m_fSight;
     public float m_fAttackRange;
-    //    [HideInInspector]
-    //    public FSMSystem m_FSMSystem;
     #endregion
 
     public class AIFunction
     {
         public static GameObject CheckEnemyInSight(AIData data, ref bool bAttack)
         {
-            GameObject go = AIMain.m_Instance.GetPlayer();
+            //GameObject go = AIMain.m_Instance.GetPlayer();
+            GameObject go = data.m_PlayerGO;
             Vector3 v = go.transform.position - data.m_Go.transform.position;
             float fDist = v.magnitude;
             if (fDist < data.m_fAttackRange)

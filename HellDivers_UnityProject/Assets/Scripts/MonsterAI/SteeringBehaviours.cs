@@ -6,6 +6,11 @@ using UnityEngine.AI;
 
 public class SteeringBehaviours
 {
+    static public void NavMove(AIData data)
+    {
+        data.navMeshAgent.SetDestination(data.m_vTarget);
+    }
+
     static public void Move(AIData data)
     {
         if (data.m_bMove == false) { return; }
@@ -143,7 +148,7 @@ public class SteeringBehaviours
 
     static public Vector3 GroupBehavior(AIData data, float radius, bool Seperate)
     {
-        if (!data.m_bMove) { return Vector3.zero; }
+        //if (!data.m_bMove) { return Vector3.zero; }
         Vector3 MoverPos = data.m_Go.transform.position;
         Vector3 m_vForward = Vector3.zero;
         float Radius = data.m_fRadius * radius;

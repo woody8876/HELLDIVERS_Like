@@ -149,26 +149,26 @@ public class FSMIdleState : FSMState
 
 public class FSMMoveToState : FSMState
 {
-    private int m_iCurrentWanderPt;
-    private GameObject[] m_WanderPoints;
+    //private int m_iCurrentWanderPt;
+    //private GameObject[] m_WanderPoints;
     public FSMMoveToState()
     {
         m_StateID = eFSMStateID.MoveToStateID;
-        m_iCurrentWanderPt = -1;
-        m_WanderPoints = GameObject.FindGameObjectsWithTag("WanderPoint");
+        //m_iCurrentWanderPt = -1;
+        //m_WanderPoints = GameObject.FindGameObjectsWithTag("WanderPoint");
     }
 
 
     public override void DoBeforeEnter(AIData data)
     {
-        int iNewPt = Random.Range(0, m_WanderPoints.Length);
-        if (m_iCurrentWanderPt == iNewPt)
-        {
-            return;
-        }
-        m_iCurrentWanderPt = iNewPt;
-        data.m_vTarget = m_WanderPoints[m_iCurrentWanderPt].transform.position;
-        data.m_bMove = true;
+        //int iNewPt = Random.Range(0, m_WanderPoints.Length);
+        //if (m_iCurrentWanderPt == iNewPt)
+        //{
+        //    return;
+        //}
+        //m_iCurrentWanderPt = iNewPt;
+        //data.m_vTarget = m_WanderPoints[m_iCurrentWanderPt].transform.position;
+        //data.m_bMove = true;
     }
 
     public override void DoBeforeLeave(AIData data)
@@ -178,8 +178,11 @@ public class FSMMoveToState : FSMState
 
     public override void Do(AIData data)
     {
-        SteeringBehaviours.Seek(data);
-        SteeringBehaviours.Move(data);
+        data.m_vTarget = data.m_PlayerGO.transform.position;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        //SteeringBehaviours.Seek(data);
+        SteeringBehaviours.NavMove(data);
+        data.m_Go.transform.position += v;
     }
 
     public override void CheckCondition(AIData data)
@@ -229,7 +232,7 @@ public class FSMChaseState : FSMState
     {
         data.m_vTarget = data.m_TargetObject.transform.position;
         SteeringBehaviours.Seek(data);
-        SteeringBehaviours.Move(data);
+        SteeringBehaviours.NavMove(data);
     }
 
     public override void CheckCondition(AIData data)
@@ -277,6 +280,7 @@ public class FSMAttackState : FSMState
         if (m_fCurrentTime > fAttackTime)
         {
             m_fCurrentTime = 0.0f;
+            data.m_Go.transform.forward = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).normalized;
             // Do attack.
         }
         m_fCurrentTime += Time.deltaTime;
