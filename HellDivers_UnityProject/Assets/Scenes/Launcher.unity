@@ -149,8 +149,8 @@ MonoBehaviour:
     totalDeaths: 0
     totalShotsFired: 0
     totalEnemiesKilled: 0
-    weapons: 
-    stratagems: 01000000
+    weapons: 4d04000015050000
+    stratagems: d1070000
 --- !u!4 &858686616
 Transform:
   m_ObjectHideFlags: 0
@@ -283,8 +283,8 @@ MonoBehaviour:
   m_CamHeight: 10
   m_CamRotX: 60
   m_CamLerp: 0.03
-  m_CamWalkAdd: 3
-  m_CamRunAdd: 5
+  m_CamWalkAdd: 5
+  m_CamRunAdd: 8
   m_ShowDebugDraw: 0
 --- !u!81 &1321313663
 AudioListener:

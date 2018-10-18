@@ -8,7 +8,8 @@ public class CameraFollowing : MonoBehaviour
 {
     #region Define Inputs
 
-    private string m_InputAim = "Fire1";
+    private string m_InputShoot = "Fire1";
+    private string m_InputAim = "Fire2";
     private string m_InputHorizontal = "Horizontal";
     private string m_InputVertical = "Vertical";
     private string m_InputRun = "Run";
@@ -95,7 +96,7 @@ public class CameraFollowing : MonoBehaviour
 
         if (m_Targets.Count == 1)
         {
-            if (Input.GetButton(m_InputAim))
+            if (Input.GetButton(m_InputAim) || Input.GetButton(m_InputShoot))
             {
                 m_ExtraVec.x = m_Targets.First.Value.forward.x;
                 m_ExtraVec.y = m_Targets.First.Value.forward.z * 0.75f;
