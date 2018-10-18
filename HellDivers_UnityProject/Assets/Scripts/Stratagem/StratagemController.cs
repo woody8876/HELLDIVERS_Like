@@ -59,6 +59,20 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     /// <param name="ids">The id key which in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
+    public void AddStratagems(List<int> ids, Transform launchPos)
+    {
+        foreach (int id in ids)
+        {
+            AddStratagem(id, launchPos);
+        }
+    }
+
+    /// <summary>
+    /// Add a multi stratagems by id key.
+    /// If the id already in the controller will be pass.
+    /// </summary>
+    /// <param name="ids">The id key which in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
     public void AddStratagems(int[] ids, Transform launchPos)
     {
         foreach (int id in ids)
