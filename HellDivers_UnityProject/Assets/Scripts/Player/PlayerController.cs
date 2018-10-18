@@ -4,8 +4,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PlayerFSMSystem))]
+[RequireComponent(typeof(PlayerFSMState))]
 public class PlayerController : MonoBehaviour
 {
+    public PlayerFSMData m_FSMData;
+    public PlayerFSMSystem m_PlayerFSM;
+
     #region Private Variable
 
     private CharacterController m_Controller;
@@ -33,11 +38,26 @@ public class PlayerController : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
+
+        m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
+        m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+
+        PlayerFSMGunState m_GunState = new PlayerFSMGunState();
+        PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
+
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
+
+        m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_PlayerFSM.AddState(m_GunState);
+        m_PlayerFSM.AddState(m_StratagemState);
     }
 
     private void FixedUpdate()
     {
         Move();
+
+        m_PlayerFSM.DoState();
     }
 
     #endregion MonoBehaviour
@@ -104,6 +124,8 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion Character Behaviour
+
+
 
 #if UNITY_EDITOR
 
