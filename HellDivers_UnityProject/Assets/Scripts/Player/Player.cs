@@ -3,22 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[RequireComponent(typeof(Weapon_Battle))]
+[RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(StratagemController))]
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
 {
+    #region Properties
+
+    public float Hp { get { return m_fHp; } }
+    public bool IsDead { get { return m_bDead; } }
+
+    #endregion Properties
+
     #region Private Variable
 
-#pragma warning disable
     private PlayerInfo m_Data;
     private PlayerParts m_Parts;
-    private PlayerController m_PlayerController;
     private StratagemController m_StratagemController;
-    //private Weapon_Battle m_WeapoonBattle;
-#pragma warning disable
+    private WeaponController m_WeapoonController;
+
+    private float m_fHp = 100;
+    private bool m_bDead;
 
     #endregion Private Variable
 
@@ -26,8 +33,13 @@ public class Player : MonoBehaviour
     {
         data.CopyTo(m_Data);
 
+        // Setup stratagems
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
-        m_StratagemController.AddStratagems(m_Data.stratagems.ToArray(), m_Parts.RightHand);
+        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand);
+
+        // Setup weapons
+        m_WeapoonController.ClearWeapon();
+        m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
     }
 
     #region MonoBehaviour
@@ -37,8 +49,7 @@ public class Player : MonoBehaviour
         this.tag = "Player";
         m_Data = new PlayerInfo();
         m_Parts = GetComponent<PlayerParts>();
-        m_PlayerController = GetComponent<PlayerController>();
-        //m_WeapoonBattle = GetComponent<Weapon_Battle>();
+        m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
     }
 

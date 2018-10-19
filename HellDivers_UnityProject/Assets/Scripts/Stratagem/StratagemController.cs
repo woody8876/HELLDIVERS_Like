@@ -15,6 +15,7 @@ public class StratagemController : MonoBehaviour
 
     #region Properties
 
+    public bool IsReady { get { return m_CurrentStratagem != false; } }
     public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
@@ -27,7 +28,7 @@ public class StratagemController : MonoBehaviour
     // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
 
-    private Vector3 m_Force = new Vector3(0.0f, 100.0f, 400.0f);
+    private Vector3 m_Force = new Vector3(0.0f, 200.0f, 500.0f);
 
     #endregion Private Variable
 
@@ -43,7 +44,7 @@ public class StratagemController : MonoBehaviour
     {
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (m_Stratagems[i].Info.id == id) return false;
+            if (m_Stratagems[i].Info.ID == id) return false;
         }
 
         GameObject go = new GameObject("Stratagem");
@@ -51,6 +52,20 @@ public class StratagemController : MonoBehaviour
         s.SetStratagemInfo(id, launchPos);
         m_Stratagems.Add(s);
         return true;
+    }
+
+    /// <summary>
+    /// Add a multi stratagems by id key.
+    /// If the id already in the controller will be pass.
+    /// </summary>
+    /// <param name="ids">The id key which in the gamedata.stratagem table.</param>
+    /// <param name="launchPos">The spawn transform root.</param>
+    public void AddStratagems(List<int> ids, Transform launchPos)
+    {
+        foreach (int id in ids)
+        {
+            AddStratagem(id, launchPos);
+        }
     }
 
     /// <summary>
@@ -94,7 +109,7 @@ public class StratagemController : MonoBehaviour
         Stratagem target = null;
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (m_Stratagems[i].Info.id == id)
+            if (m_Stratagems[i].Info.ID == id)
             {
                 target = m_Stratagems[i];
                 break;
@@ -135,7 +150,7 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (m_CurrentStratagem != null)
+        if (IsReady)
         {
             if (Input.GetButtonDown(m_InputThrow))
             {
@@ -143,16 +158,18 @@ public class StratagemController : MonoBehaviour
                 m_CurrentStratagem = null;
             }
         }
-
-        if (m_Stratagems.Count > 0)
+        else
         {
-            if (Input.GetButtonDown(m_InputStartCode))
+            if (m_Stratagems.Count > 0)
             {
-                StartCoroutine(CheckInputCode());
-            }
-            else if (Input.GetButtonUp(m_InputStartCode))
-            {
-                StopCoroutine(CheckInputCode());
+                if (Input.GetButtonDown(m_InputStartCode))
+                {
+                    StartCoroutine(CheckInputCode());
+                }
+                else if (Input.GetButtonUp(m_InputStartCode))
+                {
+                    StopCoroutine(CheckInputCode());
+                }
             }
         }
     }
@@ -190,9 +207,9 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Info.codes[inputCount - 1] == input)
+                if (_Open[i].Info.Codes[inputCount - 1] == input)
                 {
-                    if (_Open[i].Info.codes.Length == inputCount)
+                    if (_Open[i].Info.Codes.Length == inputCount)
                     {
                         m_CurrentStratagem = _Open[i];
                         m_CurrentStratagem.GetReady();
