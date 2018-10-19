@@ -15,6 +15,7 @@ public class StratagemController : MonoBehaviour
 
     #region Properties
 
+    public bool IsReady { get { return m_CurrentStratagem != false; } }
     public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
@@ -27,7 +28,7 @@ public class StratagemController : MonoBehaviour
     // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
 
-    private Vector3 m_Force = new Vector3(0.0f, 100.0f, 400.0f);
+    private Vector3 m_Force = new Vector3(0.0f, 200.0f, 500.0f);
 
     #endregion Private Variable
 
@@ -149,7 +150,7 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (m_CurrentStratagem != null)
+        if (IsReady)
         {
             if (Input.GetButtonDown(m_InputThrow))
             {
@@ -157,16 +158,18 @@ public class StratagemController : MonoBehaviour
                 m_CurrentStratagem = null;
             }
         }
-
-        if (m_Stratagems.Count > 0)
+        else
         {
-            if (Input.GetButtonDown(m_InputStartCode))
+            if (m_Stratagems.Count > 0)
             {
-                StartCoroutine(CheckInputCode());
-            }
-            else if (Input.GetButtonUp(m_InputStartCode))
-            {
-                StopCoroutine(CheckInputCode());
+                if (Input.GetButtonDown(m_InputStartCode))
+                {
+                    StartCoroutine(CheckInputCode());
+                }
+                else if (Input.GetButtonUp(m_InputStartCode))
+                {
+                    StopCoroutine(CheckInputCode());
+                }
             }
         }
     }
