@@ -42,9 +42,21 @@ public class GameMain : MonoBehaviour
     public GameObject CreatPlayer(PlayerInfo data)
     {
         if (data == null) return null;
+        Transform spawnPos = null;
+        if (MapInfo.Instance != null)
+        {
+            spawnPos = MapInfo.Instance.GetRandomSpawnPos();
+        }
+
+        if (spawnPos == null)
+        {
+            spawnPos = this.transform;
+        }
 
         GameObject playerGo = Resources.Load("Characters/Ch00/ch00") as GameObject;
-        playerGo = GameObject.Instantiate(playerGo);
+        playerGo = GameObject.Instantiate(playerGo, spawnPos);
+        playerGo.transform.parent = null;
+
         Player p = playerGo.AddComponent<Player>();
         p.Initialize(data);
 
