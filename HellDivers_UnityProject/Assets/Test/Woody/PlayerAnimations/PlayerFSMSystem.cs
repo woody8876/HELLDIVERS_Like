@@ -99,7 +99,7 @@ public class PlayerFSMSystem
         m_currentState = state;
         m_currentStateID = state.m_StateID;
         m_currentState.DoBeforeEnter(m_Data);
-
+        m_Data.m_NowAnimation = null;
     }
 
     public void DoState()

@@ -41,6 +41,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private float m_ForwardAmount;
     private float m_BattleRight;
     private float m_BattleForward;
+    public bool m_bStopMove = false;
 
     private void Awake()
     {
@@ -73,14 +74,23 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
     }
 
-    public void Attack(ePlayerFSMStateID state)
+    public void Attack(ePlayerFSMStateID state, bool Bool)
     {
-        UpdateAnimator(state);
+        UpdateAnimator(state, Bool);
     }
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
+    }
+
+    public bool FinishAnimator(PlayerFSMData data)
+    {
+        data.m_FinishAni = false;
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
+        //Debug.Log(info.normalizedTime);
+        return data.m_FinishAni;
     }
 
     private void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
@@ -102,13 +112,20 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
     }
 
-    private void UpdateAnimator(ePlayerFSMStateID state)
+    private void UpdateAnimator(ePlayerFSMStateID state, bool Bool = false)
     {
-        Debug.Log("HAHA");
         if(state == ePlayerFSMStateID.GunStateID)
         {
-            m_Animator.SetBool("Shoot", true);
+            m_Animator.SetBool("Shoot", Bool);
+        }
+        if (state == ePlayerFSMStateID.ReloadStateID)
+        {
+            m_Animator.SetTrigger("Reload");
+        }
+        if(state == ePlayerFSMStateID.StratagemStateID)
+        {
+            if (Bool) m_Animator.SetTrigger("ThrowStandBy");
+            else m_Animator.SetTrigger("ThrowOut");
         }
     }
-
 }

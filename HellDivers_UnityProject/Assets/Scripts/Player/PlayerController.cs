@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-
         m_PlayerFSM.DoState();
     }
 

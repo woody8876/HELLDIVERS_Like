@@ -17,7 +17,8 @@ public enum ePlayerFSMStateID
     StratagemStateID,
 }
 
-public class PlayerFSMState {
+public class PlayerFSMState
+{
 
     public ePlayerFSMStateID m_StateID;
     public Dictionary<ePlayerFSMTrans, PlayerFSMState> m_Map;
@@ -25,6 +26,7 @@ public class PlayerFSMState {
     public PlayerAnimationsContorller m_PAC = MonoBehaviour.FindObjectOfType<PlayerAnimationsContorller>();
     public WeaponController WP = MonoBehaviour.FindObjectOfType<WeaponController>();
     public StratagemController SC = MonoBehaviour.FindObjectOfType<StratagemController>();
+    public Animator m_Animator;
 
     public PlayerFSMState()
     {
@@ -60,7 +62,7 @@ public class PlayerFSMState {
         return m_Map[trans];
     }
 
-    public virtual void DoBeforeEnter(PlayerFSMData data )
+    public virtual void DoBeforeEnter(PlayerFSMData data)
     {
 
     }
@@ -83,6 +85,7 @@ public class PlayerFSMState {
 
 public class PlayerFSMGunState : PlayerFSMState
 {
+    bool shoot;
     public PlayerFSMGunState()
     {
         m_StateID = ePlayerFSMStateID.GunStateID;
@@ -104,11 +107,13 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (Input.GetMouseButton(0))
         {
-            Debug.Log("Shoot");
-            m_PAC.Attack(m_StateID);
-            // Animator shoot ...
+            shoot = true;
         }
-        
+        else
+        {
+            shoot = false;
+        }
+        m_PAC.Attack(m_StateID, shoot);
     }
 
     public override void CheckCondition(PlayerFSMData data)
@@ -117,7 +122,7 @@ public class PlayerFSMGunState : PlayerFSMState
         {
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Reload);
         }
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && !shoot)
         {
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
         }
@@ -126,16 +131,16 @@ public class PlayerFSMGunState : PlayerFSMState
 
 public class PlayerFSMReloadState : PlayerFSMState
 {
+    int count = 0;
     public PlayerFSMReloadState()
     {
         m_StateID = ePlayerFSMStateID.ReloadStateID;
-
     }
 
 
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-
+        count = 0;
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
@@ -145,20 +150,28 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-
+        if (count < 1) m_PAC.Attack(m_StateID, false);
+        count++;
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        m_Animator = m_PAC.Animator;
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("Reload"))
         {
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            if (m_PAC.FinishAnimator(data))
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
         }
     }
 }
 
 public class PlayerFSMStratagemState : PlayerFSMState
 {
+    int count = 0;
+
     public PlayerFSMStratagemState()
     {
         m_StateID = ePlayerFSMStateID.StratagemStateID;
@@ -167,7 +180,8 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-
+        count = 0;
+        m_PAC.Attack(m_StateID, true);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
@@ -177,19 +191,36 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            Debug.Log("Throw");
-            // Animator Throw ...
+            m_PAC.m_bStopMove = true;
+            // EnterPassword... return bool
+        }
+        else
+        {
+            m_PAC.m_bStopMove = false;
+        }
+        //if { Password Wrong}
+        //{
+        //    ...
+        //}
+        if (Input.GetMouseButton(0) /* && bool */)
+        {
+            if (count < 1) m_PAC.Attack(m_StateID, false);
+            count++;
         }
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        if (Input.GetMouseButton(0))
+        m_Animator = m_PAC.Animator;
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("ThrowOut"))
         {
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
-            // Animator Throw ...
+            if (m_PAC.FinishAnimator(data))
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
         }
     }
 }
