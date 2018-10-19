@@ -19,6 +19,7 @@ public class Attack : MonoBehaviour
     public float m_Radius = 10;
     public float m_Speed = 0.1f;
 
+    private Object m_Rock;
     private Vector3 m_Goal;
     private bool m_bMove;
     private bool m_bCheck;
@@ -27,8 +28,8 @@ public class Attack : MonoBehaviour
     private void Start()
     {
         DrawTools.GO = GameObject.Find("Range");
-        GameObject go = GameObject.Find("Rock");
-        ObjectPool.m_Instance.InitGameObjects(go, 10, 1);   
+        m_Rock = Resources.Load("Rock");
+        ObjectPool.m_Instance.InitGameObjects(m_Rock, 10, 1);   
     }
 
     private void Update()
@@ -38,8 +39,8 @@ public class Attack : MonoBehaviour
          if (!Rush(m_Goal)) TimeCounter();
          if (m_bMove) OnEdge(this.transform);
          */
-        if (!Missile(m_Target.position)) TimeCounter();
-        if (m_bMove) OnEdge(this.transform);
+        if (!Missile(m_Goal)) TimeCounter();
+        //if (m_bMove) OnEdge(this.transform);
 
     }
 
@@ -124,21 +125,31 @@ public class Attack : MonoBehaviour
     public bool Missile(Vector3 v)
     {
         if (!m_bMove) return false;
-        StartCoroutine(CreateStone(v));
-        if (timer > 5)
+        CreateStone();
+        if (timer > 0)
         {
             timer = 0;
+            m_bMove = false;
             return false;
         }
 
         return true;
     }
-    public IEnumerator CreateStone(Vector3 pos)
+    public void CreateStone()
     {
-        pos.y -= Time.deltaTime * 100f;
-        yield return new WaitForSeconds(1);
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(1);
-        go.transform.position = pos;
+        if (go == null)
+        {
+            Debug.Log("No Objec");
+            go = Instantiate(m_Rock, m_Goal, transform.rotation) as GameObject;
+            timer++;
+            return;
+        }
+        Debug.Log("Set Pos");
+        go.SetActive(true);
+        go.transform.position = m_Goal;
+        go.transform.forward = -Vector3.up;
+
         timer++;
     }
 
