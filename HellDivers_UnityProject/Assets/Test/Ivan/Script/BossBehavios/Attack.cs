@@ -112,7 +112,7 @@ public class Attack : MonoBehaviour
         }
     }
     #endregion
-    #region Attack
+        #region Attack
     public bool Rush(Vector3 vec)
     {
         if (!m_bMove) return false;
@@ -137,6 +137,7 @@ public class Attack : MonoBehaviour
     }
     public void CreateStone()
     {
+
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(1);
         if (go == null)
         {
@@ -147,6 +148,7 @@ public class Attack : MonoBehaviour
         }
         Debug.Log("Set Pos");
         go.SetActive(true);
+        m_Goal.y = 100;
         go.transform.position = m_Goal;
         go.transform.forward = -Vector3.up;
 
