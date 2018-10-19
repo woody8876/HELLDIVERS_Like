@@ -32,6 +32,7 @@ public class PatrolAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        Debug.Log("HAHHAHAHHA");
         if(m_Data.m_PlayerGO == null)
         {
             m_Data.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
