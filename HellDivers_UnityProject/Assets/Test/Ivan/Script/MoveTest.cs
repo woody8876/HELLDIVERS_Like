@@ -5,6 +5,7 @@ using UnityEngine;
 public class MoveTest : MonoBehaviour {
 
     public Transform GunPos;
+    public float m_Speed = 30;
     Vector3 m_vPos;
     WeaponController weaponController;
     List<int> weapons = new List<int> { 1101, 1301 };
@@ -16,8 +17,8 @@ public class MoveTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        m_vPos.x = Input.GetAxis("Horizontal") * Time.deltaTime * 30;
-        m_vPos.z = Input.GetAxis("Vertical") * Time.deltaTime * 30;
+        m_vPos.x = Input.GetAxis("Horizontal") * Time.deltaTime * m_Speed;
+        m_vPos.z = Input.GetAxis("Vertical") * Time.deltaTime * m_Speed;
         transform.Translate(m_vPos);
 	}
 }
