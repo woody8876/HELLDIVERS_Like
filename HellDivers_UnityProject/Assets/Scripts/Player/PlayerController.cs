@@ -18,12 +18,17 @@ public class PlayerController : MonoBehaviour
 
     private bool bRun = false;
     private bool bInBattle = false;
-    private bool bAttack = false;
+
+    private PlayerFSMData m_FSMData;
+    private PlayerFSMSystem m_PlayerFSM;
 
     #endregion Private Variable
 
     #region MonoBehaviour
+    private void Awake()
+    {
 
+    }
     private void Start()
     {
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
@@ -33,16 +38,108 @@ public class PlayerController : MonoBehaviour
         {
             m_Cam = Camera.main.transform;
         }
+
+        #region PlayerFSM
+
+        m_FSMData = new PlayerFSMData();
+        m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
+        m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+
+        PlayerFSMGunState m_GunState = new PlayerFSMGunState();
+        PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
+        PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
+        PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
+
+
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
+
+        m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
+        m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_PlayerFSM.AddState(m_GunState);
+        m_PlayerFSM.AddState(m_RelodaState);
+        m_PlayerFSM.AddState(m_StratagemState);
+        m_PlayerFSM.AddState(m_ThrowState);
+
+        #endregion
     }
 
     private void FixedUpdate()
     {
-        Move();
+        SelectMotionState();
+        m_PlayerFSM.DoState();
     }
 
     #endregion MonoBehaviour
 
     #region Character Behaviour
+
+    private void SelectMotionState()
+    {
+        if (m_FSMData.m_NowAnimation.Equals("Origin"))
+        {
+            BasicMove();
+            return;
+        }
+        if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
+        {
+            m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
+            return;
+        }
+        else if (m_FSMData.m_NowAnimation.Equals("Throw"))
+        {
+            ThrowMove();
+            return;
+        }
+        else if (m_FSMData.m_NowAnimation.Equals("Throwing"))
+        {
+            ThrowingMove();
+            return;
+        }
+        return;
+    }
+
+    private void BasicMove()
+    {
+        Move();
+        bRun = (Input.GetButton("Run")) ? true : false;
+
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+        else bInBattle = false;
+
+        m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
+
+        
+    }
+
+    private void ThrowMove()
+    {
+        Move();
+        FaceDirection();
+        bInBattle = true;
+        bRun = false;
+
+        m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
+    }
+
+    private void ThrowingMove()
+    {
+        Move();
+        FaceDirection();
+        bInBattle = true;
+        bRun = false;
+
+        m_PAC.Move(m_Move, this.transform.forward, bRun, bInBattle);
+    }
 
     private void Move()
     {
@@ -59,26 +156,7 @@ public class PlayerController : MonoBehaviour
             m_Move = v * Vector3.forward + h * Vector3.right;
         }
         if (m_Move.magnitude > 1) m_Move.Normalize();
-
-        if (m_Controller.isGrounded == false)
-        {
-            m_Move += Physics.gravity * Time.deltaTime;
-        }
-        bRun = (Input.GetButton("Run")) ? true : false;
-
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-        {
-            FaceDirection();
-            bInBattle = true;
-            if (Input.GetMouseButtonDown(0))
-            {
-                bAttack = true;
-            }
-        }
-        else bInBattle = false;
-
-        m_PAC.Move(m_Move, m_Direction, bRun, bInBattle, bAttack);
-
+        
         if (m_Controller.isGrounded == false)
         {
             m_Fall += Physics.gravity * Time.deltaTime;
@@ -104,6 +182,10 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion Character Behaviour
+    
+
+
+
 
 #if UNITY_EDITOR
 
