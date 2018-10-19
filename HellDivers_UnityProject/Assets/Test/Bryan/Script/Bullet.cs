@@ -30,7 +30,7 @@ namespace Bryan.Test
             IDamageable target = other.transform.GetComponentInParent<IDamageable>();
             if (target != null)
             {
-                target.Battle.TakeDamage(m_Damage);
+                //target.Battle.TakeDamage(m_Damage);
             }
         }
     }
