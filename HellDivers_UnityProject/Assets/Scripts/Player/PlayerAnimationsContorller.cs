@@ -48,7 +48,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         m_Animator = this.GetComponent<Animator>();
     }
 
-    public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle, bool attack)
+    public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
         if (!inBattle)
         {
@@ -70,7 +70,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
         if (m_Animator != null)
         {
-            UpdateAnimator(move, inBattle, attack);
+            UpdateAnimator(move, inBattle);
         }
     }
 
@@ -93,7 +93,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         return data.m_FinishAni;
     }
 
-    private void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
+    private void UpdateAnimator(Vector3 move, bool inBattle)
     {
         if (!inBattle)
         {
@@ -118,14 +118,18 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetBool("Shoot", Bool);
         }
-        if (state == ePlayerFSMStateID.ReloadStateID)
+        else if (state == ePlayerFSMStateID.ReloadStateID)
         {
             m_Animator.SetTrigger("Reload");
         }
-        if(state == ePlayerFSMStateID.StratagemStateID)
+        else if(state == ePlayerFSMStateID.StratagemStateID)
         {
-            if (Bool) m_Animator.SetTrigger("ThrowStandBy");
-            else m_Animator.SetTrigger("ThrowOut");
+            if(Bool)m_Animator.SetBool("ThrowStandby", Bool);
+            else m_Animator.SetBool("ThrowStandby", Bool);
+        }
+        else if (state == ePlayerFSMStateID.ThrowStateID)
+        {
+            m_Animator.SetTrigger("ThrowOut");
         }
     }
 }
