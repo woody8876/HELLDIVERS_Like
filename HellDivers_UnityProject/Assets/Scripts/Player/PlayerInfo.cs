@@ -30,6 +30,14 @@ public class PlayerInfo
 
     #region Public Function
 
+    public bool SetUsername(string name)
+    {
+        if (username.Length > 10) return false;
+
+        username = name;
+        return true;
+    }
+
     public bool AddWeapon(int id)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(id) == false) return false;
