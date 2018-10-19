@@ -6,20 +6,25 @@ public enum ePlayerFSMTrans
 {
     NullTransition,
     Go_Gun,
+    Go_Reload,
     Go_Stratagem,
 }
 public enum ePlayerFSMStateID
 {
     NullStateID,
     GunStateID,
+    ReloadStateID,
     StratagemStateID,
 }
 
-public class PlayerFSMState{
+public class PlayerFSMState {
 
     public ePlayerFSMStateID m_StateID;
     public Dictionary<ePlayerFSMTrans, PlayerFSMState> m_Map;
     public float m_fCurrentTime;
+    public PlayerAnimationsContorller m_PAC = MonoBehaviour.FindObjectOfType<PlayerAnimationsContorller>();
+    public WeaponController WP = MonoBehaviour.FindObjectOfType<WeaponController>();
+    public StratagemController SC = MonoBehaviour.FindObjectOfType<StratagemController>();
 
     public PlayerFSMState()
     {
@@ -100,34 +105,31 @@ public class PlayerFSMGunState : PlayerFSMState
         if (Input.GetMouseButton(0))
         {
             Debug.Log("Shoot");
+            m_PAC.Attack(m_StateID);
             // Animator shoot ...
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("Reload");
-            // Animator Reload ...
-        }
+        
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Reload);
+        }
         if (Input.GetKey(KeyCode.LeftShift))
         {
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
-            Debug.Log("Stratagem");
         }
     }
 }
 
-public class PlayerFSMStratagemState : PlayerFSMState
+public class PlayerFSMReloadState : PlayerFSMState
 {
-
-    private float m_fIdleTim;
-
-
-    public PlayerFSMStratagemState()
+    public PlayerFSMReloadState()
     {
-        m_StateID = ePlayerFSMStateID.StratagemStateID;
+        m_StateID = ePlayerFSMStateID.ReloadStateID;
+
     }
 
 
@@ -148,6 +150,46 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void CheckCondition(PlayerFSMData data)
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        }
+    }
+}
 
+public class PlayerFSMStratagemState : PlayerFSMState
+{
+    public PlayerFSMStratagemState()
+    {
+        m_StateID = ePlayerFSMStateID.StratagemStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Debug.Log("Throw");
+            // Animator Throw ...
+        }
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        if (Input.GetMouseButton(0))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            // Animator Throw ...
+        }
     }
 }

@@ -4,12 +4,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(PlayerFSMSystem))]
-[RequireComponent(typeof(PlayerFSMState))]
 public class PlayerController : MonoBehaviour
 {
     public PlayerFSMData m_FSMData;
-    public PlayerFSMSystem m_PlayerFSM;
+    PlayerFSMSystem m_PlayerFSM;
+    public int num;
 
     #region Private Variable
 
@@ -28,7 +27,10 @@ public class PlayerController : MonoBehaviour
     #endregion Private Variable
 
     #region MonoBehaviour
+    private void Awake()
+    {
 
+    }
     private void Start()
     {
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
@@ -39,17 +41,23 @@ public class PlayerController : MonoBehaviour
             m_Cam = Camera.main.transform;
         }
 
+        m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
 
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
+        PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
 
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
+
+        m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddState(m_GunState);
+        m_PlayerFSM.AddState(m_RelodaState);
         m_PlayerFSM.AddState(m_StratagemState);
     }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFSMSystem : MonoBehaviour
+public class PlayerFSMSystem
 {
     private List<PlayerFSMState> m_states;
     private Dictionary<ePlayerFSMTrans, PlayerFSMState> m_GlobalMap;
@@ -44,7 +44,6 @@ public class PlayerFSMSystem : MonoBehaviour
 
         if (m_states.Count == 0)
         {
-            Debug.Log("First");
             m_states.Add(s);
             m_currentState = s;
             m_currentStateID = s.m_StateID;
@@ -59,7 +58,6 @@ public class PlayerFSMSystem : MonoBehaviour
             }
         }
         m_states.Add(s);
-        Debug.Log("Add");
 
     }
 
@@ -84,15 +82,12 @@ public class PlayerFSMSystem : MonoBehaviour
     {
         if (trans == ePlayerFSMTrans.NullTransition)
         {
-            Debug.Log("Null");
             return;
         }
 
         PlayerFSMState state = m_currentState.TransitionTo(trans);
         if (state == null)
         {
-            Debug.Log("State Null");
-
             return;
         }
 
@@ -104,7 +99,6 @@ public class PlayerFSMSystem : MonoBehaviour
         m_currentState = state;
         m_currentStateID = state.m_StateID;
         m_currentState.DoBeforeEnter(m_Data);
-        Debug.Log("Change State");
 
     }
 

@@ -73,6 +73,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
     }
 
+    public void Attack(ePlayerFSMStateID state)
+    {
+        UpdateAnimator(state);
+    }
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
@@ -97,4 +101,14 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetFloat("WalkRight", m_BattleRight, 0.1f, Time.deltaTime);
         }
     }
+
+    private void UpdateAnimator(ePlayerFSMStateID state)
+    {
+        Debug.Log("HAHA");
+        if(state == ePlayerFSMStateID.GunStateID)
+        {
+            m_Animator.SetBool("Shoot", true);
+        }
+    }
+
 }

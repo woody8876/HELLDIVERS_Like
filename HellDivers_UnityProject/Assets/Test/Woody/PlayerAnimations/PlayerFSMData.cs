@@ -5,4 +5,5 @@ using UnityEngine;
 public class PlayerFSMData {
 
     public PlayerFSMSystem m_PlayerFSMSystem;
+    public bool m_FinishAni;
 }
