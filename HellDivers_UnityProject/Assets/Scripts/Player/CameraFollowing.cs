@@ -98,8 +98,8 @@ public class CameraFollowing : MonoBehaviour
         {
             if (Input.GetButton(m_InputAim) || Input.GetButton(m_InputShoot))
             {
-                m_ExtraVec.x = m_Targets.First.Value.forward.x;
-                m_ExtraVec.y = m_Targets.First.Value.forward.z * 0.75f;
+                m_ExtraVec.x = m_Targets.First.Value.forward.x * m_CamWalkAdd;
+                m_ExtraVec.y = m_Targets.First.Value.forward.z * m_CamWalkAdd * 0.75f;
             }
             else
             {

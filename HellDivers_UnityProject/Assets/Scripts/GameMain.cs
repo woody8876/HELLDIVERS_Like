@@ -29,7 +29,7 @@ public class GameMain : MonoBehaviour
     {
         if (m_PlayerData != null)
         {
-            GameObject player = PlayerCreater.CreatMainPlayer(m_PlayerData);
+            GameObject player = CreatPlayer(m_PlayerData);
             if (player != null) Camera.main.GetComponent<CameraFollowing>().FocusOnTarget(player.transform);
         }
     }
@@ -37,5 +37,29 @@ public class GameMain : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    public GameObject CreatPlayer(PlayerInfo data)
+    {
+        if (data == null) return null;
+        Transform spawnPos = null;
+        if (MapInfo.Instance != null)
+        {
+            spawnPos = MapInfo.Instance.GetRandomSpawnPos();
+        }
+
+        if (spawnPos == null)
+        {
+            spawnPos = this.transform;
+        }
+
+        GameObject playerGo = Resources.Load("Characters/Ch00/ch00") as GameObject;
+        playerGo = GameObject.Instantiate(playerGo, spawnPos);
+        playerGo.transform.parent = null;
+
+        Player p = playerGo.AddComponent<Player>();
+        p.Initialize(data);
+
+        return playerGo;
     }
 }

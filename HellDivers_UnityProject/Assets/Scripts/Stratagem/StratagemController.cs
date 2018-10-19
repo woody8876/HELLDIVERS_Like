@@ -16,6 +16,7 @@ public class StratagemController : MonoBehaviour
     #region Properties
 
     public bool IsReady { get { return m_CurrentStratagem != false; } }
+    public bool IsCheckingCode { get { return m_bCheckingCode; } }
     public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
@@ -24,6 +25,7 @@ public class StratagemController : MonoBehaviour
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
+    private bool m_bCheckingCode;
 
     // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
@@ -187,6 +189,7 @@ public class StratagemController : MonoBehaviour
 
     private IEnumerator CheckInputCode()
     {
+        m_bCheckingCode = true;
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
@@ -213,6 +216,7 @@ public class StratagemController : MonoBehaviour
                     {
                         m_CurrentStratagem = _Open[i];
                         m_CurrentStratagem.GetReady();
+                        m_bCheckingCode = false;
                         yield break;
                     }
                     continue;
@@ -221,6 +225,7 @@ public class StratagemController : MonoBehaviour
                 { _Open.RemoveAt(i); }
             }
         }
+        m_bCheckingCode = false;
     }
 
     /*---------------------------
