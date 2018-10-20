@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum EAttackMode
 {
+    INITIAL = -1,
     RUSH,
     MISSILE,
     EARTHQUACK,
@@ -20,16 +21,34 @@ public class Attack : MonoBehaviour
     public float m_Speed = 0.1f;
 
     private Object m_Rock;
+    private Object m_Circle;
+    private Object m_Rectangle;
+
     private Vector3 m_Goal;
     private bool m_bMove;
     private bool m_bCheck;
     float timer;
     float randomTime = 1;
+
+
+    #region Init Function
+    private void InitialDrawAlert()
+    {
+        DrawTools.GO = Resources.Load("Range") as GameObject;
+        DrawTools.DrawCircleSolid(transform, Vector3.up * 1.1f, 3);
+        m_Circle = DrawTools.GO;
+        DrawTools.GO = Resources.Load("Rectangle") as GameObject;
+        DrawTools.DrawRectangleSolid(transform, transform.position, 10, 2);
+        m_Rectangle = DrawTools.GO;
+    }
+    #endregion
+
     private void Start()
     {
-        DrawTools.GO = GameObject.Find("Range");
         m_Rock = Resources.Load("Rock");
+        InitialDrawAlert();
         ObjectPool.m_Instance.InitGameObjects(m_Rock, 10, 1);   
+        ObjectPool.m_Instance.InitGameObjects(m_Circle, 10, 2);
     }
 
     private void Update()
@@ -39,40 +58,18 @@ public class Attack : MonoBehaviour
          if (!Rush(m_Goal)) TimeCounter();
          if (m_bMove) OnEdge(this.transform);
          */
-        if (m_bMove && !m_bCheck)
+        if (m_bCheck) return;
+        if (!m_bMove) TimeCounter();
+        else
         {
             m_bCheck = true;
             StartCoroutine(CreateStone());
-        }
-        else
-        {
-           TimeCounter();
+            DrawTools.DrawRectangleSolid(transform, transform.position, 10, 2);
         }
     }
 
     #region Common Behaviors
     public void Idle() { }
-
-    //public void TimeCounter()
-    //{
-    //    m_bCheck = false;
-    //    timer += Time.deltaTime;
-    //    if (timer < randomTime - 0.5f)
-    //    {
-    //        Seek(m_Target.position);
-    //        m_Goal = m_Target.position;
-    //    }
-    //    if (timer > randomTime - 0.5f)
-    //    {
-    //        DrawTools.GO.SetActive(true);
-    //    }
-    //    if (timer >= randomTime)
-    //    {
-    //        m_bMove = true;
-    //        timer = 0;
-    //        randomTime = Random.Range(1.0f, 3.0f);
-    //    }
-    //}
 
     public void TimeCounter()
     {
@@ -105,20 +102,30 @@ public class Attack : MonoBehaviour
         return vec2Target;
     }
 
-    public void DrawAlert(Transform t, EAttackMode attackMode)
+    public void DrawAlert()
     {
-        switch (attackMode)
-        {
-            case EAttackMode.RUSH:
-                DrawTools.DrawRectangleSolid(t, t.position, 10, 2);
-                break;
-            case EAttackMode.MISSILE:
-                DrawTools.DrawCircleSolid(t, m_Goal, 3);
-                break;
-        }
+
     }
+    
+
+
+    public IEnumerator ShowAlert()
+    {
+
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(2);
+        m_Goal.y = 0;
+        if (go == null) { go = Instantiate(m_Circle, m_Goal, transform.rotation) as GameObject; }
+        go.SetActive(true);
+        go.transform.position = m_Goal;
+        yield return new WaitForSeconds(.8f);
+        ObjectPool.m_Instance.UnLoadObjectToPool(2, go);
+        m_bCheck = false;
+        yield break;
+    }
+
     #endregion
-        #region Attack
+
+    #region Attack
 
     public bool Rush(Vector3 vec)
     {
@@ -133,16 +140,15 @@ public class Attack : MonoBehaviour
     public IEnumerator CreateStone()
     {
         Seek(m_Target.position);
-        DrawAlert(transform, EAttackMode.MISSILE);
-        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(ShowAlert());
+        yield return new WaitForSeconds(0.5f);
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(1);
         if (go == null) { go = Instantiate(m_Rock, m_Goal, transform.rotation) as GameObject;  }
         go.SetActive(true);
-        m_Goal.y = 70;
+        m_Goal.y = 40;
         go.transform.position = m_Goal;
         go.transform.forward = -Vector3.up;
         timer++;
-        m_bCheck = false;
         yield return new WaitWhile(() =>timer < 5);
         timer = 0;
         m_bMove = false;
@@ -170,17 +176,7 @@ public class Attack : MonoBehaviour
         return false;
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    #region Fixing Function
     public bool OnCircle(Vector3 pos)
     {
         if (Mathf.Pow((pos.x - m_Center.position.x), 2) + Mathf.Pow((pos.z - m_Center.position.z), 2) == m_Radius * m_Radius)
@@ -209,4 +205,5 @@ public class Attack : MonoBehaviour
 
         return length;
     }
+    #endregion
 }
