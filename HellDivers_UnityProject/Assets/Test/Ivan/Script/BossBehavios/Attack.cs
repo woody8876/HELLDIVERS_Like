@@ -39,34 +39,19 @@ public class Attack : MonoBehaviour
          if (!Rush(m_Goal)) TimeCounter();
          if (m_bMove) OnEdge(this.transform);
          */
-        if (!Missile(m_Goal)) TimeCounter();
-        //if (m_bMove) OnEdge(this.transform);
-
+        if (m_bMove && !m_bCheck)
+        {
+            m_bCheck = true;
+            StartCoroutine(CreateStone());
+        }
+        else
+        {
+           TimeCounter();
+        }
     }
 
     #region Common Behaviors
     public void Idle() { }
-
-    public void TimeCounter()
-    {
-        m_bCheck = false;
-        timer += Time.deltaTime;
-        if (timer < randomTime - 0.5f)
-        {
-            Seek(m_Target.position);
-            m_Goal = m_Target.position;
-        }
-        if (timer > randomTime - 0.5f)
-        {
-            DrawTools.GO.SetActive(true);
-        }
-        if (timer >= randomTime)
-        {
-            m_bMove = true;
-            timer = 0;
-            randomTime = Random.Range(1.0f, 3.0f);
-        }
-    }
 
     //public void TimeCounter()
     //{
@@ -75,7 +60,7 @@ public class Attack : MonoBehaviour
     //    if (timer < randomTime - 0.5f)
     //    {
     //        Seek(m_Target.position);
-    //        m_Goal = Seek(m_Target.position);
+    //        m_Goal = m_Target.position;
     //    }
     //    if (timer > randomTime - 0.5f)
     //    {
@@ -89,6 +74,26 @@ public class Attack : MonoBehaviour
     //    }
     //}
 
+    public void TimeCounter()
+    {
+//        m_bCheck = false;
+        timer += Time.deltaTime;
+        if(timer < randomTime - 0.5f)
+        {
+            Seek(m_Target.position);
+        }
+        //if (timer > randomTime - 0.5f)
+        //{
+        //    DrawAlert(transform, EAttackMode.MISSILE);
+        //}
+        if (timer >= randomTime)
+        {
+            m_bMove = true;
+            timer = 0;
+            randomTime = Random.Range(3.0f, 5.0f);
+        }
+    }
+
     public Vector3 Seek(Vector3 target)
     {
         Vector3 vec2Target = target - transform.position;
@@ -96,6 +101,7 @@ public class Attack : MonoBehaviour
         vec2Target.y = 0;
         Quaternion face = Quaternion.LookRotation(vec2Target, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, face, 5);
+        m_Goal = m_Target.position;
         return vec2Target;
     }
 
@@ -107,52 +113,40 @@ public class Attack : MonoBehaviour
                 DrawTools.DrawRectangleSolid(t, t.position, 10, 2);
                 break;
             case EAttackMode.MISSILE:
-                DrawTools.DrawCircleSolid(t, t.position, 3);
+                DrawTools.DrawCircleSolid(t, m_Goal, 3);
                 break;
         }
     }
     #endregion
         #region Attack
+
     public bool Rush(Vector3 vec)
     {
         if (!m_bMove) return false;
         m_bCheck = true;
         vec.Normalize();
         transform.position += vec * Time.deltaTime * m_Speed;
-        return true;
-    }
-
-    public bool Missile(Vector3 v)
-    {
-        if (!m_bMove) return false;
-        CreateStone();
-        if (timer > 0)
-        {
-            timer = 0;
-            m_bMove = false;
-            return false;
-        }
 
         return true;
     }
-    public void CreateStone()
-    {
 
+    public IEnumerator CreateStone()
+    {
+        Seek(m_Target.position);
+        DrawAlert(transform, EAttackMode.MISSILE);
+        yield return new WaitForSeconds(0.2f);
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(1);
-        if (go == null)
-        {
-            Debug.Log("No Objec");
-            go = Instantiate(m_Rock, m_Goal, transform.rotation) as GameObject;
-            timer++;
-            return;
-        }
-        Debug.Log("Set Pos");
+        if (go == null) { go = Instantiate(m_Rock, m_Goal, transform.rotation) as GameObject;  }
         go.SetActive(true);
-        m_Goal.y = 100;
+        m_Goal.y = 70;
         go.transform.position = m_Goal;
         go.transform.forward = -Vector3.up;
-
         timer++;
+        m_bCheck = false;
+        yield return new WaitWhile(() =>timer < 5);
+        timer = 0;
+        m_bMove = false;
+        yield break;
     }
 
     #endregion
@@ -176,6 +170,17 @@ public class Attack : MonoBehaviour
         return false;
     }
 
+
+
+
+
+
+
+
+
+
+
+
     public bool OnCircle(Vector3 pos)
     {
         if (Mathf.Pow((pos.x - m_Center.position.x), 2) + Mathf.Pow((pos.z - m_Center.position.z), 2) == m_Radius * m_Radius)
@@ -184,7 +189,6 @@ public class Attack : MonoBehaviour
         }
         return false;
     }
-
     public void LineFunction(Transform t)
     {
 
