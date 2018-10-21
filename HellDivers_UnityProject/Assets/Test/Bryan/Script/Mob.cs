@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
+
 using UnityEditor;
+
+#endif
 
 namespace Bryan.Test
 {
@@ -109,9 +114,13 @@ namespace Bryan.Test
             Destroy(this.gameObject);
         }
 
+#if UNITY_EDITOR
+
         private void OnDrawGizmos()
         {
             Handles.Label(this.transform.position + Vector3.up, Hp.ToString());
         }
+
+#endif
     }
 }
