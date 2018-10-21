@@ -93,6 +93,7 @@ public class CameraFollowing : MonoBehaviour
         m_Cam = this.GetComponent<Camera>();
         m_Cam.transform.rotation = Quaternion.Euler(m_CamRotX, 0, 0);
         m_Cam.fieldOfView = 60.0f;
+        m_CurrentLerp = m_CamLerp;
     }
 
     // Update is called once per frame
@@ -112,17 +113,14 @@ public class CameraFollowing : MonoBehaviour
             }
             else
             {
-                float h = Input.GetAxis(m_InputHorizontal);
-                float v = Input.GetAxis(m_InputVertical);
+                m_ExtraVec.x = Input.GetAxis(m_InputHorizontal) * m_CamWalkAdd;
+                m_ExtraVec.y = Input.GetAxis(m_InputVertical) * m_CamWalkAdd;
 
-                bool bRun = Input.GetButton(m_InputRun);
-                m_ExtraVec.x = (bRun) ? h * m_CamWalkAdd : h * m_CamWalkAdd;
-                m_ExtraVec.y = (bRun) ? v * m_CamWalkAdd : v * m_CamWalkAdd;
-                m_CurrentLerp = (bRun) ? m_CamLerp * 2 : m_CamLerp;
+                m_CurrentLerp = (Input.GetButton(m_InputRun)) ? m_CamLerp * 2 : m_CamLerp;
 
                 if (m_ExtraVec.y <= 0) m_ExtraVec.y *= 1.25f;
             }
-            AddOnDestination(m_ExtraVec.x, m_ExtraVec.y);
+            AddOnDestination(m_ExtraVec);
         }
 
         MoveToDestination();
@@ -152,10 +150,10 @@ public class CameraFollowing : MonoBehaviour
         m_Destination.z += -Mathf.Tan((90 - m_CamRotX) * Mathf.Deg2Rad) * (m_CamHeight - 1f);
     }
 
-    private void AddOnDestination(float x, float z)
+    private void AddOnDestination(Vector2 vec)
     {
-        m_Destination.x += x;
-        m_Destination.z += z;
+        m_Destination.x += vec.x;
+        m_Destination.z += vec.y;
     }
 
     private void MoveToDestination()
