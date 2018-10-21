@@ -54,7 +54,12 @@ public class Player : Character, IHealable
     {
     }
 
-    public bool GiveHealth(float heal)
+    /// <summary>
+    /// Increase current health point HP.
+    /// </summary>
+    /// <param name="heal">Heal point</param>
+    /// <returns>Was the current health point increased or not ?</returns>
+    public bool TakeHealth(float heal)
     {
         if (IsDead || m_CurrentHp >= m_MaxHp) return false;
 
