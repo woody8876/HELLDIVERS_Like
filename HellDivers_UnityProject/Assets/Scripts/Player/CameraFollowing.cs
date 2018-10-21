@@ -41,7 +41,8 @@ public class CameraFollowing : MonoBehaviour
     [SerializeField] private float m_CamRotX = 60.0f;
     [SerializeField] private float m_CamLerp = 0.1f;
     [SerializeField] private float m_CamWalkAdd = 3.0f;
-    [SerializeField] private float m_CamRunAdd = 8.0f;
+    private float m_CamRunAdd = 8.0f;
+    private float m_CurrentLerp;
     private Vector3 m_Destination;
     private Vector2 m_ExtraVec;
 
@@ -56,6 +57,8 @@ public class CameraFollowing : MonoBehaviour
     {
         m_Targets.Clear();
         m_Targets.AddFirst(t);
+        UpdateDestination();
+        this.transform.position = m_Destination;
     }
 
     /// <summary>
@@ -96,10 +99,11 @@ public class CameraFollowing : MonoBehaviour
 
         if (m_Targets.Count == 1)
         {
-            if (Input.GetButton(m_InputAim) || Input.GetButton(m_InputShoot))
+            if (Input.GetButton(m_InputAim))
             {
                 m_ExtraVec.x = m_Targets.First.Value.forward.x * m_CamWalkAdd;
                 m_ExtraVec.y = m_Targets.First.Value.forward.z * m_CamWalkAdd * 0.75f;
+                m_CurrentLerp = m_CamLerp;
             }
             else
             {
@@ -107,8 +111,9 @@ public class CameraFollowing : MonoBehaviour
                 float v = Input.GetAxis(m_InputVertical);
 
                 bool bRun = Input.GetButton(m_InputRun);
-                m_ExtraVec.x = (bRun) ? h * m_CamRunAdd : h * m_CamWalkAdd;
-                m_ExtraVec.y = (bRun) ? v * m_CamRunAdd : v * m_CamWalkAdd;
+                m_ExtraVec.x = (bRun) ? h * m_CamWalkAdd : h * m_CamWalkAdd;
+                m_ExtraVec.y = (bRun) ? v * m_CamWalkAdd : v * m_CamWalkAdd;
+                m_CurrentLerp = (bRun) ? m_CamLerp * 2 : m_CamLerp;
 
                 if (m_ExtraVec.y <= 0) m_ExtraVec.y *= 1.25f;
             }
@@ -150,7 +155,7 @@ public class CameraFollowing : MonoBehaviour
 
     private void MoveToDestination()
     {
-        this.transform.position = Vector3.Lerp(this.transform.position, m_Destination, m_CamLerp);
+        this.transform.position = Vector3.Lerp(this.transform.position, m_Destination, m_CurrentLerp);
     }
 
     #endregion Private Function
