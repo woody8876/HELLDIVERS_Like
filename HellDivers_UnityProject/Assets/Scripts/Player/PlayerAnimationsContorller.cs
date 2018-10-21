@@ -41,13 +41,14 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private float m_ForwardAmount;
     private float m_BattleRight;
     private float m_BattleForward;
+    public bool m_bStopMove = false;
 
     private void Awake()
     {
         m_Animator = this.GetComponent<Animator>();
     }
 
-    public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle, bool attack)
+    public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
         if (!inBattle)
         {
@@ -69,17 +70,30 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
         if (m_Animator != null)
         {
-            UpdateAnimator(move, inBattle, attack);
+            UpdateAnimator(move, inBattle);
         }
     }
 
+    public void Attack(ePlayerFSMStateID state, bool Bool)
+    {
+        UpdateAnimator(state, Bool);
+    }
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
-    private void UpdateAnimator(Vector3 move, bool inBattle, bool attack)
+    public bool FinishAnimator(PlayerFSMData data)
+    {
+        data.m_FinishAni = false;
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
+        //Debug.Log(info.normalizedTime);
+        return data.m_FinishAni;
+    }
+
+    private void UpdateAnimator(Vector3 move, bool inBattle)
     {
         if (!inBattle)
         {
@@ -95,6 +109,27 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("WalkRight", m_BattleRight, 0.1f, Time.deltaTime);
+        }
+    }
+
+    private void UpdateAnimator(ePlayerFSMStateID state, bool Bool = false)
+    {
+        if(state == ePlayerFSMStateID.GunStateID)
+        {
+            m_Animator.SetBool("Shoot", Bool);
+        }
+        else if (state == ePlayerFSMStateID.ReloadStateID)
+        {
+            m_Animator.SetTrigger("Reload");
+        }
+        else if(state == ePlayerFSMStateID.StratagemStateID)
+        {
+            if(Bool)m_Animator.SetBool("ThrowStandby", Bool);
+            else m_Animator.SetBool("ThrowStandby", Bool);
+        }
+        else if (state == ePlayerFSMStateID.ThrowStateID)
+        {
+            m_Animator.SetTrigger("ThrowOut");
         }
     }
 }
