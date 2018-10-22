@@ -8,24 +8,14 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
-public class Player : MonoBehaviour
+public class Player : Character, IHealable
 {
-    #region Properties
-
-    public float Hp { get { return m_fHp; } }
-    public bool IsDead { get { return m_bDead; } }
-
-    #endregion Properties
-
     #region Private Variable
 
     private PlayerInfo m_Data;
     private PlayerParts m_Parts;
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
-
-    private float m_fHp = 100;
-    private bool m_bDead;
 
     #endregion Private Variable
 
@@ -54,13 +44,32 @@ public class Player : MonoBehaviour
     }
 
     // Use this for initialization
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
     }
 
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    /// <summary>
+    /// Increase current health point HP.
+    /// </summary>
+    /// <param name="heal">Heal point</param>
+    /// <returns>Was the current health point increased or not ?</returns>
+    public bool TakeHealth(float heal)
+    {
+        if (IsDead || m_CurrentHp >= m_MaxHp) return false;
+
+        CurrentHp += heal;
+        return true;
+    }
+
+    public override void Death()
+    {
+        base.Death();
     }
 
     #endregion MonoBehaviour
