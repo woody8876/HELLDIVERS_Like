@@ -316,21 +316,7 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
-        GameObject result = null;
-        if (ObjectPool.m_Instance == null)
-        {
-            result = Instantiate(m_Result);
-        }
-        else
-        {
-            result = ObjectPool.m_Instance.LoadGameObjectFromPool(m_Info.ID);
-        }
-
-        if (result != null)
-        {
-            result.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
-            result.SetActive(true);
-        }
+        LoadActivationResult();
 
         m_eState = eState.Idle;
         yield break;
@@ -352,6 +338,30 @@ public class Stratagem : MonoBehaviour
         }
         m_IsCooling = false;
         yield break;
+    }
+
+    /*--------------------------------------------------------
+     * If pool is exist. Load result object form Object pool *
+     * Or create by self onject resource m_Result            *
+     --------------------------------------------------------*/
+
+    private void LoadActivationResult()
+    {
+        GameObject result = null;
+        if (ObjectPool.m_Instance == null)
+        {
+            result = Instantiate(m_Result);
+        }
+        else
+        {
+            result = ObjectPool.m_Instance.LoadGameObjectFromPool(m_Info.ID);
+        }
+
+        if (result != null)
+        {
+            result.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+            result.SetActive(true);
+        }
     }
 
     #endregion Finite State Machine
