@@ -16,7 +16,7 @@ public class Missile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
         if(!GroundCheck(transform)) Falling(m_fGravity);
 
     }
@@ -34,11 +34,13 @@ public class Missile : MonoBehaviour {
         float sqrtHeight = pos.y * pos.y;
         if (sqrtHeight <= m_fSqrtRadius)
         {
-            pos.y = 0;
+            pos.y = 1;
             t.position = pos;
-            ObjectPool.m_Instance.UnLoadObjectToPool(1, this.gameObject);
+            if (gameObject.name == "Missile(Clone)")
+                ObjectPool.m_Instance.UnLoadObjectToPool((int)EItem.MISSILE, this.gameObject);
             return true;
         }
         return false;
     }
+
 }

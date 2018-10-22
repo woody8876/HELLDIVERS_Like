@@ -12,6 +12,14 @@ public enum EAttackMode
     SEEK
 }
 
+public enum EItem
+{
+    MISSILE,
+    ROCK,
+    CIRCLE,
+    RECTANGLE,
+    FAN
+}
 public class Attack : MonoBehaviour
 {
 
@@ -21,6 +29,7 @@ public class Attack : MonoBehaviour
     public float m_Speed = 0.1f;
     public Transform[] m_Obstacle;
 
+    private Object m_Missile;
     private Object m_Rock;
     private Object m_Circle;
     private Object m_Rectangle;
@@ -35,50 +44,30 @@ public class Attack : MonoBehaviour
 
 
     #region Init Function
-    private void InitialDrawAlert()
+    private void InitObject()
     {
-        DrawTools.GO = Resources.Load("Range") as GameObject;
-        DrawTools.DrawCircleSolid(transform, Vector3.up * 1.1f, 3);
-        m_Circle = DrawTools.GO;
-        DrawTools.GO = Resources.Load("Rectangle") as GameObject;
-        DrawTools.DrawRectangleSolid(transform, Vector3.up * 1.1f, 10, 2);
-        m_Rectangle = DrawTools.GO;
-        DrawTools.GO = Resources.Load("Fan") as GameObject;
-        DrawTools.DrawSectorSolid(transform, Vector3.up * .1f, 60, 25, 5);
-        m_Fan = DrawTools.GO;
+        m_Circle = Resources.Load("Range") as GameObject;
+        m_Rectangle = Resources.Load("Rectangle") as GameObject;
+        m_Fan = Resources.Load("Fan") as GameObject;
+        m_Missile = Resources.Load("Missile");
+        m_Rock = Resources.Load("Rock");
     }
-
-    public void DrawFan(Transform t, float radius)
+    public void CreateObjectinPool()
     {
-        GameObject fan = ObjectPool.m_Instance.LoadGameObjectFromPool(4);
-        DrawTools.GO = fan; 
-        Vector3 pos = t.position;
-        pos.y = 0f;
-        DrawTools.DrawSectorSolid(t, pos, 60, radius, 5);
-        DrawTools.GO.SetActive(true);
-        fan = DrawTools.GO;
-        fan.transform.position += Vector3.up*1.45f;
-    } 
+        ObjectPool.m_Instance.InitGameObjects(m_Missile, 3, (int)EItem.MISSILE);
+        ObjectPool.m_Instance.InitGameObjects(m_Rock, 5, (int)EItem.ROCK);
+        ObjectPool.m_Instance.InitGameObjects(m_Circle, 3, (int)EItem.CIRCLE);
+        ObjectPool.m_Instance.InitGameObjects(m_Rectangle, 1, (int)EItem.RECTANGLE);
+        ObjectPool.m_Instance.InitGameObjects(m_Fan, 5, (int)EItem.FAN);
+    }
     #endregion
-
-
 
     private void Start()
     {
-        m_Rock = Resources.Load("Rock");
-        InitialDrawAlert();
-        ObjectPool.m_Instance.InitGameObjects(m_Rock, 3, 1);   
-        ObjectPool.m_Instance.InitGameObjects(m_Circle, 3, 2);
-        ObjectPool.m_Instance.InitGameObjects(m_Rectangle, 1, 3);
-        ObjectPool.m_Instance.InitGameObjects(m_Fan, 4, 4);
-
-        for (int i = 0; i < m_Obstacle.Length; i++)
-        {
-            float r = (m_Obstacle[i].position - transform.position).magnitude;
-            DrawFan(m_Obstacle[i], m_Radius - r);
-        }
+        InitObject();
+        CreateObjectinPool();
+        //for (int i = 0; i < m_Obstacle.Length; i++) { DrawFanAlert(m_Obstacle[i]); }
     }
-
     private void Update()
     {
         //Phase 1
@@ -99,14 +88,18 @@ public class Attack : MonoBehaviour
         else
         {
             m_bCheck = true;
-            StartCoroutine(CreateStone());
-            DrawTools.DrawRectangleSolid(transform, transform.position, 10, 2);
+            StartCoroutine(CreateMissile());
         }*/
+        if (m_bCheck) return;
+        if (!m_bMove) TimeCounter();
+        else
+        {
+            m_bCheck = true;
+            StartCoroutine(CreateRock());
+        }
+        
 
     }
-
-
-
     #region Common Behaviors
     public void Idle() { }
 
@@ -135,33 +128,45 @@ public class Attack : MonoBehaviour
         m_vPos = m_Target.position;
         return vec2Target;
     }
+    #endregion
 
+    #region Draw Alert
     public void DrawRectAlert()
     {
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3);
+        DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
+        DrawTools.GO.SetActive(true); 
         m_vVec.y = 0;
         DrawTools.DrawRectangleSolid(transform, m_vVec, 10, 2);
-
     }
-
-
-
-    public IEnumerator ShowCircleAlert()
+    public void DrawFanAlert(Transform t)
     {
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(2);
-        m_vPos.y = 0;
-        if (go == null)
-        {
-            go = Instantiate(m_Circle, m_vPos, transform.rotation) as GameObject;
-            go.SetActive(true);
-        }
+        DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.FAN);
+        DrawTools.GO.SetActive(true);
+        float width = t.localScale.x * .5f;
+        float dis = (t.position - transform.position).magnitude;
+        float angle = Mathf.Tan(width / dis) * Mathf.Rad2Deg * 2;
+        Vector3 pos = t.position;
+        Vector3 Cpos = transform.position;
+        pos.y = Cpos.y = 0f;
+        DrawTools.DrawSectorSolid(t, Cpos, pos, angle, 25, width * 2);
+        DrawTools.GO.transform.position += Vector3.up*1.1f;
+    }
+    public IEnumerator DrawCircleAlert()
+    {
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.CIRCLE);
+        if (go == null) { go = Instantiate(m_Circle, m_vPos, transform.rotation) as GameObject; }
+        go.SetActive(true);
+        DrawTools.GO = go;
+        Vector3 pos = transform.position;
+        pos.y = 0;
+        DrawTools.DrawCircleSolid(transform, pos, 3);
+        m_vPos.y = 1.1f;
         go.transform.position = m_vPos;
         yield return new WaitForSeconds(.8f);
         ObjectPool.m_Instance.UnLoadObjectToPool(2, go);
         m_bCheck = false;
         yield break;
     }
-
     #endregion
 
     #region Attack
@@ -185,13 +190,13 @@ public class Attack : MonoBehaviour
         yield break;
     }
 
-    public IEnumerator CreateStone()
+    public IEnumerator CreateMissile()
     {
         Seek(m_Target.position);
-        StartCoroutine(ShowCircleAlert());
+        StartCoroutine(DrawCircleAlert());
         yield return new WaitForSeconds(0.5f);
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(1);
-        if (go == null) { go = Instantiate(m_Rock, m_vPos, transform.rotation) as GameObject;  }
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.MISSILE);
+        if (go == null) { go = Instantiate(m_Missile, m_vPos, transform.rotation) as GameObject;  }
         go.SetActive(true);
         m_vPos.y = 40;
         go.transform.position = m_vPos;
@@ -203,15 +208,25 @@ public class Attack : MonoBehaviour
         yield break;
     }
 
-    #endregion
-
-
-
-    public void PlayAnimation()
+    public IEnumerator CreateRock()
     {
-
+        Seek(m_Target.position);
+        StartCoroutine(DrawCircleAlert());
+        yield return new WaitForSeconds(0.5f);
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.ROCK);
+        if (go == null) { go = Instantiate(m_Rock, m_vPos, transform.rotation) as GameObject;  }
+        go.SetActive(true);
+        go.transform.forward = m_vPos - transform.position;
+        m_vPos.y = 40;
+        go.transform.position = m_vPos;
+        timer++;
+        yield return new WaitWhile(() =>timer < 5);
+        timer = 0;
+        m_bMove = false;
+        yield break;
     }
 
+    #endregion
     public bool OnEdge(Transform mover)
     {
         if (!m_bCheck) return false;
@@ -225,7 +240,10 @@ public class Attack : MonoBehaviour
         return false;
     }
 
+    
     #region Fixing Function
+    public void PlayAnimation() { }
+    public void LineFunction(Transform t){}
     public bool OnCircle(Vector3 pos)
     {
         if (Mathf.Pow((pos.x - m_Center.position.x), 2) + Mathf.Pow((pos.z - m_Center.position.z), 2) == m_Radius * m_Radius)
@@ -233,10 +251,6 @@ public class Attack : MonoBehaviour
             return true;
         }
         return false;
-    }
-    public void LineFunction(Transform t)
-    {
-
     }
     public float Interscetion(Transform t)
     {

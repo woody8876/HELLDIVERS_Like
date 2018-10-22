@@ -80,21 +80,21 @@ public class DrawTools {
         CreateMesh(vertices);
     }
 
-     public static void DrawSectorSolid(Transform t, Vector3 center, float angle, float radius, float width)
+     public static void DrawSectorSolid(Transform t, Vector3 center, Vector3 target, float angle, float radius, float width)
     {
         int pointAmount = 100;  
         float eachAngle = angle / pointAmount;
         Vector3 forward = t.forward;
  
         List<Vector3> vertices = new List<Vector3>();
-        vertices.Add(center);
-        vertices.Add(center - t.right * (width * 0.5f));
+        
+        vertices.Add(target - t.right * (width * 0.5f));
         for (int i = 1; i < pointAmount - 1; i++)
         {
             Vector3 pos = Quaternion.Euler(0f, -angle / 2 + eachAngle * (i - 1), 0f) * forward * radius + center;
             vertices.Add(pos);
         }
-        vertices.Add(center + t.right * (width * 0.5f));
+        vertices.Add(target + t.right * (width * 0.5f));
  
         CreateMesh(vertices);
     }
