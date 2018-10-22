@@ -13,7 +13,6 @@ public class CameraFollowing : MonoBehaviour
 {
     #region Define Inputs
 
-    private string m_InputShoot = "Fire1";
     private string m_InputAim = "Fire2";
     private string m_InputHorizontal = "Horizontal";
     private string m_InputVertical = "Vertical";
@@ -46,7 +45,6 @@ public class CameraFollowing : MonoBehaviour
     [SerializeField] private float m_CamRotX = 60.0f;
     [SerializeField] private float m_CamLerp = 0.1f;
     [SerializeField] private float m_CamWalkAdd = 3.0f;
-    private float m_CamRunAdd = 8.0f;
     private float m_CurrentLerp;
     private Vector3 m_Destination;
     private Vector2 m_ExtraVec;
