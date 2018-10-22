@@ -125,6 +125,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.StratagemStateID)
         {
             m_Animator.SetBool("ThrowStandby", Bool);
+            Debug.Log("HA");
         }
         else if (state == ePlayerFSMStateID.ThrowStateID)
         {
