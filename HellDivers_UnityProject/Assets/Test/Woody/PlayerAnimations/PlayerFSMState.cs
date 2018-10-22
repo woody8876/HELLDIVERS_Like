@@ -9,6 +9,7 @@ public enum ePlayerFSMTrans
     Go_Reload,
     Go_Stratagem,
     Go_Throw,
+    Go_SwitchWeapon,
 }
 public enum ePlayerFSMStateID
 {
@@ -17,6 +18,7 @@ public enum ePlayerFSMStateID
     ReloadStateID,
     StratagemStateID,
     ThrowStateID,
+    SwitchWeaponID,
 }
 
 public class PlayerFSMState
@@ -25,10 +27,6 @@ public class PlayerFSMState
     public ePlayerFSMStateID m_StateID;
     public Dictionary<ePlayerFSMTrans, PlayerFSMState> m_Map;
     public float m_fCurrentTime;
-    public PlayerAnimationsContorller m_PAC = MonoBehaviour.FindObjectOfType<PlayerAnimationsContorller>();
-    public WeaponController WP = MonoBehaviour.FindObjectOfType<WeaponController>();
-    public StratagemController SC = MonoBehaviour.FindObjectOfType<StratagemController>();
-    public Animator m_Animator;
 
     public PlayerFSMState()
     {
@@ -91,7 +89,6 @@ public class PlayerFSMGunState : PlayerFSMState
     public PlayerFSMGunState()
     {
         m_StateID = ePlayerFSMStateID.GunStateID;
-
     }
 
 
@@ -107,26 +104,48 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (Input.GetMouseButton(0))
+        if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            shoot = true;
+            if (Input.GetButtonDown("Fire1"))
+            {
+                if (data.m_WeaponController.ShootState()) shoot = true;
+            }
+            else shoot = false;
         }
         else
         {
-            shoot = false;
+            if (Input.GetButton("Fire1"))
+            {
+                if (data.m_WeaponController.ShootState()) shoot = true;
+                else shoot = false;
+            }
+            else shoot = false;
         }
-        m_PAC.Attack(m_StateID, shoot);
+        data.m_AnimationController.Attack(m_StateID, shoot);
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetButtonDown("Reload"))
         {
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Reload);
+            if (data.m_WeaponController.ReloadState())
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Reload);
+            }
         }
-        if (Input.GetButton("Stratagem") && !shoot)
+        if (Input.GetButton("Stratagem"))
         {
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
+            if (data.m_StratagemController.Stratagems.Count > 0)
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
+            }
+        }
+        if (Input.GetButton("WeaponSwitch"))
+        {
+            if (data.m_WeaponController.SwitchWeaponState())
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
+            }
         }
     }
 }
@@ -152,17 +171,16 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (count < 1) m_PAC.Attack(m_StateID, false);
+        if (count < 1) data.m_AnimationController.Attack(m_StateID, false);
         count++;
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        m_Animator = m_PAC.Animator;
-        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("Reload"))
         {
-            if (m_PAC.FinishAnimator(data))
+            if (data.m_AnimationController.FinishAnimator(data))
             {
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
@@ -172,40 +190,39 @@ public class PlayerFSMReloadState : PlayerFSMState
 
 public class PlayerFSMStratagemState : PlayerFSMState
 {
-    int count = 0;
-    bool bCorrect;
     public PlayerFSMStratagemState()
     {
         m_StateID = ePlayerFSMStateID.StratagemStateID;
     }
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-        count = 0;
         data.m_NowAnimation = "Stratagem";
-        Debug.Log(data.m_NowAnimation);
+        data.m_AnimationController.Attack(m_StateID, true);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-       
     }
 
     public override void Do(PlayerFSMData data)
     {
-        if(count < 1) m_PAC.Attack(m_StateID, true);
-        count++;
+        if (data.m_StratagemController.IsCheckingCode == false)
+        {
+            data.m_StratagemController.StartCheckCodes();
+        }
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (data.m_StratagemController.IsReady)
         {
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
-        if (Input.GetKeyDown(KeyCode.Z))
+
+        if (Input.GetButtonUp("Stratagem"))
         {
-            bCorrect = false;
-            m_PAC.Attack(m_StateID, bCorrect);
+            data.m_StratagemController.StopCheckCodes();
+            data.m_AnimationController.Attack(m_StateID, data.m_StratagemController.IsReady);
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
@@ -213,7 +230,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
 public class PlayerFSMThrowState : PlayerFSMState
 {
-    
+
     public PlayerFSMThrowState()
     {
         m_StateID = ePlayerFSMStateID.ThrowStateID;
@@ -223,29 +240,80 @@ public class PlayerFSMThrowState : PlayerFSMState
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Throw";
+        data.m_AnimationController.Attack(m_StateID, false);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        m_Animator.SetBool("ThrowStandby", false);
+        data.m_AnimationController.Animator.SetBool("ThrowStandby", false);
+        data.m_AnimationController.Attack(m_StateID, false);
     }
 
     public override void Do(PlayerFSMData data)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonUp("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
-            m_PAC.Attack(m_StateID, false);
+            data.m_AnimationController.Attack(m_StateID, true);
         }
+
+        data.m_AnimationController.Animator = data.m_AnimationController.Animator;
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("ThrowOut"))
+        {
+            if (info.normalizedTime > 0.7f)
+            {
+                data.m_StratagemController.Throw();
+            }
+        }
+
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        m_Animator = m_PAC.Animator;
-        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
+        data.m_AnimationController.Animator = data.m_AnimationController.Animator;
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
-            if (m_PAC.FinishAnimator(data))
+            if (data.m_AnimationController.FinishAnimator(data))
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+}
+
+public class PlayerFSMSwitchWeaponState : PlayerFSMState
+{
+    int count = 0;
+    public PlayerFSMSwitchWeaponState()
+    {
+        m_StateID = ePlayerFSMStateID.SwitchWeaponID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        count = 0;
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        if (count < 1) data.m_AnimationController.Attack(m_StateID, false);
+        count++;
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("TakeWeapon"))
+        {
+            if (data.m_AnimationController.FinishAnimator(data))
             {
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }

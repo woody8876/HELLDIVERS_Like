@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class JoystickController : MonoBehaviour
 {
     #region Private Variable
 
@@ -44,25 +44,17 @@ public class PlayerController : MonoBehaviour
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
-        m_FSMData.m_AnimationController = m_PAC;
-        m_FSMData.m_Animator = m_PAC.Animator;
-        m_FSMData.m_WeaponController = GetComponent<WeaponController>();
-        m_FSMData.m_StratagemController = GetComponent<StratagemController>();
 
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
-        PlayerFSMSwitchWeaponState m_SwitchWeapon = new PlayerFSMSwitchWeaponState();
 
 
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
-        m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeapon);
 
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
-        m_SwitchWeapon.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
@@ -115,23 +107,17 @@ public class PlayerController : MonoBehaviour
     private void BasicMove()
     {
         Move();
-        bRun = (Input.GetButton("Run")) ? true : false;
 
-        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-        {
-            FaceDirection();
-            bInBattle = true;
-        }
-
-        #region Joystick
-        else if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+        if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
         {
             FaceDirection();
             bInBattle = true;
         }
         else bInBattle = false;
-        #endregion
+
         m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
+
+
     }
 
     private void ThrowMove()
@@ -169,7 +155,7 @@ public class PlayerController : MonoBehaviour
             m_Move = v * Vector3.forward + h * Vector3.right;
         }
         if (m_Move.magnitude > 1) m_Move.Normalize();
-        
+
         if (m_Controller.isGrounded == false)
         {
             m_Fall += Physics.gravity * Time.deltaTime;
@@ -179,48 +165,26 @@ public class PlayerController : MonoBehaviour
 
     private void FaceDirection()
     {
-        float vHigh = Camera.main.transform.position.y - this.transform.position.y;
-        Ray MouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Vector3 vMouseRay = MouseRay.direction;
-        vMouseRay.Normalize();
+        float h = Input.GetAxis("JoystickHorizontal");
+        float v = Input.GetAxis("JoystickVertical");
 
-        float angle = Vector3.Dot(new Vector3(0, -1, 0), vMouseRay);
-        float distance = vHigh / angle;
-        Vector3 endPoint = MouseRay.GetPoint(distance);
-
-        m_Direction = endPoint - this.transform.position;
-        m_Direction.y = 0.0f;
-        if (m_Direction.magnitude < 0.1f) return;
-        if (m_Direction.magnitude > 1) m_Direction.Normalize();
-
-       
-        if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+        if (m_Cam != null)
         {
-            #region Joystick
-            float h = Input.GetAxis("JoystickHorizontal");
-            float v = Input.GetAxis("JoystickVertical");
-
-
-            if (m_Cam != null)
-            {
-                m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
-                m_Direction = v * m_CamForward + h * m_Cam.right;
-            }
-            else
-            {
-                m_Direction = v * Vector3.forward + h * Vector3.right;
-            }
-            if (m_Direction.magnitude < 0.1f) return;
-            if (m_Direction.magnitude > 1) m_Direction.Normalize();
-            #endregion
+            m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
+            m_Direction = v * m_CamForward + h * m_Cam.right;
+        }
+        else
+        {
+            m_Direction = v * Vector3.forward + h * Vector3.right;
         }
 
-
-
+        if (m_Direction.magnitude < 0.1f) return;
+        if (m_Direction.magnitude > 1) m_Direction.Normalize();
+        
     }
 
     #endregion Character Behaviour
-    
+
 
 
 

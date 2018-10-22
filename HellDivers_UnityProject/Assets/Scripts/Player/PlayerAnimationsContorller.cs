@@ -78,6 +78,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         UpdateAnimator(state, Bool);
     }
+
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
@@ -114,7 +115,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void UpdateAnimator(ePlayerFSMStateID state, bool Bool = false)
     {
-        if(state == ePlayerFSMStateID.GunStateID)
+        if (state == ePlayerFSMStateID.GunStateID)
         {
             m_Animator.SetBool("Shoot", Bool);
         }
@@ -122,14 +123,17 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Reload");
         }
-        else if(state == ePlayerFSMStateID.StratagemStateID)
+        else if (state == ePlayerFSMStateID.StratagemStateID)
         {
-            if(Bool)m_Animator.SetBool("ThrowStandby", Bool);
-            else m_Animator.SetBool("ThrowStandby", Bool);
+            m_Animator.SetBool("ThrowStandby", Bool);
         }
         else if (state == ePlayerFSMStateID.ThrowStateID)
         {
-            m_Animator.SetTrigger("ThrowOut");
+            m_Animator.SetBool("ThrowOut", Bool);
+        }
+        else if(state == ePlayerFSMStateID.SwitchWeaponID)
+        {
+            m_Animator.SetTrigger("SwitchWeapon");
         }
     }
 }

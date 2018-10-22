@@ -126,6 +126,27 @@ public class StratagemController : MonoBehaviour
         return false;
     }
 
+    public bool StartCheckCodes()
+    {
+        if (m_Stratagems.Count <= 0) return false;
+
+        StartCoroutine(CheckInputCode());
+        return true;
+    }
+
+    public void StopCheckCodes()
+    {
+        StopCoroutine(CheckInputCode());
+    }
+
+    public bool Throw()
+    {
+        if (IsReady == false) return false;
+        m_CurrentStratagem.Throw(m_Force);
+        m_CurrentStratagem = null;
+        return true;
+    }
+
     /// <summary>
     /// Clean up all stratagems in the controller.
     /// </summary>
@@ -152,28 +173,28 @@ public class StratagemController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (IsReady)
-        {
-            if (Input.GetButtonDown(m_InputThrow))
-            {
-                m_CurrentStratagem.Throw(m_Force);
-                m_CurrentStratagem = null;
-            }
-        }
-        else
-        {
-            if (m_Stratagems.Count > 0)
-            {
-                if (Input.GetButtonDown(m_InputStartCode))
-                {
-                    StartCoroutine(CheckInputCode());
-                }
-                else if (Input.GetButtonUp(m_InputStartCode))
-                {
-                    StopCoroutine(CheckInputCode());
-                }
-            }
-        }
+        //if (IsReady)
+        //{
+        //    if (Input.GetButtonDown(m_InputThrow))
+        //    {
+        //        m_CurrentStratagem.Throw(m_Force);
+        //        m_CurrentStratagem = null;
+        //    }
+        //}
+        //else
+        //{
+        //    if (m_Stratagems.Count > 0)
+        //    {
+        //        if (Input.GetButtonDown(m_InputStartCode))
+        //        {
+        //            StartCoroutine(CheckInputCode());
+        //        }
+        //        else if (Input.GetButtonUp(m_InputStartCode))
+        //        {
+        //            StopCoroutine(CheckInputCode());
+        //        }
+        //    }
+        //}
     }
 
     #endregion MonoBehaviour
