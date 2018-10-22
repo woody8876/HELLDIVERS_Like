@@ -6,7 +6,7 @@ using UnityEngine;
 public class StratagemSetting : ScriptableObject
 {
     public string DisplayFolder = "Stratagems";
-    public string ItemFolder = "StratagemSupplys";
+    public string ResultFolder = "StratagemSupplys";
     public GameObject DefaultDisplay;
-    public GameObject DefaultItem;
+    public GameObject DefaultResult;
 }

@@ -1195,7 +1195,7 @@ GameObject:
   - component: {fileID: 4064463626749930}
   - component: {fileID: 95529681763937496}
   m_Layer: 0
-  m_Name: CQAssaultRifle
+  m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2763,8 +2763,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960f189393b98e14a8015bad0b10c8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LaunchPoint: {fileID: 4316328121739304}
-  RightHand: {fileID: 4070483441801622}
+  m_LaunchPoint: {fileID: 4316328121739304}
+  m_RightHand: {fileID: 4070483441801622}
+  m_Body: {fileID: 1653869962935572}
+  m_Gun: {fileID: 1985642326112154}
 --- !u!137 &137034158267332372
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
