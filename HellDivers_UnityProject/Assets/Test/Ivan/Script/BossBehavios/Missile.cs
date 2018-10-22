@@ -37,7 +37,7 @@ public class Missile : MonoBehaviour {
             pos.y = 1;
             t.position = pos;
             if (gameObject.name == "Missile(Clone)")
-                ObjectPool.m_Instance.UnLoadObjectToPool((int)EItem.MISSILE, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool((int)BossBehaviors.EItem.MISSILE, this.gameObject);
             return true;
         }
         return false;

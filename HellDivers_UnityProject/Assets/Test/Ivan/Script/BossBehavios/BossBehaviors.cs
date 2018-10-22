@@ -2,26 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EAttackMode
+public class BossBehaviors : MonoBehaviour
 {
-    INITIAL = -1,
-    RUSH,
-    MISSILE,
-    EARTHQUACK,
-    THROWSTONE,
-    SEEK
-}
-
-public enum EItem
-{
-    MISSILE,
-    ROCK,
-    CIRCLE,
-    RECTANGLE,
-    FAN
-}
-public class Attack : MonoBehaviour
-{
+    public enum EItem
+    {
+        MISSILE,
+        ROCK,
+        CIRCLE,
+        RECTANGLE,
+        FAN
+    }
 
     public Transform m_Target;
     public Transform m_Center;
@@ -152,7 +142,6 @@ public class Attack : MonoBehaviour
     public IEnumerator DrawCircleAlert()
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.CIRCLE);
-        if (go == null) { go = Instantiate(m_Circle, m_vPos, transform.rotation) as GameObject; }
         go.SetActive(true);
         DrawTools.GO = go;
         Vector3 pos = transform.position;
@@ -193,7 +182,6 @@ public class Attack : MonoBehaviour
         StartCoroutine(DrawCircleAlert());
         yield return new WaitForSeconds(0.5f);
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.MISSILE);
-        if (go == null) { go = Instantiate(m_Missile, m_vPos, transform.rotation) as GameObject;  }
         go.SetActive(true);
         m_vPos.y = 40;
         go.transform.position = m_vPos;
@@ -207,7 +195,6 @@ public class Attack : MonoBehaviour
         StartCoroutine(DrawCircleAlert());
         yield return new WaitForSeconds(0.5f);
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.ROCK);
-        if (go == null) { go = Instantiate(m_Rock, m_vPos, transform.rotation) as GameObject;  }
         go.SetActive(true);
         Vector3 vec = transform.position;
         m_vPos.y = vec.y = 40;
