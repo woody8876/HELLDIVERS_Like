@@ -10,6 +10,7 @@ public enum ePlayerFSMTrans
     Go_Stratagem,
     Go_Throw,
     Go_SwitchWeapon,
+    Go_Dead,
 }
 public enum ePlayerFSMStateID
 {
@@ -19,6 +20,7 @@ public enum ePlayerFSMStateID
     StratagemStateID,
     ThrowStateID,
     SwitchWeaponID,
+    DeadStateID,
 }
 
 public class PlayerFSMState
@@ -320,3 +322,37 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
         }
     }
 }
+
+public class PlayerFSMDeadState : PlayerFSMState
+{
+    public PlayerFSMDeadState()
+    {
+        m_StateID = ePlayerFSMStateID.DeadStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        data.m_NowAnimation = "Dead";
+        data.m_AnimationController.Attack(m_StateID, false);
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        }
+    }
+}
+
