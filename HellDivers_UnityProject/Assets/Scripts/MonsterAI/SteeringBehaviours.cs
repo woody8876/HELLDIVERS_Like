@@ -6,6 +6,11 @@ using UnityEngine.AI;
 
 public class SteeringBehaviours
 {
+    static public void NavMove(AIData data)
+    {
+        data.navMeshAgent.SetDestination(data.m_vTarget);
+    }
+
     static public void Move(AIData data)
     {
         if (data.m_bMove == false) { return; }
@@ -33,13 +38,62 @@ public class SteeringBehaviours
         t.position = cPos;
 
     }
+
+    static public bool CheckCollision(AIData data)
+    {
+        List<Obstacle> m_AvoidTargets = AIMain.m_Instance.GetObstacles();
+        if (m_AvoidTargets == null)
+        {
+            return false;
+        }
+        Transform ct = data.m_Go.transform;
+        Vector3 cPos = ct.position;
+        Vector3 cForward = ct.forward;
+        Vector3 vec;
+
+        float fDist = 0.0f;
+        float fDot = 0.0f;
+        int iCount = m_AvoidTargets.Count;
+        for (int i = 0; i < iCount; i++)
+        {
+            vec = m_AvoidTargets[i].transform.position - cPos;
+            vec.y = 0.0f;
+            fDist = vec.magnitude;
+            if (fDist > data.m_fProbeLength + m_AvoidTargets[i].m_fRadius)
+            {
+                m_AvoidTargets[i].m_eState = Obstacle.eState.OUTSIDE_TEST;
+                continue;
+            }
+
+            vec.Normalize();
+            fDot = Vector3.Dot(vec, cForward);
+            if (fDot < 0)
+            {
+                m_AvoidTargets[i].m_eState = Obstacle.eState.OUTSIDE_TEST;
+                continue;
+            }
+            m_AvoidTargets[i].m_eState = Obstacle.eState.INSIDE_TEST;
+            float fProjDist = fDist * fDot;
+            float fDotDist = Mathf.Sqrt(fDist * fDist - fProjDist * fProjDist);
+            if (fDotDist > m_AvoidTargets[i].m_fRadius + data.m_fRadius)
+            {
+                continue;
+            }
+
+            return true;
+
+
+        }
+        return false;
+    }
+
     static public bool CollisionAvoided(AIData data)
     {
         Vector3 curPos = data.m_Go.transform.position;
         Vector3 tarDir = data.m_vTarget - curPos;
         float length = data.m_fProbeLength;
         RaycastHit rh;
-        if (Physics.Raycast(curPos, tarDir, out rh, length, 1<< LayerMask.NameToLayer("Terrain")| 1<< LayerMask.NameToLayer("Enemies")))
+        if (Physics.Raycast(curPos, tarDir, out rh, length, 1 << LayerMask.NameToLayer("Terrain") | 1 << LayerMask.NameToLayer("Enemies")))
         {
             Debug.Log("Obsticle!!!!");
             float distance = tarDir.magnitude;
@@ -54,8 +108,7 @@ public class SteeringBehaviours
         }
         return false;
     }
-
-
+    
     static public bool Seek(AIData data)
     {
         Vector3 curPos = data.m_Go.transform.position;
@@ -65,7 +118,7 @@ public class SteeringBehaviours
         float fDist2Target = TargetDir.magnitude;
         TargetDir.Normalize();
         float fDotForward = Vector3.Dot(vForward, TargetDir);
-        if (fDist2Target < data.m_fProbeLength)
+        if (fDist2Target < data.m_Speed + 0.001f)
         {
             data.m_fMoveForce = 0.0f;
             data.m_fTempTurnForce = 0.0f;
@@ -95,7 +148,7 @@ public class SteeringBehaviours
 
     static public Vector3 GroupBehavior(AIData data, float radius, bool Seperate)
     {
-        if (!data.m_bMove) { return Vector3.zero; }
+        //if (!data.m_bMove) { return Vector3.zero; }
         Vector3 MoverPos = data.m_Go.transform.position;
         Vector3 m_vForward = Vector3.zero;
         float Radius = data.m_fRadius * radius;
@@ -160,7 +213,6 @@ public class SteeringBehaviours
 
         return true;
     }
-
 
     //static public bool CollisionAvoided(AIData data)
     //{
