@@ -53,26 +53,32 @@ public class PlayerController : MonoBehaviour
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
-        PlayerFSMSwitchWeaponState m_SwitchWeapon = new PlayerFSMSwitchWeaponState();
+        PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
 
 
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
-        m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeapon);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
 
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
-        m_SwitchWeapon.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_SwitchWeaponState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
+        PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
+
+
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_RelodaState);
         m_PlayerFSM.AddState(m_StratagemState);
         m_PlayerFSM.AddState(m_ThrowState);
+        m_PlayerFSM.AddState(m_DeadState);
+
 
         #endregion
     }
@@ -81,6 +87,11 @@ public class PlayerController : MonoBehaviour
     {
         SelectMotionState();
         m_PlayerFSM.DoState();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
+        }
     }
 
     #endregion MonoBehaviour
@@ -109,7 +120,10 @@ public class PlayerController : MonoBehaviour
             ThrowingMove();
             return;
         }
-        return;
+        else if (m_FSMData.m_NowAnimation.Equals("Dead"))
+        {
+            return;
+        }
     }
 
     private void BasicMove()
@@ -124,7 +138,7 @@ public class PlayerController : MonoBehaviour
         }
 
         #region Joystick
-        else if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+        else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
             bInBattle = true;
@@ -193,14 +207,11 @@ public class PlayerController : MonoBehaviour
         if (m_Direction.magnitude < 0.1f) return;
         if (m_Direction.magnitude > 1) m_Direction.Normalize();
 
-       
-        if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+        if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             #region Joystick
-            float h = Input.GetAxis("JoystickHorizontal");
-            float v = Input.GetAxis("JoystickVertical");
-
-
+            float h = Input.GetAxis("DirectionHorizontal");
+            float v = Input.GetAxis("DirectionVertical");
             if (m_Cam != null)
             {
                 m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;

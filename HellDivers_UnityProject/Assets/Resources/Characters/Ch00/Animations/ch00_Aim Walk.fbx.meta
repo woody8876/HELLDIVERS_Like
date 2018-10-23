@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1bf921ea5e9288d46b00461bc4eade5c
+guid: 9aad8204ccaa00c41947f2713a88b32d
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -135,8 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: mixamo.com
-    7400002: Baisc Walk
+    7400000: Aim Walk
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -166,10 +165,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Baisc Walk
+      name: Aim Walk
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 43
+      lastFrame: 41
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

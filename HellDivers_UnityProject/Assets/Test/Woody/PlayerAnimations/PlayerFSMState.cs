@@ -10,6 +10,7 @@ public enum ePlayerFSMTrans
     Go_Stratagem,
     Go_Throw,
     Go_SwitchWeapon,
+    Go_Dead,
 }
 public enum ePlayerFSMStateID
 {
@@ -19,6 +20,7 @@ public enum ePlayerFSMStateID
     StratagemStateID,
     ThrowStateID,
     SwitchWeaponID,
+    DeadStateID,
 }
 
 public class PlayerFSMState
@@ -197,11 +199,13 @@ public class PlayerFSMStratagemState : PlayerFSMState
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Stratagem";
-        data.m_AnimationController.Attack(m_StateID, true);
+        data.m_Animator.SetBool("InputCodes", true);
+        data.m_AnimationController.Attack(m_StateID, false);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
+        
     }
 
     public override void Do(PlayerFSMData data)
@@ -216,12 +220,14 @@ public class PlayerFSMStratagemState : PlayerFSMState
     {
         if (data.m_StratagemController.IsReady)
         {
+            data.m_AnimationController.Attack(m_StateID, true);
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
 
-        if (Input.GetButtonUp("Stratagem"))
+        else if (Input.GetButtonUp("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
+            data.m_Animator.SetBool("InputCodes", false);
             data.m_AnimationController.Attack(m_StateID, data.m_StratagemController.IsReady);
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
@@ -245,7 +251,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        data.m_AnimationController.Animator.SetBool("ThrowStandby", false);
+        data.m_Animator.SetBool("InputCodes", false);
         data.m_AnimationController.Attack(m_StateID, false);
     }
 
@@ -320,3 +326,37 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
         }
     }
 }
+
+public class PlayerFSMDeadState : PlayerFSMState
+{
+    public PlayerFSMDeadState()
+    {
+        m_StateID = ePlayerFSMStateID.DeadStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        data.m_NowAnimation = "Dead";
+        data.m_AnimationController.Attack(m_StateID, false);
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        }
+    }
+}
+

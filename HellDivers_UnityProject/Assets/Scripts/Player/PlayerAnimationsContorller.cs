@@ -41,7 +41,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private float m_ForwardAmount;
     private float m_BattleRight;
     private float m_BattleForward;
-    public bool m_bStopMove = false;
 
     private void Awake()
     {
@@ -135,5 +134,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("SwitchWeapon");
         }
+        else if(state == ePlayerFSMStateID.DeadStateID)
+        {
+            m_Animator.SetTrigger("Death");
+        }
     }
+
 }
