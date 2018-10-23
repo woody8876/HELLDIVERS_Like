@@ -24,18 +24,17 @@ public class BossFSM {
         THROWROCK,
         EARTHQUACK,
     }
-
+    #region Boss FSM Field
     public eFSMStateID m_StateID;
     public Dictionary<eFSMTransition, BossFSM> m_Map;
     public float m_fCurrentTime;
-
+    #endregion
     public BossFSM()
     {
         m_StateID = eFSMStateID.INITIAL;
         m_fCurrentTime = 0.0f;
         m_Map = new Dictionary<eFSMTransition, BossFSM>();
     }
-
     public void AddTransition(eFSMTransition trans, BossFSM toState)
     {
         if (m_Map.ContainsKey(trans)) return;
@@ -51,7 +50,6 @@ public class BossFSM {
         return m_Map[trans];
 
     }
-
     public virtual void DoBeforeEnter()
     {
 
@@ -69,21 +67,114 @@ public class BossFSM {
 
     }
 }
-public enum eFSMStateID
-{
-    INITIAL = -1,
-    IDLE,
-    SEEK,
-    RUSH,
-    MISSILE,
-    THROWROCK,
-    EARTHQUACK,
+
+public class BossIdleState : BossFSM{
+    public BossIdleState() { }
+    public override void DoBeforeEnter()
+    {
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
 }
-public class BossIdleState { }
-public class BossSeekState { }
-public class BossRushState { }
-public class BossMissleState { }
-public class BossThrowRockState { }
-public class BossEarthquakeState { }
+
+public class BossSeekState :BossFSM
+{
+    float fSeekTime = 0.0f;
+    public BossSeekState()
+    {
+
+    }
+    public override void DoBeforeEnter()
+    {
+        fSeekTime = Random.Range(3.0f, 6.0f);
+        m_fCurrentTime = 0.0f;
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
+}
+
+public class BossRushState : BossFSM
+{
+    public BossRushState() { }
+    public override void DoBeforeEnter()
+    {
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
+}
+
+public class BossMissleState : BossFSM
+{
+    public BossMissleState() { }
+    public override void DoBeforeEnter()
+    {
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
+}
+
+public class BossThrowRockState : BossFSM
+{
+    public BossThrowRockState() { }
+    public override void DoBeforeEnter()
+    {
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
+}
+
+public class BossEarthquakeState : BossFSM
+{
+    public BossEarthquakeState() { }
+    public override void DoBeforeEnter()
+    {
+    }
+    public override void DoBeforeLeave()
+    {
+    }
+    public override void Do()
+    {
+    }
+    public override void CheckCondition()
+    {
+    }
+}
+
+
 
 
