@@ -62,6 +62,19 @@ public class Player : Character, IHealable
 
     #region Public Function
 
+    public void Spawn(Transform spawnPos)
+    {
+        this.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
+
+        // Setup stratagems
+        m_StratagemController.Clear();
+        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
+
+        // Setup weapons
+        m_WeapoonController.ClearWeapon();
+        m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+    }
+
     /// <summary>
     /// Increase current health point HP.
     /// </summary>
