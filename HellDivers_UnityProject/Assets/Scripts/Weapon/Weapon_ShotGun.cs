@@ -45,7 +45,8 @@ public class Weapon_ShotGun : Weapon
 
     public override void Reload()
     {
-        weaponInfo.Ammo += 10;
-        weaponInfo.Mags--;
+        int i = (int)((weaponInfo.Capacity - weaponInfo.Ammo) * 0.1f);
+        weaponInfo.Ammo = weaponInfo.Capacity;
+        weaponInfo.Mags -= i;
     }
 }
