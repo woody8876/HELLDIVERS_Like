@@ -83,6 +83,7 @@ public class Stratagem : MonoBehaviour
 
         this.gameObject.name = string.Format("Stratagem {0}", m_Info.Title);
 
+        // Load display prefab.
         if (newInfo.DisplayID.Equals(m_Info.DisplayID) == false)
         {
             GameObject display;
@@ -104,6 +105,7 @@ public class Stratagem : MonoBehaviour
             m_Animator = m_Display.GetComponent<Animator>();
         }
 
+        // Load result prefab.
         if (newInfo.ResultID.Equals(m_Info.ResultID) == false)
         {
             GameObject result;
@@ -316,7 +318,7 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
-        LoadActivationResult();
+        LoadResult();
 
         m_eState = eState.Idle;
         yield break;
@@ -345,7 +347,7 @@ public class Stratagem : MonoBehaviour
      * Or create by self onject resource m_Result            *
      --------------------------------------------------------*/
 
-    private void LoadActivationResult()
+    private void LoadResult()
     {
         GameObject result = null;
         if (ObjectPool.m_Instance == null)

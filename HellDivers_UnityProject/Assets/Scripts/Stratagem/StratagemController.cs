@@ -177,6 +177,7 @@ public class StratagemController : MonoBehaviour
     public void StopCheckCodes()
     {
         StopCoroutine(CheckInputCode());
+        m_bCheckingCode = false;
     }
 
     /// <summary>
@@ -249,10 +250,10 @@ public class StratagemController : MonoBehaviour
 
     private StratagemInfo.eCode? GetInputCode()
     {
-        if (Input.GetAxisRaw(m_InputVertical) > 0) { return StratagemInfo.eCode.Up; }
-        else if (Input.GetAxisRaw(m_InputVertical) < 0) { return StratagemInfo.eCode.Down; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) < 0) { return StratagemInfo.eCode.Left; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) > 0) { return StratagemInfo.eCode.Right; }
+        if (Input.GetAxisRaw(m_InputVertical) >= 1) { return StratagemInfo.eCode.Up; }
+        else if (Input.GetAxisRaw(m_InputVertical) <= -1) { return StratagemInfo.eCode.Down; }
+        else if (Input.GetAxisRaw(m_InputHorizontal) <= -1) { return StratagemInfo.eCode.Left; }
+        else if (Input.GetAxisRaw(m_InputHorizontal) >= 1) { return StratagemInfo.eCode.Right; }
         else { return null; }
     }
 
