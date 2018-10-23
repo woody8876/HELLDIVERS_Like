@@ -6,8 +6,8 @@ public class StratagemController : MonoBehaviour
 {
     #region Define Inputs
 
-    private string m_InputVertical = "Vertical";
-    private string m_InputHorizontal = "Horizontal";
+    private string m_InputVertical = "StratagemVertical";
+    private string m_InputHorizontal = "StratagemHorizontal";
 
     #endregion Define Inputs
 
