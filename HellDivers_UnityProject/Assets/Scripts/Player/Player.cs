@@ -8,8 +8,15 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
-public class Player : Character, IHealable
+public class Player : MonoBehaviour
 {
+    #region Properties
+
+    public float Hp { get { return m_fHp; } }
+    public bool IsDead { get { return m_bDead; } }
+
+    #endregion Properties
+
     #region Private Variable
 
     private PlayerInfo m_Data;
@@ -17,9 +24,10 @@ public class Player : Character, IHealable
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
 
-    #endregion Private Variable
+    private float m_fHp = 100;
+    private bool m_bDead;
 
-    #region Initializer
+    #endregion Private Variable
 
     public void Initialize(PlayerInfo data)
     {
@@ -27,14 +35,12 @@ public class Player : Character, IHealable
 
         // Setup stratagems
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
-        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
+        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand);
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
     }
-
-    #endregion Initializer
 
     #region MonoBehaviour
 
@@ -48,9 +54,8 @@ public class Player : Character, IHealable
     }
 
     // Use this for initialization
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
     }
 
     // Update is called once per frame
@@ -59,26 +64,4 @@ public class Player : Character, IHealable
     }
 
     #endregion MonoBehaviour
-
-    #region Public Function
-
-    /// <summary>
-    /// Increase current health point HP.
-    /// </summary>
-    /// <param name="heal">Heal point</param>
-    /// <returns>Was the current health point increased or not ?</returns>
-    public bool TakeHealth(float heal)
-    {
-        if (IsDead || m_CurrentHp >= m_MaxHp) return false;
-
-        CurrentHp += heal;
-        return true;
-    }
-
-    public override void Death()
-    {
-        base.Death();
-    }
-
-    #endregion Public Function
 }
