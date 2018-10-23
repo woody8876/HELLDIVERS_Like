@@ -20,6 +20,6 @@ public class AniTest : MonoBehaviour {
         //{
         //    Debug.Log("Complete");
         //}
-        Debug.Log(info.normalizedTime);
+
     }
 }

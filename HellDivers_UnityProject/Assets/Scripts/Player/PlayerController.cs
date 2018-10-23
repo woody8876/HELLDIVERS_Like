@@ -212,9 +212,6 @@ public class PlayerController : MonoBehaviour
             #region Joystick
             float h = Input.GetAxis("DirectionHorizontal");
             float v = Input.GetAxis("DirectionVertical");
-
-            Debug.Log(v);
-
             if (m_Cam != null)
             {
                 m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
