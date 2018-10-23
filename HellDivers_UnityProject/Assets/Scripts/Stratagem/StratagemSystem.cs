@@ -6,6 +6,8 @@ public static class StratagemSystem
 {
     public static string DisplayFolder { get { return Setting.DisplayFolder; } }
     public static GameObject DefaultDisplay { get { return Setting.DefaultDisplay; } }
+    public static string ResultFolder { get { return Setting.ResultFolder; } }
+    public static GameObject DefaultResult { get { return Setting.DefaultResult; } }
 
     private static StratagemSetting Setting
     {

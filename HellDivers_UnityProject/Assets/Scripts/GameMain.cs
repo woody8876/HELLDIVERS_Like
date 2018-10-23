@@ -12,27 +12,22 @@ public class GameMain : MonoBehaviour
 #pragma warning disable
     private AssetManager assetManager = new AssetManager();
     private ResourceManager resourceManager = new ResourceManager();
-    private GameData gameData = new GameData();
     private ObjectPool objectPool = new ObjectPool();
+    private GameData gameData = new GameData();
 #pragma warning disable
 
     private void Awake()
     {
-        objectPool.Init();
         assetManager.Init();
         resourceManager.Init();
+        objectPool.Init();
         gameData.Init();
     }
 
     // Use this for initialization
     private void Start()
     {
-        if (m_PlayerData != null)
-        {
-            GameObject player = CreatPlayer(m_PlayerData);
-
-            if (player != null) Camera.main.GetComponent<CameraFollowing>().FocusOnTarget(player.transform);
-        }
+        if (m_PlayerData != null) CreatPlayer(m_PlayerData);
     }
 
     // Update is called once per frame
@@ -61,6 +56,7 @@ public class GameMain : MonoBehaviour
         Player p = playerGo.AddComponent<Player>();
         p.Initialize(data);
 
+        Camera.main.GetComponent<CameraFollowing>().FocusOnTarget(p.transform);
         return playerGo;
     }
 }
