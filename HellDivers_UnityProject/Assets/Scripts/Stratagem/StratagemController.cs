@@ -6,18 +6,31 @@ public class StratagemController : MonoBehaviour
 {
     #region Define Inputs
 
-    private string m_InputStartCode = "Stratagem";
     private string m_InputVertical = "Vertical";
     private string m_InputHorizontal = "Horizontal";
-    private string m_InputThrow = "Fire1";
 
     #endregion Define Inputs
 
     #region Properties
 
+    /// <summary>
+    /// Was any stratagem has been ready ?
+    /// </summary>
     public bool IsReady { get { return m_CurrentStratagem != false; } }
+
+    /// <summary>
+    /// Was the checking codes process has been actived ?
+    /// </summary>
     public bool IsCheckingCode { get { return m_bCheckingCode; } }
+
+    /// <summary>
+    /// Represent of the stratagem is ready.
+    /// </summary>
     public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
+
+    /// <summary>
+    /// Represent of stratagems in the controller.
+    /// </summary>
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
     #endregion Properties
@@ -30,6 +43,7 @@ public class StratagemController : MonoBehaviour
     // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
 
+    // Throw out force.
     private Vector3 m_Force = new Vector3(0.0f, 200.0f, 500.0f);
 
     #endregion Private Variable
@@ -42,7 +56,7 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     /// <param name="id">The id key which in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
-    public bool AddStratagem(int id, Transform launchPos)
+    public bool AddStratagem(int id, Transform readyPos, Transform launchPos)
     {
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
@@ -51,7 +65,7 @@ public class StratagemController : MonoBehaviour
 
         GameObject go = new GameObject("Stratagem");
         Stratagem s = go.AddComponent<Stratagem>();
-        s.SetStratagemInfo(id, launchPos);
+        s.SetStratagemInfo(id, readyPos, launchPos);
         m_Stratagems.Add(s);
         return true;
     }
@@ -62,11 +76,11 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     /// <param name="ids">The id key which in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
-    public void AddStratagems(List<int> ids, Transform launchPos)
+    public void AddStratagems(List<int> ids, Transform readyPos, Transform launchPos)
     {
         foreach (int id in ids)
         {
-            AddStratagem(id, launchPos);
+            AddStratagem(id, readyPos, launchPos);
         }
     }
 
@@ -76,11 +90,11 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     /// <param name="ids">The id key which in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
-    public void AddStratagems(int[] ids, Transform launchPos)
+    public void AddStratagems(int[] ids, Transform readyPos, Transform launchPos)
     {
         foreach (int id in ids)
         {
-            AddStratagem(id, launchPos);
+            AddStratagem(id, readyPos, launchPos);
         }
     }
 
@@ -126,27 +140,6 @@ public class StratagemController : MonoBehaviour
         return false;
     }
 
-    public bool StartCheckCodes()
-    {
-        if (m_Stratagems.Count <= 0) return false;
-
-        StartCoroutine(CheckInputCode());
-        return true;
-    }
-
-    public void StopCheckCodes()
-    {
-        StopCoroutine(CheckInputCode());
-    }
-
-    public bool Throw()
-    {
-        if (IsReady == false) return false;
-        m_CurrentStratagem.Throw(m_Force);
-        m_CurrentStratagem = null;
-        return true;
-    }
-
     /// <summary>
     /// Clean up all stratagems in the controller.
     /// </summary>
@@ -166,38 +159,39 @@ public class StratagemController : MonoBehaviour
         m_CurrentStratagem = null;
     }
 
-    #endregion Public Function
-
-    #region MonoBehaviour
-
-    // Update is called once per frame
-    private void Update()
+    /// <summary>
+    /// Start checking stratagem codes.
+    /// </summary>
+    /// <returns>Was there are any stratagems in the contorller ?</returns>
+    public bool StartCheckCodes()
     {
-        //if (IsReady)
-        //{
-        //    if (Input.GetButtonDown(m_InputThrow))
-        //    {
-        //        m_CurrentStratagem.Throw(m_Force);
-        //        m_CurrentStratagem = null;
-        //    }
-        //}
-        //else
-        //{
-        //    if (m_Stratagems.Count > 0)
-        //    {
-        //        if (Input.GetButtonDown(m_InputStartCode))
-        //        {
-        //            StartCoroutine(CheckInputCode());
-        //        }
-        //        else if (Input.GetButtonUp(m_InputStartCode))
-        //        {
-        //            StopCoroutine(CheckInputCode());
-        //        }
-        //    }
-        //}
+        if (m_Stratagems.Count <= 0) return false;
+
+        StartCoroutine(CheckInputCode());
+        return true;
     }
 
-    #endregion MonoBehaviour
+    /// <summary>
+    /// Stop checking stratagem codes.
+    /// </summary>
+    public void StopCheckCodes()
+    {
+        StopCoroutine(CheckInputCode());
+    }
+
+    /// <summary>
+    /// Throw out the current stratagem.
+    /// </summary>
+    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
+    public bool Throw()
+    {
+        if (IsReady == false) return false;
+        m_CurrentStratagem.Throw(m_Force);
+        m_CurrentStratagem = null;
+        return true;
+    }
+
+    #endregion Public Function
 
     #region Check Input Code
 

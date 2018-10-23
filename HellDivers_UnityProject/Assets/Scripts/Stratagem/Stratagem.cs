@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
+
 using UnityEditor;
+
+#endif
 
 [RequireComponent(typeof(Rigidbody))]
 public class Stratagem : MonoBehaviour
@@ -48,6 +53,7 @@ public class Stratagem : MonoBehaviour
     #region Private Variable
 
     [SerializeField] private StratagemInfo m_Info;
+    private Transform m_ReadyPos;
     private Transform m_LaunchPos;
     private GameObject m_Display;
     private Animator m_Animator;
@@ -69,7 +75,7 @@ public class Stratagem : MonoBehaviour
     /// <param name="id">The id key which is in the gamedata.stratagem table.</param>
     /// <param name="launchPos">The spawn transform root.</param>
     /// <returns></returns>
-    public bool SetStratagemInfo(int id, Transform launchPos)
+    public bool SetStratagemInfo(int id, Transform readyPos, Transform launchPos)
     {
         StratagemInfo newInfo;
         if (TryGetInfoFromGameData(id, out newInfo) == false) return false;
@@ -101,6 +107,7 @@ public class Stratagem : MonoBehaviour
         }
 
         m_LaunchPos = launchPos;
+        m_ReadyPos = readyPos;
         this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
         this.transform.localEulerAngles = Vector3.zero;
@@ -175,7 +182,7 @@ public class Stratagem : MonoBehaviour
         if (m_UsesCount >= Info.Uses && Info.Uses >= 0) return;
         if (IsCooling || State != eState.Idle) return;
 
-        this.transform.parent = m_LaunchPos;
+        this.transform.parent = m_ReadyPos;
         this.transform.localPosition = Vector3.zero;
         this.transform.localEulerAngles = Vector3.zero;
         m_Animator.SetTrigger("Start");
@@ -191,6 +198,8 @@ public class Stratagem : MonoBehaviour
     public void Throw(Vector3 force)
     {
         if (IsCooling || State != eState.Ready) return;
+        this.transform.position = m_LaunchPos.position;
+        this.transform.rotation = m_LaunchPos.rotation;
 
         this.transform.parent = null;
         m_Rigidbody.isKinematic = false;
