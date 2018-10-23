@@ -28,12 +28,14 @@ public class BossFSM {
     public eFSMStateID m_StateID;
     public Dictionary<eFSMTransition, BossFSM> m_Map;
     public float m_fCurrentTime;
+    public BossStateFuntion m_BSF;
     #endregion
     public BossFSM()
     {
         m_StateID = eFSMStateID.INITIAL;
         m_fCurrentTime = 0.0f;
         m_Map = new Dictionary<eFSMTransition, BossFSM>();
+        m_BSF = new BossStateFuntion();
     }
     public void AddTransition(eFSMTransition trans, BossFSM toState)
     {
@@ -58,11 +60,11 @@ public class BossFSM {
     {
 
     }
-    public virtual void Do()
+    public virtual void Do(AIData data)
     {
 
     }
-    public virtual void CheckCondition()
+    public virtual void CheckCondition(EnemyData data)
     {
 
     }
@@ -76,10 +78,10 @@ public class BossIdleState : BossFSM{
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
     }
 }
@@ -87,9 +89,10 @@ public class BossIdleState : BossFSM{
 public class BossSeekState :BossFSM
 {
     float fSeekTime = 0.0f;
+    Vector3 vec;
     public BossSeekState()
     {
-
+        m_StateID = eFSMStateID.SEEK;
     }
     public override void DoBeforeEnter()
     {
@@ -99,11 +102,24 @@ public class BossSeekState :BossFSM
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
+        vec = m_BSF.Seek(data.m_Go.transform, data.m_vTarget);
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
+        if (enemyData.m_iCurHP >= enemyData.m_iMaxHP * 0.7f)
+        {
+
+        }
+        else if (enemyData.m_iCurHP >= enemyData.m_iMaxHP * 0.2f)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }
 
@@ -116,10 +132,10 @@ public class BossRushState : BossFSM
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
     }
 }
@@ -133,10 +149,10 @@ public class BossMissleState : BossFSM
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
     }
 }
@@ -150,10 +166,10 @@ public class BossThrowRockState : BossFSM
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
     }
 }
@@ -167,10 +183,10 @@ public class BossEarthquakeState : BossFSM
     public override void DoBeforeLeave()
     {
     }
-    public override void Do()
+    public override void Do(AIData data)
     {
     }
-    public override void CheckCondition()
+    public override void CheckCondition(EnemyData enemyData)
     {
     }
 }

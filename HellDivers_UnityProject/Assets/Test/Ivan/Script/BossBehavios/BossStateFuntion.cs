@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossStateFuntion : MonoBehaviour {
+public class BossStateFuntion {
 
     public enum EItem
     {
@@ -13,14 +13,14 @@ public class BossStateFuntion : MonoBehaviour {
         FAN
     }
 
-    public Transform m_Target;
+    //public Transform m_Target;
     public Transform m_Center;
     public float m_Radius = 10;
     public float m_Speed = 0.1f;
 
     private List<GameObject> m_Obstacle = new List<GameObject>();
-    private Vector3 m_vPos;
-    private Vector3 m_vVec;
+    //private Vector3 m_vPos;
+    //private Vector3 m_vVec;
     private bool m_bMove;
     private bool m_bCheck;
     float timer;
@@ -28,7 +28,7 @@ public class BossStateFuntion : MonoBehaviour {
 
 
     #region Init Function
-    private void InitObject()
+    public BossStateFuntion()
     {
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Missile"), 3, (int)EItem.MISSILE);
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Rock"), 5, (int)EItem.ROCK);
@@ -39,10 +39,6 @@ public class BossStateFuntion : MonoBehaviour {
     #endregion
 
     #region MonoBehavoirs
-    private void Start()
-    {
-        InitObject();
-    }   
     private void Update()
     {
         #region Phase 1
@@ -84,7 +80,7 @@ public class BossStateFuntion : MonoBehaviour {
         timer += Time.deltaTime;
         if (timer < randomTime - 0.5f)
         {
-            Seek(m_Target.position);
+            //Seek(m_Target.position);
         }
         if (timer >= randomTime)
         {
@@ -93,6 +89,7 @@ public class BossStateFuntion : MonoBehaviour {
             randomTime = Random.Range(2.0f, 6.0f);
         }
     }
+
     public bool OnEdge(Transform mover)
     {
         if (!m_bCheck) return false;
@@ -109,74 +106,71 @@ public class BossStateFuntion : MonoBehaviour {
 
     #region Draw Alert
 
-    public void DrawRectAlert()
+    public void DrawRectAlert(Vector3 target, Transform user)
     {
         DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
         DrawTools.GO.SetActive(true);
-        m_vVec.y = 0;
-        DrawTools.DrawRectangleSolid(transform, m_vVec, 10, 2);
+        target.y = 0;
+        DrawTools.DrawRectangleSolid(user, target, 10, 2);
     }
-    public void DrawFanAlert(Transform t)
+    public void DrawFanAlert(Transform target, Transform user)
     {
         DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.FAN);
         DrawTools.GO.SetActive(true);
-        float width = t.localScale.x * .5f;
-        float dis = (t.position - transform.position).magnitude;
+        float width = target.localScale.x * .5f;
+        float dis = (target.position - user.position).magnitude;
         float angle = Mathf.Tan(width / dis) * Mathf.Rad2Deg * 2;
-        Vector3 pos = t.position;
-        Vector3 Cpos = transform.position;
+        Vector3 pos = target.position;
+        Vector3 Cpos = user.position;
         pos.y = Cpos.y = 0f;
-        DrawTools.DrawSectorSolid(t, Cpos, pos, angle, 25, width * 2);
+        DrawTools.DrawSectorSolid(target, Cpos, pos, angle, 25, width * 2);
         DrawTools.GO.transform.position += Vector3.up * 1.1f;
     }
-    public void DrawCircleAlert()
+    public void DrawCircleAlert(Vector3 target, Transform user)
     {
         DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.CIRCLE);
         DrawTools.GO.SetActive(true);
-        Vector3 pos = transform.position;
+        Vector3 pos = user.position;
         pos.y = 0;
-        DrawTools.DrawCircleSolid(transform, pos, 3);
-        m_vPos.y = 1.1f;
-        DrawTools.GO.transform.position = m_vPos;
+        DrawTools.DrawCircleSolid(user, pos, 3);
+        target.y = 1.1f;
+        DrawTools.GO.transform.position = target;
     }
     #endregion
 
     #region Boss FSM Function
     public void Idle() { }
 
-    public Vector3 Seek(Vector3 target)
+    public Vector3 Seek(Transform user, Vector3 target)
     {
-        Vector3 vec2Target = target - transform.position;
-        Vector3 curForward = transform.forward;
+        Vector3 vec2Target = target - user.position;
         vec2Target.y = 0;
         Quaternion face = Quaternion.LookRotation(vec2Target, Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, face, 5);
-        m_vPos = m_Target.position;
+        user.rotation = Quaternion.RotateTowards(user.rotation, face, 5);
         return vec2Target;
     }
 
-    public void Rush(Vector3 vec)
+    public void Rush(Vector3 vec, Transform user)
     {
-        m_vVec = Seek(m_Target.position);
         vec.Normalize();
-        transform.position += vec * Time.deltaTime * m_Speed;
+        user.position += vec * Time.fixedDeltaTime * m_Speed;
     }
-    public void Missile()
+    public void Missile(Vector3 target)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.MISSILE);
         go.SetActive(true);
-        m_vPos.y = 40;
-        go.transform.position = m_vPos;
+        target.y = 40;
+        go.transform.position = target;
         go.transform.forward = -Vector3.up;
     }
-    public void ThrowRock()
+    public void ThrowRock(Transform user, Vector3 target)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.ROCK);
         go.SetActive(true);
-        Vector3 vec = transform.position;
-        m_vPos.y = vec.y = 40;
-        go.transform.forward = m_vPos - vec;
-        go.transform.position = m_vPos;
+        Vector3 vec = user.position;
+        target.y = vec.y = 40;
+        go.transform.forward = target - vec;
+        go.transform.position = target;
         m_Obstacle.Add(go);
     }
     public void AfterEarthquake()
