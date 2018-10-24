@@ -11,10 +11,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
     private float m_ForwardAmount;
     private float m_BattleRight;
     private float m_BattleForward;
-    private int m_Count = 0;
-    private float m_fTimer = 0.0f;
-    private float m_fCurrentTime = 0.0f;
-    private bool m_bHurt = false;
 
     private void Awake()
     {

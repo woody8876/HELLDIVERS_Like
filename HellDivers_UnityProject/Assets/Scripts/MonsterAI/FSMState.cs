@@ -219,7 +219,7 @@ public class FSMChaseState : FSMState
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+        //bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
         
         if (bAttack)
         {
@@ -267,7 +267,7 @@ public class FSMAttackState : FSMState
             if(info.normalizedTime < 0.9f) return;
         }
         bool bAttack = false;
-        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+        //bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
 
         if (bAttack == false)
         {

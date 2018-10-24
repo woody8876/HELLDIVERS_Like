@@ -7,7 +7,6 @@ using UnityEngine.AI;
 public class FishAI : MonoBehaviour {
     
     FSMSystem m_Fsm;
-    private MobAnimationsController m_MAC;
     public AIData m_AIData;
     // Use this for initialization
     private void Awake()
@@ -15,9 +14,6 @@ public class FishAI : MonoBehaviour {
         
     }
     void Start () {
-
-        m_MAC = this.GetComponent<MobAnimationsController>();
-
         m_AIData = new AIData();
         m_Fsm = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
