@@ -8,7 +8,7 @@ public interface ITakable
 }
 
 [RequireComponent(typeof(Animator))]
-public class StratagemSupply : MonoBehaviour, ITakable
+public class InteractiveItem : MonoBehaviour, ITakable
 {
     private string m_Id;
     private string m_Name;
