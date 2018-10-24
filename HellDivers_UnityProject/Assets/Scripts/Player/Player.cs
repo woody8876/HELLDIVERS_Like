@@ -90,15 +90,22 @@ public class Player : Character
         return true;
     }
 
-    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
-        // m_Controller..... check and start take damage animation.
+        bool bHurt = m_Controller.m_PlayerFSM.PerformPlayerHurt();
+        if (bHurt == false) return false;
 
-        return base.TakeDamage(damager, hitPoint);
+        return base.TakeDamage(dmg, hitPoint);
     }
 
+    [ContextMenu("DoDead")]
     public override void Death()
     {
+        if (IsDead) return;
+
+        m_bDead = true;
+        m_Controller.m_PlayerFSM.PerformPlayerDead();
+
         base.Death();
     }
 
