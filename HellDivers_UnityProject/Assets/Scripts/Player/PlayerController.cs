@@ -140,7 +140,9 @@ public class PlayerController : MonoBehaviour
     private void BasicMove()
     {
         Move();
-        bRun = (Input.GetButton("Run")) ? true : false;
+
+        if (Input.GetButton("Run")) bRun = true;
+        else bRun = false;
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
@@ -149,6 +151,10 @@ public class PlayerController : MonoBehaviour
         }
 
         #region Joystick
+        //if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        //{
+        //    bRun = false;
+        //}
         else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
