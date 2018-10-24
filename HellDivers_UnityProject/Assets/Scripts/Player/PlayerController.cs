@@ -15,14 +15,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Fall;
     private Vector3 m_Direction;
     private PlayerAnimationsContorller m_PAC;
-
     private bool bRun = false;
     private bool bInBattle = false;
-
     private PlayerFSMData m_FSMData;
-    private PlayerFSMSystem m_PlayerFSM;
 
     #endregion Private Variable
+
+    public PlayerFSMSystem m_PlayerFSM;
+    public float m_fAnimatorTime;
 
     #region MonoBehaviour
     private void Awake()
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+        m_FSMData.m_CharacterController = m_Controller;
         m_FSMData.m_AnimationController = m_PAC;
         m_FSMData.m_Animator = m_PAC.Animator;
         m_FSMData.m_WeaponController = GetComponent<WeaponController>();
@@ -70,8 +71,9 @@ public class PlayerController : MonoBehaviour
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
-        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
+        m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
 
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_RelodaState);
@@ -85,13 +87,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            m_PlayerFSM.PerformPlayerDead();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            m_PlayerFSM.PerformPlayerHurt();
+        }
         SelectMotionState();
         m_PlayerFSM.DoState();
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
-        }
     }
 
     #endregion MonoBehaviour
@@ -105,7 +110,7 @@ public class PlayerController : MonoBehaviour
             BasicMove();
             return;
         }
-        if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
+        else if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
         {
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
@@ -231,7 +236,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion Character Behaviour
-    
+
 
 
 
