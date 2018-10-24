@@ -107,5 +107,4 @@ public class FSMSystem
         m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
     }
-
 }

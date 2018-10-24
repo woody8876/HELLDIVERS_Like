@@ -2,36 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ePlayerAnimationState
-{
-    ANI_IDLE,
-    ANI_WALK,
-    ANI_RUN,
-    ANI_WALKSHOOT,
-    ANI_TURNRIGHT90,
-    ANI_TURNLEFT90,
-    ANI_DEATH
-};
-
-public enum ePlayerAttack
-{
-    ANI_IDLE,
-    ANI_GUNPLAY,
-    ANI_SHOOT,
-    ANI_SWITCHWEAPON,
-    ANI_THROW,
-    ANI_THROWSTANDBY,
-    ANI_THROWOUT,
-    ANI_RELOAD
-};
-
-public enum ePlayerAnyState
-{
-    ANI_IDLE,
-    ANI_GETHURT,
-    ANI_ROLL
-};
-
 public class PlayerAnimationsContorller : MonoBehaviour
 {
     public Animator Animator { get { return m_Animator; } set { m_Animator = value; } }
@@ -47,6 +17,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         m_Animator = this.GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        
+    }
     public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
         if (!inBattle)
@@ -73,24 +47,39 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
     }
 
-    public void Attack(ePlayerFSMStateID state, bool Bool)
-    {
-        UpdateAnimator(state, Bool);
-    }
-
     private void ApplyExtraTurnRotation()
     {
         float turnSpeed = Mathf.Lerp(180f, 360f, m_ForwardAmount);
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
+
     public bool FinishAnimator(PlayerFSMData data)
     {
         data.m_FinishAni = false;
         AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
         data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
-        //Debug.Log(info.normalizedTime);
         return data.m_FinishAni;
+    }  
+
+    /// <summary>
+    /// Set Trigger Animator
+    /// </summary>
+    /// <param name="state"></param>
+    public void SetAnimator(ePlayerFSMStateID state)
+    {
+        UpdateAnimator(state);
+    }
+
+    /// <summary>
+    /// Set Bool Animator
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="Bool"></param>
+    /// 
+    public void SetAnimator(ePlayerFSMStateID state, bool Bool)
+    {
+        UpdateAnimator(state, Bool);
     }
 
     private void UpdateAnimator(Vector3 move, bool inBattle)
@@ -112,15 +101,27 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
     }
 
-    private void UpdateAnimator(ePlayerFSMStateID state, bool Bool = false)
+    private void UpdateAnimator(ePlayerFSMStateID state)
+    {
+        if (state == ePlayerFSMStateID.ReloadStateID)
+        {
+            m_Animator.SetTrigger("Reload");
+        }
+        else if (state == ePlayerFSMStateID.SwitchWeaponID)
+        {
+            m_Animator.SetTrigger("SwitchWeapon");
+        }
+        else if (state == ePlayerFSMStateID.DeadStateID)
+        {
+            m_Animator.SetTrigger("Death");
+        }
+    }
+
+    private void UpdateAnimator(ePlayerFSMStateID state, bool Bool)
     {
         if (state == ePlayerFSMStateID.GunStateID)
         {
             m_Animator.SetBool("Shoot", Bool);
-        }
-        else if (state == ePlayerFSMStateID.ReloadStateID)
-        {
-            m_Animator.SetTrigger("Reload");
         }
         else if (state == ePlayerFSMStateID.StratagemStateID)
         {
@@ -130,13 +131,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetBool("ThrowOut", Bool);
         }
-        else if(state == ePlayerFSMStateID.SwitchWeaponID)
+        else if (state == ePlayerFSMStateID.DeadStateID)
         {
-            m_Animator.SetTrigger("SwitchWeapon");
-        }
-        else if(state == ePlayerFSMStateID.DeadStateID)
-        {
-            m_Animator.SetTrigger("Death");
+            m_Animator.SetBool("Relive", Bool);
         }
     }
 
