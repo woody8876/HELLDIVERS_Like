@@ -8,7 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
-public class Player : Character, IHealable
+public class Player : Character
 {
     #region Private Variable
 
@@ -100,6 +100,10 @@ public class Player : Character, IHealable
     public override void Death()
     {
         base.Death();
+    }
+
+    public void TakeItem()
+    {
     }
 
     #endregion Public Function
