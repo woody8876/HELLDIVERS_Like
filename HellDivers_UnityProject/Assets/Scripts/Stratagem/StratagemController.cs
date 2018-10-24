@@ -38,13 +38,11 @@ public class StratagemController : MonoBehaviour
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
+    [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
+    [SerializeField] private float m_MaxThrowForce = 2;
+    [SerializeField] private float m_CurrentThrowForce = 1;
     private bool m_bCheckingCode;
-
-    // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
-
-    // Throw out force.
-    private Vector3 m_Force = new Vector3(0.0f, 200.0f, 500.0f);
 
     #endregion Private Variable
 
@@ -180,6 +178,11 @@ public class StratagemController : MonoBehaviour
         m_bCheckingCode = false;
     }
 
+    public void ScaleThrowForce(float scale)
+    {
+        m_CurrentThrowForce = scale;
+    }
+
     /// <summary>
     /// Throw out the current stratagem.
     /// </summary>
@@ -187,7 +190,7 @@ public class StratagemController : MonoBehaviour
     public bool Throw()
     {
         if (IsReady == false) return false;
-        m_CurrentStratagem.Throw(m_Force);
+        m_CurrentStratagem.Throw(m_ThrowForce * m_CurrentThrowForce);
         m_CurrentStratagem = null;
         return true;
     }
@@ -257,6 +260,7 @@ public class StratagemController : MonoBehaviour
         else { return null; }
     }
 
+    // A container use to checking codes.
     private List<Stratagem> _Open = new List<Stratagem>();
 
     #endregion Check Input Code

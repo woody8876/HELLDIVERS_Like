@@ -14,6 +14,7 @@ public class Player : Character, IHealable
 
     private PlayerInfo m_Data;
     private PlayerParts m_Parts;
+    private PlayerController m_Controller;
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
 
@@ -43,6 +44,7 @@ public class Player : Character, IHealable
         this.tag = "Player";
         m_Data = new PlayerInfo();
         m_Parts = GetComponent<PlayerParts>();
+        m_Controller = GetComponent<PlayerController>();
         m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
     }
@@ -86,6 +88,13 @@ public class Player : Character, IHealable
 
         CurrentHp += heal;
         return true;
+    }
+
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        // m_Controller..... check and start take damage animation.
+
+        return base.TakeDamage(damager, hitPoint);
     }
 
     public override void Death()
