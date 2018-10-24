@@ -340,12 +340,10 @@ public class PlayerFSMDeadState : PlayerFSMState
         data.m_AnimationController.SetAnimator(m_StateID, false);
         data.m_NowAnimation = "Dead";
         data.m_AnimationController.SetAnimator(m_StateID);
-        data.m_CharacterController.height = data.m_CharacterController.height * 0.5f;
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        data.m_CharacterController.height = data.m_CharacterController.height * 2f;
     }
 
     public override void Do(PlayerFSMData data)
