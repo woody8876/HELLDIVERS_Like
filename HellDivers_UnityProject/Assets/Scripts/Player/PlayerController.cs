@@ -90,6 +90,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             PerformPlayerDead();
+            Debug.Log(PerformPlayerDead());
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -235,9 +236,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void PerformPlayerDead()
+    public bool PerformPlayerDead()
     {
+        AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Death"))
+        {
+            if (info.normalizedTime < 0.95f) return false;
+            else return true;
+        }
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
+        return true;
+
     }
     public bool PerformPlayerHurt()
     {
