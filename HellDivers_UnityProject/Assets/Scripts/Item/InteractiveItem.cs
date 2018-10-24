@@ -2,41 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ITakable
+public class InteractiveItem : MonoBehaviour, IInteractable
 {
-    void OnTake(Player player);
-}
+    public Vector3 Position { get { return this.transform.position; } }
 
-[RequireComponent(typeof(Animator))]
-public class InteractiveItem : MonoBehaviour, ITakable
-{
     private string m_Id;
     private string m_Name;
-    [SerializeField] private float m_HealPosint;
     private float m_LifeTime = 120.0f;
     private float m_EndTime;
-    private Animator m_Animator;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         m_EndTime = Time.time + m_LifeTime;
     }
 
     // Use this for initialization
-    private void Start()
+    protected virtual void Start()
     {
-        m_Animator = GetComponent<Animator>();
+        Player[] players = GameMain.Instance.Players.ToArray();
+        if (players != null)
+        {
+            foreach (Player p in players)
+            {
+                p.Interactive.Subscribe(this);
+            }
+        }
     }
 
     // Update is called once per frame
-    private void Update()
+    protected virtual void Update()
     {
-        if (Time.time >= m_EndTime) this.gameObject.SetActive(false);
+        if (m_LifeTime != -1)
+        {
+            if (Time.time >= m_EndTime) this.gameObject.SetActive(false);
+        }
     }
 
-    public void OnTake(Player taker)
+    public virtual void OnInteract(Player player)
     {
-        bool bHeal = taker.TakeHealth(m_HealPosint);
-        if (bHeal) Destroy(this.gameObject);
+        Destroy(this.gameObject);
     }
 }

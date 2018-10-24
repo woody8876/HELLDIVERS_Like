@@ -10,6 +10,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Player : Character
 {
+    public InteractiveBehavior Interactive { get { return m_InteractiveBehavior; } }
+
     #region Private Variable
 
     private PlayerInfo m_Data;
@@ -17,6 +19,7 @@ public class Player : Character
     private PlayerController m_Controller;
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
+    private InteractiveBehavior m_InteractiveBehavior;
 
     #endregion Private Variable
 
@@ -47,6 +50,7 @@ public class Player : Character
         m_Controller = GetComponent<PlayerController>();
         m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
+        m_InteractiveBehavior = new InteractiveBehavior();
     }
 
     // Use this for initialization
@@ -119,6 +123,7 @@ public class Player : Character
 
     public void TakeItem()
     {
+        m_InteractiveBehavior.OnInteract(this);
     }
 
     #endregion Public Function
