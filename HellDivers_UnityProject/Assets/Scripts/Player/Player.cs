@@ -92,7 +92,7 @@ public class Player : Character
 
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
-        bool bHurt = m_Controller.m_PlayerFSM.PerformPlayerHurt();
+        bool bHurt = m_Controller.PerformPlayerHurt();
         if (bHurt == false) return false;
 
         return base.TakeDamage(dmg, hitPoint);
@@ -104,7 +104,7 @@ public class Player : Character
         if (IsDead) return;
 
         m_bDead = true;
-        m_Controller.m_PlayerFSM.PerformPlayerDead();
+        m_Controller.PerformPlayerDead();
 
         base.Death();
     }
