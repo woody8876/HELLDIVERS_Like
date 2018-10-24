@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     public PlayerFSMSystem m_PlayerFSM;
     public float m_fAnimatorTime;
+    public bool bIsDead = false;
 
     #region MonoBehaviour
     private void Awake()
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+        m_FSMData.m_PlayerController = this;
         m_FSMData.m_CharacterController = m_Controller;
         m_FSMData.m_AnimationController = m_PAC;
         m_FSMData.m_Animator = m_PAC.Animator;
@@ -90,12 +92,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             PerformPlayerDead();
-            Debug.Log(PerformPlayerDead());
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
             PerformPlayerHurt();
         }
+
+        Debug.Log(bIsDead);
         SelectMotionState();
         m_PlayerFSM.DoState();
     }
@@ -236,18 +239,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public bool PerformPlayerDead()
+    public void PerformPlayerDead()
     {
-        AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Death"))
-        {
-            if (info.normalizedTime < 0.95f) return false;
-            else return true;
-        }
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
-        return true;
-
     }
+
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(2);
@@ -258,6 +254,7 @@ public class PlayerController : MonoBehaviour
         m_FSMData.m_Animator.SetTrigger("GetHurt");
         return true;
     }
+
     #endregion Character Behaviour
 
 

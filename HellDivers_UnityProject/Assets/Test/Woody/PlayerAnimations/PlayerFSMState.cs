@@ -111,6 +111,7 @@ public class PlayerFSMGunState : PlayerFSMState
             if (Input.GetButtonDown("Fire1"))
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
+                else shoot = false;
             }
             else shoot = false;
         }
@@ -119,7 +120,6 @@ public class PlayerFSMGunState : PlayerFSMState
             if (Input.GetButton("Fire1"))
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
-                else shoot = false;
             }
             else shoot = false;
         }
@@ -350,7 +350,13 @@ public class PlayerFSMDeadState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        
+        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Death"))
+        {
+            if (info.normalizedTime < 0.95f) data.m_PlayerController.bIsDead = false;
+            else data.m_PlayerController.bIsDead = true;
+            return;
+        }
     }
 
     public override void CheckCondition(PlayerFSMData data)
@@ -358,6 +364,7 @@ public class PlayerFSMDeadState : PlayerFSMState
         if (Input.GetKeyDown(KeyCode.P))
         {
             data.m_AnimationController.SetAnimator(m_StateID,true);
+            data.m_PlayerController.bIsDead = false;
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
