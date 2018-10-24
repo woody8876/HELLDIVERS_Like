@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossFSMSystem : MonoBehaviour {
-
-
+public class BossFSMSystem{
 
     private List<BossFSM> m_states;
     private Dictionary<BossFSM.eFSMTransition, BossFSM> m_GlobalMap;
@@ -12,9 +10,8 @@ public class BossFSMSystem : MonoBehaviour {
     public BossFSM.eFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private BossFSM m_currentState;
     public BossFSM CurrentState { get { return m_currentState; } }
-    private AIData m_Data;
-    private EnemyData m_enemyData;
-    public BossFSMSystem(AIData data)
+    private EnemyData m_Data;
+    public BossFSMSystem(EnemyData data)
     {
         m_Data = data;
         m_states = new List<BossFSM>();
@@ -30,7 +27,7 @@ public class BossFSMSystem : MonoBehaviour {
     {
         if (m_GlobalMap.ContainsKey(t))
         {
-            m_currentState.DoBeforeLeave();
+            m_currentState.DoBeforeLeave(m_Data);
             m_currentState = m_GlobalMap[t];
             m_currentState.DoBeforeEnter();
             m_currentStateID = m_currentState.m_StateID;
@@ -93,7 +90,7 @@ public class BossFSMSystem : MonoBehaviour {
         }
 
         // Update the currentStateID and currentState		
-        m_currentState.DoBeforeLeave();
+        m_currentState.DoBeforeLeave(m_Data);
         m_currentState = state;
         m_currentStateID = state.m_StateID;
         m_currentState.DoBeforeEnter();
@@ -102,7 +99,7 @@ public class BossFSMSystem : MonoBehaviour {
 
     public void DoState()
     {
-        m_currentState.CheckCondition(m_enemyData);
+        m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
     }
 }

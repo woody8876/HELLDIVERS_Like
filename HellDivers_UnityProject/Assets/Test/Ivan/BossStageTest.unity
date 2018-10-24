@@ -444,6 +444,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90770a5a6e995f54e9cfaf0627c31ed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_fSpreadIncrease: 0
+  m_bAutoFire: 1
+  m_bShooting: 1
 --- !u!23 &653523637
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1022,7 +1025,7 @@ GameObject:
   - component: {fileID: 1887651551}
   - component: {fileID: 1887651550}
   - component: {fileID: 1887651549}
-  - component: {fileID: 1887651548}
+  - component: {fileID: 1887651553}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -1030,27 +1033,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1887651548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1887651547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a38142f08ebe6a4ba7d68444e90af5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 653523640}
-  m_Center: {fileID: 821106195}
-  m_Radius: 25
-  m_Speed: 100
-  m_Obstacle:
-  - {fileID: 514189110}
-  - {fileID: 481478743}
-  - {fileID: 1293066240}
-  - {fileID: 1738780112}
-  - {fileID: 1490770381}
 --- !u!23 &1887651549
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1118,3 +1100,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887651553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1887651547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5e9592eaf4bb040bab4ba61baee75c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_data:
+    index: 0
+    m_iCurHP: 60
+    m_iMaxHP: 100
+    m_iArmor_FrontMin: 0
+    m_iArmor_FrontMax: 0
+    m_iArmor_BackMin: 0
+    m_iArmor_BackMax: 0
+    m_vCurFace: {x: 0, y: 0, z: 0}
+    m_vCurPos: {x: 0, y: 0, z: 0}
+    m_Go: {fileID: 0}
+    m_vTarget: {fileID: 653523640}
+  m_Center: {fileID: 821106195}

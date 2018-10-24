@@ -14,11 +14,11 @@ public class BossStateFuntion {
     }
 
     //public Transform m_Target;
-    public Transform m_Center;
-    public float m_Radius = 10;
-    public float m_Speed = 0.1f;
+    private Transform m_Center;
+    public float m_Radius = 25;
+    public float m_Speed = 100f;
 
-    private List<GameObject> m_Obstacle = new List<GameObject>();
+    public List<GameObject> m_Obstacle = new List<GameObject>();
     //private Vector3 m_vPos;
     //private Vector3 m_vVec;
     private bool m_bMove;
@@ -28,8 +28,9 @@ public class BossStateFuntion {
 
 
     #region Init Function
-    public BossStateFuntion()
+    public void Init(Transform t)
     {
+        m_Center = t;
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Missile"), 3, (int)EItem.MISSILE);
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Rock"), 5, (int)EItem.ROCK);
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Range"), 3, (int)EItem.CIRCLE);
@@ -75,29 +76,29 @@ public class BossStateFuntion {
     #endregion
 
     #region CheckCondition
-    public void TimeCounter()
+    /// <summary>
+    /// Time counter, if curTime greater than targetTime, return true.
+    /// </summary>
+    /// <param name="targetTime"></param>
+    /// <param name="curTime"></param>
+    /// <returns></returns>
+    public bool TimeCounter(float targetTime, float curTime)
     {
-        timer += Time.deltaTime;
-        if (timer < randomTime - 0.5f)
-        {
-            //Seek(m_Target.position);
-        }
-        if (timer >= randomTime)
-        {
-            m_bMove = true;
-            timer = 0;
-            randomTime = Random.Range(2.0f, 6.0f);
-        }
+        curTime += Time.deltaTime;
+        if (curTime >= targetTime) { return true; }
+        return false;
+    }
+    public bool TimesCounter(float targetTime, float curTime)
+    {
+        curTime += Time.deltaTime;
+        if (curTime >= targetTime) { return true; }
+        return false;
     }
 
     public bool OnEdge(Transform mover)
     {
-        if (!m_bCheck) return false;
         if (Mathf.Pow((mover.position.x - m_Center.position.x), 2) + Mathf.Pow((mover.position.z - m_Center.position.z), 2) >= m_Radius * m_Radius)
         {
-            m_bMove = false;
-            m_bCheck = false;
-            DrawTools.GO.SetActive(false);
             return true;
         }
         return false;
@@ -108,8 +109,9 @@ public class BossStateFuntion {
 
     public void DrawRectAlert(Vector3 target, Transform user)
     {
-        DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
-        DrawTools.GO.SetActive(true);
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
+        if (go == null) Debug.Log("NULL!!!!"); return;
+        go.SetActive(true);
         target.y = 0;
         DrawTools.DrawRectangleSolid(user, target, 10, 2);
     }
@@ -149,7 +151,6 @@ public class BossStateFuntion {
         user.rotation = Quaternion.RotateTowards(user.rotation, face, 5);
         return vec2Target;
     }
-
     public void Rush(Vector3 vec, Transform user)
     {
         vec.Normalize();
