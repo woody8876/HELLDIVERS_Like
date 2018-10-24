@@ -33,14 +33,29 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
+    /// <summary>
+    /// Represent of the throw out force scale.
+    /// [Range( 0 , MaxScaleForce )]
+    /// </summary>
+    public float ScaleThrowForce
+    {
+        get { return m_ScaleForce; }
+        set
+        {
+            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            else if (value < 0) m_ScaleForce = 0;
+            else m_ScaleForce = value;
+        }
+    }
+
     #endregion Properties
 
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
     [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
-    [SerializeField] private float m_MaxThrowForce = 2;
-    [SerializeField] private float m_CurrentThrowForce = 1;
+    [SerializeField] private float m_MaxScaleForce = 2;
+    private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
 
@@ -178,9 +193,18 @@ public class StratagemController : MonoBehaviour
         m_bCheckingCode = false;
     }
 
-    public void ScaleThrowForce(float scale)
+    /// <summary>
+    /// Throw out the current stratagem.
+    /// </summary>
+    /// <param name="scale">Scale of the force for throwing.</param>
+    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
+    public bool Throw(float scale)
     {
-        m_CurrentThrowForce = scale;
+        if (IsReady == false) return false;
+        ScaleThrowForce = scale;
+        m_CurrentStratagem.Throw(m_ThrowForce * ScaleThrowForce);
+        m_CurrentStratagem = null;
+        return true;
     }
 
     /// <summary>
@@ -189,10 +213,7 @@ public class StratagemController : MonoBehaviour
     /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
     public bool Throw()
     {
-        if (IsReady == false) return false;
-        m_CurrentStratagem.Throw(m_ThrowForce * m_CurrentThrowForce);
-        m_CurrentStratagem = null;
-        return true;
+        return Throw(1.0f);
     }
 
     #endregion Public Function
