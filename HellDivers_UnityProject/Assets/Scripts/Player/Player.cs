@@ -102,11 +102,19 @@ public class Player : Character
     public override void Death()
     {
         if (IsDead) return;
-
         m_bDead = true;
-        m_Controller.PerformPlayerDead();
 
-        base.Death();
+        StartCoroutine(OnDeath());
+    }
+
+    private IEnumerator OnDeath()
+    {
+        m_Controller.PerformPlayerDead();
+        yield return new WaitUntil(() => m_Controller.bIsDead);
+
+        GameMain.Instance.CameraFolloing.RemoveTarget(this.transform);
+
+        this.gameObject.SetActive(false);
     }
 
     public void TakeItem()
