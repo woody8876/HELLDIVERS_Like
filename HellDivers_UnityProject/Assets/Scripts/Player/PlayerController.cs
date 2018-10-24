@@ -97,8 +97,7 @@ public class PlayerController : MonoBehaviour
         {
             PerformPlayerHurt();
         }
-
-        Debug.Log(bIsDead);
+        
         SelectMotionState();
         m_PlayerFSM.DoState();
     }
