@@ -6,8 +6,8 @@ using UnityEngine.AI;
 [System.Serializable]
 public class AIData
 {
-    public float m_fRadius;
-    public float m_fProbeLength;
+    public float m_fRadius = 1;
+    public float m_fProbeLength = 10;
     public float m_fPatrolVisionLength;
     public float m_Speed;
     public float m_fMaxSpeed;
@@ -29,20 +29,21 @@ public class AIData
     [HideInInspector]
     public FSMSystem m_FSMSystem;
 
+    public MobAnimationsController m_AnimationController;
+
     #region Attack attribute
     [HideInInspector]
     public float m_fAttackTime;
     public float m_fHp;
     public float m_fAttack;
-    public float m_fSight;
-    public float m_fAttackRange;
+    public float m_fSight = 6;
+    public float m_fAttackRange = 3;
     #endregion
 
     public class AIFunction
     {
         public static GameObject CheckEnemyInSight(AIData data, ref bool bAttack)
         {
-            //GameObject go = AIMain.m_Instance.GetPlayer();
             GameObject go = data.m_PlayerGO;
             Vector3 v = go.transform.position - data.m_Go.transform.position;
             float fDist = v.magnitude;

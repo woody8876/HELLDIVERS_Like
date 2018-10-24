@@ -102,10 +102,23 @@ public class PlayerFSMSystem
         m_currentState.DoBeforeEnter(m_Data);
     }
 
+    public void PerformPlayerDead()
+    {
+        PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
+    }
+    public bool PerformPlayerHurt()
+    {
+        AnimatorStateInfo info = m_Data.m_Animator.GetCurrentAnimatorStateInfo(2);
+        if (info.IsName("GetGurt"))
+        {
+            return false;
+        }
+        m_Data.m_Animator.SetTrigger("GetHurt");
+        return true;
+    }
     public void DoState()
     {
         m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
-
     }
 }
