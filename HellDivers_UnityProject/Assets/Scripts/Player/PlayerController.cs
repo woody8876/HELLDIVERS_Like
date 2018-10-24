@@ -89,11 +89,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            m_PlayerFSM.PerformPlayerDead();
+            PerformPlayerDead();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            m_PlayerFSM.PerformPlayerHurt();
+            PerformPlayerHurt();
         }
         SelectMotionState();
         m_PlayerFSM.DoState();
@@ -235,6 +235,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void PerformPlayerDead()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
+    }
+    public bool PerformPlayerHurt()
+    {
+        AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(2);
+        if (info.IsName("GetGurt"))
+        {
+            return false;
+        }
+        m_FSMData.m_Animator.SetTrigger("GetHurt");
+        return true;
+    }
     #endregion Character Behaviour
 
 
