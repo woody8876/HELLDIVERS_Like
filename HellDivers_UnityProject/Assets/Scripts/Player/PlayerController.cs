@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
         m_FSMData.m_PlayerController = this;
-        m_FSMData.m_CharacterController = m_Controller;
         m_FSMData.m_AnimationController = m_PAC;
         m_FSMData.m_Animator = m_PAC.Animator;
         m_FSMData.m_WeaponController = GetComponent<WeaponController>();
@@ -57,18 +56,22 @@ public class PlayerController : MonoBehaviour
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
         PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
+        PlayerFSMPickUpState m_PickUpState = new PlayerFSMPickUpState();
 
 
-        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_PickUp, m_PickUpState);
 
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
-        m_SwitchWeaponState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_SwitchWeaponState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_PickUpState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 

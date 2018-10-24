@@ -135,6 +135,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetBool("Relive", Bool);
         }
+        else if (state == ePlayerFSMStateID.PickUpID)
+        {
+            m_Animator.SetBool("Pick", Bool);
+        }
     }
 
 }

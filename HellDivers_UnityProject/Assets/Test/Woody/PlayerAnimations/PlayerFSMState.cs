@@ -10,6 +10,7 @@ public enum ePlayerFSMTrans
     Go_Stratagem,
     Go_Throw,
     Go_SwitchWeapon,
+    Go_PickUp,
     Go_Dead,
 }
 public enum ePlayerFSMStateID
@@ -20,6 +21,7 @@ public enum ePlayerFSMStateID
     StratagemStateID,
     ThrowStateID,
     SwitchWeaponID,
+    PickUpID,
     DeadStateID,
 }
 
@@ -148,6 +150,10 @@ public class PlayerFSMGunState : PlayerFSMState
             {
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
             }
+        }
+        if (Input.GetButton("Interactive"))
+        {
+            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_PickUp);
         }
     }
 }
@@ -368,3 +374,39 @@ public class PlayerFSMDeadState : PlayerFSMState
     }
 }
 
+public class PlayerFSMPickUpState : PlayerFSMState
+{
+    public PlayerFSMPickUpState()
+    {
+        m_StateID = ePlayerFSMStateID.PickUpID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        data.m_NowAnimation = "Stratagem";
+        data.m_AnimationController.SetAnimator(m_StateID, true);
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+        data.m_AnimationController.SetAnimator(m_StateID, false);
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+       
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("PickUp"))
+        {
+            if (info.normalizedTime > 0.8f)
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+}
