@@ -68,6 +68,7 @@ public class Player : Character
 
     public void OnEnable()
     {
+        StartCoroutine(OnSpawn());
     }
 
     // Use this for initialization
@@ -136,7 +137,10 @@ public class Player : Character
         StartCoroutine(DoDeath());
     }
 
-    public void TakeItem()
+    /// <summary>
+    /// Interact with items which are exist in interactive item manager.
+    /// </summary>
+    public void InteractWithItem()
     {
         if (InteractiveItemManager.Instance == null) return;
         InteractiveItemManager.Instance.OnInteractive(this);
@@ -145,6 +149,22 @@ public class Player : Character
     #endregion Public Function
 
     #region Private Function
+
+    /*--------------------------------------------------------
+     * Check animation time was finished and set this alive. *
+     --------------------------------------------------------*/
+
+    private IEnumerator OnSpawn()
+    {
+        if (m_Controller != null)
+        {
+            m_Controller.PerformPlayerRelive();
+            yield return new WaitUntil(() => m_Controller.bIsAlive);
+        }
+
+        GameMain.Instance.CameraFolloing.AddTarget(this.transform);
+        m_bDead = false;
+    }
 
     /*------------------------------------------------------
      * Check animation time was finished and disable this. *
