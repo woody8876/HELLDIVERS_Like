@@ -2,26 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class AimLine : MonoBehaviour
 {
     #region private variable
     private GameObject m_GoLineRender;
     private LineRenderer m_LineRender;
-    private Transform m_Enitter;
+    
+    private PlayerParts m_PlayerParts = new PlayerParts();
     private int straightPosCount = 2;
     private int spinePosCount = 50;
     #endregion
-    
+    public GameObject m_LaunchPoint;
+    public Transform m_Enitter;
+
+
     private void Start()
     {
         m_GoLineRender =  Resources.Load("LineRender") as GameObject;
         m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
-        
         SetAimLineInfo(true);
     }
     private void Update()
     {
+        m_LaunchPoint = Resources.Load("LaunchPoint") as GameObject;
+
+        //m_Enitter = m_LaunchPoint.transform;
+
         if (Input.GetMouseButton(1))
         {
             OpenAimLine();
@@ -49,22 +57,22 @@ public class AimLine : MonoBehaviour
         m_LineRender.positionCount = straight ? straightPosCount : spinePosCount;
     }
 
-    private void OpenAimLine()
+    public void OpenAimLine()
     {
         
         m_LineRender.enabled = true;
-        
-        m_Enitter = transform.Find("Emitter");
 
-        if (m_Enitter == null)
-        {
-            Debug.Log("Can't find the Emitter");
-            m_LineRender.SetPosition(0, new Vector3(0,0,0));
-            m_LineRender.SetPosition(1, (GetLastPosition()));
-        }
+        //m_Enitter = m_PlayerParts.LaunchPoint;
+
+        //if (m_Enitter == null)
+        //{
+        //    Debug.Log("Can't find the Emitter");
+        //    m_LineRender.SetPosition(0, new Vector3(0,0,0));
+        //    m_LineRender.SetPosition(1, (GetLastPosition()));
+        //}
         if (m_LineRender.positionCount == straightPosCount)
         {
-            m_LineRender.SetPosition(0, m_Enitter.transform.localPosition);
+            m_LineRender.SetPosition(0, m_Enitter.localPosition);
             m_LineRender.SetPosition(1, new Vector3(0, 0, 50));
 
         }
@@ -99,12 +107,12 @@ public class AimLine : MonoBehaviour
             }
         }
     }
-    private void CloseAimLine()
+    public void CloseAimLine()
     {
         m_LineRender.enabled = false;
     }
 
-    private Vector3 GetLastPosition()
+    public Vector3 GetLastPosition()
     {
         if (m_LineRender.positionCount == straightPosCount)
         {

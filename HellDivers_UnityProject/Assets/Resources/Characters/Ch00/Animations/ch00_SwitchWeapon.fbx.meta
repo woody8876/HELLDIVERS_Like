@@ -135,8 +135,9 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Grab Rifle From Behind Shoulder
+    7400000: SwitchWeapon
     7400002: TakeWeapon
+    7400004: PrepareToInputCodes
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -166,7 +167,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Grab Rifle From Behind Shoulder
+      name: SwitchWeapon
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 106
@@ -194,10 +195,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TakeWeapon
+      name: PrepareToInputCodes
       takeName: mixamo.com
-      firstFrame: 25
-      lastFrame: 106
+      firstFrame: 0
+      lastFrame: 70
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

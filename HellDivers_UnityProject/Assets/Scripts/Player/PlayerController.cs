@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
             m_Cam = Camera.main.transform;
         }
 
-        #region PlayerFSM
+        #region PlayerFSMMap
 
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
@@ -76,14 +76,20 @@ public class PlayerController : MonoBehaviour
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
+        PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
         m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_VictoryState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
 
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_RelodaState);
+        m_PlayerFSM.AddState(m_SwitchWeaponState);
         m_PlayerFSM.AddState(m_StratagemState);
         m_PlayerFSM.AddState(m_ThrowState);
+        m_PlayerFSM.AddState(m_PickUpState);
+        m_PlayerFSM.AddState(m_VictoryState);
         m_PlayerFSM.AddState(m_DeadState);
 
 
@@ -100,7 +106,11 @@ public class PlayerController : MonoBehaviour
         {
             PerformPlayerHurt();
         }
-        
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PerformPlayerVictory();
+        }
+
         SelectMotionState();
         m_PlayerFSM.DoState();
     }
@@ -140,7 +150,9 @@ public class PlayerController : MonoBehaviour
     private void BasicMove()
     {
         Move();
-        bRun = (Input.GetButton("Run")) ? true : false;
+
+        if (Input.GetButton("Run")) bRun = true;
+        else bRun = false;
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
@@ -149,6 +161,7 @@ public class PlayerController : MonoBehaviour
         }
 
         #region Joystick
+      
         else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
@@ -162,8 +175,21 @@ public class PlayerController : MonoBehaviour
     private void ThrowMove()
     {
         Move();
-        FaceDirection();
-        bInBattle = true;
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+
+        #region Joystick
+
+        else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+        #endregion
+        else bInBattle = false;
         bRun = false;
 
         m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
@@ -241,11 +267,14 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void PerformPlayerVictory()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Victory);
+    }
     public void PerformPlayerDead()
     {
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
     }
-
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(2);
