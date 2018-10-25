@@ -33,18 +33,31 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
+    /// <summary>
+    /// Represent of the throw out force scale.
+    /// [Range( 0 , MaxScaleForce )]
+    /// </summary>
+    public float ScaleThrowForce
+    {
+        get { return m_ScaleForce; }
+        set
+        {
+            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            else if (value < 0) m_ScaleForce = 0;
+            else m_ScaleForce = value;
+        }
+    }
+
     #endregion Properties
 
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
+    [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
+    [SerializeField] private float m_MaxScaleForce = 2;
+    private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
-
-    // Current actvating stratagem.
     private Stratagem m_CurrentStratagem;
-
-    // Throw out force.
-    private Vector3 m_Force = new Vector3(0.0f, 200.0f, 500.0f);
 
     #endregion Private Variable
 
@@ -183,13 +196,35 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Throw out the current stratagem.
     /// </summary>
+    /// <param name="scale">Scale of the force for throwing.</param>
+    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
+    public bool Throw(float scale)
+    {
+        if (IsReady == false) return false;
+        ScaleThrowForce = scale;
+        m_CurrentStratagem.Throw(m_ThrowForce * ScaleThrowForce);
+        m_CurrentStratagem = null;
+        return true;
+    }
+
+    /// <summary>
+    /// Throw out the current stratagem.
+    /// </summary>
     /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
     public bool Throw()
     {
-        if (IsReady == false) return false;
-        m_CurrentStratagem.Throw(m_Force);
-        m_CurrentStratagem = null;
-        return true;
+        return Throw(1.0f);
+    }
+
+    /// <summary>
+    /// Reset all stratagem uses = 0.
+    /// </summary>
+    public void ResetAllUses()
+    {
+        foreach (Stratagem s in m_Stratagems)
+        {
+            s.ResetUses();
+        }
     }
 
     #endregion Public Function
@@ -210,7 +245,7 @@ public class StratagemController : MonoBehaviour
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle)
+            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle && s.IsCooling == false)
                 _Open.Add(s);
         }
 
@@ -257,6 +292,7 @@ public class StratagemController : MonoBehaviour
         else { return null; }
     }
 
+    // A container use to checking codes.
     private List<Stratagem> _Open = new List<Stratagem>();
 
     #endregion Check Input Code

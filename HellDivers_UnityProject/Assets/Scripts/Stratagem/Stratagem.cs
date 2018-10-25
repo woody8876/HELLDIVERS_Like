@@ -122,7 +122,9 @@ public class Stratagem : MonoBehaviour
 
             if (result == null) result = StratagemSystem.DefaultResult;
             m_Result = result;
-            ObjectPool.m_Instance.InitGameObjects(result, 3, newInfo.ID);
+
+            int count = (newInfo.Uses == -1) ? 10 : newInfo.Uses;
+            ObjectPool.m_Instance.InitGameObjects(result, count, newInfo.ID);
         }
 
         m_LaunchPos = launchPos;
@@ -234,6 +236,11 @@ public class Stratagem : MonoBehaviour
 
         // Translate to ThrowOut state.
         m_eState = eState.ThrowOut;
+    }
+
+    public void ResetUses()
+    {
+        m_UsesCount = 0;
     }
 
     #endregion Public Function

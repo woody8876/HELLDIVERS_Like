@@ -4,24 +4,36 @@ using UnityEngine;
 
 public class GameMain : MonoBehaviour
 {
-    /// <summary>
-    /// Testing player info.
-    /// </summary>
+    // Testing player info.
     public PlayerInfo m_PlayerData;
 
-#pragma warning disable
-    private AssetManager assetManager = new AssetManager();
-    private ResourceManager resourceManager = new ResourceManager();
-    private ObjectPool objectPool = new ObjectPool();
-    private GameData gameData = new GameData();
-#pragma warning disable
+    #region Properties
+
+    public static GameMain Instance { get; private set; }
+    public List<Player> Players { get { return m_Players; } }
+    public CameraFollowing CameraFolloing { get { return m_CameraFollowing; } }
+
+    #endregion Properties
+
+    private AssetManager m_AssetManager = new AssetManager();
+    private ResourceManager m_ResourceManager = new ResourceManager();
+    private ObjectPool m_ObjectPool = new ObjectPool();
+    private GameData m_GameData = new GameData();
+    private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
+    private List<Player> m_Players = new List<Player>();
+    private CameraFollowing m_CameraFollowing;
 
     private void Awake()
     {
-        assetManager.Init();
-        resourceManager.Init();
-        objectPool.Init();
-        gameData.Init();
+        if (Instance == null) Instance = this;
+        else Destroy(this);
+
+        m_AssetManager.Init();
+        m_ResourceManager.Init();
+        m_ObjectPool.Init();
+        m_GameData.Init();
+        m_ItemManager.Init();
+        m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
     }
 
     // Use this for initialization
@@ -37,26 +49,22 @@ public class GameMain : MonoBehaviour
 
     public GameObject CreatPlayer(PlayerInfo data)
     {
-        if (data == null) return null;
         Transform spawnPos = null;
-        if (MapInfo.Instance != null)
-        {
-            spawnPos = MapInfo.Instance.GetRandomSpawnPos();
-        }
+        if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
+        if (spawnPos == null) spawnPos = this.transform;
 
-        if (spawnPos == null)
-        {
-            spawnPos = this.transform;
-        }
+        GameObject playerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Characters/Ch00", "ch00") as GameObject;
+        playerGo = GameObject.Instantiate(playerGo);
+        playerGo.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
 
-        GameObject playerGo = Resources.Load("Characters/Ch00/ch00") as GameObject;
-        playerGo = GameObject.Instantiate(playerGo, spawnPos);
-        playerGo.transform.parent = null;
+        Player player = playerGo.AddComponent<Player>();
+        player.Initialize(data);
+        m_Players.Add(player);
 
-        Player p = playerGo.AddComponent<Player>();
-        p.Initialize(data);
+        // Camera start following player
+        if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);
+        else m_CameraFollowing.AddTarget(player.transform);
 
-        Camera.main.GetComponent<CameraFollowing>().FocusOnTarget(p.transform);
         return playerGo;
     }
 }

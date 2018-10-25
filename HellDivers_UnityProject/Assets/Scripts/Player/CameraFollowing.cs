@@ -62,6 +62,7 @@ public class CameraFollowing : MonoBehaviour
         m_Targets.AddFirst(t);
         UpdateDestination();
         this.transform.position = m_Destination;
+        CheckToEnable();
     }
 
     /// <summary>
@@ -70,6 +71,7 @@ public class CameraFollowing : MonoBehaviour
     public void AddTarget(Transform t)
     {
         m_Targets.AddLast(t);
+        CheckToEnable();
     }
 
     /// <summary>
@@ -77,7 +79,11 @@ public class CameraFollowing : MonoBehaviour
     /// </summary>
     public bool RemoveTarget(Transform t)
     {
-        if (m_Targets.Remove(t)) return true;
+        if (m_Targets.Remove(t))
+        {
+            CheckToDisable();
+            return true;
+        }
         else return false;
     }
 
@@ -157,6 +163,18 @@ public class CameraFollowing : MonoBehaviour
     private void MoveToDestination()
     {
         this.transform.position = Vector3.Lerp(this.transform.position, m_Destination, m_CurrentLerp);
+    }
+
+    private void CheckToEnable()
+    {
+        if (this.enabled) return;
+        if (m_Targets.Count > 0) this.enabled = true;
+    }
+
+    private void CheckToDisable()
+    {
+        if (this.enabled == false) return;
+        if (m_Targets == null || m_Targets.Count == 0) this.enabled = false;
     }
 
     #endregion Private Function

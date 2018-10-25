@@ -7,7 +7,9 @@ public class MapInfo : MonoBehaviour
     public static MapInfo Instance;
 
     public List<Transform> SpawnPos { get { return m_SpawnPos; } }
+    public List<Transform> TowerPos { get { return m_TowerPos; } }
     [SerializeField] private List<Transform> m_SpawnPos;
+    [SerializeField] private List<Transform> m_TowerPos;
 
     public Transform GetRandomSpawnPos()
     {
@@ -25,13 +27,24 @@ public class MapInfo : MonoBehaviour
         else Destroy(this);
     }
 
-    // Use this for initialization
-    private void Start()
+    [ContextMenu("Auto Scan")]
+    private void AutoScan()
     {
+        AutoScanPositions("SpawnPosGroup", out m_SpawnPos);
+        AutoScanPositions("TowerPosGroup", out m_TowerPos);
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void AutoScanPositions(string rootName, out List<Transform> container)
     {
+        container = new List<Transform>();
+        GameObject spawnPosGrounp = GameObject.Find(rootName);
+        Transform[] positions = spawnPosGrounp.GetComponentsInChildren<Transform>();
+        if (positions != null)
+        {
+            for (int i = 1; i < positions.Length; i++)
+            {
+                container.Add(positions[i]);
+            }
+        }
     }
 }
