@@ -10,9 +10,9 @@ public class PlayerFSMSystem
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private PlayerFSMState m_currentState;
     public PlayerFSMState CurrentState { get { return m_currentState; } }
-    private PlayerFSMData m_Data;
+    private PlayerController m_Data;
     // Use this for initialization
-    public PlayerFSMSystem(PlayerFSMData data)
+    public PlayerFSMSystem(PlayerController data)
     {
         m_Data = data;
         m_states = new List<PlayerFSMState>();

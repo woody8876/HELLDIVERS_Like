@@ -70,22 +70,22 @@ public class PlayerFSMState
         return m_Map[trans];
     }
 
-    public virtual void DoBeforeEnter(PlayerFSMData data)
+    public virtual void DoBeforeEnter(PlayerController data)
     {
 
     }
 
-    public virtual void DoBeforeLeave(PlayerFSMData data)
+    public virtual void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public virtual void Do(PlayerFSMData data)
+    public virtual void Do(PlayerController data)
     {
 
     }
 
-    public virtual void CheckCondition(PlayerFSMData data)
+    public virtual void CheckCondition(PlayerController data)
     {
 
     }
@@ -100,17 +100,17 @@ public class PlayerFSMGunState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
 
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
@@ -129,35 +129,35 @@ public class PlayerFSMGunState : PlayerFSMState
             }
             else shoot = false;
         }
-        data.m_AnimationController.SetAnimator(m_StateID, shoot);
+        data.m_PAC.SetAnimator(m_StateID, shoot);
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
         if (Input.GetButtonDown("Reload"))
         {
             if (data.m_WeaponController.ReloadState())
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Reload);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Reload);
             }
         }
         if (Input.GetButton("Stratagem"))
         {
             if (data.m_StratagemController.Stratagems.Count > 0)
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
             }
         }
         if (Input.GetButtonDown("WeaponSwitch"))
         {
             if (data.m_WeaponController.SwitchWeaponState())
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
             }
         }
         if (Input.GetButtonDown("Interactive"))
         {
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_PickUp);
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_PickUp);
         }
     }
 }
@@ -170,29 +170,29 @@ public class PlayerFSMReloadState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
-    {
-
-    }
-
-    public override void Do(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+
+    }
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("Reload"))
         {
-            if (data.m_AnimationController.FinishAnimator(data))
+            if (data.m_PAC.FinishAnimator(data))
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -204,18 +204,18 @@ public class PlayerFSMStratagemState : PlayerFSMState
     {
         m_StateID = ePlayerFSMStateID.StratagemStateID;
     }
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
         data.m_NowAnimation = "Stratagem";
-        data.m_AnimationController.SetAnimator(m_StateID, true);
+        data.m_PAC.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID, false);
+        data.m_PAC.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
         if (data.m_StratagemController.IsCheckingCode == false)
         {
@@ -223,19 +223,19 @@ public class PlayerFSMStratagemState : PlayerFSMState
         }
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
         if (data.m_StratagemController.IsReady)
         {
-            data.m_AnimationController.SetAnimator(m_StateID);
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Throw);
+            data.m_PAC.SetAnimator(m_StateID);
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
 
         else if (Input.GetButtonUp("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
-            data.m_AnimationController.SetAnimator(m_StateID, data.m_StratagemController.IsReady);
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            data.m_PAC.SetAnimator(m_StateID, data.m_StratagemController.IsReady);
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
 }
@@ -249,26 +249,26 @@ public class PlayerFSMThrowState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
         data.m_NowAnimation = "Throw";
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
         if (Input.GetButtonUp("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
-            data.m_AnimationController.SetAnimator(m_StateID);
+            data.m_PAC.SetAnimator(m_StateID);
         }
 
         //data.m_AnimationController.Animator = data.m_AnimationController.Animator;
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
             if (info.normalizedTime > 0.7f)
@@ -279,15 +279,14 @@ public class PlayerFSMThrowState : PlayerFSMState
         }
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
-        data.m_AnimationController.Animator = data.m_AnimationController.Animator;
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
-            if (data.m_AnimationController.FinishAnimator(data))
+            if (data.m_PAC.FinishAnimator(data))
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -301,29 +300,29 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
-    {
-
-    }
-
-    public override void Do(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+
+    }
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("SwitchWeapon"))
         {
-            if (data.m_AnimationController.FinishAnimator(data))
+            if (data.m_PAC.FinishAnimator(data))
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -336,30 +335,30 @@ public class PlayerFSMPickUpState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.PickUpID;
     }
     
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
         data.m_NowAnimation = "Stratagem";
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
         
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
 
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Pick"))
         {
             if (info.normalizedTime > 0.8f)
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -373,29 +372,29 @@ public class PlayerFSMVictoryState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
-    {
-
-    }
-
-    public override void Do(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+
+    }
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("Victory"))
         {
             if (info.normalizedTime > 0.8f)
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -409,33 +408,33 @@ public class PlayerFSMDeadState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
         data.m_NowAnimation = "Dead";
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
         AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Death"))
         {
-            if (info.normalizedTime < 0.95f) data.m_PlayerController.bIsDead = false;
+            if (info.normalizedTime < 0.95f) data.bIsDead = false;
             else
             {
-                data.m_PlayerController.bIsDead = true;
-                data.m_PlayerController.bIsAlive = false;
+                data.bIsDead = true;
+                data.bIsAlive = false;
             }
             return;
         }
     }
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
 
     }
@@ -449,36 +448,36 @@ public class PlayerFSMReliveState : PlayerFSMState
     }
 
 
-    public override void DoBeforeEnter(PlayerFSMData data)
+    public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(PlayerFSMData data)
+    public override void DoBeforeLeave(PlayerController data)
     {
 
     }
 
-    public override void Do(PlayerFSMData data)
+    public override void Do(PlayerController data)
     {
         AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Relive"))
         {
-            if (info.normalizedTime < 0.9f) data.m_PlayerController.bIsAlive = false;
-            else data.m_PlayerController.bIsAlive = true;
+            if (info.normalizedTime < 0.9f) data.bIsAlive = false;
+            else data.bIsAlive = true;
             return;
         }
     }
 
 
-    public override void CheckCondition(PlayerFSMData data)
+    public override void CheckCondition(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Relive"))
         {
             if (info.normalizedTime > 0.95f)
             {
-                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }

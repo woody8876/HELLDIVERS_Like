@@ -54,7 +54,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     }
 
 
-    public bool FinishAnimator(PlayerFSMData data)
+    public bool FinishAnimator(PlayerController data)
     {
         data.m_FinishAni = false;
         AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);

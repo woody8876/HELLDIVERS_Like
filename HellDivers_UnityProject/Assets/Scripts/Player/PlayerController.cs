@@ -7,20 +7,25 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     #region Private Variable
-
     private CharacterController m_Controller;
     private Transform m_Cam;
     private Vector3 m_CamForward;
     private Vector3 m_Move;
     private Vector3 m_Fall;
     private Vector3 m_Direction;
-    private PlayerAnimationsContorller m_PAC;
     private bool bRun = false;
     private bool bInBattle = false;
-    private PlayerFSMData m_FSMData;
+    //private PlayerFSMData m_FSMData;
 
     #endregion Private Variable
-
+    
+    public Player m_Player;
+    public bool m_FinishAni = false;
+    public string m_NowAnimation = "Origin";
+    public Animator m_Animator;
+    public PlayerAnimationsContorller m_PAC;
+    public WeaponController m_WeaponController;
+    public StratagemController m_StratagemController;
     public PlayerFSMSystem m_PlayerFSM;
     public float m_fAnimatorTime;
     public bool bIsDead = false;
@@ -33,6 +38,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        m_Player = this.GetComponent<Player>();
+        m_WeaponController = this.GetComponent<WeaponController>();
+        m_StratagemController = this.GetComponent<StratagemController>();
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
 
@@ -43,14 +51,14 @@ public class PlayerController : MonoBehaviour
 
         #region PlayerFSMMap
 
-        m_FSMData = new PlayerFSMData();
-        m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
-        m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
-        m_FSMData.m_PlayerController = this;
-        m_FSMData.m_AnimationController = m_PAC;
-        m_FSMData.m_Animator = m_PAC.Animator;
-        m_FSMData.m_WeaponController = GetComponent<WeaponController>();
-        m_FSMData.m_StratagemController = GetComponent<StratagemController>();
+        //m_FSMData = new PlayerFSMData();
+        m_PlayerFSM = new PlayerFSMSystem(this);
+        //m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+        //m_FSMData.m_PlayerController = this;
+        //m_FSMData.m_AnimationController = m_PAC;
+        //m_FSMData.m_Animator = m_PAC.Animator;
+        //m_FSMData.m_WeaponController = GetComponent<WeaponController>();
+        //m_FSMData.m_StratagemController = GetComponent<StratagemController>();
 
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
@@ -129,27 +137,27 @@ public class PlayerController : MonoBehaviour
 
     private void SelectMotionState()
     {
-        if (m_FSMData.m_NowAnimation.Equals("Origin"))
+        if (m_NowAnimation.Equals("Origin"))
         {
             BasicMove();
             return;
         }
-        else if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
+        else if (m_NowAnimation.Equals("Stratagem"))
         {
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
         }
-        else if (m_FSMData.m_NowAnimation.Equals("Throw"))
+        else if (m_NowAnimation.Equals("Throw"))
         {
             ThrowMove();
             return;
         }
-        else if (m_FSMData.m_NowAnimation.Equals("Throwing"))
+        else if (m_NowAnimation.Equals("Throwing"))
         {
             ThrowingMove();
             return;
         }
-        else if (m_FSMData.m_NowAnimation.Equals("Dead"))
+        else if (m_NowAnimation.Equals("Dead"))
         {
             return;
         }
@@ -285,12 +293,12 @@ public class PlayerController : MonoBehaviour
     }
     public bool PerformPlayerHurt()
     {
-        AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(2);
+        AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
         if (info.IsName("GetGurt"))
         {
             return false;
         }
-        m_FSMData.m_Animator.SetTrigger("GetHurt");
+        m_PAC.Animator.SetTrigger("GetHurt");
         return true;
     }
     public void PerformPlayerRelive()
