@@ -127,6 +127,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Victory");
         }
+        else if (state == ePlayerFSMStateID.ReliveStateID)
+        {
+            m_Animator.SetTrigger("Relive");
+        }
     }
 
     private void UpdateAnimator(ePlayerFSMStateID state, bool Bool)
