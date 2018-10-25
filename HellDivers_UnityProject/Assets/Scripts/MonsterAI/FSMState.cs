@@ -14,8 +14,6 @@ public enum eFSMTransition
     GO_Flee,
     Go_Dead,
 }
-
-
 public enum eFSMStateID
 {
     NullStateID = 0,
@@ -89,7 +87,6 @@ public class FSMState
 
     }
 }
-
 
 public class FSMIdleState : FSMState
 {
@@ -202,12 +199,12 @@ public class FSMChaseState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-
+        data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-
+        data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
     public override void Do(AIData data)
@@ -219,8 +216,8 @@ public class FSMChaseState : FSMState
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        //bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
-        
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+
         if (bAttack)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
@@ -230,17 +227,19 @@ public class FSMChaseState : FSMState
 
 public class FSMAttackState : FSMState
 {
+    private float fAttackTime = 0.0f;
+    
     public FSMAttackState()
     {
         m_StateID = eFSMStateID.AttackStateID;
     }
 
-
     public override void DoBeforeEnter(AIData data)
     {
         data.navMeshAgent.enabled = false;
-        data.m_AnimationController.SetAnimator(m_StateID, true);
-        data.m_Go.transform.forward = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).normalized;
+        data.m_AnimationController.SetAnimator(m_StateID);
+        fAttackTime = Random.Range(5.0f, 8.0f);
+        m_fCurrentTime = 0.0f;
     }
 
     public override void DoBeforeLeave(AIData data)
@@ -251,31 +250,41 @@ public class FSMAttackState : FSMState
 
     public override void Do(AIData data)
     {
+        m_fCurrentTime += Time.deltaTime;
+
+        if (m_fCurrentTime > fAttackTime)
+        {
+            data.m_AnimationController.SetAnimator(m_StateID, false);
+            data.m_AnimationController.SetAnimator(m_StateID);
+            m_fCurrentTime = 0.0f;
+        }
+
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
             if (info.normalizedTime > 0.9f)
-                data.m_Go.transform.forward = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).normalized;
+            {
+                data.m_AnimationController.SetAnimator(m_StateID, true);
+            }
         }
     }
 
     public override void CheckCondition(AIData data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Attack"))
-        {
-            if(info.normalizedTime < 0.9f) return;
-        }
         bool bAttack = false;
-        //bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
-
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
         if (bAttack == false)
         {
-            data.m_AnimationController.SetAnimator(m_StateID, false);
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-            return;
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("Attack"))
+            {
+                if (info.normalizedTime > 0.9f)
+                {
+                    data.m_AnimationController.SetAnimator(m_StateID, false);
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                }
+            }
         }
-
     }
 }
 

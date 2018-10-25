@@ -11,6 +11,7 @@ public enum ePlayerFSMTrans
     Go_Throw,
     Go_SwitchWeapon,
     Go_PickUp,
+    Go_Victory,
     Go_Dead,
 }
 public enum ePlayerFSMStateID
@@ -22,6 +23,7 @@ public enum ePlayerFSMStateID
     ThrowStateID,
     SwitchWeaponID,
     PickUpID,
+    VictoryID,
     DeadStateID,
 }
 
@@ -205,13 +207,12 @@ public class PlayerFSMStratagemState : PlayerFSMState
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Stratagem";
-        data.m_Animator.SetBool("InputCodes", true);
-        data.m_AnimationController.SetAnimator(m_StateID, false);
+        data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        
+        data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
     public override void Do(PlayerFSMData data)
@@ -226,14 +227,13 @@ public class PlayerFSMStratagemState : PlayerFSMState
     {
         if (data.m_StratagemController.IsReady)
         {
-            data.m_AnimationController.SetAnimator(m_StateID, true);
+            data.m_AnimationController.SetAnimator(m_StateID);
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
 
         else if (Input.GetButtonUp("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
-            data.m_Animator.SetBool("InputCodes", false);
             data.m_AnimationController.SetAnimator(m_StateID, data.m_StratagemController.IsReady);
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
@@ -252,13 +252,11 @@ public class PlayerFSMThrowState : PlayerFSMState
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Throw";
-        data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        data.m_Animator.SetBool("InputCodes", false);
-        data.m_AnimationController.SetAnimator(m_StateID, false);
+
     }
 
     public override void Do(PlayerFSMData data)
@@ -266,7 +264,7 @@ public class PlayerFSMThrowState : PlayerFSMState
         if (Input.GetButtonUp("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
-            data.m_AnimationController.SetAnimator(m_StateID, true);
+            data.m_AnimationController.SetAnimator(m_StateID);
         }
 
         //data.m_AnimationController.Animator = data.m_AnimationController.Animator;
@@ -297,7 +295,6 @@ public class PlayerFSMThrowState : PlayerFSMState
 
 public class PlayerFSMSwitchWeaponState : PlayerFSMState
 {
-    int count = 0;
     public PlayerFSMSwitchWeaponState()
     {
         m_StateID = ePlayerFSMStateID.SwitchWeaponID;
@@ -306,7 +303,7 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-        count = 0;
+        data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
@@ -316,14 +313,13 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (count < 1) data.m_AnimationController.SetAnimator(m_StateID);
-        count++;
+
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
-        if (info.IsName("TakeWeapon"))
+        if (info.IsName("SwitchWeapon"))
         {
             if (data.m_AnimationController.FinishAnimator(data))
             {
@@ -367,7 +363,7 @@ public class PlayerFSMDeadState : PlayerFSMState
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            data.m_AnimationController.SetAnimator(m_StateID,true);
+            data.m_AnimationController.SetAnimator(m_StateID, true);
             data.m_PlayerController.bIsDead = false;
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
@@ -395,13 +391,49 @@ public class PlayerFSMPickUpState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-       
+
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("PickUp"))
+        {
+            if (info.normalizedTime > 0.8f)
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+}
+
+public class PlayerFSMVictoryState : PlayerFSMState
+{
+    public PlayerFSMVictoryState()
+    {
+        m_StateID = ePlayerFSMStateID.VictoryID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        data.m_AnimationController.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+        
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("Victory"))
         {
             if (info.normalizedTime > 0.8f)
             {

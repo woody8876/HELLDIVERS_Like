@@ -12,4 +12,6 @@ public class PlayerFSMData
     public WeaponController m_WeaponController;
     public StratagemController m_StratagemController;
     public Animator m_Animator;
+
+    public Player m_Player;
 }
