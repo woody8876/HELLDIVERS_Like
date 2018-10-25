@@ -131,6 +131,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Relive");
         }
+        else if (state == ePlayerFSMStateID.PickUpID)
+        {
+            m_Animator.SetTrigger("Pick");
+        }
     }
 
     private void UpdateAnimator(ePlayerFSMStateID state, bool Bool)
@@ -146,14 +150,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.ThrowStateID)
         {
             m_Animator.SetBool("ThrowOut", Bool);
-        }
-        else if (state == ePlayerFSMStateID.DeadStateID)
-        {
-            m_Animator.SetBool("Relive", Bool);
-        }
-        else if (state == ePlayerFSMStateID.PickUpID)
-        {
-            m_Animator.SetBool("Pick", Bool);
         }
     }
 

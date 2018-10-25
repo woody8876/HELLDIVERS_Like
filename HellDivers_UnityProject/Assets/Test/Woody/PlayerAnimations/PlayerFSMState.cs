@@ -148,14 +148,14 @@ public class PlayerFSMGunState : PlayerFSMState
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
             }
         }
-        if (Input.GetButton("WeaponSwitch"))
+        if (Input.GetButtonDown("WeaponSwitch"))
         {
             if (data.m_WeaponController.SwitchWeaponState())
             {
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
             }
         }
-        if (Input.GetButton("Interactive"))
+        if (Input.GetButtonDown("Interactive"))
         {
             data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_PickUp);
         }
@@ -164,7 +164,6 @@ public class PlayerFSMGunState : PlayerFSMState
 
 public class PlayerFSMReloadState : PlayerFSMState
 {
-    int count = 0;
     public PlayerFSMReloadState()
     {
         m_StateID = ePlayerFSMStateID.ReloadStateID;
@@ -173,7 +172,7 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-        count = 0;
+        data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
@@ -183,8 +182,7 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (count < 1) data.m_AnimationController.SetAnimator(m_StateID);
-        count++;
+
     }
 
     public override void CheckCondition(PlayerFSMData data)
@@ -331,64 +329,22 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
     }
 }
 
-public class PlayerFSMDeadState : PlayerFSMState
-{
-    public PlayerFSMDeadState()
-    {
-        m_StateID = ePlayerFSMStateID.DeadStateID;
-    }
-
-
-    public override void DoBeforeEnter(PlayerFSMData data)
-    {
-        data.m_AnimationController.SetAnimator(m_StateID, false);
-        data.m_NowAnimation = "Dead";
-        data.m_AnimationController.SetAnimator(m_StateID);
-    }
-
-    public override void DoBeforeLeave(PlayerFSMData data)
-    {
-    }
-
-    public override void Do(PlayerFSMData data)
-    {
-        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Death"))
-        {
-            if (info.normalizedTime < 0.95f) data.m_PlayerController.bIsDead = false;
-            else
-            {
-                data.m_PlayerController.bIsDead = true;
-                data.m_PlayerController.bIsAlive = false;
-            }
-
-            return;
-        }
-    }
-
-    public override void CheckCondition(PlayerFSMData data)
-    {
-
-    }
-}
-
 public class PlayerFSMPickUpState : PlayerFSMState
 {
     public PlayerFSMPickUpState()
     {
         m_StateID = ePlayerFSMStateID.PickUpID;
     }
-
-
+    
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Stratagem";
-        data.m_AnimationController.SetAnimator(m_StateID, true);
+        data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID, false);
+        
     }
 
     public override void Do(PlayerFSMData data)
@@ -399,7 +355,7 @@ public class PlayerFSMPickUpState : PlayerFSMState
     public override void CheckCondition(PlayerFSMData data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("PickUp"))
+        if (info.IsName("Pick"))
         {
             if (info.normalizedTime > 0.8f)
             {
@@ -445,6 +401,46 @@ public class PlayerFSMVictoryState : PlayerFSMState
     }
 }
 
+public class PlayerFSMDeadState : PlayerFSMState
+{
+    public PlayerFSMDeadState()
+    {
+        m_StateID = ePlayerFSMStateID.DeadStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        data.m_NowAnimation = "Dead";
+        data.m_AnimationController.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Death"))
+        {
+            if (info.normalizedTime < 0.95f) data.m_PlayerController.bIsDead = false;
+            else
+            {
+                data.m_PlayerController.bIsDead = true;
+                data.m_PlayerController.bIsAlive = false;
+            }
+            return;
+        }
+    }
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+
+    }
+}
+  
 public class PlayerFSMReliveState : PlayerFSMState
 {
     public PlayerFSMReliveState()
