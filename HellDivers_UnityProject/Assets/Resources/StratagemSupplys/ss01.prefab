@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 33298037613620802}
   - component: {fileID: 23050275213568642}
   - component: {fileID: 95254284305184080}
-  - component: {fileID: 114472640819264996}
   - component: {fileID: 135435685578134176}
+  - component: {fileID: 114590935796478192}
   m_Layer: 0
   m_Name: ss01
   m_TagString: Untagged
@@ -102,7 +102,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114472640819264996
+--- !u!114 &114590935796478192
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -110,10 +110,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1761061813801878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25405c7e823be804282fb91cb543457c, type: 3}
+  m_Script: {fileID: 11500000, guid: 45c4000d4c7521e4c8af9808e50ec5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HealPosint: 100
+  m_Id: ss01
+  m_Title: Resupply
+  m_Heal: 50
 --- !u!135 &135435685578134176
 SphereCollider:
   m_ObjectHideFlags: 1

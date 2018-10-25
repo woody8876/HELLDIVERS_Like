@@ -2,31 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractiveItem : MonoBehaviour, IInteractable
+public class InteractiveItem : MonoBehaviour
 {
+    public string ID { get { return m_Id; } }
+    public string Title { get { return m_Title; } }
     public Vector3 Position { get { return this.transform.position; } }
 
-    private string m_Id;
-    private string m_Name;
+    [SerializeField] private string m_Id;
+    [SerializeField] private string m_Title;
     private float m_LifeTime = 120.0f;
     private float m_EndTime;
 
     protected virtual void OnEnable()
     {
+        InteractiveItemManager.Instance.AddItem(this);
         m_EndTime = Time.time + m_LifeTime;
     }
 
     // Use this for initialization
     protected virtual void Start()
     {
-        Player[] players = GameMain.Instance.Players.ToArray();
-        if (players != null)
-        {
-            foreach (Player p in players)
-            {
-                p.Interactive.Subscribe(this);
-            }
-        }
     }
 
     // Update is called once per frame
@@ -41,5 +36,10 @@ public class InteractiveItem : MonoBehaviour, IInteractable
     public virtual void OnInteract(Player player)
     {
         Destroy(this.gameObject);
+    }
+
+    protected virtual void OnDisable()
+    {
+        InteractiveItemManager.Instance.RemoveItem(this);
     }
 }

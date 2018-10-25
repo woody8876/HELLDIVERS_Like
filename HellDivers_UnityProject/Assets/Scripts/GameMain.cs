@@ -20,6 +20,7 @@ public class GameMain : MonoBehaviour
     private ObjectPool m_ObjectPool = new ObjectPool();
     private GameData m_GameData = new GameData();
     private List<Player> m_Players = new List<Player>();
+    private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private CameraFollowing m_CameraFollowing;
 
     private void Awake()
@@ -31,6 +32,7 @@ public class GameMain : MonoBehaviour
         m_ResourceManager.Init();
         m_ObjectPool.Init();
         m_GameData.Init();
+        m_ItemManager.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
     }
 
