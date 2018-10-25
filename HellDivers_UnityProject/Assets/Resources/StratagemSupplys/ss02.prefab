@@ -22,8 +22,7 @@ GameObject:
   - component: {fileID: 33298037613620802}
   - component: {fileID: 23050275213568642}
   - component: {fileID: 95254284305184080}
-  - component: {fileID: 135435685578134176}
-  - component: {fileID: 114590935796478192}
+  - component: {fileID: 114039728733412132}
   m_Layer: 0
   m_Name: ss02
   m_TagString: Untagged
@@ -58,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 480434288a66e7e46988fd83ca184622, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +101,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114590935796478192
+--- !u!114 &114039728733412132
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -110,21 +109,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1761061813801878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c4000d4c7521e4c8af9808e50ec5a0, type: 3}
+  m_Script: {fileID: 11500000, guid: abac78b1a5d1fb145868e7fbec2e7d3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Id: ss01
-  m_Title: Resupply
-  m_Heal: 50
---- !u!135 &135435685578134176
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1761061813801878}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Title: Ammo
+  m_Radius: 2
+  m_WeaponID: 1101
+  m_Ammo: 1
