@@ -104,8 +104,6 @@ public class PlayerFSMSystem
 
     public void DoState()
     {
-
-        Debug.Log(m_currentStateID);
         m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
     }
