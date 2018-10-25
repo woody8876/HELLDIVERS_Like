@@ -115,6 +115,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("ThrowStandby");
         }
+        else if (state == ePlayerFSMStateID.ThrowStateID)
+        {
+            m_Animator.SetTrigger("ThrowOut");
+        }
         else if (state == ePlayerFSMStateID.DeadStateID)
         {
             m_Animator.SetTrigger("Death");
@@ -129,7 +133,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
         else if (state == ePlayerFSMStateID.StratagemStateID)
         {
-            m_Animator.SetBool("ThrowStandby", Bool);
+            m_Animator.SetBool("InputCodes", Bool);
         }
         else if (state == ePlayerFSMStateID.ThrowStateID)
         {
