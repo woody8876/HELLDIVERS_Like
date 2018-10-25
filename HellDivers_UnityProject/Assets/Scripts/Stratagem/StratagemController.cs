@@ -234,7 +234,7 @@ public class StratagemController : MonoBehaviour
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle)
+            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle && s.IsCooling == false)
                 _Open.Add(s);
         }
 
