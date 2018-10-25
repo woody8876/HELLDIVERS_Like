@@ -238,6 +238,11 @@ public class Stratagem : MonoBehaviour
         m_eState = eState.ThrowOut;
     }
 
+    public void ResetUses()
+    {
+        m_UsesCount = 0;
+    }
+
     #endregion Public Function
 
     #region Finite State Machine

@@ -5,13 +5,23 @@ using UnityEngine;
 
 [RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(StratagemController))]
-[RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(CharacterController))]
 public class Player : Character
 {
+    #region Properties
+
+    /// <summary>
+    /// Player weapon behavior controller.
+    /// </summary>
     public WeaponController WaeponController { get { return m_WeapoonController; } }
+
+    /// <summary>
+    /// Player stratagem behavior controller.
+    /// </summary>
     public StratagemController StratagemController { get { return m_StratagemController; } }
+
+    #endregion Properties
 
     #region Private Variable
 
@@ -25,6 +35,10 @@ public class Player : Character
 
     #region Initializer
 
+    /// <summary>
+    /// Initialize by player info to setup player's weapons and stratagems.
+    /// </summary>
+    /// <param name="data"></param>
     public void Initialize(PlayerInfo data)
     {
         data.CopyTo(m_Data);
@@ -52,6 +66,10 @@ public class Player : Character
         m_StratagemController = GetComponent<StratagemController>();
     }
 
+    public void OnEnable()
+    {
+    }
+
     // Use this for initialization
     protected override void Start()
     {
@@ -67,13 +85,14 @@ public class Player : Character
 
     #region Public Function
 
+    /// <summary>
+    /// Set player spawn on the position.
+    /// </summary>
+    /// <param name="spawnPos">Spawn position</param>
     public void Spawn(Transform spawnPos)
     {
         this.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
-
-        // Setup stratagems
-        m_StratagemController.Clear();
-        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
+        m_StratagemController.ResetAllUses();
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
@@ -93,6 +112,12 @@ public class Player : Character
         return true;
     }
 
+    /// <summary>
+    /// Decrease current health point by damage point.
+    /// </summary>
+    /// <param name="dmg">Damage point</param>
+    /// <param name="hitPoint">Hit point position</param>
+    /// <returns>Was the current health point decreased or not ?</returns>
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         bool bHurt = m_Controller.PerformPlayerHurt();
@@ -101,7 +126,9 @@ public class Player : Character
         return base.TakeDamage(dmg, hitPoint);
     }
 
-    [ContextMenu("DoDead")]
+    /// <summary>
+    /// Do dead. perform daead animation then disable this player.
+    /// </summary>
     public override void Death()
     {
         if (IsDead) return;
@@ -109,20 +136,32 @@ public class Player : Character
         StartCoroutine(DoDeath());
     }
 
+    public void TakeItem()
+    {
+        if (InteractiveItemManager.Instance == null) return;
+        InteractiveItemManager.Instance.OnInteractive(this);
+    }
+
+    #endregion Public Function
+
+    #region Private Function
+
+    /*------------------------------------------------------
+     * Check animation time was finished and disable this. *
+     ------------------------------------------------------*/
+
     private IEnumerator DoDeath()
     {
-        m_Controller.PerformPlayerDead();
-        yield return new WaitUntil(() => m_Controller.bIsDead);
+        if (m_Controller != null)
+        {
+            m_Controller.PerformPlayerDead();
+            yield return new WaitUntil(() => m_Controller.bIsDead);
+        }
 
         GameMain.Instance.CameraFolloing.RemoveTarget(this.transform);
 
         this.gameObject.SetActive(false);
     }
 
-    public void TakeItem()
-    {
-        InteractiveItemManager.Instance.OnInteractive(this);
-    }
-
-    #endregion Public Function
+    #endregion Private Function
 }

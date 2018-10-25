@@ -216,6 +216,17 @@ public class StratagemController : MonoBehaviour
         return Throw(1.0f);
     }
 
+    /// <summary>
+    /// Reset all stratagem uses = 0.
+    /// </summary>
+    public void ResetAllUses()
+    {
+        foreach (Stratagem s in m_Stratagems)
+        {
+            s.ResetUses();
+        }
+    }
+
     #endregion Public Function
 
     #region Check Input Code
