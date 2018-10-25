@@ -210,7 +210,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        
+        data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
     public override void Do(PlayerFSMData data)
@@ -250,12 +250,11 @@ public class PlayerFSMThrowState : PlayerFSMState
     public override void DoBeforeEnter(PlayerFSMData data)
     {
         data.m_NowAnimation = "Throw";
-        data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        data.m_AnimationController.SetAnimator(m_StateID, false);
+
     }
 
     public override void Do(PlayerFSMData data)
@@ -263,7 +262,7 @@ public class PlayerFSMThrowState : PlayerFSMState
         if (Input.GetButtonUp("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
-            data.m_AnimationController.SetAnimator(m_StateID, true);
+            data.m_AnimationController.SetAnimator(m_StateID);
         }
 
         //data.m_AnimationController.Animator = data.m_AnimationController.Animator;
