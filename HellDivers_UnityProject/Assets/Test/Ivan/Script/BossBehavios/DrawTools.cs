@@ -30,14 +30,14 @@ public class DrawTools {
             mf = GO.AddComponent<MeshFilter>();
             mr = GO.AddComponent<MeshRenderer>();
             shader = Shader.Find("Unlit/Color");
+            mr.material.shader = shader ;
+            mr.material.color = Color.red;
         }
         else
         {
             mf = GO.GetComponent<MeshFilter>();
             mr = GO.GetComponent<MeshRenderer>();
             shader = Shader.Find("Unlit/Color");
-
-//            shader = mr.material.shader;
         }
         GO.transform.position = new Vector3(0, 0.1f, 0);
 
@@ -45,8 +45,6 @@ public class DrawTools {
         mesh.triangles = triangles;
 
         mf.mesh = mesh;
-        //mr.material.shader = shader ;
-        //mr.material.color = Color.red;
 
         return GO;
     }

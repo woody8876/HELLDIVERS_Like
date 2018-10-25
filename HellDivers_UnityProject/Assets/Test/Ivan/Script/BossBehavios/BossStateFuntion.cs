@@ -13,24 +13,11 @@ public class BossStateFuntion {
         FAN
     }
 
-    //public Transform m_Target;
-    private Transform m_Center;
     public float m_Radius = 25;
     public float m_Speed = 100f;
-
-    public List<GameObject> m_Obstacle = new List<GameObject>();
-    //private Vector3 m_vPos;
-    //private Vector3 m_vVec;
-    private bool m_bMove;
-    private bool m_bCheck;
-    float timer;
-    float randomTime = 1;
-
-
     #region Init Function
-    public void Init(Transform t)
+    public void Init()
     {
-        m_Center = t;
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Missile"), 3, (int)EItem.MISSILE);
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Rock"), 5, (int)EItem.ROCK);
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Range"), 3, (int)EItem.CIRCLE);
@@ -38,82 +25,27 @@ public class BossStateFuntion {
         ObjectPool.m_Instance.InitGameObjects(Resources.Load("Fan"), 5, (int)EItem.FAN);
     }
     #endregion
-
-    #region MonoBehavoirs
-    private void Update()
-    {
-        #region Phase 1
-        /* 
-        if (m_bCheck) return;
-         if (!m_bMove) TimeCounter();
-         else
-         {
-             StartCoroutine(Rush(m_vVec));
-             OnEdge(this.transform);
-         }
-          */
-        #endregion
-        #region Phase 2
-        //Phase 2
-        /*
-        if (m_bCheck) return;
-        if (m_Obstacle.Count >= 5)
-        {
-            for (int i = 0; i < m_Obstacle.Count; i++) { DrawFanAlert(m_Obstacle[i].transform); }
-            StartCoroutine(Earthquake());
-            return;
-        }
-        if (!m_bMove) TimeCounter();
-        else
-        {
-            m_bCheck = true;
-            if (timer >= randomTime - 1) StartCoroutine(ThrowRock());
-            else StartCoroutine(Missile());
-        }
-        */
-        #endregion
-    }
-    #endregion
-
+    
     #region CheckCondition
-    /// <summary>
-    /// Time counter, if curTime greater than targetTime, return true.
-    /// </summary>
-    /// <param name="targetTime"></param>
-    /// <param name="curTime"></param>
-    /// <returns></returns>
-    public bool TimeCounter(float targetTime, float curTime)
+    public bool OnEdge(Transform mover, Transform center)
     {
-        curTime += Time.deltaTime;
-        if (curTime >= targetTime) { return true; }
-        return false;
-    }
-    public bool TimesCounter(float targetTime, float curTime)
-    {
-        curTime += Time.deltaTime;
-        if (curTime >= targetTime) { return true; }
-        return false;
-    }
-
-    public bool OnEdge(Transform mover)
-    {
-        if (Mathf.Pow((mover.position.x - m_Center.position.x), 2) + Mathf.Pow((mover.position.z - m_Center.position.z), 2) >= m_Radius * m_Radius)
+        if (Mathf.Pow((mover.position.x - center.position.x), 2) + Mathf.Pow((mover.position.z - center.position.z), 2) >= m_Radius * m_Radius)
         {
             return true;
         }
         return false;
     }
     #endregion
-
+    
     #region Draw Alert
-
-    public void DrawRectAlert(Vector3 target, Transform user)
+    public void DrawRectAlert(Transform user, out GameObject go)
     {
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
-        if (go == null) Debug.Log("NULL!!!!"); return;
-        go.SetActive(true);
-        target.y = 0;
-        DrawTools.DrawRectangleSolid(user, target, 10, 2);
+        DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.RECTANGLE);
+        DrawTools.GO.SetActive(true);
+        go = DrawTools.GO;
+        Vector3 pos = user.position;
+        pos.y = 1.1f;
+        DrawTools.DrawRectangleSolid(user, pos, 10, 2);
     }
     public void DrawFanAlert(Transform target, Transform user)
     {
@@ -128,21 +60,17 @@ public class BossStateFuntion {
         DrawTools.DrawSectorSolid(target, Cpos, pos, angle, 25, width * 2);
         DrawTools.GO.transform.position += Vector3.up * 1.1f;
     }
-    public void DrawCircleAlert(Vector3 target, Transform user)
+    public void DrawCircleAlert(Vector3 target, Transform user, out GameObject go)
     {
         DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.CIRCLE);
         DrawTools.GO.SetActive(true);
-        Vector3 pos = user.position;
-        pos.y = 0;
-        DrawTools.DrawCircleSolid(user, pos, 3);
+        go = DrawTools.GO;
         target.y = 1.1f;
-        DrawTools.GO.transform.position = target;
+        DrawTools.DrawCircleSolid(user, target, 3);
     }
     #endregion
-
+    
     #region Boss FSM Function
-    public void Idle() { }
-
     public Vector3 Seek(Transform user, Vector3 target)
     {
         Vector3 vec2Target = target - user.position;
@@ -164,7 +92,7 @@ public class BossStateFuntion {
         go.transform.position = target;
         go.transform.forward = -Vector3.up;
     }
-    public void ThrowRock(Transform user, Vector3 target)
+    public void ThrowRock(Transform user, Vector3 target, EnemyData data)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.ROCK);
         go.SetActive(true);
@@ -172,17 +100,17 @@ public class BossStateFuntion {
         target.y = vec.y = 40;
         go.transform.forward = target - vec;
         go.transform.position = target;
-        m_Obstacle.Add(go);
+        data.m_Obstacle.Add(go);
     }
-    public void AfterEarthquake()
+    public void AfterEarthquake(EnemyData data)
     {
-        for (int i = 0; i < m_Obstacle.Count; i++)
+        for (int i = 0; i < data.m_Obstacle.Count; i++)
         {
             GameObject fan = GameObject.Find("Fan(Clone)");
-            ObjectPool.m_Instance.UnLoadObjectToPool((int)EItem.ROCK, m_Obstacle[i]);
+            ObjectPool.m_Instance.UnLoadObjectToPool((int)EItem.ROCK, data.m_Obstacle[i]);
             ObjectPool.m_Instance.UnLoadObjectToPool((int)EItem.FAN, fan);
         }
-        m_Obstacle.Clear();
+        data.m_Obstacle.Clear();
     }
     #endregion
 

@@ -5,7 +5,6 @@ using UnityEngine;
 public class BossAI : MonoBehaviour {
 
     public EnemyData m_data;
-    public Transform m_Center;
     BossFSMSystem m_BFS;
     BossStateFuntion m_BSF;
 
@@ -13,7 +12,7 @@ public class BossAI : MonoBehaviour {
 	void Start () {
         m_BFS = new BossFSMSystem(m_data);
         m_BSF = new BossStateFuntion();
-        m_BSF.Init(m_Center);
+        m_BSF.Init();
         m_data.m_Go = this.gameObject;
         m_data.m_bossFSMSystem = m_BFS;
         #region Init FSM State

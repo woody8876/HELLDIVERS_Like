@@ -29,7 +29,7 @@ public class BossFSMSystem{
         {
             m_currentState.DoBeforeLeave(m_Data);
             m_currentState = m_GlobalMap[t];
-            m_currentState.DoBeforeEnter();
+            m_currentState.DoBeforeEnter(m_Data);
             m_currentStateID = m_currentState.m_StateID;
         }
     }
@@ -93,7 +93,7 @@ public class BossFSMSystem{
         m_currentState.DoBeforeLeave(m_Data);
         m_currentState = state;
         m_currentStateID = state.m_StateID;
-        m_currentState.DoBeforeEnter();
+        m_currentState.DoBeforeEnter(m_Data);
 
     }
 

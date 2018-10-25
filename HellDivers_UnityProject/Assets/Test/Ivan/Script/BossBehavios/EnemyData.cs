@@ -13,11 +13,20 @@ public class EnemyData{
     public int m_iArmor_BackMin;
     public int m_iArmor_BackMax;
 
+    public bool m_bMissiling;
+    public bool m_bRushing;
+
     public Vector3 m_vCurFace;
     public Vector3 m_vCurPos;
     
     public GameObject m_Go;
+    public GameObject m_curActive;
+
     public Transform m_vTarget;
+    public Transform m_vCenter;
+
+    public List<GameObject> m_Obstacle;
+
     public BossFSMSystem m_bossFSMSystem;
 
 

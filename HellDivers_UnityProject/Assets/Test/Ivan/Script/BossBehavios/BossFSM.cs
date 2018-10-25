@@ -29,7 +29,6 @@ public class BossFSM {
     protected Dictionary<eFSMTransition, BossFSM> m_Map;
     protected BossStateFuntion m_BSF;
     public float m_fCurrentTime;
-    protected bool m_bMissiling;
     #endregion
     public BossFSM()
     {
@@ -53,7 +52,7 @@ public class BossFSM {
         return m_Map[trans];
 
     }
-    public virtual void DoBeforeEnter()
+    public virtual void DoBeforeEnter(EnemyData data)
     {
 
     }
@@ -78,10 +77,11 @@ public class BossIdleState : BossFSM{
         m_StateID = eFSMStateID.IDLE;
         fIdleTime = 1.0f;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
         m_fCurrentTime = 0.0f;
-        fIdleTime = Random.Range(1.0f, 3.0f);
+        if (data.m_iCurHP < data.m_iMaxHP * 0.2f) fIdleTime = 0.1f;
+        else fIdleTime = Random.Range(1.0f, 3.0f);
     }
     public override void DoBeforeLeave(EnemyData data)
     {
@@ -93,7 +93,6 @@ public class BossIdleState : BossFSM{
     }
     public override void CheckCondition(EnemyData data)
     {
-        Debug.Log(m_fCurrentTime);
         if (m_fCurrentTime > fIdleTime)
         {
             data.m_bossFSMSystem.PerformTransition(eFSMTransition.G0_SEEK);
@@ -109,9 +108,10 @@ public class BossSeekState :BossFSM
     {
         m_StateID = eFSMStateID.SEEK;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
-        if (m_bMissiling) fSeekTime = 0.3f;
+        if (data.m_bMissiling) fSeekTime = 0.2f;
+        else if (data.m_iCurHP < data.m_iMaxHP * 0.2f) fSeekTime = 1.0f;
         else fSeekTime = Random.Range(3.0f, 6.0f);
         m_fCurrentTime = 0.0f;
     }
@@ -143,7 +143,7 @@ public class BossDrawAlertState : BossFSM
     {
         m_StateID = eFSMStateID.DRAWALERT;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
         fDrawTime = 0.5f;
         m_fCurrentTime = 0.0f;
@@ -151,33 +151,34 @@ public class BossDrawAlertState : BossFSM
     }
     public override void DoBeforeLeave(EnemyData data)
     {
-        //curActive = DrawTools.GO;
     }
     public override void Do(EnemyData data)
     {
         m_fCurrentTime += Time.fixedDeltaTime;
         if (bDraw) return;
-        if (m_BSF.m_Obstacle.Count >= 5)
+        if (data.m_Obstacle.Count >= 5)
         {
-            for (int i = 0; i < m_BSF.m_Obstacle.Count; i++) { m_BSF.DrawFanAlert(m_BSF.m_Obstacle[i].transform, data.m_Go.transform); }
+            for (int i = 0; i < data.m_Obstacle.Count; i++) { m_BSF.DrawFanAlert(data.m_Obstacle[i].transform, data.m_Go.transform); }
         }
         else if (data.m_iCurHP >= data.m_iMaxHP * 0.7f)
         {
-           m_BSF.DrawRectAlert(data.m_vCurFace, data.m_Go.transform);
+           m_BSF.DrawRectAlert(data.m_Go.transform, out data.m_curActive);
         }
         else if (data.m_iCurHP >= data.m_iMaxHP * 0.2f)
         {
-            m_BSF.DrawCircleAlert(data.m_vCurPos, data.m_Go.transform);
+            m_BSF.DrawCircleAlert(data.m_vCurPos, data.m_Go.transform, out data.m_curActive);
         }
         else
         {
+            if (!data.m_bRushing) m_BSF.DrawCircleAlert(data.m_vCurPos, data.m_Go.transform, out data.m_curActive);
+            else m_BSF.DrawRectAlert(data.m_Go.transform, out data.m_curActive);
         }
         bDraw = true;
     }
     public override void CheckCondition(EnemyData data)
     {
         if (m_fCurrentTime < fDrawTime) return;
-        if (m_BSF.m_Obstacle.Count >= 5)
+        if (data.m_Obstacle.Count >= 5)
         {
             data.m_bossFSMSystem.PerformTransition(eFSMTransition.GO_EARTHQIAKE);
         }
@@ -191,30 +192,48 @@ public class BossDrawAlertState : BossFSM
         }
         else
         {
+            if (!data.m_bRushing) data.m_bossFSMSystem.PerformTransition(eFSMTransition.GO_MISSILE);
+            else data.m_bossFSMSystem.PerformTransition(eFSMTransition.G0_RUSH);
         }
     }
 }
 
 public class BossRushState : BossFSM
 {
+    float fRushTime;
+    float fcurRush;
+    float fRushCount;
     public BossRushState()
     {
         m_StateID = eFSMStateID.RUSH;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
+        m_fCurrentTime = 0.0f;
+        fRushTime = 0.1f;
+        if (data.m_iCurHP < data.m_iMaxHP * 0.2f) fRushCount = Random.Range(3, 7);
+        else fRushCount = 1;
     }
     public override void DoBeforeLeave(EnemyData data)
     {
-       // ObjectPool.m_Instance.UnLoadObjectToPool((int)BossStateFuntion.EItem.RECTANGLE, curActive);
+        ObjectPool.m_Instance.UnLoadObjectToPool((int)BossStateFuntion.EItem.RECTANGLE, data.m_curActive);
+        fcurRush++;
     }
     public override void Do(EnemyData data)
     {
         m_BSF.Rush(data.m_vCurFace, data.m_Go.transform);
+        m_fCurrentTime += Time.fixedDeltaTime;
+        
     }
     public override void CheckCondition(EnemyData data)
     {
-        if (m_BSF.OnEdge(data.m_Go.transform))
+        if (m_fCurrentTime < fRushTime) return;
+        if (fcurRush >= fRushCount)
+        {
+            data.m_bRushing = false;
+            fcurRush = 0;
+        }
+        if (m_BSF.OnEdge(data.m_Go.transform, data.m_vCenter))
         {
             data.m_bossFSMSystem.PerformTransition(eFSMTransition.GO_IDLE);
         }
@@ -225,33 +244,36 @@ public class BossMissleState : BossFSM
 {
     float fCount;
     float fMissile;
+
     public BossMissleState()
     {
         m_StateID = eFSMStateID.MISSILE;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
-        if (!m_bMissiling)
+        if (!data.m_bMissiling)
         {
             fCount = Random.Range(3, 7);
             fMissile = 0;
         }
-        m_bMissiling = true;
+        data.m_bMissiling = true;
     }
     public override void DoBeforeLeave(EnemyData data)
     {
+        ObjectPool.m_Instance.UnLoadObjectToPool((int)BossStateFuntion.EItem.CIRCLE, data.m_curActive);
     }
     public override void Do(EnemyData data)
     {
         if (fMissile < fCount)
         {
             m_BSF.Missile(data.m_vCurPos);
-            fCount++;
+            fMissile++;
         }
         else
         {
-            m_BSF.ThrowRock(data.m_Go.transform, data.m_vCurPos);
-            m_bMissiling = false;
+            m_BSF.ThrowRock(data.m_Go.transform, data.m_vCurPos, data);
+            data.m_bMissiling = false;
+            data.m_bRushing = true;
         }
     }
     public override void CheckCondition(EnemyData data)
@@ -267,14 +289,14 @@ public class BossEarthquakeState : BossFSM
     {
         m_StateID = eFSMStateID.EARTHQUACK;
     }
-    public override void DoBeforeEnter()
+    public override void DoBeforeEnter(EnemyData data)
     {
         m_fCurrentTime = 0.0f;
         earthquakeTime = 3.0f;
     }
     public override void DoBeforeLeave(EnemyData data)
     {
-        m_BSF.AfterEarthquake();
+        m_BSF.AfterEarthquake(data);
     }
     public override void Do(EnemyData data)
     {

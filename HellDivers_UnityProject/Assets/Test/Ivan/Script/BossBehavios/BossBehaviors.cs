@@ -41,7 +41,6 @@ public class BossBehaviors : MonoBehaviour
     #region MonoBehavoirs
     private void Start()
     {
-        InitObject();
     }
     private void Update()
     {
