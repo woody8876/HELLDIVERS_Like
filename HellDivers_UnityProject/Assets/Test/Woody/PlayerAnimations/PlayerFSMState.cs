@@ -297,7 +297,6 @@ public class PlayerFSMThrowState : PlayerFSMState
 
 public class PlayerFSMSwitchWeaponState : PlayerFSMState
 {
-    int count = 0;
     public PlayerFSMSwitchWeaponState()
     {
         m_StateID = ePlayerFSMStateID.SwitchWeaponID;
@@ -306,7 +305,7 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerFSMData data)
     {
-        count = 0;
+        data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerFSMData data)
@@ -316,14 +315,13 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
     public override void Do(PlayerFSMData data)
     {
-        if (count < 1) data.m_AnimationController.SetAnimator(m_StateID);
-        count++;
+
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(1);
-        if (info.IsName("TakeWeapon"))
+        if (info.IsName("SwitchWeapon"))
         {
             if (data.m_AnimationController.FinishAnimator(data))
             {

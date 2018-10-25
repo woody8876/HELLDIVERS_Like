@@ -111,6 +111,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("SwitchWeapon");
         }
+        else if (state == ePlayerFSMStateID.StratagemStateID)
+        {
+            m_Animator.SetTrigger("ThrowStandby");
+        }
         else if (state == ePlayerFSMStateID.DeadStateID)
         {
             m_Animator.SetTrigger("Death");

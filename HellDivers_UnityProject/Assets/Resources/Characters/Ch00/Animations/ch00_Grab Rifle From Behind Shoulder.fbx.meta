@@ -135,7 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Grab Rifle From Behind Shoulder
+    7400000: SwitchWeapon
     7400002: TakeWeapon
     9500000: //RootNode
   externalObjects: {}
@@ -166,7 +166,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Grab Rifle From Behind Shoulder
+      name: SwitchWeapon
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 106
