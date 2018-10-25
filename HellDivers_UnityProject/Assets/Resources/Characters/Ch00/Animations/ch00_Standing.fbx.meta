@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9556573f47efd0b48835e16446e309e0
+guid: 258d66f38c003474aabc3235a0d6be37
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -135,8 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine
     400128: mixamorig:Spine1
     400130: mixamorig:Spine2
-    7400000: Put Back Rifle Behind Shoulder
-    7400002: PutBackWeapon
+    7400000: Standing
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -166,10 +165,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Put Back Rifle Behind Shoulder
+      name: Standing
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 119
+      lastFrame: 83
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -178,8 +177,8 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1

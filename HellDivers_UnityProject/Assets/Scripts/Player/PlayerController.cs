@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
             m_Cam = Camera.main.transform;
         }
 
-        #region PlayerFSM
+        #region PlayerFSMMap
 
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
+        
         m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
