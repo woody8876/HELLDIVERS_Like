@@ -58,6 +58,8 @@ public class InteractiveItemManager
             {
                 InteractiveItem currentItem = currentList[i];
                 float dist = Vector3.Distance(position, currentItem.Position);
+                if (dist > currentItem.Radius) continue;
+
                 if (dist < nearestDist)
                 {
                     nearestDist = dist;

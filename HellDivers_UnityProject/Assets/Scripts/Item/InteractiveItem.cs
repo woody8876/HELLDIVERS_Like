@@ -6,10 +6,12 @@ public class InteractiveItem : MonoBehaviour
 {
     public string ID { get { return m_Id; } }
     public string Title { get { return m_Title; } }
+    public float Radius { get { return m_Radius; } }
     public Vector3 Position { get { return this.transform.position; } }
 
     [SerializeField] private string m_Id;
     [SerializeField] private string m_Title;
+    [SerializeField] private float m_Radius = 2;
     private float m_LifeTime = 120.0f;
     private float m_EndTime;
 
