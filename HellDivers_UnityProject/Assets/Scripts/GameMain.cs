@@ -19,8 +19,8 @@ public class GameMain : MonoBehaviour
     private ResourceManager m_ResourceManager = new ResourceManager();
     private ObjectPool m_ObjectPool = new ObjectPool();
     private GameData m_GameData = new GameData();
-    private List<Player> m_Players = new List<Player>();
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
+    private List<Player> m_Players = new List<Player>();
     private CameraFollowing m_CameraFollowing;
 
     private void Awake()
