@@ -56,6 +56,7 @@ public class Stratagem : MonoBehaviour
     private Transform m_ReadyPos;
     private Transform m_LaunchPos;
     private GameObject m_Display;
+    private GameObject m_Result;
     private Animator m_Animator;
     private Rigidbody m_Rigidbody;
     private float m_Radius = 0.25f;
@@ -82,28 +83,48 @@ public class Stratagem : MonoBehaviour
 
         this.gameObject.name = string.Format("Stratagem {0}", m_Info.Title);
 
-        if (newInfo.DisplayID != m_Info.DisplayID)
+        // Load display prefab.
+        if (newInfo.DisplayID.Equals(m_Info.DisplayID) == false)
         {
-            GameObject go;
+            GameObject display;
 
             if (ResourceManager.m_Instance == null)
             {
                 Debug.LogWarningFormat("Stratagem Warning ({0}) : ResourcesManager doesn't exist, Using Resource.Load()", this.gameObject.name);
-                go = Resources.Load(string.Format("{0}/{1}", StratagemSystem.DisplayFolder, newInfo.DisplayID)) as GameObject;
+                display = Resources.Load(string.Format("{0}/{1}", StratagemSystem.DisplayFolder, newInfo.DisplayID)) as GameObject;
             }
             else
             {
-                go = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.DisplayID) as GameObject;
+                display = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.DisplayFolder, newInfo.DisplayID) as GameObject;
             }
 
-            if (m_Display != go)
+            if (display == null) display = StratagemSystem.DefaultDisplay;
+
+            DestroyImmediate(m_Display);
+            m_Display = Instantiate(display, this.transform.position, Quaternion.identity, this.transform);
+            m_Animator = m_Display.GetComponent<Animator>();
+        }
+
+        // Load result prefab.
+        if (newInfo.ResultID.Equals(m_Info.ResultID) == false)
+        {
+            GameObject result;
+
+            if (ResourceManager.m_Instance == null)
             {
-                if (go == null) go = StratagemSystem.DefaultDisplay;
-
-                DestroyImmediate(m_Display);
-                m_Display = Instantiate(go, this.transform.position, Quaternion.identity, this.transform);
-                m_Animator = m_Display.GetComponent<Animator>();
+                Debug.LogWarningFormat("Stratagem Warning ({0}) : ResourcesManager doesn't exist, Using Resource.Load()", this.gameObject.name);
+                result = Resources.Load(string.Format("{0}/{1}", StratagemSystem.ResultFolder, newInfo.ResultID)) as GameObject;
             }
+            else
+            {
+                result = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.ResultFolder, newInfo.ResultID) as GameObject;
+            }
+
+            if (result == null) result = StratagemSystem.DefaultResult;
+            m_Result = result;
+
+            int count = (newInfo.Uses == -1) ? 10 : newInfo.Uses;
+            ObjectPool.m_Instance.InitGameObjects(result, count, newInfo.ID);
         }
 
         m_LaunchPos = launchPos;
@@ -217,6 +238,11 @@ public class Stratagem : MonoBehaviour
         m_eState = eState.ThrowOut;
     }
 
+    public void ResetUses()
+    {
+        m_UsesCount = 0;
+    }
+
     #endregion Public Function
 
     #region Finite State Machine
@@ -299,6 +325,8 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
+        LoadResult();
+
         m_eState = eState.Idle;
         yield break;
     }
@@ -319,6 +347,30 @@ public class Stratagem : MonoBehaviour
         }
         m_IsCooling = false;
         yield break;
+    }
+
+    /*--------------------------------------------------------
+     * If pool is exist. Load result object form Object pool *
+     * Or create by self onject resource m_Result            *
+     --------------------------------------------------------*/
+
+    private void LoadResult()
+    {
+        GameObject result = null;
+        if (ObjectPool.m_Instance == null)
+        {
+            result = Instantiate(m_Result);
+        }
+        else
+        {
+            result = ObjectPool.m_Instance.LoadGameObjectFromPool(m_Info.ID);
+        }
+
+        if (result != null)
+        {
+            result.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+            result.SetActive(true);
+        }
     }
 
     #endregion Finite State Machine

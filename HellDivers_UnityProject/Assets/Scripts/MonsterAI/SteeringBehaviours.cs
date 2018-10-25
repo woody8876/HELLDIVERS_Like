@@ -20,7 +20,7 @@ public class SteeringBehaviours
         Vector3 vForward = t.forward;
         if (data.m_fTempTurnForce > data.m_fMaxRot) { data.m_fTempTurnForce = data.m_fMaxRot; }
         else if (data.m_fTempTurnForce < -data.m_fMaxRot) { data.m_fTempTurnForce = -data.m_fMaxRot; }
-        Vector3 vOriF = vForward;
+        //Vector3 vOriF = vForward;
         vForward += vRight * data.m_fTempTurnForce;
         vForward.y = 0;
         vForward.Normalize();

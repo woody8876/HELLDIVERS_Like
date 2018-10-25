@@ -91,7 +91,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 0
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -128,7 +128,7 @@ ModelImporter:
     tangentImportMode: 4
     normalCalculationMode: 0
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -143,10 +143,11 @@ ModelImporter:
     rootMotionBoneName: 
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 0
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 15f5ea9e92a93df4583acc736458c6be,
+    type: 3}
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 1
   userData: 

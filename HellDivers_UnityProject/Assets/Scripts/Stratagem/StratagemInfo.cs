@@ -17,6 +17,7 @@ public class StratagemInfo
     public float CoolDown { get { return cooldown; } }
     public float Activation { get { return activation; } }
     public string DisplayID { get { return displayId; } }
+    public string ResultID { get { return resultId; } }
 
     #endregion Properties
 

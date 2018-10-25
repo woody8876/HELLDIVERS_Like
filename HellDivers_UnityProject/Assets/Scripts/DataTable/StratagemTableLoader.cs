@@ -47,6 +47,7 @@ public static class StratagemDataLoader
                 infos[6].SetValue(data, float.Parse(colum[6]));
                 infos[7].SetValue(data, float.Parse(colum[7]));
                 infos[8].SetValue(data, colum[8]);
+                infos[9].SetValue(data, colum[9]);
 
                 table.Add(data.ID, data);
             }

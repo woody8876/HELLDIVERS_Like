@@ -80,7 +80,7 @@ public class WeaponController : MonoBehaviour
             Debug.Log("Ammo");
             return false;
         }
-        if (!m_bShooting) { return true; }
+        if (!m_bShooting) { return false; }
         m_bShooting = false;
         m_cCoolDown = StartCoroutine(WaitCooling());
         return true;

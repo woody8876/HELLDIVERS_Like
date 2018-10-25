@@ -13,13 +13,13 @@ public class AniTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+        //AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
 
         //Debug.Log(info.IsName("Walk"));
         //if(info.normalizedTime >= 0.99f)
         //{
         //    Debug.Log("Complete");
         //}
-        Debug.Log(info.normalizedTime);
+
     }
 }

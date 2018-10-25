@@ -15,14 +15,16 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Fall;
     private Vector3 m_Direction;
     private PlayerAnimationsContorller m_PAC;
-
     private bool bRun = false;
     private bool bInBattle = false;
-
     private PlayerFSMData m_FSMData;
-    private PlayerFSMSystem m_PlayerFSM;
 
     #endregion Private Variable
+
+    public PlayerFSMSystem m_PlayerFSM;
+    public float m_fAnimatorTime;
+    public bool bIsDead = false;
+    public bool bIsAlive = true;
 
     #region MonoBehaviour
     private void Awake()
@@ -39,11 +41,12 @@ public class PlayerController : MonoBehaviour
             m_Cam = Camera.main.transform;
         }
 
-        #region PlayerFSM
+        #region PlayerFSMMap
 
         m_FSMData = new PlayerFSMData();
         m_PlayerFSM = new PlayerFSMSystem(m_FSMData);
         m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
+        m_FSMData.m_PlayerController = this;
         m_FSMData.m_AnimationController = m_PAC;
         m_FSMData.m_Animator = m_PAC.Animator;
         m_FSMData.m_WeaponController = GetComponent<WeaponController>();
@@ -53,32 +56,69 @@ public class PlayerController : MonoBehaviour
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
-        PlayerFSMSwitchWeaponState m_SwitchWeapon = new PlayerFSMSwitchWeaponState();
+        PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
+        PlayerFSMPickUpState m_PickUpState = new PlayerFSMPickUpState();
 
 
-        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
-        m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeapon);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_PickUp, m_PickUpState);
 
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
-        m_SwitchWeapon.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
+        m_SwitchWeaponState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_PickUpState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
         m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
+        PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
+        PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
+        m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_VictoryState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
 
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_RelodaState);
+        m_PlayerFSM.AddState(m_SwitchWeaponState);
         m_PlayerFSM.AddState(m_StratagemState);
         m_PlayerFSM.AddState(m_ThrowState);
+        m_PlayerFSM.AddState(m_PickUpState);
+        m_PlayerFSM.AddState(m_VictoryState);
+        m_PlayerFSM.AddState(m_DeadState);
+        m_PlayerFSM.AddState(m_ReliveState);
+
 
         #endregion
     }
 
     private void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            PerformPlayerDead();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            PerformPlayerHurt();
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PerformPlayerVictory();
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            PerformPlayerRelive();
+        }
         SelectMotionState();
         m_PlayerFSM.DoState();
     }
@@ -94,7 +134,7 @@ public class PlayerController : MonoBehaviour
             BasicMove();
             return;
         }
-        if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
+        else if (m_FSMData.m_NowAnimation.Equals("Stratagem"))
         {
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
@@ -109,13 +149,18 @@ public class PlayerController : MonoBehaviour
             ThrowingMove();
             return;
         }
-        return;
+        else if (m_FSMData.m_NowAnimation.Equals("Dead"))
+        {
+            return;
+        }
     }
 
     private void BasicMove()
     {
         Move();
-        bRun = (Input.GetButton("Run")) ? true : false;
+
+        if (Input.GetButton("Run")) bRun = true;
+        else bRun = false;
 
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
@@ -124,7 +169,8 @@ public class PlayerController : MonoBehaviour
         }
 
         #region Joystick
-        else if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+      
+        else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
             bInBattle = true;
@@ -137,8 +183,21 @@ public class PlayerController : MonoBehaviour
     private void ThrowMove()
     {
         Move();
-        FaceDirection();
-        bInBattle = true;
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+
+        #region Joystick
+
+        else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+        #endregion
+        else bInBattle = false;
         bRun = false;
 
         m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
@@ -193,14 +252,11 @@ public class PlayerController : MonoBehaviour
         if (m_Direction.magnitude < 0.1f) return;
         if (m_Direction.magnitude > 1) m_Direction.Normalize();
 
-       
-        if (Input.GetButton("JoystickHorizontal") || Input.GetButton("JoystickVertical"))
+        if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             #region Joystick
-            float h = Input.GetAxis("JoystickHorizontal");
-            float v = Input.GetAxis("JoystickVertical");
-
-
+            float h = Input.GetAxis("DirectionHorizontal");
+            float v = Input.GetAxis("DirectionVertical");
             if (m_Cam != null)
             {
                 m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
@@ -219,8 +275,31 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void PerformPlayerVictory()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Victory);
+    }
+    public void PerformPlayerDead()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
+    }
+    public bool PerformPlayerHurt()
+    {
+        AnimatorStateInfo info = m_FSMData.m_Animator.GetCurrentAnimatorStateInfo(2);
+        if (info.IsName("GetGurt"))
+        {
+            return false;
+        }
+        m_FSMData.m_Animator.SetTrigger("GetHurt");
+        return true;
+    }
+    public void PerformPlayerRelive()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
+    }
+
     #endregion Character Behaviour
-    
+
 
 
 

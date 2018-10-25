@@ -3,42 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
+[RequireComponent(typeof(MobAnimationsController))]
 public class FishAI : MonoBehaviour {
-
-    public AIData m_Data;
+    
     FSMSystem m_Fsm;
-	// Use this for initialization
-	void Start () {
-        m_Fsm = new FSMSystem(m_Data);
-        m_Data.m_Go = this.gameObject;
-        m_Data.m_FSMSystem = m_Fsm;
-        m_Data.navMeshAgent = GetComponent<NavMeshAgent>();
+    public AIData m_AIData;
+    // Use this for initialization
+    private void Awake()
+    {
+        
+    }
+    void Start () {
+        m_AIData = new AIData();
+        m_Fsm = new FSMSystem(m_AIData);
+        m_AIData.m_Go = this.gameObject;
+        m_AIData.m_FSMSystem = m_Fsm;
+        m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
+        m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
 
         FSMMoveToState mtstate = new FSMMoveToState();
         FSMChaseState chasestate = new FSMChaseState();
         FSMAttackState attackstate = new FSMAttackState();
 
         mtstate.AddTransition(eFSMTransition.Go_Chase, chasestate);
+
         chasestate.AddTransition(eFSMTransition.Go_Attack, attackstate);
+
         attackstate.AddTransition(eFSMTransition.Go_Chase, chasestate);
 
         m_Fsm.AddState(mtstate);
-        //m_Fsm.AddState(chasestate);
-        //m_Fsm.AddState(attackstate);
+        m_Fsm.AddState(chasestate);
+        m_Fsm.AddState(attackstate);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (m_Data.m_PlayerGO == null)
+        if (m_AIData.m_PlayerGO == null)
         {
-            m_Data.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+            m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         }
         m_Fsm.DoState();
     }
     private void OnDrawGizmos()
     {
-        if (m_Data == null || m_Fsm == null)
+        if (m_AIData == null || m_Fsm == null)
         {
             return;
         }
@@ -51,15 +59,15 @@ public class FishAI : MonoBehaviour {
         else if (m_Fsm.CurrentStateID == eFSMStateID.ChaseStateID)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, m_Data.m_vTarget);
+            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
         else if (m_Fsm.CurrentStateID == eFSMStateID.AttackStateID)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(this.transform.position, m_Data.m_vTarget);
+            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
-        Gizmos.DrawWireSphere(m_Data.m_vTarget, 0.5f);
+        Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
-        Gizmos.DrawWireSphere(this.transform.position, m_Data.m_fAttackRange);
+        Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
     }
 }
