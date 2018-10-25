@@ -37,10 +37,6 @@ public class MobAnimationsController : MonoBehaviour {
         {
            // m_Animator.SetBool();
         }
-        if (state == eFSMStateID.ChaseStateID)
-        {
-           m_Animator.SetBool("Chase",true);
-        }
         if (state == eFSMStateID.AttackStateID)
         {
             m_Animator.SetTrigger("Attack");
@@ -53,6 +49,10 @@ public class MobAnimationsController : MonoBehaviour {
         if (state == eFSMStateID.AttackStateID)
         {
             m_Animator.SetBool("Idle", Bool);
+        }
+        if (state == eFSMStateID.ChaseStateID)
+        {
+            m_Animator.SetBool("Chase", Bool);
         }
     }
 }

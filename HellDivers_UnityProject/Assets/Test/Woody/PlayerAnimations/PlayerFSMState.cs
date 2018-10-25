@@ -13,6 +13,7 @@ public enum ePlayerFSMTrans
     Go_PickUp,
     Go_Victory,
     Go_Dead,
+    Go_Relive,
 }
 public enum ePlayerFSMStateID
 {
@@ -25,6 +26,7 @@ public enum ePlayerFSMStateID
     PickUpID,
     VictoryID,
     DeadStateID,
+    ReliveStateID,
 }
 
 public class PlayerFSMState
@@ -354,19 +356,19 @@ public class PlayerFSMDeadState : PlayerFSMState
         if (info.IsName("Death"))
         {
             if (info.normalizedTime < 0.95f) data.m_PlayerController.bIsDead = false;
-            else data.m_PlayerController.bIsDead = true;
+            else
+            {
+                data.m_PlayerController.bIsDead = true;
+                data.m_PlayerController.bIsAlive = false;
+            }
+
             return;
         }
     }
 
     public override void CheckCondition(PlayerFSMData data)
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            data.m_AnimationController.SetAnimator(m_StateID, true);
-            data.m_PlayerController.bIsDead = false;
-            data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
-        }
+
     }
 }
 
@@ -422,7 +424,7 @@ public class PlayerFSMVictoryState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerFSMData data)
     {
-        
+
     }
 
     public override void Do(PlayerFSMData data)
@@ -436,6 +438,49 @@ public class PlayerFSMVictoryState : PlayerFSMState
         if (info.IsName("Victory"))
         {
             if (info.normalizedTime > 0.8f)
+            {
+                data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+}
+
+public class PlayerFSMReliveState : PlayerFSMState
+{
+    public PlayerFSMReliveState()
+    {
+        m_StateID = ePlayerFSMStateID.ReliveStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerFSMData data)
+    {
+        data.m_AnimationController.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(PlayerFSMData data)
+    {
+
+    }
+
+    public override void Do(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Relive"))
+        {
+            if (info.normalizedTime < 0.9f) data.m_PlayerController.bIsAlive = false;
+            else data.m_PlayerController.bIsAlive = true;
+            return;
+        }
+    }
+
+
+    public override void CheckCondition(PlayerFSMData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Relive"))
+        {
+            if (info.normalizedTime > 0.95f)
             {
                 data.m_PlayerFSMSystem.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }

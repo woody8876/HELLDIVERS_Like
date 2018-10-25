@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public PlayerFSMSystem m_PlayerFSM;
     public float m_fAnimatorTime;
     public bool bIsDead = false;
+    public bool bIsAlive = true;
 
     #region MonoBehaviour
     private void Awake()
@@ -77,11 +78,14 @@ public class PlayerController : MonoBehaviour
 
         PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
         PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
+        PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
         m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
         m_VictoryState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
 
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_RelodaState);
@@ -91,6 +95,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_PickUpState);
         m_PlayerFSM.AddState(m_VictoryState);
         m_PlayerFSM.AddState(m_DeadState);
+        m_PlayerFSM.AddState(m_ReliveState);
 
 
         #endregion
@@ -110,7 +115,10 @@ public class PlayerController : MonoBehaviour
         {
             PerformPlayerVictory();
         }
-
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            PerformPlayerRelive();
+        }
         SelectMotionState();
         m_PlayerFSM.DoState();
     }
@@ -284,6 +292,10 @@ public class PlayerController : MonoBehaviour
         }
         m_FSMData.m_Animator.SetTrigger("GetHurt");
         return true;
+    }
+    public void PerformPlayerRelive()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
     }
 
     #endregion Character Behaviour
