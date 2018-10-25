@@ -123,6 +123,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Death");
         }
+        else if (state == ePlayerFSMStateID.VictoryID)
+        {
+            m_Animator.SetTrigger("Victory");
+        }
     }
 
     private void UpdateAnimator(ePlayerFSMStateID state, bool Bool)
