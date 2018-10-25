@@ -57,7 +57,8 @@ public class InteractiveItemManager
             for (int i = 0; i < currentList.Count; i++)
             {
                 InteractiveItem currentItem = currentList[i];
-                float dist = Vector3.Distance(position, currentItem.Position);
+
+                float dist = Vector3.Distance(position, currentItem.Position); // Check item interactable radius.
                 if (dist > currentItem.Radius) continue;
 
                 if (dist < nearestDist)

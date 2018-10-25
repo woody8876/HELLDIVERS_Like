@@ -11,6 +11,7 @@ using UnityEngine;
 public class Player : Character
 {
     public WeaponController WaeponController { get { return m_WeapoonController; } }
+    public StratagemController StratagemController { get { return m_StratagemController; } }
 
     #region Private Variable
 
@@ -60,10 +61,6 @@ public class Player : Character
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            TakeItem();
-        }
     }
 
     #endregion MonoBehaviour
@@ -109,11 +106,10 @@ public class Player : Character
     {
         if (IsDead) return;
         m_bDead = true;
-
-        StartCoroutine(OnDeath());
+        StartCoroutine(DoDeath());
     }
 
-    private IEnumerator OnDeath()
+    private IEnumerator DoDeath()
     {
         m_Controller.PerformPlayerDead();
         yield return new WaitUntil(() => m_Controller.bIsDead);

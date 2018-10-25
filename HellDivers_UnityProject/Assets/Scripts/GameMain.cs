@@ -49,8 +49,6 @@ public class GameMain : MonoBehaviour
 
     public GameObject CreatPlayer(PlayerInfo data)
     {
-        if (data == null) return null;
-
         Transform spawnPos = null;
         if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
         if (spawnPos == null) spawnPos = this.transform;
