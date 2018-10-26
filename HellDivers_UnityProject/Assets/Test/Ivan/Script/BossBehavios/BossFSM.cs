@@ -158,7 +158,7 @@ public class BossDrawAlertState : BossFSM
         if (bDraw) return;
         if (data.m_Obstacle.Count >= 5)
         {
-            for (int i = 0; i < data.m_Obstacle.Count; i++) { m_BSF.DrawFanAlert(data.m_Obstacle[i].transform, data.m_Go.transform); }
+            for (int i = 0; i < data.m_Obstacle.Count; i++) { m_BSF.DrawFanAlert(data.m_Obstacle[i].transform, data.m_vCenter); }
         }
         else if (data.m_iCurHP >= data.m_iMaxHP * 0.7f)
         {
@@ -271,7 +271,7 @@ public class BossMissleState : BossFSM
         }
         else
         {
-            m_BSF.ThrowRock(data.m_Go.transform, data.m_vCurPos, data);
+            m_BSF.ThrowRock(data.m_vCenter, data.m_vCurPos, data);
             data.m_bMissiling = false;
             data.m_bRushing = true;
         }
@@ -297,10 +297,17 @@ public class BossEarthquakeState : BossFSM
     public override void DoBeforeLeave(EnemyData data)
     {
         m_BSF.AfterEarthquake(data);
+        data.m_bEarthquake = false;
     }
     public override void Do(EnemyData data)
     {
-        m_fCurrentTime += Time.fixedDeltaTime;
+        if (!data.m_bEarthquake) m_BSF.JumpUP(data.m_Go.transform, data.m_vCenter, 50, data);
+        else  m_BSF.FallDown(data.m_Go.transform, data.m_vCenter, 100, data);
+        
+        if (data.m_bEarthquake &&(data.m_Go.transform.position - data.m_vCenter.position).sqrMagnitude < 1)
+        {
+            m_fCurrentTime += Time.fixedDeltaTime;
+        }
     }
     public override void CheckCondition(EnemyData data)
     {

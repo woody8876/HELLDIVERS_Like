@@ -15,6 +15,7 @@ public class EnemyData{
 
     public bool m_bMissiling;
     public bool m_bRushing;
+    public bool m_bEarthquake;
 
     public Vector3 m_vCurFace;
     public Vector3 m_vCurPos;

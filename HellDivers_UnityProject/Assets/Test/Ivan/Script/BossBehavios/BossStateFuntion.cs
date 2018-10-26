@@ -13,7 +13,7 @@ public class BossStateFuntion {
         FAN
     }
 
-    public float m_Radius = 25;
+    public float m_Radius = 20;
     public float m_Speed = 100f;
     #region Init Function
     public void Init()
@@ -44,7 +44,7 @@ public class BossStateFuntion {
         DrawTools.GO.SetActive(true);
         go = DrawTools.GO;
         Vector3 pos = user.position;
-        pos.y = 1.1f;
+        pos.y = .1f;
         DrawTools.DrawRectangleSolid(user, pos, 10, 2);
     }
     public void DrawFanAlert(Transform target, Transform user)
@@ -58,14 +58,14 @@ public class BossStateFuntion {
         Vector3 Cpos = user.position;
         pos.y = Cpos.y = 0f;
         DrawTools.DrawSectorSolid(target, Cpos, pos, angle, 25, width * 2);
-        DrawTools.GO.transform.position += Vector3.up * 1.1f;
+        DrawTools.GO.transform.position += Vector3.up * .1f;
     }
     public void DrawCircleAlert(Vector3 target, Transform user, out GameObject go)
     {
         DrawTools.GO = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.CIRCLE);
         DrawTools.GO.SetActive(true);
         go = DrawTools.GO;
-        target.y = 1.1f;
+        target.y = .1f;
         DrawTools.DrawCircleSolid(user, target, 3);
     }
     #endregion
@@ -101,6 +101,20 @@ public class BossStateFuntion {
         go.transform.forward = target - vec;
         go.transform.position = target;
         data.m_Obstacle.Add(go);
+    }
+    public void JumpUP(Transform user, Transform center, float force, EnemyData data)
+    {
+        user.position += (user.forward * .2f + user.up )* force * Time.fixedDeltaTime;
+        if (user.position.y > 50) data.m_bEarthquake = true;
+    }
+    public void FallDown(Transform user, Transform center, float force, EnemyData data)
+    {
+        if ((user.position - data.m_vCenter.position).sqrMagnitude < 5) user.position = data.m_vCenter.position + Vector3.up ;
+        Vector3 pos = user.position;
+        pos.x = data.m_vCenter.position.x;
+        pos.z = data.m_vCenter.position.z;
+        user.position = pos;
+        user.position -= user.up * Time.fixedDeltaTime * force;
     }
     public void AfterEarthquake(EnemyData data)
     {
