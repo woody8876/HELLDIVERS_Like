@@ -104,13 +104,12 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_ReliveState);
         m_PlayerFSM.AddState(m_RollState);
 
-
-
         #endregion
     }
 
     private void FixedUpdate()
     {
+        #region Input
         if (Input.GetKeyDown(KeyCode.O))
         {
             PerformPlayerDead();
@@ -131,6 +130,8 @@ public class PlayerController : MonoBehaviour
         {
             PerformPlayerRoll();
         }
+        #endregion
+
         SelectMotionState();
         m_PlayerFSM.DoState();
     }

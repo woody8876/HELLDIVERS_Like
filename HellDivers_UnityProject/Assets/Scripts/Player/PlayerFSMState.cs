@@ -252,7 +252,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
     }
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
         data.m_PAC.SetAnimator(m_StateID, true);
     }
 
@@ -263,6 +262,8 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
+        data.m_NowAnimation = "Stratagem";
+
         if (data.m_StratagemController.IsCheckingCode == false)
         {
             data.m_StratagemController.StartCheckCodes();
@@ -297,7 +298,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_NowAnimation = "Throw";
+      
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -307,6 +308,8 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
+        data.m_NowAnimation = "Throw";
+
         if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
@@ -381,7 +384,6 @@ public class PlayerFSMPickUpState : PlayerFSMState
     
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
@@ -392,13 +394,13 @@ public class PlayerFSMPickUpState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-
+        data.m_NowAnimation = "Stratagem";
     }
 
     public override void CheckCondition(PlayerController data)
     {
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Pick"))
+        if (info.IsName("PickUp"))
         {
             if (info.normalizedTime > 0.8f)
             {
@@ -539,18 +541,17 @@ public class PlayerFSMRollState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
+        data.m_NowAnimation = "Origin";
     }
 
     public override void Do(PlayerController data)
     {
-       
+        data.m_NowAnimation = "Stratagem";
     }
 
 
@@ -559,8 +560,9 @@ public class PlayerFSMRollState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Roll"))
         {
-            if (info.normalizedTime > 0.95f)
+            if (info.normalizedTime > 0.8f)
             {
+                Debug.Log("enter");
                 data.m_PlayerFSM.PerformPreviousTransition();
             }
         }

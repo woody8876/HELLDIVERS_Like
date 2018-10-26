@@ -7,9 +7,10 @@ public class PlayerFSMSystem
     private List<PlayerFSMState> m_states;
     private Dictionary<ePlayerFSMTrans, PlayerFSMState> m_GlobalMap;
     private ePlayerFSMStateID m_currentStateID;
+    private ePlayerFSMStateID m_CurrentGlobalStateID;
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private PlayerFSMState m_currentState;
-    private PlayerFSMState m_CurrentGlobalState;
+    private PlayerFSMState m_CurrentGlobalState = null;
     private PlayerFSMState m_PreviousState;
     public PlayerFSMState CurrentState { get { return m_currentState; } }
     private PlayerController m_Data;
@@ -30,14 +31,9 @@ public class PlayerFSMSystem
     {
         if (m_GlobalMap.ContainsKey(t))
         {
-            m_currentState.DoBeforeLeave(m_Data);
-            if (m_currentStateID != ePlayerFSMStateID.DeadStateID)
-            {
-                m_PreviousState = m_currentState;
-            }
-            m_currentState = m_GlobalMap[t];
-            m_currentState.DoBeforeEnter(m_Data);
-            m_currentStateID = m_currentState.m_StateID;
+            m_CurrentGlobalState = m_GlobalMap[t];
+            m_CurrentGlobalState.DoBeforeEnter(m_Data);
+            m_CurrentGlobalStateID = m_CurrentGlobalState.m_StateID;
         }
     }
 
@@ -110,25 +106,24 @@ public class PlayerFSMSystem
 
     public void PerformPreviousTransition()
     {
-        PlayerFSMState state = m_PreviousState;
-        if (state == null)
-        {
-            return;
-        }
-        // Update the currentStateID and currentState
-
-        m_currentState.DoBeforeLeave(m_Data);
-        m_Data.m_NowAnimation = "Origin";
-
-        m_currentState = state;
-        m_currentStateID = state.m_StateID;
-        m_currentState.DoBeforeEnter(m_Data);
+        m_CurrentGlobalState.DoBeforeLeave(m_Data);
+        m_CurrentGlobalState = null;
     }
 
     public void DoState()
     {
-        //Debug.Log(m_currentStateID);
-        m_currentState.CheckCondition(m_Data);
-        m_currentState.Do(m_Data);
+        Debug.Log(m_currentStateID);
+
+        if (m_CurrentGlobalState == null)
+        {
+            m_currentState.CheckCondition(m_Data);
+            m_currentState.Do(m_Data);
+        }
+        else if (m_CurrentGlobalState != null)
+        {
+            m_CurrentGlobalState.CheckCondition(m_Data);
+            m_CurrentGlobalState.Do(m_Data);
+        }
+
     }
 }
