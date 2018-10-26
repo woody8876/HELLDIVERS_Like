@@ -238,6 +238,9 @@ public class Stratagem : MonoBehaviour
         m_eState = eState.ThrowOut;
     }
 
+    /// <summary>
+    /// Reset used count = 0.
+    /// </summary>
     public void ResetUses()
     {
         m_UsesCount = 0;
@@ -325,7 +328,7 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
-        LoadResult();
+        LoadResult();  // Load stratagem result from object pool.
 
         m_eState = eState.Idle;
         yield break;
@@ -368,7 +371,8 @@ public class Stratagem : MonoBehaviour
 
         if (result != null)
         {
-            result.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+            Quaternion randRotation = Quaternion.Euler(0.0f, Random.Range(0, 360), 0.0f);
+            result.transform.SetPositionAndRotation(this.transform.position, randRotation);
             result.SetActive(true);
         }
     }
