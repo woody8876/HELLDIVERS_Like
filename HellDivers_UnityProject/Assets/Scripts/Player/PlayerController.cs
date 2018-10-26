@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     //private PlayerFSMData m_FSMData;
 
     #endregion Private Variable
-    
+
     public Player m_Player;
     public bool m_FinishAni = false;
     public string m_NowAnimation = "Origin";
@@ -51,22 +51,25 @@ public class PlayerController : MonoBehaviour
         }
 
         #region PlayerFSMMap
-        
-        
+
+
         m_Animator = m_PAC.Animator;
 
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
+        PlayerFSMMeleeAttackState m_MeleeAttackState = new PlayerFSMMeleeAttackState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
         PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
         PlayerFSMPickUpState m_PickUpState = new PlayerFSMPickUpState();
 
-
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_MeleeAttack, m_MeleeAttackState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_PickUp, m_PickUpState);
+
+        m_MeleeAttackState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
@@ -82,15 +85,19 @@ public class PlayerController : MonoBehaviour
         PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
         PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
         PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
+        PlayerFSMRollState m_RollState = new PlayerFSMRollState();
         m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
         m_VictoryState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
         m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+        m_RollState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Roll, m_RollState);
 
         m_PlayerFSM.AddState(m_GunState);
+        m_PlayerFSM.AddState(m_MeleeAttackState);
         m_PlayerFSM.AddState(m_RelodaState);
         m_PlayerFSM.AddState(m_SwitchWeaponState);
         m_PlayerFSM.AddState(m_StratagemState);
@@ -99,6 +106,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_VictoryState);
         m_PlayerFSM.AddState(m_DeadState);
         m_PlayerFSM.AddState(m_ReliveState);
+        m_PlayerFSM.AddState(m_RollState);
 
 
 
@@ -107,7 +115,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(bIsDead);
         if (Input.GetKeyDown(KeyCode.O))
         {
             PerformPlayerDead();
@@ -123,6 +130,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             PerformPlayerRelive();
+        }
+        if (Input.GetButtonDown("Roll"))
+        {
+            PerformPlayerRoll();
         }
         SelectMotionState();
         m_PlayerFSM.DoState();
@@ -174,7 +185,7 @@ public class PlayerController : MonoBehaviour
         }
 
         #region Joystick
-      
+
         else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
@@ -233,7 +244,7 @@ public class PlayerController : MonoBehaviour
             m_Move = v * Vector3.forward + h * Vector3.right;
         }
         if (m_Move.magnitude > 1) m_Move.Normalize();
-        
+
         if (m_Controller.isGrounded == false)
         {
             m_Fall += Physics.gravity * Time.deltaTime;
@@ -292,6 +303,15 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
     }
+    public void PerformPlayerRoll()
+    {
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Roll"))
+        {
+            return;
+        }
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Roll);
+    }
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
@@ -302,11 +322,8 @@ public class PlayerController : MonoBehaviour
         m_PAC.Animator.SetTrigger("GetHurt");
         return true;
     }
-
     #endregion Character Behaviour
-
-
-
+    
 
 
 #if UNITY_EDITOR

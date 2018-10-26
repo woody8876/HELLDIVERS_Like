@@ -6,6 +6,7 @@ public enum ePlayerFSMTrans
 {
     NullTransition,
     Go_Gun,
+    Go_MeleeAttack,
     Go_Reload,
     Go_Stratagem,
     Go_Throw,
@@ -14,11 +15,13 @@ public enum ePlayerFSMTrans
     Go_Victory,
     Go_Dead,
     Go_Relive,
+    Go_Roll,
 }
 public enum ePlayerFSMStateID
 {
     NullStateID,
     GunStateID,
+    MeleeAttackID,
     ReloadStateID,
     StratagemStateID,
     ThrowStateID,
@@ -27,6 +30,7 @@ public enum ePlayerFSMStateID
     VictoryID,
     DeadStateID,
     ReliveStateID,
+    RollStateID,
 }
 
 public class PlayerFSMState
@@ -114,7 +118,7 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            if (Input.GetAxis("Fire1") < 0)
+            if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
                 else shoot = false;
@@ -123,7 +127,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if (Input.GetAxis("Fire1") < 0)
+            if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
             }
@@ -158,6 +162,48 @@ public class PlayerFSMGunState : PlayerFSMState
         if (Input.GetButtonDown("Interactive"))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_PickUp);
+        }
+        if (Input.GetButtonDown("MeleeAttack"))
+        {
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_MeleeAttack);
+        }
+    }
+}
+
+public class PlayerFSMMeleeAttackState : PlayerFSMState
+{
+    bool shoot;
+    public PlayerFSMMeleeAttackState()
+    {
+        m_StateID = ePlayerFSMStateID.MeleeAttackID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerController data)
+    {
+        data.m_PAC.SetAnimator(m_StateID);
+        data.m_NowAnimation = "Stratagem";
+    }
+
+    public override void DoBeforeLeave(PlayerController data)
+    {
+
+    }
+
+    public override void Do(PlayerController data)
+    {
+      
+    }
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("MeleeAttack"))
+        {
+            if (info.normalizedTime > 0.8f)
+            {
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
         }
     }
 }
@@ -256,24 +302,22 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
+        data.m_PAC.SetAnimator(m_StateID, false);
     }
 
     public override void Do(PlayerController data)
     {
-        if (Input.GetAxis("Fire1") < 0)
+        if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
         {
             data.m_NowAnimation = "Throwing";
-            data.m_PAC.SetAnimator(m_StateID);
+            data.m_PAC.SetAnimator(m_StateID, true);
         }
-
-        //data.m_AnimationController.Animator = data.m_AnimationController.Animator;
+        
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
             if (info.normalizedTime > 0.7f)
             {
-                //Throw(time)...
                 data.m_StratagemController.Throw();
             }
         }
@@ -394,7 +438,7 @@ public class PlayerFSMVictoryState : PlayerFSMState
         {
             if (info.normalizedTime > 0.8f)
             {
-                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformPreviousTransition();
             }
         }
     }
@@ -472,8 +516,6 @@ public class PlayerFSMReliveState : PlayerFSMState
             return;
         }
     }
-
-
     public override void CheckCondition(PlayerController data)
     {
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
@@ -481,7 +523,45 @@ public class PlayerFSMReliveState : PlayerFSMState
         {
             if (info.normalizedTime > 0.95f)
             {
-                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformPreviousTransition();
+            }
+        }
+    }
+}
+
+public class PlayerFSMRollState : PlayerFSMState
+{
+    public PlayerFSMRollState()
+    {
+        m_StateID = ePlayerFSMStateID.RollStateID;
+    }
+
+
+    public override void DoBeforeEnter(PlayerController data)
+    {
+        data.m_NowAnimation = "Stratagem";
+        data.m_PAC.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(PlayerController data)
+    {
+
+    }
+
+    public override void Do(PlayerController data)
+    {
+       
+    }
+
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Roll"))
+        {
+            if (info.normalizedTime > 0.95f)
+            {
+                data.m_PlayerFSM.PerformPreviousTransition();
             }
         }
     }

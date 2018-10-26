@@ -107,6 +107,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Reload");
         }
+        else if (state == ePlayerFSMStateID.MeleeAttackID)
+        {
+            m_Animator.SetTrigger("MeleeAttack");
+        }
         else if (state == ePlayerFSMStateID.SwitchWeaponID)
         {
             m_Animator.SetTrigger("SwitchWeapon");
@@ -114,10 +118,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.StratagemStateID)
         {
             m_Animator.SetTrigger("ThrowStandby");
-        }
-        else if (state == ePlayerFSMStateID.ThrowStateID)
-        {
-            m_Animator.SetTrigger("ThrowOut");
         }
         else if (state == ePlayerFSMStateID.DeadStateID)
         {
@@ -134,6 +134,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.PickUpID)
         {
             m_Animator.SetTrigger("Pick");
+        }
+        else if (state == ePlayerFSMStateID.RollStateID)
+        {
+            m_Animator.SetTrigger("Roll");
         }
     }
 

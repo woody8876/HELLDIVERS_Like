@@ -9,6 +9,7 @@ public class PlayerFSMSystem
     private ePlayerFSMStateID m_currentStateID;
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private PlayerFSMState m_currentState;
+    private PlayerFSMState m_PreviousState;
     public PlayerFSMState CurrentState { get { return m_currentState; } }
     private PlayerController m_Data;
     // Use this for initialization
@@ -29,6 +30,10 @@ public class PlayerFSMSystem
         if (m_GlobalMap.ContainsKey(t))
         {
             m_currentState.DoBeforeLeave(m_Data);
+            if (m_currentStateID != ePlayerFSMStateID.DeadStateID)
+            {
+                m_PreviousState = m_currentState;
+            }
             m_currentState = m_GlobalMap[t];
             m_currentState.DoBeforeEnter(m_Data);
             m_currentStateID = m_currentState.m_StateID;
@@ -102,8 +107,26 @@ public class PlayerFSMSystem
         m_currentState.DoBeforeEnter(m_Data);
     }
 
+    public void PerformPreviousTransition()
+    {
+        PlayerFSMState state = m_PreviousState;
+        if (state == null)
+        {
+            return;
+        }
+        // Update the currentStateID and currentState
+
+        m_currentState.DoBeforeLeave(m_Data);
+        m_Data.m_NowAnimation = "Origin";
+
+        m_currentState = state;
+        m_currentStateID = state.m_StateID;
+        m_currentState.DoBeforeEnter(m_Data);
+    }
+
     public void DoState()
     {
+        //Debug.Log(m_currentStateID);
         m_currentState.CheckCondition(m_Data);
         m_currentState.Do(m_Data);
     }
