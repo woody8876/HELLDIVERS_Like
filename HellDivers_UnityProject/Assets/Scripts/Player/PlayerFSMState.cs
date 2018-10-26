@@ -114,7 +114,7 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetAxis("Fire1") < 0)
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
                 else shoot = false;
@@ -123,7 +123,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if (Input.GetButton("Fire1"))
+            if (Input.GetAxis("Fire1") < 0)
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
             }
@@ -261,7 +261,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetAxis("Fire1") < 0)
         {
             data.m_NowAnimation = "Throwing";
             data.m_PAC.SetAnimator(m_StateID);
@@ -464,7 +464,11 @@ public class PlayerFSMReliveState : PlayerFSMState
         if (info.IsName("Relive"))
         {
             if (info.normalizedTime < 0.9f) data.bIsAlive = false;
-            else data.bIsAlive = true;
+            else
+            {
+                data.bIsAlive = true;
+                data.bIsDead = false;
+            }
             return;
         }
     }

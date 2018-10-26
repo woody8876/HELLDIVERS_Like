@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        m_PlayerFSM = new PlayerFSMSystem(this);
         m_Player = this.GetComponent<Player>();
         m_WeaponController = this.GetComponent<WeaponController>();
         m_StratagemController = this.GetComponent<StratagemController>();
@@ -50,15 +51,9 @@ public class PlayerController : MonoBehaviour
         }
 
         #region PlayerFSMMap
-
-        //m_FSMData = new PlayerFSMData();
-        m_PlayerFSM = new PlayerFSMSystem(this);
-        //m_FSMData.m_PlayerFSMSystem = m_PlayerFSM;
-        //m_FSMData.m_PlayerController = this;
-        //m_FSMData.m_AnimationController = m_PAC;
-        //m_FSMData.m_Animator = m_PAC.Animator;
-        //m_FSMData.m_WeaponController = GetComponent<WeaponController>();
-        //m_FSMData.m_StratagemController = GetComponent<StratagemController>();
+        
+        
+        m_Animator = m_PAC.Animator;
 
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
@@ -106,11 +101,13 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_ReliveState);
 
 
+
         #endregion
     }
 
     private void FixedUpdate()
     {
+        Debug.Log(bIsDead);
         if (Input.GetKeyDown(KeyCode.O))
         {
             PerformPlayerDead();
@@ -291,6 +288,10 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Dead);
     }
+    public void PerformPlayerRelive()
+    {
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
+    }
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
@@ -300,10 +301,6 @@ public class PlayerController : MonoBehaviour
         }
         m_PAC.Animator.SetTrigger("GetHurt");
         return true;
-    }
-    public void PerformPlayerRelive()
-    {
-        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
     }
 
     #endregion Character Behaviour
