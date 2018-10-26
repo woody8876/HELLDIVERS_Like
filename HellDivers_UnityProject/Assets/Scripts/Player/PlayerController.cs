@@ -86,10 +86,6 @@ public class PlayerController : MonoBehaviour
         PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
         PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
         PlayerFSMRollState m_RollState = new PlayerFSMRollState();
-        m_DeadState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-        m_VictoryState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-        m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-        m_RollState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
