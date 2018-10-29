@@ -50,9 +50,13 @@ public class MobAnimationsController : MonoBehaviour {
         {
             m_Animator.SetBool("Idle", Bool);
         }
-        if (state == eFSMStateID.ChaseStateID)
+        else if (state == eFSMStateID.ChaseStateID)
         {
             m_Animator.SetBool("Chase", Bool);
+        }
+        else if (state == eFSMStateID.IdleStateID)
+        {
+            m_Animator.SetBool("Idle", Bool);
         }
     }
 }

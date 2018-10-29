@@ -27,8 +27,6 @@ public class AimLine : MonoBehaviour
     }
     private void Update()
     {
-        //m_Enitter = m_LaunchPoint.transform;
-
         if (Input.GetMouseButton(1))
         {
             OpenAimLine();

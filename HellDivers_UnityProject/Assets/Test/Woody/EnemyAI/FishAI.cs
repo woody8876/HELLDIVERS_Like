@@ -21,19 +21,24 @@ public class FishAI : MonoBehaviour {
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
 
-        FSMMoveToState mtstate = new FSMMoveToState();
-        FSMChaseState chasestate = new FSMChaseState();
-        FSMAttackState attackstate = new FSMAttackState();
+        FSMMoveToState m_MoveState = new FSMMoveToState();
+        FSMChaseState m_Chasestate = new FSMChaseState();
+        FSMAttackState m_Attackstate = new FSMAttackState();
+        FSMIdleState m_IdleState = new FSMIdleState();
 
-        mtstate.AddTransition(eFSMTransition.Go_Chase, chasestate);
+        m_MoveState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
-        chasestate.AddTransition(eFSMTransition.Go_Attack, attackstate);
+        m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        
+        m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
 
-        attackstate.AddTransition(eFSMTransition.Go_Chase, chasestate);
+        m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
+        m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
-        m_Fsm.AddState(mtstate);
-        m_Fsm.AddState(chasestate);
-        m_Fsm.AddState(attackstate);
+
+        m_Fsm.AddState(m_MoveState);
+        m_Fsm.AddState(m_Chasestate);
+        m_Fsm.AddState(m_Attackstate);
     }
 	
 	// Update is called once per frame
