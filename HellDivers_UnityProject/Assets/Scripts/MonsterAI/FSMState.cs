@@ -156,6 +156,7 @@ public class FSMMoveToState : FSMState
 
     public override void Do(AIData data)
     {
+        data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_PlayerGO.transform.position;
         SteeringBehaviours.NavMove(data);
         //Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
@@ -275,7 +276,7 @@ public class FSMDeadState : FSMState
 
     public override void Do(AIData data)
     {
-        Debug.Log("Do Dead State");
+       
     }
 
     public override void CheckCondition(AIData data)

@@ -25,6 +25,8 @@ public class SpawnMobs : MonoBehaviour
 
     public void SpawnEnemy()
     {
+        m_Go = Resources.Load("FishAI") as GameObject;
+
         int spawnIndex = Random.Range(0, m_SpawnPoints.Length);
         for (int i = 0; i < 3; i++)
         {
@@ -32,6 +34,8 @@ public class SpawnMobs : MonoBehaviour
             if (m_Go == null) return;
             m_Go.SetActive(true);
             m_Go.transform.position = m_SpawnPoints[spawnIndex].transform.position;
+
+            //Instantiate(m_Go, m_SpawnPoints[spawnIndex].transform.position, m_SpawnPoints[spawnIndex].transform.rotation);
         }
     }
 }

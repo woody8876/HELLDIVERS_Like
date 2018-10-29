@@ -20,6 +20,7 @@ public class FishAI : MonoBehaviour {
         m_AIData.m_FSMSystem = m_Fsm;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
+        m_AIData.navMeshAgent.enabled = false;
 
         FSMMoveToState m_MoveState = new FSMMoveToState();
         FSMChaseState m_Chasestate = new FSMChaseState();

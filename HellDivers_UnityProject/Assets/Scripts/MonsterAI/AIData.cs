@@ -21,7 +21,7 @@ public class AIData
     [HideInInspector] public bool m_bCol;
     [HideInInspector] public bool m_bMove;
     public NavMeshAgent navMeshAgent;
-
+    
     public GameObject m_TargetObject;
     [HideInInspector]
     public Vector3 m_vTarget;
