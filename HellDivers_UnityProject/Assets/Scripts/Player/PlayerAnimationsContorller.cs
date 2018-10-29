@@ -160,7 +160,4 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetBool("ThrowOut", Bool);
         }
     }
-
-
-
 }

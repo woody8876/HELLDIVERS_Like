@@ -95,6 +95,7 @@ public class AimLine : MonoBehaviour
     }
     public void CloseAimLine()
     {
+        if (m_LineRender == null) return;
         m_LineRender.enabled = false;
     }
 

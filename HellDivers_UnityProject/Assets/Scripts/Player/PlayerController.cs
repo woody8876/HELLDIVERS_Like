@@ -132,6 +132,8 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
+            if (m_NowAnimation.Equals("Dead")) return;
+
             PerformPlayerRoll();
         }
         #endregion
@@ -168,6 +170,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (m_NowAnimation.Equals("Dead"))
         {
+            m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
         }
     }
@@ -308,7 +311,8 @@ public class PlayerController : MonoBehaviour
     }
     public void PerformPlayerRelive()
     {
-        //m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
+        if (m_PlayerFSM == null) return;
+        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
     }
     public void PerformPlayerRoll()
     {

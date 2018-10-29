@@ -265,7 +265,7 @@ public class FSMDeadState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-
+        data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(AIData data)
@@ -280,7 +280,14 @@ public class FSMDeadState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Dead"))
+        {
+            if (info.normalizedTime > 0.9f)
+            {
+                ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
+            }
+        }
     }
 }
 

@@ -501,7 +501,8 @@ public class PlayerFSMReliveState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
+        data.m_NowAnimation = "Origin";
+        data.m_PAC.ResetAnimator(data);
     }
 
     public override void Do(PlayerController data)
@@ -526,6 +527,7 @@ public class PlayerFSMReliveState : PlayerFSMState
             if (info.normalizedTime > 0.95f)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                data.m_PlayerFSM.PerformPreviousTransition();
             }
         }
     }

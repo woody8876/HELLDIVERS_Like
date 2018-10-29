@@ -111,8 +111,13 @@ public class PlayerFSMSystem
 
     public void DoState()
     {
-        m_currentState.CheckCondition(m_Data);
-        m_currentState.Do(m_Data);
+        if (m_Data.m_NowAnimation.Equals("Dead") == false)
+        {
+            m_currentState.CheckCondition(m_Data);
+            m_currentState.Do(m_Data);
+        }
+        
+        if (m_CurrentGlobalState == null) return;
         m_CurrentGlobalState.CheckCondition(m_Data);
         m_CurrentGlobalState.Do(m_Data);
     }

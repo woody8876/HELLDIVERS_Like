@@ -35,10 +35,13 @@ public class FishAI : MonoBehaviour {
         m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
+        FSMDeadState m_DeadState = new FSMDeadState();
+        m_Fsm.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
         m_Fsm.AddState(m_MoveState);
         m_Fsm.AddState(m_Chasestate);
         m_Fsm.AddState(m_Attackstate);
+        m_Fsm.AddState(m_DeadState);
     }
 	
 	// Update is called once per frame
@@ -48,6 +51,10 @@ public class FishAI : MonoBehaviour {
             m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         }
         m_Fsm.DoState();
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            m_Fsm.PerformGlobalTransition(eFSMTransition.Go_Dead);
+        }
     }
     private void OnDrawGizmos()
     {

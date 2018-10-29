@@ -37,6 +37,10 @@ public class MobAnimationsController : MonoBehaviour {
         {
            // m_Animator.SetBool();
         }
+        if (state == eFSMStateID.DeadStateID)
+        {
+            m_Animator.SetTrigger("Dead");
+        }
         if (state == eFSMStateID.AttackStateID)
         {
             m_Animator.SetTrigger("Attack");
