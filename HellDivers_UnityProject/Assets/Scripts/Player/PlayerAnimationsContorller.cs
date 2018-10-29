@@ -53,15 +53,18 @@ public class PlayerAnimationsContorller : MonoBehaviour
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
-
     public bool FinishAnimator(PlayerController data)
     {
         data.m_FinishAni = false;
         AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
         data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
         return data.m_FinishAni;
-    }  
+    }
 
+    public void ResetAnimator(PlayerController data)
+    {
+        m_Animator.SetTrigger("Reset");
+    }
     /// <summary>
     /// Set Trigger Animator
     /// </summary>
@@ -122,6 +125,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.DeadStateID)
         {
             m_Animator.SetTrigger("Death");
+            m_Animator.SetTrigger("Reset");
         }
         else if (state == ePlayerFSMStateID.VictoryID)
         {
@@ -156,5 +160,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
             m_Animator.SetBool("ThrowOut", Bool);
         }
     }
+
+
 
 }

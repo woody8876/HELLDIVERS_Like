@@ -94,8 +94,7 @@ public class PlayerFSMSystem
         }
 
         // Update the currentStateID and currentState
-
-
+        
         m_currentState.DoBeforeLeave(m_Data);
         m_Data.m_NowAnimation = "Origin";
 
@@ -112,18 +111,9 @@ public class PlayerFSMSystem
 
     public void DoState()
     {
-        Debug.Log(m_currentStateID);
-
-        if (m_CurrentGlobalState == null)
-        {
-            m_currentState.CheckCondition(m_Data);
-            m_currentState.Do(m_Data);
-        }
-        else if (m_CurrentGlobalState != null)
-        {
-            m_CurrentGlobalState.CheckCondition(m_Data);
-            m_CurrentGlobalState.Do(m_Data);
-        }
-
+        m_currentState.CheckCondition(m_Data);
+        m_currentState.Do(m_Data);
+        m_CurrentGlobalState.CheckCondition(m_Data);
+        m_CurrentGlobalState.Do(m_Data);
     }
 }

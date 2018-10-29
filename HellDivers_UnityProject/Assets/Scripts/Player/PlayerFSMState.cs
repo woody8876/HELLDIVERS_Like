@@ -172,7 +172,6 @@ public class PlayerFSMGunState : PlayerFSMState
 
 public class PlayerFSMMeleeAttackState : PlayerFSMState
 {
-    bool shoot;
     public PlayerFSMMeleeAttackState()
     {
         m_StateID = ePlayerFSMStateID.MeleeAttackID;
@@ -202,13 +201,14 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
         {
             if (info.normalizedTime > 0.8f)
             {
+                Debug.Log("Animation");
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
 }
 
-public class PlayerFSMReloadState : PlayerFSMState
+public class PlayerFSMReloadState  : PlayerFSMState
 {
     public PlayerFSMReloadState()
     {
@@ -467,7 +467,7 @@ public class PlayerFSMDeadState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Death"))
         {
             if (info.normalizedTime < 0.95f) data.bIsDead = false;
@@ -506,7 +506,7 @@ public class PlayerFSMReliveState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Relive"))
         {
             if (info.normalizedTime < 0.9f) data.bIsAlive = false;
@@ -520,12 +520,12 @@ public class PlayerFSMReliveState : PlayerFSMState
     }
     public override void CheckCondition(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Relive"))
         {
             if (info.normalizedTime > 0.95f)
             {
-                data.m_PlayerFSM.PerformPreviousTransition();
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
     }
@@ -557,12 +557,11 @@ public class PlayerFSMRollState : PlayerFSMState
 
     public override void CheckCondition(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Roll"))
         {
             if (info.normalizedTime > 0.8f)
             {
-                Debug.Log("enter");
                 data.m_PlayerFSM.PerformPreviousTransition();
             }
         }

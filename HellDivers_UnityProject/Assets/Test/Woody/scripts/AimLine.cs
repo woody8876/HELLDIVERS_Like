@@ -8,26 +8,25 @@ public class AimLine : MonoBehaviour
     #region private variable
     private GameObject m_GoLineRender;
     private LineRenderer m_LineRender;
-    
-    private PlayerParts m_PlayerParts = new PlayerParts();
+    private PlayerParts m_PlayerParts;
     private int straightPosCount = 2;
     private int spinePosCount = 50;
     #endregion
-    public GameObject m_LaunchPoint;
-    public Transform m_Enitter;
-
+    private Transform m_LaunchPoint;
+    private Transform m_Enitter;
 
     private void Start()
     {
+        m_PlayerParts = GetComponent<PlayerParts>();
         m_GoLineRender =  Resources.Load("LineRender") as GameObject;
         m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
         SetAimLineInfo(true);
+        m_LaunchPoint = m_PlayerParts.LaunchPoint;
+        m_Enitter = m_LaunchPoint;
     }
     private void Update()
     {
-        m_LaunchPoint = Resources.Load("LaunchPoint") as GameObject;
-
         //m_Enitter = m_LaunchPoint.transform;
 
         if (Input.GetMouseButton(1))
@@ -37,14 +36,6 @@ public class AimLine : MonoBehaviour
         else if (Input.GetMouseButtonUp(1))
         {
             CloseAimLine();
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            SetAimLineInfo(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.X))
-        {
-            SetAimLineInfo(false);
         }
     }
 
@@ -62,19 +53,16 @@ public class AimLine : MonoBehaviour
         
         m_LineRender.enabled = true;
 
-        //m_Enitter = m_PlayerParts.LaunchPoint;
-
-        //if (m_Enitter == null)
-        //{
-        //    Debug.Log("Can't find the Emitter");
-        //    m_LineRender.SetPosition(0, new Vector3(0,0,0));
-        //    m_LineRender.SetPosition(1, (GetLastPosition()));
-        //}
-        if (m_LineRender.positionCount == straightPosCount)
+        if (m_Enitter == null)
+        {
+            Debug.Log("Can't find the Emitter");
+            m_LineRender.SetPosition(0, new Vector3(0, 0, 0));
+            m_LineRender.SetPosition(1, (GetLastPosition()));
+        }
+        else if (m_LineRender.positionCount == straightPosCount)
         {
             m_LineRender.SetPosition(0, m_Enitter.localPosition);
-            m_LineRender.SetPosition(1, new Vector3(0, 0, 50));
-
+            m_LineRender.SetPosition(1, GetLastPosition());
         }
         else if (m_LineRender.positionCount == spinePosCount)
         {

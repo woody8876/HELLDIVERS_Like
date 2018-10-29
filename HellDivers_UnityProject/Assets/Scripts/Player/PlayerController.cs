@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(AimLine))]
 public class PlayerController : MonoBehaviour
 {
     #region Private Variable
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_Direction;
     private bool bRun = false;
     private bool bInBattle = false;
-    //private PlayerFSMData m_FSMData;
+    private AimLine m_AimLine;
 
     #endregion Private Variable
 
@@ -44,7 +45,7 @@ public class PlayerController : MonoBehaviour
         m_StratagemController = this.GetComponent<StratagemController>();
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
-
+        m_AimLine = this.GetComponent<AimLine>();
         if (Camera.main != null)
         {
             m_Cam = Camera.main.transform;
@@ -86,6 +87,8 @@ public class PlayerController : MonoBehaviour
         PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
         PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
         PlayerFSMRollState m_RollState = new PlayerFSMRollState();
+
+        m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
@@ -175,20 +178,26 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Run")) bRun = true;
         else bRun = false;
 
+        #region Key & Mouse
         if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             FaceDirection();
             bInBattle = true;
         }
+        #endregion
 
         #region Joystick
-
         else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
         {
             FaceDirection();
+            m_AimLine.OpenAimLine();
             bInBattle = true;
         }
-        else bInBattle = false;
+        else
+        {
+            m_AimLine.CloseAimLine();
+            bInBattle = false;
+        }
         #endregion
         m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
     }
@@ -298,11 +307,11 @@ public class PlayerController : MonoBehaviour
     }
     public void PerformPlayerRelive()
     {
-        m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
+        //m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Relive);
     }
     public void PerformPlayerRoll()
     {
-        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Roll"))
         {
             return;
