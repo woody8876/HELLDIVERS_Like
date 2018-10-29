@@ -28,7 +28,7 @@ public class Weapon_ShotGun : Weapon
                     Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread));
                 go.SetActive(true);
                 weaponInfo.Ammo--;
-                Debug.DrawRay(pos, go.transform.forward, Color.green, 10f);
+                Debug.DrawRay(pos, go.transform.forward * 10, Color.green, 1f);
                 if (CheckHit(pos, go.transform.forward))
                 {
                     damage = weaponInfo.Damage;
