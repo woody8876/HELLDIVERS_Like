@@ -165,36 +165,7 @@ public class SteeringBehaviours
         m_vForward.y = 0;
         return m_vForward;
     }
-
-    static public bool Flee(AIData data)
-    {
-        data.m_vTarget = data.m_Go.transform.position;
-        Vector3 cPos = data.m_Go.transform.position;
-        Vector3 vec = data.m_PlayerGO.transform.position - cPos;
-        vec.y = 0.0f;
-        float fDist = vec.magnitude;
-        Vector3 vf = data.m_Go.transform.forward;
-        Vector3 vr = data.m_Go.transform.right;
-        float fDotF = Vector3.Dot(vf, vec.normalized);
-        float fDotR = Vector3.Dot(vr, vec.normalized);
-
-
-        if (fDotF < -0.96f)
-        {
-            fDotF = -1.0f;
-            data.m_Go.transform.forward = -vec;
-            data.m_fTempTurnForce = 0.0f;
-            data.m_fRot = 0.0f;
-        }
-        else
-        {
-            data.m_fTempTurnForce = -fDotR;
-        }
-        data.m_fMoveForce = -fDotF;
-        data.m_bMove = true;
-        return true;
-    }
-
+    
     static public bool CreatRandomTarget(AIData data)
     {
         Vector3 nextTarget = data.m_Go.transform.forward;

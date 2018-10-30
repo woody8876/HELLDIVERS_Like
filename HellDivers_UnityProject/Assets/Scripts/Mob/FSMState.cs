@@ -9,8 +9,9 @@ public enum eFSMTransition
     Go_MoveTo,
     Go_Chase,
     Go_Attack,
-    GO_Wander,
     GO_WanderIdle,
+    GO_Wander,
+    Go_CallArmy,
     GO_Flee,
     Go_Dead,
 }
@@ -21,8 +22,9 @@ public enum eFSMStateID
     MoveToStateID,
     ChaseStateID,
     AttackStateID,
-    WanderStateID,
     WanderIdleStateID,
+    WanderStateID,
+    CallArmyState,
     FleeStateID,
     DeadStateID,
 }
@@ -280,7 +282,7 @@ public class FSMDeadState : FSMState
 
     public override void Do(AIData data)
     {
-       
+
     }
 
     public override void CheckCondition(AIData data)
@@ -374,11 +376,11 @@ public class FSMWanderState : FSMState
     }
 }
 
-public class FSMFleeState : FSMState
+public class FSMCallArmyState : FSMState
 {
-    public FSMFleeState()
+    public FSMCallArmyState()
     {
-        m_StateID = eFSMStateID.FleeStateID;
+        m_StateID = eFSMStateID.CallArmyState;
     }
 
 
@@ -394,8 +396,43 @@ public class FSMFleeState : FSMState
 
     public override void Do(AIData data)
     {
-        SteeringBehaviours.Flee(data);
-        SteeringBehaviours.Move(data);
+
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+
+        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
+    }
+}
+
+public class FSMFleeState : FSMState
+{
+    public FSMFleeState()
+    {
+        m_StateID = eFSMStateID.FleeStateID;
+    }
+
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        data.navMeshAgent.enabled = true;
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+        data.navMeshAgent.enabled = false;
+    }
+
+    public override void Do(AIData data)
+    {
+        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_PlayerGO.transform.position).normalized;
+        data.m_vTarget.y = data.m_Go.transform.position.y;
+        SteeringBehaviours.NavMove(data);
     }
 
     public override void CheckCondition(AIData data)
