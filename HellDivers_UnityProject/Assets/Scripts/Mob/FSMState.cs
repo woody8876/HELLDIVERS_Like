@@ -232,9 +232,13 @@ public class FSMAttackState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
+        Vector3 targetDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+        Vector3 newDir = Vector3.RotateTowards(data.m_Go.transform.forward, targetDir, 0.1f, 0.1f);
+        data.m_Go.transform.rotation = Quaternion.LookRotation(newDir);
+
         data.navMeshAgent.enabled = false;
-        data.m_Go.transform.forward = Quaternion.AngleAxis(Vector3.Angle(data.m_Go.transform.forward,data.m_PlayerGO.transform.position - data.m_Go.transform.position), Vector3.up) * data.m_Go.transform.forward;
         data.m_AnimationController.SetAnimator(m_StateID);
+        DoDamage(data);
     }
 
     public override void DoBeforeLeave(AIData data)
@@ -257,6 +261,23 @@ public class FSMAttackState : FSMState
             if (info.normalizedTime > 0.9f)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
+            }
+        }
+    }
+
+    private void DoDamage(AIData data)
+    {
+        RaycastHit hit;
+        if (Physics.CapsuleCast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward * 10.0f, 50.0f,data.m_Go.transform.forward , out hit))
+        {
+            Debug.Log("OnHit");
+
+            if (hit.collider.transform.tag == "Player")
+            {
+                Debug.Log("OnDamage");
+
+                IDamageable target = hit.transform.GetComponent<IDamageable>();
+                target.TakeDamage(10.0f, hit.point);
             }
         }
     }
@@ -382,7 +403,6 @@ public class FSMWanderState : FSMState
 
 public class FSMCallArmyState : FSMState
 {
-    private SpawnMobs SpawnMobs;
     public FSMCallArmyState()
     {
         m_StateID = eFSMStateID.CallArmyState;
@@ -391,8 +411,7 @@ public class FSMCallArmyState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        SpawnMobs = data.m_PlayerGO.GetComponent<SpawnMobs>();
-        SpawnMobs.SpawnFish();
+        SpawnMobs.m_Instance.SpawnFish( 5);
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 

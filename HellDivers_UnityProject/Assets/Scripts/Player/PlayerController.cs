@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerAnimationsContorller))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AimLine))]
-[RequireComponent(typeof(SpawnMobs))]
 public class PlayerController : MonoBehaviour
 {
     #region Private Variable

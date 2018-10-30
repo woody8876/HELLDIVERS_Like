@@ -8,8 +8,10 @@ public class MapInfo : MonoBehaviour
 
     public List<Transform> SpawnPos { get { return m_SpawnPos; } }
     public List<Transform> TowerPos { get { return m_TowerPos; } }
+    public List<Transform> MobPos { get { return m_MobPos; } }
     [SerializeField] private List<Transform> m_SpawnPos;
     [SerializeField] private List<Transform> m_TowerPos;
+    [SerializeField] private List<Transform> m_MobPos;
 
     public Transform GetRandomSpawnPos()
     {
@@ -32,6 +34,7 @@ public class MapInfo : MonoBehaviour
     {
         AutoScanPositions("SpawnPosGroup", out m_SpawnPos);
         AutoScanPositions("TowerPosGroup", out m_TowerPos);
+        AutoScanPositions("MobPosGroup", out m_MobPos);
     }
 
     private void AutoScanPositions(string rootName, out List<Transform> container)

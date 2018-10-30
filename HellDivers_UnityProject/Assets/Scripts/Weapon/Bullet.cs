@@ -26,18 +26,24 @@ public class Bullet : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void FixedUpdate () {
         StartCoroutine(BulletDeath());
     }
 
     private void OnTriggerEnter(Collider other)
     {
         //m_bullet.enabled = false;
+
+        if (other.transform.tag == "Player")
+        {
+            IDamageable target = other.transform.GetComponent<IDamageable>();
+            target.TakeDamage(GameData.Instance.WeaponInfoTable[m_ID].Damage, other.transform.position);
+        }
     }
 
     IEnumerator BulletDeath()
     {
-        this.transform.position = this.transform.position + this.transform.forward * Time.deltaTime * m_fSpeed;
+        this.transform.position = this.transform.position + this.transform.forward * Time.fixedDeltaTime * m_fSpeed;
         yield return new WaitForSeconds(m_fRange/m_fSpeed);
         ObjectPool.m_Instance.UnLoadObjectToPool(m_iID, this.gameObject);
     }
