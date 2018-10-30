@@ -37,30 +37,41 @@ public class MobAnimationsController : MonoBehaviour {
         {
            // m_Animator.SetBool();
         }
-        if (state == eFSMStateID.DeadStateID)
+        else if (state == eFSMStateID.DeadStateID)
         {
             m_Animator.SetTrigger("Dead");
         }
-        if (state == eFSMStateID.AttackStateID)
+        else if (state == eFSMStateID.AttackStateID)
         {
             m_Animator.SetTrigger("Attack");
         }
-
+        else if (state == eFSMStateID.CallArmyState)
+        {
+            m_Animator.SetTrigger("CallArmy");
+        }
     }
 
     private void UpdateAnimator(eFSMStateID state, bool Bool)
     {
-        if (state == eFSMStateID.AttackStateID)
-        {
-            m_Animator.SetBool("Idle", Bool);
-        }
-        else if (state == eFSMStateID.ChaseStateID)
+        if (state == eFSMStateID.ChaseStateID)
         {
             m_Animator.SetBool("Chase", Bool);
         }
         else if (state == eFSMStateID.IdleStateID)
         {
             m_Animator.SetBool("Idle", Bool);
+        }
+        else if (state == eFSMStateID.WanderStateID)
+        {
+            m_Animator.SetBool("Wander", Bool);
+        }
+        else if (state == eFSMStateID.WanderIdleStateID)
+        {
+            m_Animator.SetBool("Idle", Bool);
+        }
+        else if (state == eFSMStateID.FleeStateID)
+        {
+            m_Animator.SetBool("Flee", Bool);
         }
     }
 }

@@ -30,6 +30,7 @@ public class AIData
     public FSMSystem m_FSMSystem;
 
     public MobAnimationsController m_AnimationController;
+    
 
     #region Attack attribute
     [HideInInspector]

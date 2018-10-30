@@ -17,21 +17,25 @@ public class PatrolAI : MonoBehaviour {
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
 
-        FSMWanderIdleState wanderIdleState = new FSMWanderIdleState();
-        FSMWanderState wanderState = new FSMWanderState();
-        FSMFleeState fleeState = new FSMFleeState();
+        FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
+        FSMWanderState m_WanderState = new FSMWanderState();
+        FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
+        FSMFleeState m_FleeState = new FSMFleeState();
 
-        wanderIdleState.AddTransition(eFSMTransition.GO_Wander, wanderState);
-        wanderIdleState.AddTransition(eFSMTransition.GO_Flee, fleeState);
+        m_WanderIdleState.AddTransition(eFSMTransition.GO_Wander, m_WanderState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
 
-        wanderState.AddTransition(eFSMTransition.GO_WanderIdle, wanderIdleState);
-        wanderState.AddTransition(eFSMTransition.GO_Flee, fleeState);
+        m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_WanderState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
 
-        fleeState.AddTransition(eFSMTransition.GO_WanderIdle, wanderIdleState);
+        m_CallArmyState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
 
-        m_FSM.AddState(wanderIdleState);
-        m_FSM.AddState(wanderState);
-        m_FSM.AddState(fleeState);
+        m_FleeState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+
+        m_FSM.AddState(m_WanderIdleState);
+        m_FSM.AddState(m_WanderState);
+        m_FSM.AddState(m_CallArmyState);
+        m_FSM.AddState(m_FleeState);
     }
 	
 	// Update is called once per frame
