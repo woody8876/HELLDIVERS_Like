@@ -24,6 +24,7 @@ public class EnemyData{
     public GameObject m_curActive;
 
     public Transform m_vTarget;
+    public Transform m_vMissilePos;
     public Transform m_vCenter;
 
     public List<GameObject> m_Obstacle;

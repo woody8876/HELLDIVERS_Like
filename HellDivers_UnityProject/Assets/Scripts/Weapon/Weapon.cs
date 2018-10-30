@@ -15,7 +15,6 @@ public class WeaponInfo
     public int _Type;
     public string _Title;
     public float _Damage;
-    public float _Center_Damage;
     public float _Explosion_Damage;
     public float _FireRate;
     public int _Capacity;
@@ -35,7 +34,6 @@ public class WeaponInfo
     public int Type { get { return _Type; } }
     public string Title { get { return _Title; } }
     public float Damage { get { return _Damage; } }
-    public float Center_Damage { get { return _Center_Damage; } }
     public float Explosion_Damage { get { return _Explosion_Damage; } }
     public float FireRate { get { return 1 / (_FireRate * 0.017f); } }
     public int Capacity { get { return _Capacity; } }
