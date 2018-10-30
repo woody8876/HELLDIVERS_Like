@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     public Player m_Player;
     public bool m_FinishAni = false;
-    public string m_NowAnimation = "Origin";
+    public string m_MoveMode = "Origin";
     public Animator m_Animator;
     public PlayerAnimationsContorller m_PAC;
     public WeaponController m_WeaponController;
@@ -71,30 +71,30 @@ public class PlayerController : MonoBehaviour
         m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_PickUp, m_PickUpState);
 
-        m_MeleeAttackState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
         m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_MeleeAttackState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_SwitchWeaponState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_PickUpState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
-        m_ThrowState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
-        PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
-        PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
-        PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
         PlayerFSMRollState m_RollState = new PlayerFSMRollState();
+        PlayerFSMVictoryState m_VictoryState = new PlayerFSMVictoryState();
+        PlayerFSMDeadState m_DeadState = new PlayerFSMDeadState();
+        PlayerFSMReliveState m_ReliveState = new PlayerFSMReliveState();
 
         m_ReliveState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
-        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
-        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
-        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Roll, m_RollState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Victory, m_VictoryState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
+        m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
 
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_MeleeAttackState);
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
-            if (m_NowAnimation.Equals("Dead")) return;
+            if (m_MoveMode.Equals("Dead")) return;
 
             PerformPlayerRoll();
         }
@@ -148,27 +148,27 @@ public class PlayerController : MonoBehaviour
 
     private void SelectMotionState()
     {
-        if (m_NowAnimation.Equals("Origin"))
+        if (m_MoveMode.Equals("Origin"))
         {
             BasicMove();
             return;
         }
-        else if (m_NowAnimation.Equals("Stratagem"))
+        else if (m_MoveMode.Equals("Stop"))
         {
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
         }
-        else if (m_NowAnimation.Equals("Throw"))
+        else if (m_MoveMode.Equals("Throw"))
         {
             ThrowMove();
             return;
         }
-        else if (m_NowAnimation.Equals("Throwing"))
+        else if (m_MoveMode.Equals("Throwing"))
         {
             ThrowingMove();
             return;
         }
-        else if (m_NowAnimation.Equals("Dead"))
+        else if (m_MoveMode.Equals("Dead"))
         {
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;

@@ -96,7 +96,7 @@ public class PlayerFSMSystem
         // Update the currentStateID and currentState
         
         m_currentState.DoBeforeLeave(m_Data);
-        m_Data.m_NowAnimation = "Origin";
+        m_Data.m_MoveMode = "Origin";
 
         m_currentState = state;
         m_currentStateID = state.m_StateID;
@@ -111,7 +111,7 @@ public class PlayerFSMSystem
 
     public void DoState()
     {
-        if (m_Data.m_NowAnimation.Equals("Dead") == false)
+        if (m_Data.m_MoveMode.Equals("Dead") == false)
         {
             m_currentState.CheckCondition(m_Data);
             m_currentState.Do(m_Data);

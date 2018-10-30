@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class SpawnMobs : MonoBehaviour
 {
-
-    public float m_SpawnTime = 3f;
+    private float m_SpawnTime = 3f;
+    private float m_SpawnStartTime = 0.0f;
     private GameObject[] m_SpawnPoints;
     public GameObject m_Go;
     // Use this for initialization
     void Start()
     {
-        //m_Go = Resources.Load("FishAI") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(Resources.Load("FishAI"), 20, 3001);
+        m_Go = Resources.Load("Mobs/Fish") as GameObject;
+
+        ObjectPool.m_Instance.InitGameObjects(m_Go, 20, 3001);
         m_SpawnPoints = GameObject.FindGameObjectsWithTag("MobSpawnPoint");
-        InvokeRepeating("SpawnEnemy", 0.0f, m_SpawnTime);
+        InvokeRepeating("SpawnEnemy", m_SpawnStartTime, m_SpawnTime);
     }
 
     // Update is called once per frame
@@ -25,17 +26,13 @@ public class SpawnMobs : MonoBehaviour
 
     public void SpawnEnemy()
     {
-        m_Go = Resources.Load("FishAI") as GameObject;
-
         int spawnIndex = Random.Range(0, m_SpawnPoints.Length);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
             m_Go = ObjectPool.m_Instance.LoadGameObjectFromPool(3001);
             if (m_Go == null) return;
             m_Go.SetActive(true);
             m_Go.transform.position = m_SpawnPoints[spawnIndex].transform.position;
-
-            //Instantiate(m_Go, m_SpawnPoints[spawnIndex].transform.position, m_SpawnPoints[spawnIndex].transform.rotation);
         }
     }
 }

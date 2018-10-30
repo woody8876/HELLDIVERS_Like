@@ -129,7 +129,7 @@ public class FSMIdleState : FSMState
                 }
             }
         }
-        else if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
@@ -159,8 +159,8 @@ public class FSMMoveToState : FSMState
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_PlayerGO.transform.position;
         SteeringBehaviours.NavMove(data);
-        //Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
-        //data.m_Go.transform.position += v;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        data.m_Go.transform.position += v;
     }
 
     public override void CheckCondition(AIData data)
@@ -205,6 +205,8 @@ public class FSMChaseState : FSMState
     {
         data.m_vTarget = data.m_TargetObject.transform.position;
         SteeringBehaviours.NavMove(data);
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        data.m_Go.transform.position += v;
     }
 
     public override void CheckCondition(AIData data)
@@ -240,7 +242,8 @@ public class FSMAttackState : FSMState
 
     public override void Do(AIData data)
     {
-
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        data.m_Go.transform.position += v;
     }
 
     public override void CheckCondition(AIData data)
@@ -266,6 +269,7 @@ public class FSMDeadState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
+        data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
@@ -286,6 +290,7 @@ public class FSMDeadState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_MoveTo);
                 ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
             }
         }
@@ -343,16 +348,16 @@ public class FSMWanderState : FSMState
     }
     public override void DoBeforeEnter(AIData data)
     {
-
+        data.navMeshAgent.enabled = true;
     }
     public override void DoBeforeLeave(AIData data)
     {
-
+        data.navMeshAgent.enabled = false;
     }
     public override void Do(AIData data)
     {
-        SteeringBehaviours.Seek(data);
-        SteeringBehaviours.Move(data);
+        data.m_vTarget.y = data.m_Go.transform.position.y;
+        SteeringBehaviours.NavMove(data);
     }
     public override void CheckCondition(AIData data)
     {

@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PatrolAI : MonoBehaviour {
 
-    public AIData m_Data;
+    public AIData m_AIData;
     FSMSystem m_FSM;
     // Use this for initialization
     void Start () {
-        m_FSM = new FSMSystem(m_Data);
-        m_Data.m_Go = this.gameObject;
-        m_Data.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        m_Data.m_FSMSystem = m_FSM;
+        m_FSM = new FSMSystem(m_AIData);
+        m_AIData.m_Go = this.gameObject;
+        m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+        m_AIData.m_FSMSystem = m_FSM;
+        m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
+        m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
+        m_AIData.navMeshAgent.enabled = false;
 
         FSMWanderIdleState wanderIdleState = new FSMWanderIdleState();
         FSMWanderState wanderState = new FSMWanderState();
@@ -32,15 +36,15 @@ public class PatrolAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(m_Data.m_PlayerGO == null)
+        if(m_AIData.m_PlayerGO == null)
         {
-            m_Data.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+            m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         }
         m_FSM.DoState();
 	}
     private void OnDrawGizmos()
     {
-        if (m_Data == null || m_FSM == null)
+        if (m_AIData == null || m_FSM == null)
         {
             return;
         }
@@ -53,10 +57,10 @@ public class PatrolAI : MonoBehaviour {
         else if (m_FSM.CurrentStateID == eFSMStateID.FleeStateID)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, m_Data.m_vTarget);
+            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
-        Gizmos.DrawWireSphere(m_Data.m_vTarget, 0.5f);
+        Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
-        Gizmos.DrawWireSphere(this.transform.position, m_Data.m_fProbeLength);
+        Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fProbeLength);
     }
 }

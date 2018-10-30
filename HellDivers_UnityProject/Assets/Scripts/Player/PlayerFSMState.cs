@@ -131,7 +131,11 @@ public class PlayerFSMGunState : PlayerFSMState
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
             }
-            else shoot = false;
+            else
+            {
+                data.m_WeaponController.m_fSpreadIncrease = 0;
+                shoot = false;
+            }
         }
         data.m_PAC.SetAnimator(m_StateID, shoot);
     }
@@ -181,7 +185,7 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_PAC.SetAnimator(m_StateID);
-        data.m_NowAnimation = "Stratagem";
+        data.m_MoveMode = "Stop";
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -201,7 +205,6 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
         {
             if (info.normalizedTime > 0.8f)
             {
-                Debug.Log("Animation");
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
         }
@@ -252,6 +255,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
     }
     public override void DoBeforeEnter(PlayerController data)
     {
+        data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID, true);
     }
 
@@ -262,8 +266,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
-
         if (data.m_StratagemController.IsCheckingCode == false)
         {
             data.m_StratagemController.StartCheckCodes();
@@ -298,7 +300,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-      
+        data.m_MoveMode = "Throw";
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -308,11 +310,9 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        data.m_NowAnimation = "Throw";
-
         if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
         {
-            data.m_NowAnimation = "Throwing";
+            data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);
         }
         
@@ -394,7 +394,7 @@ public class PlayerFSMPickUpState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
+        data.m_MoveMode = "Stratagem";
     }
 
     public override void CheckCondition(PlayerController data)
@@ -456,7 +456,7 @@ public class PlayerFSMDeadState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_NowAnimation = "Dead";
+        data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
@@ -496,12 +496,13 @@ public class PlayerFSMReliveState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-        data.m_NowAnimation = "Origin";
+        data.m_MoveMode = "Origin";
         data.m_PAC.ResetAnimator(data);
     }
 
@@ -543,17 +544,18 @@ public class PlayerFSMRollState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-        data.m_NowAnimation = "Origin";
+        data.m_MoveMode = "Origin";
     }
 
     public override void Do(PlayerController data)
     {
-        data.m_NowAnimation = "Stratagem";
+        
     }
 
 

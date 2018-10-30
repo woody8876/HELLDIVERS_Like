@@ -37,6 +37,8 @@ public class FishAI : MonoBehaviour {
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
         FSMDeadState m_DeadState = new FSMDeadState();
+        m_DeadState.AddTransition(eFSMTransition.Go_MoveTo, m_MoveState);
+
         m_Fsm.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
         m_Fsm.AddState(m_MoveState);
