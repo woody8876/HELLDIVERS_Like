@@ -21,7 +21,7 @@ public class GameMain : MonoBehaviour
     private GameData m_GameData = new GameData();
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private List<Player> m_Players = new List<Player>();
-    private SpawnMobs m_MobSpawner = new SpawnMobs();
+    private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
 
     private void Awake()

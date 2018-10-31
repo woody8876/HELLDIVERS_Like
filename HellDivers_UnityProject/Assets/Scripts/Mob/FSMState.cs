@@ -304,15 +304,7 @@ public class FSMDeadState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Dead"))
-        {
-            if (info.normalizedTime > 0.9f)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_MoveTo);
-                ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
-            }
-        }
+
     }
 }
 
@@ -348,10 +340,12 @@ public class FSMWanderIdleState : FSMState
     public override void CheckCondition(AIData data)
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        Debug.Log(Dist);
 
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
+            return;
         }
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
@@ -385,9 +379,12 @@ public class FSMWanderState : FSMState
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
+        Debug.Log(Dist);
+
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
+            return;
         }
         else if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
         {
@@ -406,7 +403,7 @@ public class FSMCallArmyState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        SpawnMobs.m_Instance.SpawnFish(5);
+        MobManager.m_Instance.SpawnFish(5);
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
