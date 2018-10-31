@@ -7,7 +7,7 @@ public class UIPlayerInfo : MonoBehaviour
 {
     public Player CurrentPlayer { get { return m_Player; } }
     private Player m_Player;
-    private Text m_PlayerName;
+    [SerializeField] private GameObject m_Title;
 
     public void Initialize(Player player)
     {
