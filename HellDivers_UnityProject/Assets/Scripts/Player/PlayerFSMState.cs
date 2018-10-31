@@ -165,7 +165,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0)
+            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))/* && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0*/)
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
             }
