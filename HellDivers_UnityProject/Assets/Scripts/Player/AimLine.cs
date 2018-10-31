@@ -17,11 +17,11 @@ public class AimLine : MonoBehaviour
 
     private void Start()
     {
-        m_PlayerParts = GetComponent<PlayerParts>();
-        m_GoLineRender =  Resources.Load("LineRender") as GameObject;
+        m_GoLineRender =  Resources.Load("LineRender/LineRender") as GameObject;
         m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
         SetAimLineInfo(true);
+        m_PlayerParts = GetComponent<PlayerParts>();
         m_LaunchPoint = m_PlayerParts.LaunchPoint;
         m_Enitter = m_LaunchPoint;
     }
