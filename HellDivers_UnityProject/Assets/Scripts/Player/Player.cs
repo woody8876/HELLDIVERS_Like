@@ -21,6 +21,11 @@ public class Player : Character
     /// </summary>
     public StratagemController StratagemController { get { return m_StratagemController; } }
 
+    /// <summary>
+    /// Current player infos.
+    /// </summary>
+    public PlayerInfo Info { get { return m_Data; } }
+
     #endregion Properties
 
     #region Private Variable

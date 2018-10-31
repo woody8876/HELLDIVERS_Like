@@ -66,6 +66,11 @@ public class GameMain : MonoBehaviour
         player.Initialize(data);
         m_Players.Add(player);
 
+        if (UIMain.Instance != null)
+        {
+            UIMain.Instance.AddPlayerInfo(player);
+        }
+
         // Camera start following player
         if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);
         else m_CameraFollowing.AddTarget(player.transform);
