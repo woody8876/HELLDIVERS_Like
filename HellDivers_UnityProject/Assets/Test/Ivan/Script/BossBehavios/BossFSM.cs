@@ -244,41 +244,46 @@ public class BossMissleState : BossFSM
 {
     float fCount;
     float fMissile;
-
+    float fMissileTime;
     public BossMissleState()
     {
         m_StateID = eFSMStateID.MISSILE;
     }
     public override void DoBeforeEnter(EnemyData data)
     {
+        m_fCurrentTime = 0;
+        fMissileTime = Mathf.Sqrt(data.m_vMissilePos.position.y * 0.204f);
         if (!data.m_bMissiling)
         {
             fCount = Random.Range(3, 7);
             fMissile = 0;
         }
         data.m_bMissiling = true;
+        m_BSF.Missile(data.m_vMissilePos);
     }
     public override void DoBeforeLeave(EnemyData data)
     {
+        fMissile++;
         ObjectPool.m_Instance.UnLoadObjectToPool((int)BossStateFuntion.EItem.CIRCLE, data.m_curActive);
     }
     public override void Do(EnemyData data)
     {
-        if (fMissile < fCount)
-        {
-            m_BSF.Missile(data.m_vCurPos);
-            fMissile++;
-        }
-        else
+        m_fCurrentTime += Time.fixedDeltaTime;
+        m_BSF.Seek(data.m_Go.transform, data.m_vTarget.position);
+        if (fMissile > fCount)         
         {
             m_BSF.ThrowRock(data.m_vCenter, data.m_vCurPos, data);
             data.m_bMissiling = false;
             data.m_bRushing = true;
+            fMissile = 0;
         }
     }
     public override void CheckCondition(EnemyData data)
     {
-        data.m_bossFSMSystem.PerformTransition(eFSMTransition.G0_SEEK);
+        if (m_fCurrentTime > fMissileTime)
+        {
+            data.m_bossFSMSystem.PerformTransition(eFSMTransition.G0_SEEK);
+        }
     }
 }
 

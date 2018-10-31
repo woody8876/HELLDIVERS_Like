@@ -33,6 +33,8 @@ public class Turret_Test : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         m_weaponController.ShootState();
-        transform.forward = Target.position - transform.position;
+        Vector3 pos = Target.position;
+        pos.y -= 1.295f;
+        transform.forward = pos - transform.position;
 	}
 }

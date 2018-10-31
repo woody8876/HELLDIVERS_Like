@@ -9,7 +9,7 @@ public class BossAI : MonoBehaviour {
     BossStateFuntion m_BSF;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         m_BFS = new BossFSMSystem(m_data);
         m_BSF = new BossStateFuntion();
         m_BSF.Init();

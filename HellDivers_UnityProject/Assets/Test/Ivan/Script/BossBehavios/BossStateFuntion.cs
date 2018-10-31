@@ -15,6 +15,8 @@ public class BossStateFuntion {
 
     public float m_Radius = 20;
     public float m_Speed = 100f;
+    private float m_Time;
+
     #region Init Function
     public void Init()
     {
@@ -84,13 +86,12 @@ public class BossStateFuntion {
         vec.Normalize();
         user.position += vec * Time.fixedDeltaTime * m_Speed;
     }
-    public void Missile(Vector3 target)
+    public void Missile(Transform user)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool((int)EItem.MISSILE);
         go.SetActive(true);
-        target.y = 40;
-        go.transform.position = target;
-        go.transform.forward = -Vector3.up;
+        go.transform.position = user.position;
+        go.transform.forward = user.forward;
     }
     public void ThrowRock(Transform user, Vector3 target, EnemyData data)
     {
