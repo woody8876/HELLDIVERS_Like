@@ -57,8 +57,9 @@ public class Bullet : MonoBehaviour {
         {
             IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
             target.TakeDamage(m_fDamage, rh.point);
+            BulletDeath();
         }
-        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Obstical")))
+        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Terrain")))
         {
             BulletDeath();
         }

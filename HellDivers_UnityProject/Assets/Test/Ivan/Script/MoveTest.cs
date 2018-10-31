@@ -1,19 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(WeaponController))]
-public class MoveTest : MonoBehaviour {
+public class MoveTest : Character {
 
-    public Transform GunPos;
     public float m_Speed = 30;
     Vector3 m_vPos;
-    WeaponController weaponController;
-    List<int> weapons = new List<int> { 1101, 1301 };
-	// Use this for initialization
-	void Start () {
-        weaponController = GetComponent<WeaponController>();
-        weaponController.AddMultiWeapons(weapons, GunPos);
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,4 +12,5 @@ public class MoveTest : MonoBehaviour {
         m_vPos.z = Input.GetAxis("Vertical") * Time.deltaTime * m_Speed;
         transform.Translate(m_vPos);
 	}
+
 }
