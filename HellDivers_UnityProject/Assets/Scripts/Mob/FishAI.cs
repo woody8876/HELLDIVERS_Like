@@ -13,7 +13,12 @@ public class FishAI : Character {
     {
         
     }
-    void Start () {
+    private void OnEnable()
+    {
+        
+    }
+    protected override void Start () {
+        base.Start();
         m_AIData = new AIData();
         m_Fsm = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
@@ -58,6 +63,11 @@ public class FishAI : Character {
         {
             m_Fsm.PerformGlobalTransition(eFSMTransition.Go_Dead);
         }
+    }
+    public override void Death()
+    {
+        m_bDead = true;
+        m_Fsm.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
     private void OnDrawGizmos()
     {
