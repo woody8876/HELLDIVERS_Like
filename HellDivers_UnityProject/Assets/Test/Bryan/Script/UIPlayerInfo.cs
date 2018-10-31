@@ -43,7 +43,21 @@ public class UIPlayerInfo : MonoBehaviour
         m_PlayerName.text = m_Player.Info.Username;
         m_PlayerRank.text = m_Player.Info.Rank.ToString();
 
-        string rankImgPath = string.Format("UI/Resource/Icons/Rank/icon_rank_{0}", m_Player.Info.Rank.ToString("00"));
+        string rankImgFile = "icon_rank_";
+        if (m_Player.Info.Rank < 1)
+        {
+            rankImgFile += "01";
+        }
+        else if (m_Player.Info.Rank > 40)
+        {
+            rankImgFile += "40";
+        }
+        else
+        {
+            rankImgFile += m_Player.Info.Rank.ToString("00");
+        }
+
+        string rankImgPath = string.Format("UI/Resource/Icons/Rank/{0}", rankImgFile);
         Sprite rankImg = Resources.Load<Sprite>(rankImgPath);
         m_PlayerRankImg.sprite = rankImg;
     }
