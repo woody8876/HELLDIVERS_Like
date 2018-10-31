@@ -8,7 +8,7 @@ public class AIData
 {
     public float m_fRadius = 1;
     public float m_fProbeLength = 10;
-    public float m_fPatrolVisionLength;
+    public float m_fPatrolVisionLength = 7;
     public float m_Speed;
     public float m_fMaxSpeed;
     public float m_fMaxRot;

@@ -37,6 +37,10 @@ public class PlayerController : MonoBehaviour
     {
 
     }
+    private void OnEnable()
+    {
+        
+    }
     private void Start()
     {
         m_PlayerFSM = new PlayerFSMSystem(this);
@@ -56,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
         m_Animator = m_PAC.Animator;
 
+        PlayerFSMStartState m_StartState = new PlayerFSMStartState();
         PlayerFSMGunState m_GunState = new PlayerFSMGunState();
         PlayerFSMReloadState m_RelodaState = new PlayerFSMReloadState();
         PlayerFSMMeleeAttackState m_MeleeAttackState = new PlayerFSMMeleeAttackState();
@@ -63,6 +68,8 @@ public class PlayerController : MonoBehaviour
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
         PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
         PlayerFSMPickUpState m_PickUpState = new PlayerFSMPickUpState();
+
+        m_StartState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_GunState.AddTransition(ePlayerFSMTrans.Go_MeleeAttack, m_MeleeAttackState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
@@ -95,6 +102,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Dead, m_DeadState);
         m_PlayerFSM.AddGlobalTransition(ePlayerFSMTrans.Go_Relive, m_ReliveState);
 
+        m_PlayerFSM.AddState(m_StartState);
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_MeleeAttackState);
         m_PlayerFSM.AddState(m_RelodaState);
@@ -104,7 +112,6 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_PickUpState);
         m_PlayerFSM.AddState(m_VictoryState);
         m_PlayerFSM.AddState(m_DeadState);
-        m_PlayerFSM.AddState(m_ReliveState);
         m_PlayerFSM.AddState(m_RollState);
 
         #endregion
@@ -127,7 +134,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
-            PerformPlayerRelive();
+            //PerformPlayerRelive();
         }
         if (Input.GetButtonDown("Roll"))
         {
@@ -152,23 +159,33 @@ public class PlayerController : MonoBehaviour
             BasicMove();
             return;
         }
+        else if (m_MoveMode.Equals("MoveOnly"))
+        {
+            m_AimLine.CloseAimLine();
+            OnlyMove();
+            return;
+        }
         else if (m_MoveMode.Equals("Stop"))
         {
+            m_AimLine.CloseAimLine();
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
         }
         else if (m_MoveMode.Equals("Throw"))
         {
+            m_AimLine.CloseAimLine();
             ThrowMove();
             return;
         }
         else if (m_MoveMode.Equals("Throwing"))
         {
+            m_AimLine.CloseAimLine();
             ThrowingMove();
             return;
         }
         else if (m_MoveMode.Equals("Dead"))
         {
+            m_AimLine.CloseAimLine();
             m_PAC.Move(Vector3.zero, this.transform.forward, false, false);
             return;
         }
@@ -199,6 +216,35 @@ public class PlayerController : MonoBehaviour
         else
         {
             m_AimLine.CloseAimLine();
+            bInBattle = false;
+        }
+        #endregion
+        m_PAC.Move(m_Move, m_Direction, bRun, bInBattle);
+    }
+
+    private void OnlyMove()
+    {
+        Move();
+
+        if (Input.GetButton("Run")) bRun = true;
+        else bRun = false;
+
+        #region Key & Mouse
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+        #endregion
+
+        #region Joystick
+        else if (Input.GetAxis("DirectionHorizontal") != 0 || Input.GetAxis("DirectionVertical") != 0)
+        {
+            FaceDirection();
+            bInBattle = true;
+        }
+        else
+        {
             bInBattle = false;
         }
         #endregion

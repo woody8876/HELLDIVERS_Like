@@ -6,9 +6,9 @@ public class AimLine : MonoBehaviour
 {
     #region private variable
     private GameObject m_GoLineRender;
-    private LineRenderer m_LineRender;
+    public LineRenderer m_LineRender;
     private PlayerParts m_PlayerParts;
-    private int straightPosCount = 2;
+    private int straightPosCount = 4;
     private int spinePosCount = 50;
     #endregion
     private Transform m_LaunchPoint;
@@ -16,8 +16,9 @@ public class AimLine : MonoBehaviour
 
     private void Start()
     {
-        m_GoLineRender =  Resources.Load("LineRender/LineRender") as GameObject;
+        m_GoLineRender = Resources.Load("LineRender/LineRender") as GameObject;
         m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
+        
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
         SetAimLineInfo(true);
         m_PlayerParts = GetComponent<PlayerParts>();
@@ -47,7 +48,7 @@ public class AimLine : MonoBehaviour
 
     public void OpenAimLine()
     {
-        
+
         m_LineRender.enabled = true;
 
         if (m_Enitter == null)
@@ -59,7 +60,9 @@ public class AimLine : MonoBehaviour
         else if (m_LineRender.positionCount == straightPosCount)
         {
             m_LineRender.SetPosition(0, m_Enitter.localPosition);
-            m_LineRender.SetPosition(1, GetLastPosition());
+            m_LineRender.SetPosition(1, m_Enitter.localPosition + new Vector3(0, 0, 2f));
+            m_LineRender.SetPosition(2, GetLastPosition() - new Vector3(0, 0, 2f));
+            m_LineRender.SetPosition(3, GetLastPosition());
         }
         else if (m_LineRender.positionCount == spinePosCount)
         {
