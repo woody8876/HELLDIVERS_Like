@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(MobAnimationsController))]
-public class FishAI : MonoBehaviour {
+public class FishAI : Character {
     
     FSMSystem m_Fsm;
     public AIData m_AIData;
