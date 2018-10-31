@@ -42,9 +42,9 @@ public class GameMain : MonoBehaviour
     private void Start()
     {
         if (m_PlayerData != null) CreatPlayer(m_PlayerData);
-       
-        //m_MobSpawner.SpawnPatrol(40);
-        //InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
+
+        m_MobSpawner.SpawnPatrol(40);
+        InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
     }
 
     // Update is called once per frame
