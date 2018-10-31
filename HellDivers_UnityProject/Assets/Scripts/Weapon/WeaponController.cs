@@ -64,17 +64,8 @@ public class WeaponController : MonoBehaviour
     #endregion SetWeapon
 
     #region WeaponBehaviours
-
-    //private void IdleState()
-    //{
-    //    if (Input.GetButton("Fire1") && m_cCoolDown == null) { m_ActiveState = ShootState; }
-    //    else if (Input.GetButtonDown("Reload") && m_cCoolDown == null) { m_ActiveState = ReloadState; }
-    //    else if (Input.GetButtonDown("WeaponSwitch")) { m_ActiveState = SwitchWeaponState; }
-    //}
-
     public bool ShootState()
     {
-
         if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0 )
         {
             Debug.Log("Ammo");
@@ -85,21 +76,6 @@ public class WeaponController : MonoBehaviour
         m_cCoolDown = StartCoroutine(WaitCooling());
         return true;
     }
-
-    //private void ShootState()
-    //{
-    //    if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0 || !Input.GetButton("Fire1"))
-    //    {
-    //        Debug.Log("Ammo");
-    //        m_bAutoFire = true;
-    //        m_fSpreadIncrease = 0;
-    //        m_ActiveState = IdleState;
-    //        return;
-    //    }
-    //    else if (!m_bAutoFire) { return; }
-    //    m_bAutoFire = false;
-    //    m_cCoolDown = StartCoroutine(WaitCooling());
-    //}
 
     private IEnumerator WaitCooling()
     {
@@ -117,39 +93,20 @@ public class WeaponController : MonoBehaviour
     public bool ReloadState()
     {
         Debug.Log("Reloading...");
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[_CurrentWeapon].weaponInfo.Capacity || m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags <= 0)
-        {
-            return false;
-        }
+        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[_CurrentWeapon].weaponInfo.Capacity ||
+            m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags <= 0) { return false; }
         else if (m_bReloading) { return false; }
-        //if (m_cCoolDown != null) StopCoroutine(m_cCoolDown);
         m_bReloading = true;
         m_cCoolDown = StartCoroutine(WaitReloading());
         return true;
     }
 
-    //private void ReloadState()
-    //{
-    //    Debug.Log("Reloading...");
-    //    Debug.Log("Mags :" + m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags);
-    //    if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[_CurrentWeapon].weaponInfo.Capacity || m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags <= 0)
-    //    {
-    //        m_ActiveState = IdleState;
-    //        return;
-    //    }
-    //    else if (m_bReloading) { return; }
-    //    //if (m_cCoolDown != null) StopCoroutine(m_cCoolDown);
-    //    Debug.Log("Reload");
-    //    m_bReloading = true;
-    //    m_cCoolDown = StartCoroutine(WaitReloading());
-    //}
-
     private IEnumerator WaitReloading()
     {
-        //if (Input.GetButtonUp("Reload")) { m_ActiveState = IdleState; }
-
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) { yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed); }
-        else { yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
+        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) {
+            yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed); }
+        else {
+            yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
         m_dActiveWeapon[_CurrentWeapon].Reload();
         Debug.Log("Mags :" + m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags);
         m_bReloading = false;
@@ -174,48 +131,12 @@ public class WeaponController : MonoBehaviour
         }
         return false;
     }
-    //private void SwitchWeaponState()
-    //{
-    //    Debug.Log(_CurrentWeapon);
-    //    for (int i = 0; i < ActivedWeapon.Length; i++)
-    //    {
-    //        if (i == ActivedWeapon.Length - 1)
-    //        {
-    //            _CurrentWeapon = ActivedWeapon[0];
-    //            m_ActiveState = IdleState;
-    //            return;
-    //        }
-    //        else if (ActivedWeapon[i] == _CurrentWeapon)
-    //        {
-    //            _CurrentWeapon = ActivedWeapon[i + 1];
-    //            m_ActiveState = IdleState;
-    //            return;
-    //        }
-    //    }
-    //}
-
     #endregion WeaponBehaviours
 
-    #region MonoBehaviors
-
-    //private void Awake()
-    //{
-    //    m_ActiveState = IdleState;
-    //}
-
-    //private void Update()
-    //{
-    //    if (m_dActiveWeapon.Count < 1) { return; }
-    //    m_ActiveState();
-    //}
-
-    #endregion MonoBehaviors
-
     //For Debug
-    //[SerializeField] private int currentWeapon;
-
-    //[SerializeField] private int[] activedWeapon;
-    //[SerializeField] private int currentAmmo;
+    [SerializeField] private int currentWeapon;
+    [SerializeField] private int[] activedWeapon;
+    [SerializeField] private int currentAmmo;
 
     public int _CurrentWeapon { get; private set; }
 

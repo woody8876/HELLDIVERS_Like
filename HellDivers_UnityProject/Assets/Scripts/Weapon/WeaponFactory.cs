@@ -18,6 +18,7 @@ public enum eWeaponType { FirstOne = -1,
     Explosive,
     Laser,
     Anti_Tank,
+    Turret,
     LastOne };
 
 public interface IWeaponBehaviour
@@ -44,6 +45,9 @@ public class WeaponFactory {
                 break;
             case eWeaponType.Shotguns:
                 weaponBehaviour = new Weapon_ShotGun();
+                break;
+            case eWeaponType.Turret:
+                weaponBehaviour = new Weapon_Turret();
                 break;
             default:
                 weaponBehaviour = new Weapon_Rifle();
