@@ -18,8 +18,8 @@ public class PlayerInfo
 
     [SerializeField] private List<int> weapons;
     [SerializeField] private List<int> stratagems;
-    private string username;
-    private int rank;
+    [SerializeField] private string username;
+    [SerializeField] private int rank;
     private int totalMissionFought;
     private int totalMissionWon;
     private int totalDeaths;

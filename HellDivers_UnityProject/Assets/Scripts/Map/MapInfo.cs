@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MapInfo : MonoBehaviour
 {
-    public static MapInfo Instance;
-
+    public static MapInfo Instance { get; private set; }
     public List<Transform> SpawnPos { get { return m_SpawnPos; } }
     public List<Transform> TowerPos { get { return m_TowerPos; } }
+    public List<Transform> MobPos { get { return m_MobPos; } }
     [SerializeField] private List<Transform> m_SpawnPos;
     [SerializeField] private List<Transform> m_TowerPos;
+    [SerializeField] private List<Transform> m_MobPos;
 
     public Transform GetRandomSpawnPos()
     {
@@ -32,13 +33,21 @@ public class MapInfo : MonoBehaviour
     {
         AutoScanPositions("SpawnPosGroup", out m_SpawnPos);
         AutoScanPositions("TowerPosGroup", out m_TowerPos);
+        AutoScanPositions("MobPosGroup", out m_MobPos);
     }
 
     private void AutoScanPositions(string rootName, out List<Transform> container)
     {
         container = new List<Transform>();
-        GameObject spawnPosGrounp = GameObject.Find(rootName);
-        Transform[] positions = spawnPosGrounp.GetComponentsInChildren<Transform>();
+        GameObject positionGroupRoot = GameObject.Find(rootName);
+
+        if (positionGroupRoot)
+        {
+            Debug.LogWarningFormat("{0} doesn't exist.", rootName);
+            return;
+        }
+
+        Transform[] positions = positionGroupRoot.GetComponentsInChildren<Transform>();
         if (positions != null)
         {
             for (int i = 1; i < positions.Length; i++)
