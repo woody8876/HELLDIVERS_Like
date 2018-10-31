@@ -42,7 +42,7 @@ public class GameMain : MonoBehaviour
     private void Start()
     {
         if (m_PlayerData != null) CreatPlayer(m_PlayerData);
-       
+
         m_MobSpawner.SpawnPatrol(10);
         InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
     }
@@ -65,6 +65,11 @@ public class GameMain : MonoBehaviour
         Player player = playerGo.AddComponent<Player>();
         player.Initialize(data);
         m_Players.Add(player);
+
+        if (UIMain.Instance != null)
+        {
+            UIMain.Instance.AddPlayerInfo(player);
+        }
 
         // Camera start following player
         if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);

@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIMain : MonoBehaviour {
+public class UIMain : MonoBehaviour
+{
+    public static UIMain Instance { get; private set; }
+    [SerializeField] private Transform m_PlayerInfoPanel;
+    [SerializeField] private GameObject m_PlayerInfoPrefab;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(this);
+    }
+
+    public void AddPlayerInfo(Player player)
+    {
+        GameObject newPlayerinfo = Instantiate(m_PlayerInfoPrefab, m_PlayerInfoPanel);
+        UIPlayerInfo uiPlayerInfo = newPlayerinfo.GetComponent<UIPlayerInfo>();
+        uiPlayerInfo.Initialize(player);
+    }
 }
