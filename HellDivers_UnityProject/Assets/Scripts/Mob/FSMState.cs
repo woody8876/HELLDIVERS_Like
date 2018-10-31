@@ -171,7 +171,6 @@ public class FSMMoveToState : FSMState
         GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
         if (go != null)
         {
-            data.m_TargetObject = go;
             if (bAttack)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
@@ -205,16 +204,16 @@ public class FSMChaseState : FSMState
 
     public override void Do(AIData data)
     {
-        data.m_vTarget = data.m_TargetObject.transform.position;
+        data.m_vTarget = data.m_PlayerGO.transform.position;
         SteeringBehaviours.NavMove(data);
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 3f * Time.deltaTime;
         data.m_Go.transform.position += v;
     }
 
     public override void CheckCondition(AIData data)
     {
         bool bAttack = false;
-        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_TargetObject, ref bAttack);
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_PlayerGO, ref bAttack);
 
         if (bAttack)
         {
@@ -248,29 +247,30 @@ public class FSMAttackState : FSMState
 
     public override void Do(AIData data)
     {
+        data.m_vTarget = data.m_PlayerGO.transform.position;
         vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
 
-        if (Vector3.Angle(data.m_Go.transform.forward, vDir) > 1.0f)
+        if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && Count < 1)
         {
-            float fRight = Vector3.Dot(data.m_Go.transform.right, data.m_PlayerGO.transform.position);
+            float fRight = Vector3.Dot(vDir.normalized, data.m_Go.transform.right);
             if (fRight >= 0)
             {
-                data.m_Go.transform.Rotate(new Vector3(0, 5, 0),Space.Self);
+                data.m_Go.transform.Rotate(new Vector3(0, 10, 0), Space.Self);
             }
             else if (fRight < 0)
             {
-                data.m_Go.transform.Rotate(new Vector3(0, -5, 0), Space.Self);
+                data.m_Go.transform.Rotate(new Vector3(0, -10, 0), Space.Self);
             }
         }
-        if (Vector3.Angle(data.m_Go.transform.forward, vDir) < 1.0f && Count < 1)
+        if (Vector3.Angle(vDir , data.m_Go.transform.forward) <= 10.0f && Count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
             Count++;
         }
 
-
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
+
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
@@ -291,6 +291,11 @@ public class FSMAttackState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
+            return;
+        }
+        if((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
     }
 

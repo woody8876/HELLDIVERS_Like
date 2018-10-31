@@ -14,7 +14,6 @@ public class PatrolAI : Character{
     {
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
-        m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
     }
     protected override void Start() {
         base.Start();
@@ -72,6 +71,7 @@ public class PatrolAI : Character{
             {
                 if (info.normalizedTime > 0.9f)
                 {
+                    m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
                     ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
                     MobManager.m_PatrolCount--;
                 }
