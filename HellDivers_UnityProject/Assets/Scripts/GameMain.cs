@@ -21,6 +21,7 @@ public class GameMain : MonoBehaviour
     private GameData m_GameData = new GameData();
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private List<Player> m_Players = new List<Player>();
+    private SpawnMobs m_MobSpawner = new SpawnMobs();
     private CameraFollowing m_CameraFollowing;
 
     private void Awake()
@@ -33,6 +34,7 @@ public class GameMain : MonoBehaviour
         m_ObjectPool.Init();
         m_GameData.Init();
         m_ItemManager.Init();
+        m_MobSpawner.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
     }
 
@@ -40,6 +42,9 @@ public class GameMain : MonoBehaviour
     private void Start()
     {
         if (m_PlayerData != null) CreatPlayer(m_PlayerData);
+       
+        m_MobSpawner.SpawnPatrol(10);
+        InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
     }
 
     // Update is called once per frame
@@ -66,5 +71,10 @@ public class GameMain : MonoBehaviour
         else m_CameraFollowing.AddTarget(player.transform);
 
         return playerGo;
+    }
+
+    private void SpawnMobs()
+    {
+        m_MobSpawner.SpawnFish(5);
     }
 }
