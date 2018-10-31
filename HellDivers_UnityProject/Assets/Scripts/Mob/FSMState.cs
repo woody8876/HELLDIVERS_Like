@@ -225,6 +225,7 @@ public class FSMChaseState : FSMState
 
 public class FSMAttackState : FSMState
 {
+    private int AttackCount = 0;
     public FSMAttackState()
     {
         m_StateID = eFSMStateID.AttackStateID;
@@ -232,18 +233,15 @@ public class FSMAttackState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        Vector3 targetDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
-        Vector3 newDir = Vector3.RotateTowards(data.m_Go.transform.forward, targetDir, 0.1f, 0.1f);
-        data.m_Go.transform.rotation = Quaternion.LookRotation(newDir);
-
+        AttackCount = 0;
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
-        DoDamage(data);
+
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-
+        DoDamage(data);
     }
 
 
@@ -251,6 +249,15 @@ public class FSMAttackState : FSMState
     {
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Attack"))
+        {
+            if (info.normalizedTime > 0.2f && AttackCount < 1)
+            {
+                DoDamage(data);
+                AttackCount++;
+            }
+        }
     }
 
     public override void CheckCondition(AIData data)
@@ -267,20 +274,8 @@ public class FSMAttackState : FSMState
 
     private void DoDamage(AIData data)
     {
-        RaycastHit hit;
-        if (Physics.CapsuleCast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward * 10.0f, 50.0f,data.m_Go.transform.forward , out hit))
-        {
-            Debug.Log("OnHit");
-
-            if (hit.collider.transform.tag == "Player")
-            {
-                Debug.Log("OnDamage");
-
-                IDamageable target = hit.transform.GetComponent<IDamageable>();
-                target.TakeDamage(10.0f, hit.point);
-            }
-        }
-    }
+        IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
+        target.TakeDamage(10.0f, data.m_Go.transform.position);    }
 }
 
 public class FSMDeadState : FSMState
@@ -411,7 +406,7 @@ public class FSMCallArmyState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        SpawnMobs.m_Instance.SpawnFish( 5);
+        SpawnMobs.m_Instance.SpawnFish(5);
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
@@ -422,7 +417,7 @@ public class FSMCallArmyState : FSMState
 
     public override void Do(AIData data)
     {
-        
+
     }
 
     public override void CheckCondition(AIData data)
