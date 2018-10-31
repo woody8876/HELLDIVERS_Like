@@ -48,6 +48,12 @@ public class Bullet : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         //m_bullet.enabled = false;
+
+        if (other.transform.tag == "Player")
+        {
+            IDamageable target = other.transform.GetComponent<IDamageable>();
+            target.TakeDamage(GameData.Instance.WeaponInfoTable[m_ID].Damage, other.transform.position);
+        }
     }
 
     private void Detect()

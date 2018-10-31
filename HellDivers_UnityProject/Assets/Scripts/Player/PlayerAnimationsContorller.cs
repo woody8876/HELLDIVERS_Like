@@ -53,15 +53,18 @@ public class PlayerAnimationsContorller : MonoBehaviour
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
-
-    public bool FinishAnimator(PlayerFSMData data)
+    public bool FinishAnimator(PlayerController data)
     {
         data.m_FinishAni = false;
         AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
         data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
         return data.m_FinishAni;
-    }  
+    }
 
+    public void ResetAnimator(PlayerController data)
+    {
+        m_Animator.SetTrigger("Reset");
+    }
     /// <summary>
     /// Set Trigger Animator
     /// </summary>
@@ -107,6 +110,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("Reload");
         }
+        else if (state == ePlayerFSMStateID.MeleeAttackID)
+        {
+            m_Animator.SetTrigger("MeleeAttack");
+        }
         else if (state == ePlayerFSMStateID.SwitchWeaponID)
         {
             m_Animator.SetTrigger("SwitchWeapon");
@@ -115,13 +122,10 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetTrigger("ThrowStandby");
         }
-        else if (state == ePlayerFSMStateID.ThrowStateID)
-        {
-            m_Animator.SetTrigger("ThrowOut");
-        }
         else if (state == ePlayerFSMStateID.DeadStateID)
         {
             m_Animator.SetTrigger("Death");
+            m_Animator.SetTrigger("Reset");
         }
         else if (state == ePlayerFSMStateID.VictoryID)
         {
@@ -130,6 +134,14 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.ReliveStateID)
         {
             m_Animator.SetTrigger("Relive");
+        }
+        else if (state == ePlayerFSMStateID.PickUpID)
+        {
+            m_Animator.SetTrigger("Pick");
+        }
+        else if (state == ePlayerFSMStateID.RollStateID)
+        {
+            m_Animator.SetTrigger("Roll");
         }
     }
 
@@ -147,14 +159,5 @@ public class PlayerAnimationsContorller : MonoBehaviour
         {
             m_Animator.SetBool("ThrowOut", Bool);
         }
-        else if (state == ePlayerFSMStateID.DeadStateID)
-        {
-            m_Animator.SetBool("Relive", Bool);
-        }
-        else if (state == ePlayerFSMStateID.PickUpID)
-        {
-            m_Animator.SetBool("Pick", Bool);
-        }
     }
-
 }

@@ -9,21 +9,16 @@ public class InteractiveItem : MonoBehaviour
     public float Radius { get { return m_Radius; } }
     public Vector3 Position { get { return this.transform.position; } }
 
-    [SerializeField] private string m_Id;
-    [SerializeField] private string m_Title;
-    [SerializeField] private float m_Radius = 2;
-    private float m_LifeTime = 120.0f;
-    private float m_EndTime;
+    [SerializeField] protected string m_Id;
+    [SerializeField] protected string m_Title;
+    [SerializeField] protected float m_Radius = 2;
+    protected float m_LifeTime = 120.0f;
+    protected float m_EndTime;
 
     protected virtual void OnEnable()
     {
         InteractiveItemManager.Instance.AddItem(this);
         m_EndTime = Time.time + m_LifeTime;
-    }
-
-    // Use this for initialization
-    protected virtual void Start()
-    {
     }
 
     // Update is called once per frame
