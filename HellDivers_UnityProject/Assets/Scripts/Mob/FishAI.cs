@@ -18,6 +18,7 @@ public class FishAI : Character {
     {
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
+        m_FSM.PerformTransition(eFSMTransition.Go_MoveTo);
     }
     protected override void Start () {
         base.Start();
@@ -72,7 +73,6 @@ public class FishAI : Character {
             {
                 if (info.normalizedTime > 0.9f)
                 {
-                    m_FSM.PerformTransition(eFSMTransition.Go_MoveTo);
                     ObjectPool.m_Instance.UnLoadObjectToPool(3001, this.gameObject);
                     MobManager.m_FishCount--;
                 }

@@ -14,6 +14,7 @@ public class PatrolAI : Character{
     {
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
+        m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
     }
     protected override void Start() {
         base.Start();
@@ -33,14 +34,15 @@ public class PatrolAI : Character{
         FSMFleeState m_FleeState = new FSMFleeState();
 
         m_WanderIdleState.AddTransition(eFSMTransition.GO_Wander, m_WanderState);
-        m_WanderIdleState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
+        m_WanderIdleState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
 
         m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
-        m_WanderState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
+        m_WanderState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
+
+        m_FleeState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
 
         m_CallArmyState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
-
-        m_FleeState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_CallArmyState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
         FSMDeadState m_DeadState = new FSMDeadState();
         m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
@@ -70,7 +72,6 @@ public class PatrolAI : Character{
             {
                 if (info.normalizedTime > 0.9f)
                 {
-                    m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
                     ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
                     MobManager.m_PatrolCount--;
                 }

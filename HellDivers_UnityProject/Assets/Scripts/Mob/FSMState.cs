@@ -226,6 +226,8 @@ public class FSMChaseState : FSMState
 public class FSMAttackState : FSMState
 {
     private int AttackCount = 0;
+    private int Count = 0;
+    Vector3 vDir;
     public FSMAttackState()
     {
         m_StateID = eFSMStateID.AttackStateID;
@@ -234,19 +236,39 @@ public class FSMAttackState : FSMState
     public override void DoBeforeEnter(AIData data)
     {
         AttackCount = 0;
+        Count = 0;
         data.navMeshAgent.enabled = false;
-        data.m_AnimationController.SetAnimator(m_StateID);
-
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-        DoDamage(data);
+       
     }
 
 
     public override void Do(AIData data)
     {
+        vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+
+        if (Vector3.Angle(data.m_Go.transform.forward, vDir) > 1.0f)
+        {
+            float fRight = Vector3.Dot(data.m_Go.transform.right, data.m_PlayerGO.transform.position);
+            if (fRight >= 0)
+            {
+                data.m_Go.transform.Rotate(new Vector3(0, 5, 0),Space.Self);
+            }
+            else if (fRight < 0)
+            {
+                data.m_Go.transform.Rotate(new Vector3(0, -5, 0), Space.Self);
+            }
+        }
+        if (Vector3.Angle(data.m_Go.transform.forward, vDir) < 1.0f && Count < 1)
+        {
+            data.m_AnimationController.SetAnimator(m_StateID);
+            Count++;
+        }
+
+
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
@@ -275,7 +297,8 @@ public class FSMAttackState : FSMState
     private void DoDamage(AIData data)
     {
         IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
-        target.TakeDamage(10.0f, data.m_Go.transform.position);    }
+        target.TakeDamage(10.0f, data.m_Go.transform.position);
+    }
 }
 
 public class FSMDeadState : FSMState
@@ -340,11 +363,10 @@ public class FSMWanderIdleState : FSMState
     public override void CheckCondition(AIData data)
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
-        Debug.Log(Dist);
 
         if (Dist < data.m_fPatrolVisionLength)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
             return;
         }
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
@@ -379,11 +401,9 @@ public class FSMWanderState : FSMState
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
-        Debug.Log(Dist);
-
         if (Dist < data.m_fPatrolVisionLength)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
             return;
         }
         else if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
@@ -419,12 +439,19 @@ public class FSMCallArmyState : FSMState
 
     public override void CheckCondition(AIData data)
     {
+        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("CallArmy"))
         {
             if (info.normalizedTime > 0.9f)
             {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
+                if (Dist < data.m_fPatrolVisionLength)
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
+                    return;
+                }
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
             }
         }
     }
@@ -463,7 +490,7 @@ public class FSMFleeState : FSMState
 
         if (Dist > data.m_fPatrolVisionLength * 1.5f)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
         }
     }
 }
