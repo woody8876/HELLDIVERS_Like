@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class Grenades : MonoBehaviour {
 
-    [SerializeField] float m_fAngle;
-    [SerializeField] float m_fForce;
+    [SerializeField]public float m_fAngle;
+    private float m_fForce;
+    public float  m_Force
+    {
+        set
+        {
+            if (m_fForce > 20) m_fForce = 20;
+            else m_fForce = value;
+        }
+        get { return m_fForce; }
+    }
+
     float m_fGravity = -9.8f;
     float m_fTime;
     bool m_bGround = true;
-
 	// Use this for initialization
 	void Start () {
 		
@@ -17,14 +26,7 @@ public class Grenades : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (Input.GetMouseButton(0))
-        {
-            m_fForce += 2 * Time.fixedDeltaTime;
-            transform.position = Input.mousePosition;
-            m_bGround = false;
-        }
-        else if (Input.GetMouseButtonUp(0)) Throw();
-        if (!m_bGround)
+        if (!m_bGround )
         {
             Falling(m_fForce);
             Moving(m_fForce);
@@ -32,13 +34,9 @@ public class Grenades : MonoBehaviour {
             m_bGround = GroundCheck();
         }
 
-
     }
 
-    void Throw()
-    {
-        m_bGround = false;
-    }
+    public void Throw() { m_bGround = false; }
 
     void Falling(float force)
     {
@@ -55,9 +53,11 @@ public class Grenades : MonoBehaviour {
          
     bool GroundCheck()
     {
-        if (transform.position.y <= 2)
+        if (Physics.Raycast(transform.position, -transform.up, .5f, 1 << LayerMask.NameToLayer("Terrain")))
         {
-            m_fTime = m_fForce = 0;
+            m_fTime = 0;
+            m_fForce = 10;
+            ObjectPool.m_Instance.UnLoadObjectToPool(3001, this.gameObject);
             return true;
         }
         return false;
