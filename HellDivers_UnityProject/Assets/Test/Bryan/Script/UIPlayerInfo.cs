@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class UIPlayerInfo : MonoBehaviour
 {
     public Player CurrentPlayer { get { return m_Player; } }
+
     private Player m_Player;
     private UIPlayerWeaponInfo m_UIWeapon;
+    private List<UIPlayerStratagemInfo> m_UIStratagems;
     [SerializeField] private Text m_PlayerName;
     [SerializeField] private Text m_PlayerRank;
     [SerializeField] private Image m_PlayerRankImg;
@@ -19,10 +21,8 @@ public class UIPlayerInfo : MonoBehaviour
         m_Player = player;
 
         InitTitleDisplay();
-
-        m_UIWeapon = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
-        m_UIWeapon.Initialize(player.WaeponController.CurrentWeaponInfo);
-        m_UIWeapon.gameObject.SetActive(true);
+        InitWeaponDisplay();
+        InitStratagemDisplay();
     }
 
     // Use this for initialization
@@ -34,6 +34,11 @@ public class UIPlayerInfo : MonoBehaviour
     private void Update()
     {
         m_UIWeapon.UpdateAmmoDisplay();
+
+        foreach (UIPlayerStratagemInfo sInfo in m_UIStratagems)
+        {
+            sInfo.UpdateUses();
+        }
     }
 
     private void InitTitleDisplay()
@@ -60,5 +65,27 @@ public class UIPlayerInfo : MonoBehaviour
         string rankImgPath = string.Format("UI/Resource/Icons/Rank/{0}", rankImgFile);
         Sprite rankImg = Resources.Load<Sprite>(rankImgPath);
         m_PlayerRankImg.sprite = rankImg;
+    }
+
+    private void InitWeaponDisplay()
+    {
+        if (m_Player == null) return;
+
+        m_UIWeapon = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
+        m_UIWeapon.Initialize(m_Player.WaeponController.CurrentWeaponInfo);
+        m_UIWeapon.gameObject.SetActive(true);
+    }
+
+    private void InitStratagemDisplay()
+    {
+        if (m_Player == null) return;
+
+        m_UIStratagems = new List<UIPlayerStratagemInfo>();
+        for (int i = 0; i < m_Player.StratagemController.Stratagems.Count; i++)
+        {
+            UIPlayerStratagemInfo stratagemUI = Instantiate(m_StratagemInfoPrefab, this.transform).GetComponent<UIPlayerStratagemInfo>();
+            stratagemUI.Initialize(m_Player.StratagemController.Stratagems[i]);
+            m_UIStratagems.Add(stratagemUI);
+        }
     }
 }
