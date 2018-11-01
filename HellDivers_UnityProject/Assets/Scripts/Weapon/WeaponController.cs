@@ -102,12 +102,13 @@ public class WeaponController : MonoBehaviour
 
     private IEnumerator WaitReloading()
     {
+        OnReload();
         if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) {
             yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed); }
         else {
             yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
         m_dActiveWeapon[_CurrentWeapon].Reload();
-        OnReload();
+        OnReloadEnd();
         m_bReloading = false;
         m_cCoolDown = null;
     }
@@ -155,8 +156,10 @@ public class WeaponController : MonoBehaviour
     #region Delegate
     public delegate void Shoot();
     public event Shoot OnFire;
-    public delegate void Reload();
-    public event Reload OnReload;
+    public delegate void StartReload();
+    public event StartReload OnReload;
+    public delegate void EndReload();
+    public event EndReload OnReloadEnd;
     public delegate void SwitchWeapon();
     public event SwitchWeapon OnSwitch;
     #endregion
