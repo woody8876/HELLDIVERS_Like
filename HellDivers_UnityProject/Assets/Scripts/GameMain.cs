@@ -24,6 +24,7 @@ public class GameMain : MonoBehaviour
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
     [SerializeField] private float m_RespawnTime = 1;
+    private float m_SpawnRadius = 10;
 
     private void Awake()
     {
@@ -61,10 +62,17 @@ public class GameMain : MonoBehaviour
     private IEnumerator RespawnProcess(Player player)
     {
         yield return new WaitForSeconds(m_RespawnTime);
+        LayerMask layerMask = 1 << LayerMask.NameToLayer("Enemies") | 1 << LayerMask.NameToLayer("Obstacle");
+        Vector3 spawnPos = player.transform.position;
+        bool bBlock;
+        do
+        {
+            spawnPos = player.transform.position;
+            float radius = Random.Range(0, m_SpawnRadius);
+            spawnPos += Quaternion.Euler(0.0f, Random.Range(0, 360), 0.0f) * Vector3.forward * radius;
+            bBlock = Physics.CheckSphere(spawnPos, 1.5f, layerMask);
+        } while (bBlock);
 
-        Transform spawnPos = null;
-        if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
-        if (spawnPos == null) spawnPos = this.transform;
         player.Spawn(spawnPos);
     }
 
@@ -72,7 +80,6 @@ public class GameMain : MonoBehaviour
     {
         GameObject playerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Characters/Ch00", "ch00") as GameObject;
         playerGo = GameObject.Instantiate(playerGo);
-        //playerGo.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
         Player player = playerGo.AddComponent<Player>();
         player.Initialize(data);
         m_Players.Add(player);
@@ -80,7 +87,7 @@ public class GameMain : MonoBehaviour
         Transform spawnPos = null;
         if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
         if (spawnPos == null) spawnPos = this.transform;
-        player.Spawn(spawnPos);
+        player.Spawn(spawnPos.position);
 
         if (UIMain.Instance != null)
         {
