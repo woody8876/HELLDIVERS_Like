@@ -41,7 +41,7 @@ public class MapInfo : MonoBehaviour
         container = new List<Transform>();
         GameObject positionGroupRoot = GameObject.Find(rootName);
 
-        if (positionGroupRoot)
+        if (positionGroupRoot == null)
         {
             Debug.LogWarningFormat("{0} doesn't exist.", rootName);
             return;
