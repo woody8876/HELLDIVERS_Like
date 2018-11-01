@@ -8,7 +8,7 @@ public class UIPlayerInfo : MonoBehaviour
     public Player CurrentPlayer { get { return m_Player; } }
 
     private Player m_Player;
-    private UIPlayerWeaponInfo m_UIWeapon;
+    private Dictionary<int, UIPlayerWeaponInfo> m_UIWeapons;
     private Dictionary<int, UIPlayerStratagemInfo> m_UIStratagems;
     [SerializeField] private Text m_PlayerName;
     [SerializeField] private Text m_PlayerRank;
@@ -33,7 +33,7 @@ public class UIPlayerInfo : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        m_UIWeapon.UpdateAmmoDisplay();
+        SwithToCurrentWeaponDisplay();
 
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
@@ -71,9 +71,32 @@ public class UIPlayerInfo : MonoBehaviour
     {
         if (m_Player == null) return;
 
-        m_UIWeapon = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
-        m_UIWeapon.Initialize(m_Player.WaeponController.CurrentWeaponInfo);
-        m_UIWeapon.gameObject.SetActive(true);
+        m_UIWeapons = new Dictionary<int, UIPlayerWeaponInfo>();
+        foreach (KeyValuePair<int, IWeaponBehaviour> weapon in m_Player.WaeponController.ActiveWeapon)
+        {
+            UIPlayerWeaponInfo weaponUI = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
+            weaponUI.Initialize(weapon.Value.weaponInfo);
+            weaponUI.gameObject.SetActive(false);
+            m_UIWeapons.Add(weapon.Value.weaponInfo.ID, weaponUI);
+        }
+    }
+
+    private void SwithToCurrentWeaponDisplay()
+    {
+        if (m_UIWeapons.Count <= 0) return;
+
+        foreach (KeyValuePair<int, UIPlayerWeaponInfo> weaponUI in m_UIWeapons)
+        {
+            if (weaponUI.Key == m_Player.WaeponController._CurrentWeapon)
+            {
+                weaponUI.Value.gameObject.SetActive(true);
+                weaponUI.Value.UpdateAmmoDisplay();
+            }
+            else
+            {
+                weaponUI.Value.gameObject.SetActive(false);
+            }
+        }
     }
 
     private void InitStratagemDisplay()
