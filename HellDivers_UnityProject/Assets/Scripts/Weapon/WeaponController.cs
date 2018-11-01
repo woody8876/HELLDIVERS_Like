@@ -153,14 +153,11 @@ public class WeaponController : MonoBehaviour
     public bool m_bAutoFire = true;
 
     #region Delegate
-    public delegate void Shoot();
-    public event Shoot OnFire;
-    public delegate void StartReload();
-    public event StartReload OnReload;
-    public delegate void EndReload();
-    public event EndReload OnReloadEnd;
-    public delegate void SwitchWeapon();
-    public event SwitchWeapon OnSwitch;
+    public delegate void EventHolder();
+    public event EventHolder OnFire;
+    public event EventHolder OnReload;
+    public event EventHolder OnReloadEnd;
+    public event EventHolder OnSwitch;
     #endregion
 
     #region Private member

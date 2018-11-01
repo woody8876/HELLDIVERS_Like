@@ -12,8 +12,8 @@ public class GrenadesController : MonoBehaviour {
 	// Use this for initialization
 	public void Start()
     {
-        Object Grenades = Resources.Load("Grenades/Grenade_Pumkin");
-        Object Effect = Resources.Load("Grenades/Effect_Pumkin");
+        Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");
+        Object Effect = Resources.Load("Grenades/Effect_Pumpkin");
         ObjectPool.m_Instance.InitGameObjects(Grenades, 10, 3001);
         ObjectPool.m_Instance.InitGameObjects(Effect, 5, 3011);
 	}
