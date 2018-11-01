@@ -71,11 +71,6 @@ public class Player : Character
         m_StratagemController = GetComponent<StratagemController>();
     }
 
-    public void OnEnable()
-    {
-        StartCoroutine(OnSpawn());
-    }
-
     // Use this for initialization
     protected override void Start()
     {
@@ -103,6 +98,9 @@ public class Player : Character
         // Setup weapons
         m_WeapoonController.ClearWeapon();
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+
+        this.gameObject.SetActive(true);
+        StartCoroutine(OnSpawn());
     }
 
     /// <summary>
@@ -185,6 +183,7 @@ public class Player : Character
 
         GameMain.Instance.CameraFolloing.RemoveTarget(this.transform);
 
+        GameMain.Instance.RespawnPlayer(this);
         this.gameObject.SetActive(false);
     }
 

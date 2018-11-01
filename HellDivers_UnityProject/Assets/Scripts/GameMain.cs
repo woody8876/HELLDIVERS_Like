@@ -23,6 +23,7 @@ public class GameMain : MonoBehaviour
     private List<Player> m_Players = new List<Player>();
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
+    [SerializeField] private float m_RespawnTime = 1;
 
     private void Awake()
     {
@@ -52,19 +53,34 @@ public class GameMain : MonoBehaviour
     {
     }
 
-    public GameObject CreatPlayer(PlayerInfo data)
+    public void RespawnPlayer(Player player)
     {
+        StartCoroutine(RespawnProcess(player));
+    }
+
+    private IEnumerator RespawnProcess(Player player)
+    {
+        yield return new WaitForSeconds(m_RespawnTime);
+
         Transform spawnPos = null;
         if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
         if (spawnPos == null) spawnPos = this.transform;
+        player.Spawn(spawnPos);
+    }
 
+    public GameObject CreatPlayer(PlayerInfo data)
+    {
         GameObject playerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Characters/Ch00", "ch00") as GameObject;
         playerGo = GameObject.Instantiate(playerGo);
-        playerGo.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
-
+        //playerGo.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
         Player player = playerGo.AddComponent<Player>();
         player.Initialize(data);
         m_Players.Add(player);
+
+        Transform spawnPos = null;
+        if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
+        if (spawnPos == null) spawnPos = this.transform;
+        player.Spawn(spawnPos);
 
         if (UIMain.Instance != null)
         {
