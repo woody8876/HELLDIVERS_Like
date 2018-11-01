@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class PatrolAI : Character{
 
     public AIData m_AIData;
+    public PlayerController m_PlayerController;
     FSMSystem m_FSM;
     private MobAnimationsController m_MobAnimator;
 
@@ -61,6 +62,7 @@ public class PatrolAI : Character{
         if (m_AIData.m_PlayerGO == null)
         {
             m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+            m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
         }
 
         m_FSM.DoState();
@@ -78,7 +80,6 @@ public class PatrolAI : Character{
                 }
             }
         }
-
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
     public override void Death()

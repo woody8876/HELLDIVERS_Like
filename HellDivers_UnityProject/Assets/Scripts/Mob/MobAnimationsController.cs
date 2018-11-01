@@ -41,9 +41,9 @@ public class MobAnimationsController : MonoBehaviour {
         {
             m_Animator.SetTrigger("GetHurt");
         }
-        else if (state == eFSMStateID.DeadStateID)
+        else if (state == eFSMStateID.WanderIdleStateID)
         {
-            m_Animator.SetTrigger("Dead");
+            m_Animator.SetTrigger("WanderIdle");
         }
         else if (state == eFSMStateID.AttackStateID)
         {
@@ -52,6 +52,10 @@ public class MobAnimationsController : MonoBehaviour {
         else if (state == eFSMStateID.CallArmyState)
         {
             m_Animator.SetTrigger("CallArmy");
+        }
+        else if (state == eFSMStateID.DeadStateID)
+        {
+            m_Animator.SetTrigger("Dead");
         }
     }
 
@@ -71,7 +75,7 @@ public class MobAnimationsController : MonoBehaviour {
         }
         else if (state == eFSMStateID.WanderIdleStateID)
         {
-            m_Animator.SetBool("Idle", Bool);
+            m_Animator.SetBool("WanderIdle", Bool);
         }
         else if (state == eFSMStateID.FleeStateID)
         {

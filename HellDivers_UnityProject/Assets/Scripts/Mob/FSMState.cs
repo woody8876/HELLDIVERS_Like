@@ -137,6 +137,10 @@ public class FSMIdleState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
+        if (data.m_bIsPlayerDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
     }
 }
 
@@ -221,6 +225,11 @@ public class FSMChaseState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
         }
+
+        if (data.m_bIsPlayerDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
     }
 }
 
@@ -299,6 +308,10 @@ public class FSMAttackState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
+        if (data.m_bIsPlayerDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
     }
 
     private void DoDamage(AIData data)
@@ -371,7 +384,7 @@ public class FSMDeadState : FSMState
 
     public override void DoBeforeLeave(AIData data)
     {
-
+       
     }
 
     public override void Do(AIData data)
@@ -387,18 +400,16 @@ public class FSMDeadState : FSMState
 
 public class FSMWanderIdleState : FSMState
 {
-
     private float m_fIdleTime;
-
-
+    
     public FSMWanderIdleState()
     {
         m_StateID = eFSMStateID.WanderIdleStateID;
     }
-
-
+    
     public override void DoBeforeEnter(AIData data)
     {
+        data.m_vTarget = new Vector3(0, 0, 0);
         m_fCurrentTime = 0.0f;
         m_fIdleTime = Random.Range(1.0f, 3.0f);
         data.m_AnimationController.SetAnimator(m_StateID, true);
@@ -418,14 +429,18 @@ public class FSMWanderIdleState : FSMState
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
+        if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Wander);
+        }
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
             return;
         }
-        if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
+        if (data.m_bIsPlayerDead == false)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Wander);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
     }
 }
@@ -455,14 +470,17 @@ public class FSMWanderState : FSMState
     {
         float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
 
+        if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
+        if (data.m_bIsPlayerDead == false)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+        }
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
-            return;
-        }
-        else if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
         }
     }
 }
