@@ -72,13 +72,20 @@ public class UIPlayerInfo : MonoBehaviour
         if (m_Player == null) return;
 
         m_UIWeapons = new Dictionary<int, UIPlayerWeaponInfo>();
-        foreach (KeyValuePair<int, IWeaponBehaviour> weapon in m_Player.WaeponController.ActiveWeapon)
+        foreach (KeyValuePair<int, IWeaponBehaviour> weapon in m_Player.WeaponController.ActiveWeapon)
         {
             UIPlayerWeaponInfo weaponUI = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
             weaponUI.Initialize(weapon.Value.weaponInfo);
             weaponUI.gameObject.SetActive(false);
+
+            m_Player.WeaponController.OnFire += weaponUI.UpdateAmmoDisplay;
+            m_Player.WeaponController.OnReload += weaponUI.UpdateAmmoDisplay;
+
             m_UIWeapons.Add(weapon.Value.weaponInfo.ID, weaponUI);
         }
+
+        SwithToCurrentWeaponDisplay();
+        m_Player.WeaponController.OnSwitch += SwithToCurrentWeaponDisplay;
     }
 
     private void SwithToCurrentWeaponDisplay()
@@ -87,7 +94,7 @@ public class UIPlayerInfo : MonoBehaviour
 
         foreach (KeyValuePair<int, UIPlayerWeaponInfo> weaponUI in m_UIWeapons)
         {
-            if (weaponUI.Key == m_Player.WaeponController._CurrentWeapon)
+            if (weaponUI.Key == m_Player.WeaponController._CurrentWeapon)
             {
                 weaponUI.Value.gameObject.SetActive(true);
                 weaponUI.Value.UpdateAmmoDisplay();

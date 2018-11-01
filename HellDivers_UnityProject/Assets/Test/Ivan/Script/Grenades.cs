@@ -8,7 +8,7 @@ public class Grenades : MonoBehaviour {
     [SerializeField] float m_fForce;
     float m_fGravity = -9.8f;
     float m_fTime;
-         
+    bool m_bGround = true;
 
 	// Use this for initialization
 	void Start () {
@@ -17,17 +17,27 @@ public class Grenades : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (!GroundCheck())
+        if (Input.GetMouseButton(0))
+        {
+            m_fForce += 2 * Time.fixedDeltaTime;
+            transform.position = Input.mousePosition;
+            m_bGround = false;
+        }
+        else if (Input.GetMouseButtonUp(0)) Throw();
+        if (!m_bGround)
         {
             Falling(m_fForce);
             Moving(m_fForce);
             m_fTime += Time.fixedDeltaTime;
-        }
-        else
-        {
-            m_fTime = 0;
+            m_bGround = GroundCheck();
         }
 
+
+    }
+
+    void Throw()
+    {
+        m_bGround = false;
     }
 
     void Falling(float force)
@@ -45,7 +55,11 @@ public class Grenades : MonoBehaviour {
          
     bool GroundCheck()
     {
-        if (transform.position.y <= 2) return true;
+        if (transform.position.y <= 2)
+        {
+            m_fTime = m_fForce = 0;
+            return true;
+        }
         return false;
     }
 }

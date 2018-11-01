@@ -53,7 +53,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
 
         m_MagAmount.text = string.Format("x{0}", m_CurrentWeapon.Mags);
 
-        bool bOutOfAmmo = (m_AmmoAmount.fillAmount == 0);
+        bool bOutOfAmmo = (m_AmmoAmount.fillAmount <= 0.2f);
         m_Animator.SetBool("OutOfAmmo", bOutOfAmmo);
     }
 }

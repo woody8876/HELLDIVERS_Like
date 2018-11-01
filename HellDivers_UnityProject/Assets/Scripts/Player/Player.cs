@@ -14,7 +14,7 @@ public class Player : Character
     /// <summary>
     /// Player weapon behavior controller.
     /// </summary>
-    public WeaponController WaeponController { get { return m_WeapoonController; } }
+    public WeaponController WeaponController { get { return m_WeapoonController; } }
 
     /// <summary>
     /// Player stratagem behavior controller.
