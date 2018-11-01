@@ -9,7 +9,7 @@ public class UIPlayerInfo : MonoBehaviour
 
     private Player m_Player;
     private UIPlayerWeaponInfo m_UIWeapon;
-    private List<UIPlayerStratagemInfo> m_UIStratagems;
+    private Dictionary<int, UIPlayerStratagemInfo> m_UIStratagems;
     [SerializeField] private Text m_PlayerName;
     [SerializeField] private Text m_PlayerRank;
     [SerializeField] private Image m_PlayerRankImg;
@@ -35,9 +35,9 @@ public class UIPlayerInfo : MonoBehaviour
     {
         m_UIWeapon.UpdateAmmoDisplay();
 
-        foreach (UIPlayerStratagemInfo sInfo in m_UIStratagems)
+        foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            sInfo.UpdateUses();
+            stratagemUI.Value.UpdateUses();
         }
     }
 
@@ -80,12 +80,13 @@ public class UIPlayerInfo : MonoBehaviour
     {
         if (m_Player == null) return;
 
-        m_UIStratagems = new List<UIPlayerStratagemInfo>();
+        m_UIStratagems = new Dictionary<int, UIPlayerStratagemInfo>();
         for (int i = 0; i < m_Player.StratagemController.Stratagems.Count; i++)
         {
+            Stratagem currentStratagem = m_Player.StratagemController.Stratagems[i];
             UIPlayerStratagemInfo stratagemUI = Instantiate(m_StratagemInfoPrefab, this.transform).GetComponent<UIPlayerStratagemInfo>();
-            stratagemUI.Initialize(m_Player.StratagemController.Stratagems[i]);
-            m_UIStratagems.Add(stratagemUI);
+            stratagemUI.Initialize(currentStratagem);
+            m_UIStratagems.Add(currentStratagem.Info.ID, stratagemUI);
         }
     }
 }
