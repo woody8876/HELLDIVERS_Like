@@ -71,11 +71,6 @@ public class Player : Character
         m_StratagemController = GetComponent<StratagemController>();
     }
 
-    public void OnEnable()
-    {
-        StartCoroutine(OnSpawn());
-    }
-
     // Use this for initialization
     protected override void Start()
     {
@@ -95,14 +90,19 @@ public class Player : Character
     /// Set player spawn on the position.
     /// </summary>
     /// <param name="spawnPos">Spawn position</param>
-    public void Spawn(Transform spawnPos)
+    public void Spawn(Vector3 spawnPos)
     {
-        this.transform.SetPositionAndRotation(spawnPos.position, spawnPos.rotation);
+        m_CurrentHp = m_MaxHp;
+
+        this.transform.position = spawnPos;
         m_StratagemController.ResetAllUses();
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+
+        this.gameObject.SetActive(true);
+        StartCoroutine(OnSpawn());
     }
 
     /// <summary>
@@ -135,6 +135,7 @@ public class Player : Character
     /// <summary>
     /// Do dead. perform daead animation then disable this player.
     /// </summary>
+    [ContextMenu("DoDeath")]
     public override void Death()
     {
         if (IsDead) return;
@@ -185,6 +186,7 @@ public class Player : Character
 
         GameMain.Instance.CameraFolloing.RemoveTarget(this.transform);
 
+        GameMain.Instance.RespawnPlayer(this);
         this.gameObject.SetActive(false);
     }
 
