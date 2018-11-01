@@ -5,12 +5,15 @@ using UnityEngine.UI;
 
 public class UIPlayerStratagemInfo : MonoBehaviour
 {
+    public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
     private Stratagem m_CurrentStratagem;
-    private List<Image> m_Code;
+    private List<Image> m_CodeImgs;
     [SerializeField] private Image m_Icon;
     [SerializeField] private Text m_Uses;
     [SerializeField] private Transform m_ArrowRoot;
     [SerializeField] private Image m_Arrow;
+    [SerializeField] private Color m_LightColor;
+    [SerializeField] private Color m_DarkColor;
 
     public void Initialize(Stratagem stratagem)
     {
@@ -25,6 +28,29 @@ public class UIPlayerStratagemInfo : MonoBehaviour
     {
         int count = m_CurrentStratagem.Info.Uses - m_CurrentStratagem.UsesCount;
         m_Uses.text = count.ToString();
+    }
+
+    public void StartCheckCodes()
+    {
+        m_Icon.color = m_LightColor;
+        foreach (Image codeImg in m_CodeImgs)
+        {
+            codeImg.color = m_DarkColor;
+        }
+    }
+
+    public void CheckingCode(int step)
+    {
+        m_CodeImgs[step - 1].color = m_LightColor;
+    }
+
+    public void StopCheckCodes()
+    {
+        m_Icon.color = m_DarkColor;
+        foreach (Image codeImg in m_CodeImgs)
+        {
+            codeImg.color = m_DarkColor;
+        }
     }
 
     private Sprite LoadIcon()
@@ -52,7 +78,7 @@ public class UIPlayerStratagemInfo : MonoBehaviour
 
     private void CreateCodesDisplaye()
     {
-        m_Code = new List<Image>();
+        m_CodeImgs = new List<Image>();
 
         for (int i = 0; i < m_CurrentStratagem.Info.Codes.Length; i++)
         {
@@ -78,7 +104,7 @@ public class UIPlayerStratagemInfo : MonoBehaviour
             }
 
             codeArrow.gameObject.SetActive(true);
-            m_Code.Add(codeArrow);
+            m_CodeImgs.Add(codeArrow);
         }
     }
 }

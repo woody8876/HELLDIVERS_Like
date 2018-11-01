@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 222750349870474938}
   - component: {fileID: 114729273643198224}
   - component: {fileID: 114246756098262818}
+  - component: {fileID: 114449300298729908}
   m_Layer: 5
   m_Name: Text_Uses
   m_TagString: Untagged
@@ -216,6 +217,8 @@ MonoBehaviour:
   m_Uses: {fileID: 114729273643198224}
   m_ArrowRoot: {fileID: 224259113556971360}
   m_Arrow: {fileID: 114896855440349354}
+  m_LightColor: {r: 1, g: 1, b: 1, a: 1}
+  m_DarkColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!114 &114376466184139882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -257,6 +260,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114449300298729908
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1840568307618388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114659478682681414
 MonoBehaviour:
   m_ObjectHideFlags: 1

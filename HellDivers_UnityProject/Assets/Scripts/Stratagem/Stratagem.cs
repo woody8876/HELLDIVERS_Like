@@ -241,7 +241,7 @@ public class Stratagem : MonoBehaviour
         // Translate to ThrowOut state.
         m_eState = eState.ThrowOut;
 
-        OnThrow();
+        if (OnThrow != null) OnThrow();
     }
 
     /// <summary>
