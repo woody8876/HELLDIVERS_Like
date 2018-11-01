@@ -82,7 +82,7 @@ public class WeaponController : MonoBehaviour
         m_AnimEffect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
         m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
-        OnFire();
+        if (OnFire != null) OnFire();
         yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.FireRate);
         m_bShooting = true;
         m_fSpreadIncrease += m_dActiveWeapon[_CurrentWeapon].weaponInfo.Spread_Increase_per_shot;
@@ -102,12 +102,12 @@ public class WeaponController : MonoBehaviour
 
     private IEnumerator WaitReloading()
     {
-        OnReload();
+        if (OnReload != null) OnReload();
         float reloadTime = (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) ? 
             m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed : m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed;
         yield return new WaitForSeconds(reloadTime);
         m_dActiveWeapon[_CurrentWeapon].Reload();
-        OnReloadEnd();
+        if (OnReloadEnd != null) OnReloadEnd();
         m_bReloading = false;
         m_cCoolDown = null;
     }
@@ -119,13 +119,13 @@ public class WeaponController : MonoBehaviour
             if (i == ActivedWeaponID.Length - 1)
             {
                 _CurrentWeapon = ActivedWeaponID[0];
-                OnSwitch();
+                if (OnSwitch != null) OnSwitch();
                 return true; 
             }
             else if (ActivedWeaponID[i] == _CurrentWeapon)
             {
                 _CurrentWeapon = ActivedWeaponID[i + 1];
-                OnSwitch();
+                if (OnSwitch != null) OnSwitch();
                 return true;
             }
         }
