@@ -46,9 +46,9 @@ public class WeaponController : MonoBehaviour
 
     public void ClearWeapon()
     {
-        for (int i = 0; i < ActivedWeapon.Length; i++)
+        for (int i = 0; i < ActivedWeaponID.Length; i++)
         {
-            ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeapon[i]);
+            ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeaponID[i]);
         }
         m_dActiveWeapon.Clear();
     }
@@ -82,8 +82,8 @@ public class WeaponController : MonoBehaviour
         m_AnimEffect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
         m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
+        OnFire();
         yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.FireRate);
-        Debug.Log((m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo));
         m_bShooting = true;
         m_fSpreadIncrease += m_dActiveWeapon[_CurrentWeapon].weaponInfo.Spread_Increase_per_shot;
         m_cCoolDown = null;
@@ -92,7 +92,6 @@ public class WeaponController : MonoBehaviour
 
     public bool ReloadState()
     {
-        Debug.Log("Reloading...");
         if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[_CurrentWeapon].weaponInfo.Capacity ||
             m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags <= 0) { return false; }
         else if (m_bReloading) { return false; }
@@ -108,24 +107,25 @@ public class WeaponController : MonoBehaviour
         else {
             yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
         m_dActiveWeapon[_CurrentWeapon].Reload();
-        Debug.Log("Mags :" + m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags);
+        OnReload();
         m_bReloading = false;
         m_cCoolDown = null;
     }
 
     public bool SwitchWeaponState()
     {
-        Debug.Log(_CurrentWeapon);
-        for (int i = 0; i < ActivedWeapon.Length; i++)
+        for (int i = 0; i < ActivedWeaponID.Length; i++)
         {
-            if (i == ActivedWeapon.Length - 1)
+            if (i == ActivedWeaponID.Length - 1)
             {
-                _CurrentWeapon = ActivedWeapon[0];
+                _CurrentWeapon = ActivedWeaponID[0];
+                OnSwitch();
                 return true; 
             }
-            else if (ActivedWeapon[i] == _CurrentWeapon)
+            else if (ActivedWeaponID[i] == _CurrentWeapon)
             {
-                _CurrentWeapon = ActivedWeapon[i + 1];
+                _CurrentWeapon = ActivedWeaponID[i + 1];
+                OnSwitch();
                 return true;
             }
         }
@@ -140,8 +140,7 @@ public class WeaponController : MonoBehaviour
 
     public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
     public int _CurrentWeapon { get; private set; }
-
-    public int[] ActivedWeapon
+    public int[] ActivedWeaponID
     {
         get
         {
@@ -152,6 +151,15 @@ public class WeaponController : MonoBehaviour
     }
     public float m_fSpreadIncrease;
     public bool m_bAutoFire = true;
+
+    #region Delegate
+    public delegate void Shoot();
+    public event Shoot OnFire;
+    public delegate void Reload();
+    public event Reload OnReload;
+    public delegate void SwitchWeapon();
+    public event SwitchWeapon OnSwitch;
+    #endregion
 
     #region Private member
 
