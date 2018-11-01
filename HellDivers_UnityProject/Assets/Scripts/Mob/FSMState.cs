@@ -9,6 +9,7 @@ public enum eFSMTransition
     Go_MoveTo,
     Go_Chase,
     Go_Attack,
+    Go_GetHurt,
     GO_WanderIdle,
     GO_Wander,
     Go_CallArmy,
@@ -22,6 +23,7 @@ public enum eFSMStateID
     MoveToStateID,
     ChaseStateID,
     AttackStateID,
+    GetHurtStateID,
     WanderIdleStateID,
     WanderStateID,
     CallArmyState,
@@ -193,7 +195,6 @@ public class FSMChaseState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        data.navMeshAgent.enabled = true;
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
@@ -204,9 +205,10 @@ public class FSMChaseState : FSMState
 
     public override void Do(AIData data)
     {
+        data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_PlayerGO.transform.position;
         SteeringBehaviours.NavMove(data);
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 3f * Time.deltaTime;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
     }
 
@@ -241,7 +243,7 @@ public class FSMAttackState : FSMState
 
     public override void DoBeforeLeave(AIData data)
     {
-       
+
     }
 
 
@@ -262,7 +264,7 @@ public class FSMAttackState : FSMState
                 data.m_Go.transform.Rotate(new Vector3(0, -10, 0), Space.Self);
             }
         }
-        if (Vector3.Angle(vDir , data.m_Go.transform.forward) <= 10.0f && Count < 1)
+        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && Count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
             Count++;
@@ -293,7 +295,7 @@ public class FSMAttackState : FSMState
             }
             return;
         }
-        if((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
@@ -303,6 +305,53 @@ public class FSMAttackState : FSMState
     {
         IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
         target.TakeDamage(10.0f, data.m_Go.transform.position);
+    }
+}
+
+public class FSMGetHurtState : FSMState
+{
+    public FSMGetHurtState()
+    {
+        m_StateID = eFSMStateID.GetHurtStateID;
+    }
+
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        data.navMeshAgent.enabled = false;
+        data.m_AnimationController.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+
+    }
+
+    public override void Do(AIData data)
+    {
+
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("GetHurt"))
+        {
+            if (info.normalizedTime > 0.9f)
+            {
+                Vector3 v = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+                float fDist = v.magnitude;
+
+                if (fDist < data.m_fAttackRange)
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
+                }
+                else
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                }
+            }
+        }
     }
 }
 

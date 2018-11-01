@@ -18,8 +18,9 @@ public class AimLine : MonoBehaviour
     {
         m_GoLineRender = Resources.Load("LineRender/LineRender") as GameObject;
         m_GoLineRender = Instantiate(m_GoLineRender, this.transform);
-        
+
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
+        m_LineRender.useWorldSpace = false;
         SetAimLineInfo(true);
         m_PlayerParts = GetComponent<PlayerParts>();
         m_LaunchPoint = m_PlayerParts.LaunchPoint;
@@ -59,10 +60,17 @@ public class AimLine : MonoBehaviour
         }
         else if (m_LineRender.positionCount == straightPosCount)
         {
-            m_LineRender.SetPosition(0, m_Enitter.localPosition);
-            m_LineRender.SetPosition(1, m_Enitter.localPosition + new Vector3(0, 0, 2f));
-            m_LineRender.SetPosition(2, GetLastPosition() - new Vector3(0, 0, 2f));
-            m_LineRender.SetPosition(3, GetLastPosition());
+            Vector3 vPosition0 = m_Enitter.transform.localPosition;
+            Vector3 vPosition1 = (GetLastPosition() + m_Enitter.transform.localPosition) * 0.2f;
+            vPosition1.y = m_Enitter.localPosition.y;
+            Vector3 vPosition2 = (GetLastPosition() + m_Enitter.transform.localPosition) * 0.8f;
+            vPosition2.y = m_Enitter.localPosition.y;
+            Vector3 vPosition3 = GetLastPosition();
+
+            m_LineRender.SetPosition(0, vPosition0);
+            m_LineRender.SetPosition(1, vPosition1);
+            m_LineRender.SetPosition(2, vPosition2);
+            m_LineRender.SetPosition(3, vPosition3);
         }
         else if (m_LineRender.positionCount == spinePosCount)
         {
@@ -105,8 +113,15 @@ public class AimLine : MonoBehaviour
     {
         if (m_LineRender.positionCount == straightPosCount)
         {
-            return new Vector3(0, 0, 50);
+            RaycastHit rh;
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out rh, 50f, 1 << LayerMask.NameToLayer("Enemies")))
+            {
+                float fDis = (rh.point - this.transform.position).magnitude;
+                return new Vector3(0, m_Enitter.localPosition.y, fDis);
+            }
+            return new Vector3(0, m_Enitter.localPosition.y, 50);
         }
+
         else if (m_LineRender.positionCount == spinePosCount)
         {
             float fHigh = Camera.main.transform.position.y - this.transform.position.y;

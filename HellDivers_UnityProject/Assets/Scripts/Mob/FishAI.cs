@@ -20,6 +20,7 @@ public class FishAI : Character {
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start () {
+        m_MaxHp = 1000;
         base.Start();
         
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
@@ -30,14 +31,11 @@ public class FishAI : Character {
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
-
-        FSMMoveToState m_MoveState = new FSMMoveToState();
+        
         FSMChaseState m_Chasestate = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
         FSMIdleState m_IdleState = new FSMIdleState();
-
-        m_MoveState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-
+        
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
         
         m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
@@ -46,12 +44,17 @@ public class FishAI : Character {
         m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
+        FSMGetHurtState m_GetHurtState = new FSMGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
-        m_DeadState.AddTransition(eFSMTransition.Go_MoveTo, m_MoveState);
+
+        m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+
+        m_DeadState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
-
-        m_FSM.AddState(m_MoveState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_GetHurt, m_GetHurtState);
+        
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_DeadState);
@@ -79,7 +82,6 @@ public class FishAI : Character {
                 }
             }
         }
-
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
     public override void Death()
@@ -87,6 +89,34 @@ public class FishAI : Character {
         m_bDead = true;
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
+    public void PerformGetHurt()
+    {
+        AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("GetHurt"))
+        {
+            return;
+        }
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_GetHurt);
+        return;
+    }
+    public override bool TakeDamage(float dmg, Vector3 hitPoint)
+    {
+        if (IsDead) return false;
+
+        CurrentHp -= dmg;
+        if (m_CurrentHp <= 0)
+        {
+            Death();
+            return true;
+        }
+        PerformGetHurt();
+        return true;
+    }
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        return TakeDamage(damager.Damage, hitPoint);
+    }
+
     private void OnDrawGizmos()
     {
         if (m_AIData == null || m_FSM == null)
