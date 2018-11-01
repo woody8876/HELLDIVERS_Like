@@ -138,7 +138,7 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private int[] activedWeapon;
     [SerializeField] private int currentAmmo;
 
-    public WeaponInfo CurrentWeaponInfo { get { return m_dActiveWeapon[_CurrentWeapon].weaponInfo; } }
+    public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
     public int _CurrentWeapon { get; private set; }
 
     public int[] ActivedWeapon
