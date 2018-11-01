@@ -34,6 +34,16 @@ public class StratagemController : MonoBehaviour
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
     /// <summary>
+    /// Represent of stratagems is ready to checking code.
+    /// </summary>
+    public List<Stratagem> StratagemsOnCheckingCode { get { return _Open; } }
+
+    /// <summary>
+    /// Represent of current checking code input step.
+    /// </summary>
+    public int InputCodeStep { get { return m_CodeInputStep; } }
+
+    /// <summary>
     /// Represent of the throw out force scale.
     /// [Range( 0 , MaxScaleForce )]
     /// </summary>
@@ -50,6 +60,22 @@ public class StratagemController : MonoBehaviour
 
     #endregion Properties
 
+    public delegate void StartCheckingCodeAction();
+
+    public delegate void CheckingCodeAction();
+
+    public delegate void StopCheckingCodeAction();
+
+    public delegate void GetReadyAction();
+
+    public event StartCheckingCodeAction OnStartCheckingCode;
+
+    public event CheckingCodeAction OnCheckingCode;
+
+    public event StopCheckingCodeAction OnStopCheckingCode;
+
+    public event GetReadyAction OnGetReady;
+
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
@@ -58,6 +84,11 @@ public class StratagemController : MonoBehaviour
     private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
+
+    // A container use to checking codes.
+    private List<Stratagem> _Open = new List<Stratagem>();
+
+    private int m_CodeInputStep;
 
     #endregion Private Variable
 
@@ -181,6 +212,7 @@ public class StratagemController : MonoBehaviour
         if (m_Stratagems.Count <= 0) return false;
 
         StartCoroutine(CheckInputCode());
+        if (OnStartCheckingCode != null) OnStartCheckingCode();
         return true;
     }
 
@@ -191,6 +223,8 @@ public class StratagemController : MonoBehaviour
     {
         StopCoroutine(CheckInputCode());
         m_bCheckingCode = false;
+
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
     }
 
     /// <summary>
@@ -241,6 +275,7 @@ public class StratagemController : MonoBehaviour
     private IEnumerator CheckInputCode()
     {
         m_bCheckingCode = true;
+        m_CodeInputStep = 0;
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
@@ -251,23 +286,24 @@ public class StratagemController : MonoBehaviour
 
         if (_Open.Count <= 0) yield break;
 
-        int inputCount = 0;
         StratagemInfo.eCode? input = null;
         while (_Open.Count > 0)
         {
             yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
             yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
-            inputCount++;
+            m_CodeInputStep++;
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Info.Codes[inputCount - 1] == input)
+                if (_Open[i].Info.Codes[m_CodeInputStep - 1] == input)
                 {
-                    if (_Open[i].Info.Codes.Length == inputCount)
+                    if (_Open[i].Info.Codes.Length == m_CodeInputStep)
                     {
                         m_CurrentStratagem = _Open[i];
                         m_CurrentStratagem.GetReady();
                         m_bCheckingCode = false;
+
+                        if (OnGetReady != null) OnGetReady();
                         yield break;
                     }
                     continue;
@@ -275,6 +311,7 @@ public class StratagemController : MonoBehaviour
                 else
                 { _Open.RemoveAt(i); }
             }
+            if (OnCheckingCode != null) OnCheckingCode();
         }
         m_bCheckingCode = false;
     }
@@ -291,9 +328,6 @@ public class StratagemController : MonoBehaviour
         else if (Input.GetAxisRaw(m_InputHorizontal) >= 1) { return StratagemInfo.eCode.Right; }
         else { return null; }
     }
-
-    // A container use to checking codes.
-    private List<Stratagem> _Open = new List<Stratagem>();
 
     #endregion Check Input Code
 }

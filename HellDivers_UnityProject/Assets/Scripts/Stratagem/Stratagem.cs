@@ -48,6 +48,10 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public float ActTimer { get { return m_ActivationTimer; } }
 
+    public delegate void ThrowEventHolder();
+
+    public event ThrowEventHolder OnThrow;
+
     #endregion Properties
 
     #region Private Variable
@@ -236,6 +240,8 @@ public class Stratagem : MonoBehaviour
 
         // Translate to ThrowOut state.
         m_eState = eState.ThrowOut;
+
+        OnThrow();
     }
 
     /// <summary>

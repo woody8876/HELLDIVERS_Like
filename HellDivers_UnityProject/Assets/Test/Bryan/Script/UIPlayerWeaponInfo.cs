@@ -8,6 +8,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
     private WeaponInfo m_CurrentWeapon;
     private Animator m_Animator;
     [SerializeField] private Image m_Icon;
+    [SerializeField] private Image m_IconFill;
     [SerializeField] private Image m_AmmoAmount;
     [SerializeField] private Text m_MagAmount;
 
@@ -15,6 +16,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
     {
         m_CurrentWeapon = info;
         m_Icon.sprite = LoadWeaponIcon();
+        m_IconFill.sprite = m_Icon.sprite;
         UpdateAmmoDisplay();
     }
 
@@ -44,6 +46,13 @@ public class UIPlayerWeaponInfo : MonoBehaviour
             iconImg = Resources.Load<Sprite>(fullPath);
         }
         return iconImg;
+    }
+
+    public void StartReload()
+    {
+        float reloadSpeed = (m_CurrentWeapon.Ammo == 0) ? m_CurrentWeapon.Empty_Reload_Speed : m_CurrentWeapon.Tactical_Reload_Speed;
+        m_Animator.SetFloat("ReloadTime", reloadSpeed);
+        m_Animator.SetTrigger("Reload");
     }
 
     public void UpdateAmmoDisplay()

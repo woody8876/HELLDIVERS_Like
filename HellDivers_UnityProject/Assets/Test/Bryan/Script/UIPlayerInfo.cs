@@ -33,8 +33,6 @@ public class UIPlayerInfo : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        SwithToCurrentWeaponDisplay();
-
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
             stratagemUI.Value.UpdateUses();
@@ -80,6 +78,7 @@ public class UIPlayerInfo : MonoBehaviour
 
             m_Player.WeaponController.OnFire += weaponUI.UpdateAmmoDisplay;
             m_Player.WeaponController.OnReload += weaponUI.UpdateAmmoDisplay;
+            //m_Player.WeaponController.OnReload += weaponUI.StartReload;
 
             m_UIWeapons.Add(weapon.Value.weaponInfo.ID, weaponUI);
         }
