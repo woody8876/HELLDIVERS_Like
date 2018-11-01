@@ -103,10 +103,9 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitReloading()
     {
         OnReload();
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) {
-            yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed); }
-        else {
-            yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed); }
+        float reloadTime = (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) ? 
+            m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed : m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed;
+        yield return new WaitForSeconds(reloadTime);
         m_dActiveWeapon[_CurrentWeapon].Reload();
         OnReloadEnd();
         m_bReloading = false;
