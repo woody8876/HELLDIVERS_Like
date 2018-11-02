@@ -296,7 +296,8 @@ public class StratagemController : MonoBehaviour
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Info.Codes[m_CodeInputStep - 1] == input)
+                int index = m_CodeInputStep - 1;
+                if (_Open[i].Info.Codes[index] == input)
                 {
                     if (_Open[i].Info.Codes.Length == m_CodeInputStep)
                     {
@@ -312,6 +313,7 @@ public class StratagemController : MonoBehaviour
                 else
                 { _Open.RemoveAt(i); }
             }
+
             if (OnCheckingCode != null) OnCheckingCode();
         }
         m_bCheckingCode = false;
