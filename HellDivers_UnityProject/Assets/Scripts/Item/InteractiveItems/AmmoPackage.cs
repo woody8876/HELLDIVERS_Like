@@ -16,9 +16,9 @@ public class AmmoPackage : InteractiveItem
 
     public override void OnInteract(Player player)
     {
-        m_WeaponID = player.WaeponController._CurrentWeapon;
+        m_WeaponID = player.WeaponController._CurrentWeapon;
 
-        bool bFillUp = player.WaeponController.AddMags(WeaponID, Ammo);
+        bool bFillUp = player.WeaponController.AddMags(WeaponID, Ammo);
         if (bFillUp == false) return;
 
         Destroy(this.gameObject);

@@ -8,14 +8,20 @@ public class UIPlayerWeaponInfo : MonoBehaviour
     private WeaponInfo m_CurrentWeapon;
     private Animator m_Animator;
     [SerializeField] private Image m_Icon;
+    [SerializeField] private Image m_IconFill;
     [SerializeField] private Image m_AmmoAmount;
     [SerializeField] private Text m_MagAmount;
 
     public void Initialize(WeaponInfo info)
     {
         m_CurrentWeapon = info;
-        m_Icon.sprite = LoadWeaponIcon();
+        InitWeaponIcon();
         UpdateAmmoDisplay();
+    }
+
+    private void OnEnable()
+    {
+        m_Animator.SetTrigger("Show");
     }
 
     private void Awake()
@@ -23,7 +29,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
         m_Animator = this.GetComponent<Animator>();
     }
 
-    private Sprite LoadWeaponIcon()
+    private Sprite InitWeaponIcon()
     {
         Sprite iconImg = null;
         string imgName = string.Format("icon_{0}", m_CurrentWeapon.ID);
@@ -43,7 +49,18 @@ public class UIPlayerWeaponInfo : MonoBehaviour
         {
             iconImg = Resources.Load<Sprite>(fullPath);
         }
+
+        m_Icon.sprite = iconImg;
+        m_IconFill.sprite = iconImg;
         return iconImg;
+    }
+
+    public void StartReload()
+    {
+        float reloadSpeed = (m_CurrentWeapon.Ammo == 0) ? m_CurrentWeapon.Empty_Reload_Speed : m_CurrentWeapon.Tactical_Reload_Speed;
+        reloadSpeed = 1 / reloadSpeed;
+        m_Animator.SetFloat("ReloadTime", reloadSpeed);
+        m_Animator.SetTrigger("Reload");
     }
 
     public void UpdateAmmoDisplay()
@@ -53,7 +70,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
 
         m_MagAmount.text = string.Format("x{0}", m_CurrentWeapon.Mags);
 
-        bool bOutOfAmmo = (m_AmmoAmount.fillAmount == 0);
+        bool bOutOfAmmo = (m_AmmoAmount.fillAmount <= 0.2f);
         m_Animator.SetBool("OutOfAmmo", bOutOfAmmo);
     }
 }
