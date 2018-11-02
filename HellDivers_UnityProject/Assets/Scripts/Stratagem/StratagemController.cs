@@ -60,21 +60,19 @@ public class StratagemController : MonoBehaviour
 
     #endregion Properties
 
-    public delegate void StartCheckingCodeAction();
+    #region Event
 
-    public delegate void CheckingCodeAction();
+    public delegate void EventHolder();
 
-    public delegate void StopCheckingCodeAction();
+    public event EventHolder OnStartCheckingCode;
 
-    public delegate void GetReadyAction();
+    public event EventHolder OnCheckingCode;
 
-    public event StartCheckingCodeAction OnStartCheckingCode;
+    public event EventHolder OnStopCheckingCode;
 
-    public event CheckingCodeAction OnCheckingCode;
+    public event EventHolder OnGetReady;
 
-    public event StopCheckingCodeAction OnStopCheckingCode;
-
-    public event GetReadyAction OnGetReady;
+    #endregion Event
 
     #region Private Variable
 
@@ -93,6 +91,8 @@ public class StratagemController : MonoBehaviour
     #endregion Private Variable
 
     #region Public Function
+
+    #region Management
 
     /// <summary>
     /// Add a stratagem by id key.
@@ -203,14 +203,16 @@ public class StratagemController : MonoBehaviour
         m_CurrentStratagem = null;
     }
 
+    #endregion Management
+
     /// <summary>
     /// Start checking stratagem codes.
     /// </summary>
     /// <returns>Was there are any stratagems in the contorller ?</returns>
     public bool StartCheckCodes()
     {
+        StopAllCoroutines();
         if (m_Stratagems.Count <= 0) return false;
-
         StartCoroutine(CheckInputCode());
         if (OnStartCheckingCode != null) OnStartCheckingCode();
         return true;
@@ -221,10 +223,8 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public void StopCheckCodes()
     {
-        StopCoroutine(CheckInputCode());
+        StopAllCoroutines();
         m_bCheckingCode = false;
-
-        if (OnStopCheckingCode != null) OnStopCheckingCode();
     }
 
     /// <summary>
@@ -280,9 +280,11 @@ public class StratagemController : MonoBehaviour
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle && s.IsCooling == false)
+            if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
                 _Open.Add(s);
         }
+
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
 
         if (_Open.Count <= 0) yield break;
 
@@ -304,6 +306,7 @@ public class StratagemController : MonoBehaviour
                         m_bCheckingCode = false;
 
                         if (OnGetReady != null) OnGetReady();
+                        StopCheckCodes();
                         yield break;
                     }
                     continue;
