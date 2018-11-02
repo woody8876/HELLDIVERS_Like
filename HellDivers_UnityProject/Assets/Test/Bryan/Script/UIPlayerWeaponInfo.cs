@@ -57,8 +57,7 @@ public class UIPlayerWeaponInfo : MonoBehaviour
 
     public void StartReload()
     {
-        float reloadSpeed = (m_CurrentWeapon.Ammo == 0) ? m_CurrentWeapon.Empty_Reload_Speed : m_CurrentWeapon.Tactical_Reload_Speed;
-        reloadSpeed = 1 / reloadSpeed;
+        float reloadSpeed = 1 / m_CurrentWeapon.ReloadSpeed;
         m_Animator.SetFloat("ReloadTime", reloadSpeed);
         m_Animator.SetTrigger("Reload");
     }

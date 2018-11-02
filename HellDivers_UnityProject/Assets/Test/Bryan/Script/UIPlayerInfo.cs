@@ -5,7 +5,16 @@ using UnityEngine.UI;
 
 public class UIPlayerInfo : MonoBehaviour
 {
+    #region Properties
+
+    /// <summary>
+    /// Represent of the player which is observing.
+    /// </summary>
     public Player CurrentPlayer { get { return m_Player; } }
+
+    #endregion Properties
+
+    #region Private Variable
 
     private Player m_Player;
     private Dictionary<int, UIPlayerWeaponInfo> m_UIWeapons;
@@ -15,6 +24,12 @@ public class UIPlayerInfo : MonoBehaviour
     [SerializeField] private Image m_PlayerRankImg;
     [SerializeField] private GameObject m_WeaponInfoPrefab;
     [SerializeField] private GameObject m_StratagemInfoPrefab;
+    [SerializeField] private GameObject m_StratagemCDIconPrefab;
+    [SerializeField] private Transform m_StratagemCDPanel;
+
+    #endregion Private Variable
+
+    #region Initializer
 
     public void Initialize(Player player)
     {
@@ -25,15 +40,9 @@ public class UIPlayerInfo : MonoBehaviour
         InitStratagemDisplay();
     }
 
-    // Use this for initialization
-    private void Start()
-    {
-    }
+    #endregion Initializer
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
+    #region UI Title
 
     private void InitTitleDisplay()
     {
@@ -60,6 +69,8 @@ public class UIPlayerInfo : MonoBehaviour
         Sprite rankImg = Resources.Load<Sprite>(rankImgPath);
         m_PlayerRankImg.sprite = rankImg;
     }
+
+    #endregion UI Title
 
     #region UI Weapon
 
@@ -126,6 +137,7 @@ public class UIPlayerInfo : MonoBehaviour
         for (int i = 0; i < m_Player.StratagemController.Stratagems.Count; i++)
         {
             Stratagem currentStratagem = m_Player.StratagemController.Stratagems[i];
+
             UIPlayerStratagemInfo stratagemUI = Instantiate(m_StratagemInfoPrefab, this.transform).GetComponent<UIPlayerStratagemInfo>();
             stratagemUI.Initialize(currentStratagem);
             stratagemUI.gameObject.SetActive(false);
@@ -137,6 +149,10 @@ public class UIPlayerInfo : MonoBehaviour
             m_Player.StratagemController.OnStopCheckingCode += StopStratagemUI;
             m_Player.StratagemController.OnCheckingCode += CheckingCodes;
             m_Player.StratagemController.OnGetReady += GetReady;
+
+            UIPlayerStratagemCD stratagemCD = Instantiate(m_StratagemCDIconPrefab, m_StratagemCDPanel).GetComponent<UIPlayerStratagemCD>();
+            stratagemCD.Initialize(currentStratagem);
+            currentStratagem.OnCoolDown += stratagemCD.RefreshDisplay;
 
             m_UIStratagems.Add(currentStratagem.Info.ID, stratagemUI);
         }
