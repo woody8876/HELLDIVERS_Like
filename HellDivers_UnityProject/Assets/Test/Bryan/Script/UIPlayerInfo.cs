@@ -130,6 +130,7 @@ public class UIPlayerInfo : MonoBehaviour
             stratagemUI.gameObject.SetActive(false);
 
             currentStratagem.OnThrow += stratagemUI.CloseUI;
+            currentStratagem.OnThrow += StopStratagemUI;
             currentStratagem.OnGetReady += stratagemUI.UpdateUses;
             m_Player.StratagemController.OnStartCheckingCode += StartStratagemUI;
             m_Player.StratagemController.OnStopCheckingCode += StopStratagemUI;
@@ -146,13 +147,13 @@ public class UIPlayerInfo : MonoBehaviour
 
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            if (stratagemUI.Value.CurrentStratagem.IsCooling == false || stratagemUI.Value.CurrentStratagem.IsOutOfUses == false)
+            if (stratagemUI.Value.CurrentStratagem.IsCooling || stratagemUI.Value.CurrentStratagem.IsOutOfUses)
             {
-                stratagemUI.Value.BrightDisplay();
+                stratagemUI.Value.DarkDisplay();
             }
             else
             {
-                stratagemUI.Value.DarkDisplay();
+                stratagemUI.Value.BrightDisplay();
             }
             stratagemUI.Value.StartUI();
         }
@@ -177,7 +178,7 @@ public class UIPlayerInfo : MonoBehaviour
     {
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            if (m_Player.StratagemController.CurrentStratagem.Info.ID == stratagemUI.Key)
+            if (stratagemUI.Value.CurrentStratagem == m_Player.StratagemController.CurrentStratagem)
             {
                 stratagemUI.Value.GetReady();
             }
