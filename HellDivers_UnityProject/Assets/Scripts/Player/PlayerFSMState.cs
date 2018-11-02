@@ -287,6 +287,8 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
+        Debug.LogError("Stop");
+        data.m_StratagemController.StopCheckCodes();
         data.m_PAC.SetAnimator(m_StateID, false);
     }
 
@@ -301,7 +303,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
             data.m_PAC.SetAnimator(m_StateID);
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
-        else if (Input.GetButtonUp("Stratagem"))
+        else if (!Input.GetButton("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
             data.m_PAC.SetAnimator(m_StateID, data.m_StratagemController.IsReady);
@@ -338,7 +340,7 @@ public class PlayerFSMThrowState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
-            if (info.normalizedTime > 0.7f)
+            if (info.normalizedTime > 0.5f)
             {
                 data.m_StratagemController.Throw();
             }

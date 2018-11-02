@@ -7,8 +7,8 @@ public class PlayerFSMSystem
     private List<PlayerFSMState> m_states;
     private Dictionary<ePlayerFSMTrans, PlayerFSMState> m_GlobalMap;
     private ePlayerFSMStateID m_currentStateID;
-    private ePlayerFSMStateID m_CurrentGlobalStateID;
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
+    private ePlayerFSMStateID m_CurrentGlobalStateID;
     private PlayerFSMState m_currentState;
     private PlayerFSMState m_CurrentGlobalState = null;
     private PlayerFSMState m_PreviousState;

@@ -87,6 +87,7 @@ public class PatrolAI : Character{
         m_bDead = true;
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
+
     private void OnDrawGizmos()
     {
         if (m_AIData == null || m_FSM == null)

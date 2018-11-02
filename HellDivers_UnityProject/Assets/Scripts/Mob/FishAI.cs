@@ -99,20 +99,6 @@ public class FishAI : Character
         }
         m_FSM.DoState();
 
-        //if (m_bDead)
-        //{
-        //    AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        //    if (info.IsName("Dead"))
-        //    {
-        //        if (info.normalizedTime > 0.9f)
-        //        {
-        //            m_FSM.PerformTransition(eFSMTransition.Go_Chase);
-        //            ObjectPool.m_Instance.UnLoadObjectToPool(3001, this.gameObject);
-        //            MobManager.m_FishCount--;
-        //        }
-        //    }
-        //}
-
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
@@ -144,27 +130,16 @@ public class FishAI : Character
     {
         if (IsDead) return false;
 
-        lock (this)
+        CurrentHp -= dmg;
+        if (m_CurrentHp <= 0)
         {
-            CurrentHp -= dmg;
-            if (m_CurrentHp <= 0)
-            {
-                Death();
-                return true;
-            }
-            else
-            {
-                PerformGetHurt();
-            }
+            Death();
+            return true;
         }
-        //CurrentHp -= dmg;
-        //if (m_CurrentHp <= 0)
-        //{
-        //    Death();
-        //    return true;
-        //}
-
-
+        else
+        {
+            PerformGetHurt();
+        }
         return true;
     }
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
