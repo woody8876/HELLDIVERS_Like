@@ -72,6 +72,15 @@ public class WeaponInfo
             else m_Mags = value;
         }
     }
+    public float ReloadSpeed
+    {
+        get
+        {
+            float reloadTime = (m_Ammo <= 0) ? Empty_Reload_Speed : Tactical_Reload_Speed;
+            return reloadTime;
+        }
+    }
+
 }
 
 [System.Serializable]
