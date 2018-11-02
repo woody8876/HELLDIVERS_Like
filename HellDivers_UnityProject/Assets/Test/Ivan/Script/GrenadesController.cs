@@ -4,29 +4,54 @@ using UnityEngine;
 
 public class GrenadesController : MonoBehaviour {
 
-    [SerializeField]
+    [SerializeField] int m_iGrenadeCount;
+    [SerializeField] int m_iGrenadeID;
 
+    List<int> m_lActiveGrenades = new List<int>();
     GrenadeInfo grenaderInfo;
     GameObject m_Grenades;
     bool m_bHolding;
 
-	public void AddGrenades(int id)
+	private void AddGrenades(int id, int count)
     {
         grenaderInfo = GameData.Instance.GrenadeInfoTable[(int)id];
         string m_sGrenade = "Grenade_" + grenaderInfo.Title;
         string m_sEffect = "Effect_" + grenaderInfo.Title;
-        
+        Object grenade;
+        Object effect;
         if (ResourceManager.m_Instance != null)
         {
-            Object grenade = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sGrenade, false);
-            Object effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sEffect, false);
-                
+            grenade = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sGrenade, false);
+            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sEffect, false);
         }
-        Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");
-        Object Effect = Resources.Load("Grenades/Effect_Pumpkin");
-        //ObjectPool.m_Instance.InitGameObjects(Grenades, 10, );
-        //ObjectPool.m_Instance.InitGameObjects(Effect, 5, );
+        else
+        {
+            grenade = Resources.Load("Grenades/Grenade_Pumpkin");
+            effect = Resources.Load("Grenades/Effect_Pumpkin");
+        }
+        if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
+        ObjectPool.m_Instance.InitGameObjects(grenade, count, id);
+        ObjectPool.m_Instance.InitGameObjects(effect, count, id + 100);
+
+
+        m_lActiveGrenades.Add(id);
 	}
+
+    public void Equipment(int id, int count)
+    {
+        bool bExist = false;
+        for (int i = 0; i < m_lActiveGrenades.Count; i++)
+        {
+            if (m_lActiveGrenades[i] == id)
+            {
+                bExist = true;
+                break;
+            }
+        }
+        if (!bExist) AddGrenades(id);
+
+    }
+
 
     // Update is called once per frame
     private void FixedUpdate()

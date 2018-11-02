@@ -23,7 +23,6 @@ public class Weapon_Rifle : Weapon
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             weaponInfo.Ammo--;
-            Debug.DrawRay(pos, go.transform.forward * 10, Color.green, 1f);
             if (CheckHit(pos, go.transform.forward)) { damage = weaponInfo.Damage; }
             else { damage = 0; }
 

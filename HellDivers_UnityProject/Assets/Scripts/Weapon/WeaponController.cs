@@ -67,7 +67,7 @@ public class WeaponController : MonoBehaviour
     #region WeaponBehaviours
     public bool ShootState()
     {
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0 ) { return false; }
+        if (CurrentWeaponInfo.Ammo <= 0 ) { return false; }
         if (!m_bShooting) { return false; }
         m_bShooting = false;
         m_cCoolDown = StartCoroutine(WaitCooling());
@@ -80,16 +80,15 @@ public class WeaponController : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
         if (OnFire != null) OnFire();
-        yield return new WaitForSeconds(m_dActiveWeapon[_CurrentWeapon].weaponInfo.FireRate);
+        yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
-        m_fSpreadIncrease += m_dActiveWeapon[_CurrentWeapon].weaponInfo.Spread_Increase_per_shot;
+        m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
         m_cCoolDown = null;
     }
 
     public bool ReloadState()
     {
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo >= m_dActiveWeapon[_CurrentWeapon].weaponInfo.Capacity ||
-            m_dActiveWeapon[_CurrentWeapon].weaponInfo.Mags <= 0) { return false; }
+        if (CurrentWeaponInfo.Ammo >= CurrentWeaponInfo.Capacity || CurrentWeaponInfo.Mags <= 0) { return false; }
         else if (m_bReloading) { return false; }
         m_bReloading = true;
         m_cCoolDown = StartCoroutine(WaitReloading());
@@ -127,11 +126,16 @@ public class WeaponController : MonoBehaviour
     }
     #endregion WeaponBehaviours
 
-    //For Debug
-    [SerializeField] private int currentWeapon;
-    [SerializeField] private int[] activedWeapon;
-    [SerializeField] private int currentAmmo;
+    #region Delegate
+    public delegate void EventHolder();
+    public event EventHolder OnFire;
+    public event EventHolder OnReload;
+    public event EventHolder OnReloadEnd;
+    public event EventHolder OnSwitch;
+    public event EventHolder OnPickMags;
+    #endregion
 
+    #region Public Field
     public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
     public WeaponInfo CurrentWeaponInfo { get { return m_dActiveWeapon[_CurrentWeapon].weaponInfo; } }
     public int _CurrentWeapon { get; private set; }
@@ -146,33 +150,17 @@ public class WeaponController : MonoBehaviour
     }
     public float m_fSpreadIncrease;
     public bool m_bAutoFire = true;
-
-    #region Delegate
-    public delegate void EventHolder();
-    public event EventHolder OnFire;
-    public event EventHolder OnReload;
-    public event EventHolder OnReloadEnd;
-    public event EventHolder OnSwitch;
-    public event EventHolder OnPickMags;
+    public bool m_bShooting = true;
     #endregion
 
     #region Private member
-
     private WeaponFactory m_weaponFactory = new WeaponFactory();
     private GameObject m_GOEffect;
     private Animator m_AnimEffect;
     private Transform m_tGunPos;
     private Coroutine m_cCoolDown;
-
-    public delegate void ActiveState();
-
-    public ActiveState m_ActiveState;
-
     private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();
-
-    public bool m_bShooting = true;
     private float m_fDamage;
     private bool m_bReloading;
-
     #endregion Private member
 }
