@@ -171,7 +171,6 @@ public class SteeringBehaviours
         Vector3 nextTarget = data.m_Go.transform.forward;
         nextTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * nextTarget;
         nextTarget *= Random.Range(5f, 20f);
-        //nextTarget.y = data.m_Go.transform.position.y;
         nextTarget += data.m_Go.transform.position;
         if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 1f || data.m_vTarget == Vector3.zero)
         {

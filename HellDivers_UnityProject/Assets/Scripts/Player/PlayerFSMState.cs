@@ -503,7 +503,7 @@ public class PlayerFSMDeadState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_MoveMode = "Stop";
+        data.m_MoveMode = "Dead";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
