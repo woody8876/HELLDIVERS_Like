@@ -17,7 +17,7 @@ public class PatrolAI : Character{
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start() {
-        m_MaxHp = 1000;
+        m_MaxHp = 100;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();

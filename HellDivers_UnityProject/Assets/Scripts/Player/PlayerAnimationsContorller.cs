@@ -85,6 +85,11 @@ public class PlayerAnimationsContorller : MonoBehaviour
         UpdateAnimator(state, Bool);
     }
 
+    public void SetAnimator(ePlayerFSMStateID state, float speed)
+    {
+        UpdateAnimator(state, speed);
+    }
+
     private void UpdateAnimator(Vector3 move, bool inBattle)
     {
         if (!inBattle)
@@ -99,12 +104,12 @@ public class PlayerAnimationsContorller : MonoBehaviour
             if (Vector3.Angle(this.transform.forward, move) > 20)
             {
                 m_Animator.SetBool("RotateStart", true);
-                m_Animator.Play("Rotate", 0, 0);
+                //m_Animator.Play("Rotate", 0, 0);
             }
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
-            m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);
-            m_Animator.SetFloat("WalkRight", m_BattleRight, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkForward", m_BattleForward/*, 0.1f, Time.deltaTime*/);
+            m_Animator.SetFloat("WalkRight", m_BattleRight/*, 0.1f, Time.deltaTime*/);
         }
     }
 
@@ -162,6 +167,15 @@ public class PlayerAnimationsContorller : MonoBehaviour
         else if (state == ePlayerFSMStateID.ThrowStateID)
         {
             m_Animator.SetBool("ThrowOut", Bool);
+        }
+    }
+
+    private void UpdateAnimator(ePlayerFSMStateID state, float speed)
+    {
+        if (state == ePlayerFSMStateID.ReloadStateID)
+        {
+            m_Animator.SetTrigger("Reload");
+            m_Animator.SetFloat("ReloadSpeed", speed);
         }
     }
 }

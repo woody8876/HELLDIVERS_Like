@@ -18,12 +18,14 @@ public class FishAI : Character
     }
     private void OnEnable()
     {
+        if (m_FSM == null) return;
+        m_FSM.PerformTransition(eFSMTransition.Go_Chase);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start()
     {
-        m_MaxHp = 1000;
+        m_MaxHp = 450;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();

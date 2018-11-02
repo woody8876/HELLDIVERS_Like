@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
-            if (m_MoveMode.Equals("Dead")) return;
+            if (m_MoveMode.Equals("Stop")) return;
 
             PerformPlayerRoll();
         }
@@ -374,7 +374,7 @@ public class PlayerController : MonoBehaviour
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
-        if (info.IsName("GetGurt"))
+        if (m_PAC.Animator.IsInTransition(2) || info.IsName("GetGurt"))
         {
             return false;
         }

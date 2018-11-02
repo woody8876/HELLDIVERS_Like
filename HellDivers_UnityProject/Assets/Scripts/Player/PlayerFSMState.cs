@@ -247,7 +247,7 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_PAC.SetAnimator(m_StateID);
+
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -256,16 +256,25 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
+        if (Input.GetButton("Reload"))
+        {
+            float speed = data.m_WeaponController.ReloadSpeed;
+            speed = (3.33f / speed);
+            data.m_PAC.SetAnimator(m_StateID, speed);
+        }
     }
 
     public override void CheckCondition(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
-        if (info.IsName("Reload"))
+        if (!Input.GetButton("Reload"))
         {
-            if (data.m_PAC.FinishAnimator(data))
+            AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
+            if (info.IsName("Reload"))
             {
-                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                if (data.m_PAC.FinishAnimator(data))
+                {
+                    data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                }
             }
         }
     }
@@ -287,8 +296,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-        Debug.LogError("Stop");
-        data.m_StratagemController.StopCheckCodes();
         data.m_PAC.SetAnimator(m_StateID, false);
     }
 
@@ -306,7 +313,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
         else if (!Input.GetButton("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
-            data.m_PAC.SetAnimator(m_StateID, data.m_StratagemController.IsReady);
+            data.m_PAC.SetAnimator(m_StateID, false);
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
