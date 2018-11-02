@@ -88,7 +88,7 @@ public class FishAI : Character {
 
         if (m_bDead)
         {
-            AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
+            AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(1);
             if (info.IsName("Dead"))
             {
                 if (info.normalizedTime > 0.9f)
@@ -112,11 +112,10 @@ public class FishAI : Character {
         if (IsDead) return;
 
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("GetHurt") || info.IsName("Dead"))
+        if (info.IsName("GetHurt"))
         {
             return;
         }
-        Debug.LogError("To Hurt");
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_GetHurt);
         return;
     }
