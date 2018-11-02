@@ -6,12 +6,21 @@ public class GrenadesController : MonoBehaviour {
 
     [SerializeField]
 
-    GrenaderInfo grenader = new GrenaderInfo();
+    GrenadeInfo grenaderInfo;
     GameObject m_Grenades;
     bool m_bHolding;
 
-	public void Start()
+	public void AddGrenades(int id)
     {
+        grenaderInfo = GameData.Instance.GrenadeInfoTable[(int)id];
+        string m_sGrenade = "Grenade_" + grenaderInfo.Title;
+        string m_sEffect = "Effect_" + grenaderInfo.Title;
+        
+        if (ResourceManager.m_Instance != null)
+        {
+            Object grenade = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sGrenade, false);
+                
+        }
         Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");
         Object Effect = Resources.Load("Grenades/Effect_Pumpkin");
         //ObjectPool.m_Instance.InitGameObjects(Grenades, 10, );

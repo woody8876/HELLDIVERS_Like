@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GrenadeInfoLoader {
 
-    public static Dictionary<int, GrenaderInfo> LoadData(string filePath)
+    public static Dictionary<int, GrenadeInfo> LoadData(string filePath)
     {
-        Dictionary<int, GrenaderInfo> grenadeInfo = new Dictionary<int, GrenaderInfo>();
+        Dictionary<int, GrenadeInfo> grenadeInfo = new Dictionary<int, GrenadeInfo>();
         if (_LoadDataBase(filePath, ref grenadeInfo) == true)
         {
             Debug.Log("GrenadeInfo has been load.");
@@ -19,7 +19,7 @@ public class GrenadeInfoLoader {
         }
     }
 
-    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, GrenaderInfo> Info)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, GrenadeInfo> Info)
     {
         Info.Clear();
         TextAsset datas = Resources.Load<TextAsset>(tablePath);
@@ -29,7 +29,7 @@ public class GrenadeInfoLoader {
             for (int i = 1; i < lines.Length - 1; i++)
             {
                 string[] grenadeInfo = lines[i].Split(',');
-                GrenaderInfo data = new GrenaderInfo();
+                GrenadeInfo data = new GrenadeInfo();
                 data.SetID(int.Parse(grenadeInfo[0]));
                 data.SetType(int.Parse(grenadeInfo[1]));
                 data.SetTitle(grenadeInfo[2]);

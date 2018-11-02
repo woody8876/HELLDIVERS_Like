@@ -100,8 +100,8 @@ public class Weapon : IWeaponBehaviour
         else
         {
             Debug.LogWarning("No ResourceManager.");
-            m_Weapon = Resources.Load(m_sWeapon);
-            effect = Resources.Load(m_sEffect) as GameObject;
+            m_Weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
+            effect = Resources.Load("WeaponStorage/" + m_sEffect) as GameObject;
         }
 
         if (ObjectPool.m_Instance != null)

@@ -11,7 +11,7 @@ public enum EGrenades
     TIMEBOMB
 }
 
-public class GrenaderInfo {
+public class GrenadeInfo {
 
     public int ID { private set ; get ; }
     public int Type { private set; get; }
