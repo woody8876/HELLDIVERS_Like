@@ -394,7 +394,17 @@ public class FSMDeadState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Dead"))
+        {
+            if (info.normalizedTime > 0.9f)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                Debug.LogError("Dead");
+                ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
+                MobManager.m_FishCount--;
+            }
+        }
     }
 }
 

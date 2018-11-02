@@ -89,11 +89,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         if (!inBattle)
         {
-            //float h = Input.GetAxis("Horizontal");
-            //float v = Input.GetAxis("Vertical");
-            //Vector3 m_Move = v * Vector3.forward + h * Vector3.right;
-            //m_Animator.SetFloat("WalkForward", 0.0f, 0.1f, Time.deltaTime);
-            //m_Animator.SetFloat("WalkRight", 0.0f, 0.1f, Time.deltaTime);
             m_Animator.SetBool("WalkShoot", false);
             m_Animator.SetBool("RotateStart", false);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
@@ -101,7 +96,11 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
         else if (inBattle)
         {
-            if (Vector3.Angle(this.transform.forward, move) > 20) m_Animator.SetBool("RotateStart", true);
+            if (Vector3.Angle(this.transform.forward, move) > 20)
+            {
+                m_Animator.SetBool("RotateStart", true);
+                m_Animator.Play("Rotate", 0, 0);
+            }
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);

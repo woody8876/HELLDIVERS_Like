@@ -119,6 +119,7 @@ public class PlayerFSMSystem
         
         if (m_CurrentGlobalState == null) return;
         m_CurrentGlobalState.CheckCondition(m_Data);
+        if (m_CurrentGlobalState == null) return;
         m_CurrentGlobalState.Do(m_Data);
     }
 }
