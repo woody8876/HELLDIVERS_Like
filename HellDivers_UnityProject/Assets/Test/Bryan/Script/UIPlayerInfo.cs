@@ -72,7 +72,7 @@ public class UIPlayerInfo : MonoBehaviour
         if (m_Player == null) return;
 
         m_UIWeapon = Instantiate(m_WeaponInfoPrefab, this.transform).GetComponent<UIPlayerWeaponInfo>();
-        m_UIWeapon.Initialize(m_Player.WaeponController.CurrentWeaponInfo);
+       // m_UIWeapon.Initialize(m_Player.WaeponController.CurrentWeaponInfo);
         m_UIWeapon.gameObject.SetActive(true);
     }
 
