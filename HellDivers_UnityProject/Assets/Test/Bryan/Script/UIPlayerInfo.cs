@@ -75,6 +75,7 @@ public class UIPlayerInfo : MonoBehaviour
             weaponUI.gameObject.SetActive(false);
 
             m_Player.WeaponController.OnFire += weaponUI.UpdateAmmoDisplay;
+            m_Player.WeaponController.OnPickMags += weaponUI.UpdateAmmoDisplay;
             m_Player.WeaponController.OnReload += weaponUI.StartReload;
             m_Player.WeaponController.OnReloadEnd += weaponUI.UpdateAmmoDisplay;
 
