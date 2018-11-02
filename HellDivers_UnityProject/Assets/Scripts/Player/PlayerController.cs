@@ -39,7 +39,9 @@ public class PlayerController : MonoBehaviour
     }
     private void OnEnable()
     {
-        
+        if (m_PlayerFSM == null) return;
+        m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        m_PAC.ResetAnimator(this);
     }
     private void Start()
     {
@@ -146,6 +148,7 @@ public class PlayerController : MonoBehaviour
 
         SelectMotionState();
         m_PlayerFSM.DoState();
+        CheckState();
     }
 
     #endregion MonoBehaviour
@@ -346,6 +349,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void CheckState()
+    {
+        if (!Input.GetButton("Stratagem"))
+        {
+            if(m_PlayerFSM.CurrentStateID == ePlayerFSMStateID.StratagemStateID)
+            {
+                m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+
+    #region Public Function
     public void PerformPlayerVictory()
     {
         m_PlayerFSM.PerformGlobalTransition(ePlayerFSMTrans.Go_Victory);
@@ -378,8 +393,10 @@ public class PlayerController : MonoBehaviour
         m_PAC.Animator.SetTrigger("GetHurt");
         return true;
     }
+    #endregion
+
     #endregion Character Behaviour
-    
+
 
 
 #if UNITY_EDITOR

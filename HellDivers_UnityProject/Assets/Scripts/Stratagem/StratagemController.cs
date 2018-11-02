@@ -34,6 +34,16 @@ public class StratagemController : MonoBehaviour
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
     /// <summary>
+    /// Represent of stratagems is ready to checking code.
+    /// </summary>
+    public List<Stratagem> StratagemsOnCheckingCode { get { return _Open; } }
+
+    /// <summary>
+    /// Represent of current checking code input step.
+    /// </summary>
+    public int InputCodeStep { get { return m_CodeInputStep; } }
+
+    /// <summary>
     /// Represent of the throw out force scale.
     /// [Range( 0 , MaxScaleForce )]
     /// </summary>
@@ -50,6 +60,20 @@ public class StratagemController : MonoBehaviour
 
     #endregion Properties
 
+    #region Event
+
+    public delegate void EventHolder();
+
+    public event EventHolder OnStartCheckingCode;
+
+    public event EventHolder OnCheckingCode;
+
+    public event EventHolder OnStopCheckingCode;
+
+    public event EventHolder OnGetReady;
+
+    #endregion Event
+
     #region Private Variable
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
@@ -59,9 +83,16 @@ public class StratagemController : MonoBehaviour
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
 
+    // A container use to checking codes.
+    private List<Stratagem> _Open = new List<Stratagem>();
+
+    private int m_CodeInputStep;
+
     #endregion Private Variable
 
     #region Public Function
+
+    #region Management
 
     /// <summary>
     /// Add a stratagem by id key.
@@ -172,15 +203,18 @@ public class StratagemController : MonoBehaviour
         m_CurrentStratagem = null;
     }
 
+    #endregion Management
+
     /// <summary>
     /// Start checking stratagem codes.
     /// </summary>
     /// <returns>Was there are any stratagems in the contorller ?</returns>
     public bool StartCheckCodes()
     {
+        StopAllCoroutines();
         if (m_Stratagems.Count <= 0) return false;
-
         StartCoroutine(CheckInputCode());
+        if (OnStartCheckingCode != null) OnStartCheckingCode();
         return true;
     }
 
@@ -189,7 +223,7 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public void StopCheckCodes()
     {
-        StopCoroutine(CheckInputCode());
+        StopAllCoroutines();
         m_bCheckingCode = false;
     }
 
@@ -241,33 +275,38 @@ public class StratagemController : MonoBehaviour
     private IEnumerator CheckInputCode()
     {
         m_bCheckingCode = true;
+        m_CodeInputStep = 0;
         _Open.Clear();
 
         foreach (Stratagem s in m_Stratagems)
         {
-            if (s != null && s.Info != null && s.State == Stratagem.eState.Idle && s.IsCooling == false)
+            if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
                 _Open.Add(s);
         }
 
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
+
         if (_Open.Count <= 0) yield break;
 
-        int inputCount = 0;
         StratagemInfo.eCode? input = null;
         while (_Open.Count > 0)
         {
             yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
             yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
-            inputCount++;
+            m_CodeInputStep++;
 
             for (int i = 0; i < _Open.Count; i++)
             {
-                if (_Open[i].Info.Codes[inputCount - 1] == input)
+                if (_Open[i].Info.Codes[m_CodeInputStep - 1] == input)
                 {
-                    if (_Open[i].Info.Codes.Length == inputCount)
+                    if (_Open[i].Info.Codes.Length == m_CodeInputStep)
                     {
                         m_CurrentStratagem = _Open[i];
                         m_CurrentStratagem.GetReady();
                         m_bCheckingCode = false;
+
+                        if (OnGetReady != null) OnGetReady();
+                        StopCheckCodes();
                         yield break;
                     }
                     continue;
@@ -275,6 +314,7 @@ public class StratagemController : MonoBehaviour
                 else
                 { _Open.RemoveAt(i); }
             }
+            if (OnCheckingCode != null) OnCheckingCode();
         }
         m_bCheckingCode = false;
     }
@@ -291,9 +331,6 @@ public class StratagemController : MonoBehaviour
         else if (Input.GetAxisRaw(m_InputHorizontal) >= 1) { return StratagemInfo.eCode.Right; }
         else { return null; }
     }
-
-    // A container use to checking codes.
-    private List<Stratagem> _Open = new List<Stratagem>();
 
     #endregion Check Input Code
 }

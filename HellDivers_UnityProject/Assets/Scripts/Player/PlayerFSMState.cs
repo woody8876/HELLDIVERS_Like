@@ -18,6 +18,7 @@ public enum ePlayerFSMTrans
     Go_Relive,
     Go_Roll,
 }
+
 public enum ePlayerFSMStateID
 {
     NullStateID,
@@ -37,7 +38,6 @@ public enum ePlayerFSMStateID
 
 public class PlayerFSMState
 {
-
     public ePlayerFSMStateID m_StateID;
     public Dictionary<ePlayerFSMTrans, PlayerFSMState> m_Map;
     public float m_fCurrentTime;
@@ -58,13 +58,13 @@ public class PlayerFSMState
 
         m_Map.Add(trans, toState);
     }
+
     public void DelTransition(ePlayerFSMTrans trans)
     {
         if (m_Map.ContainsKey(trans))
         {
             m_Map.Remove(trans);
         }
-
     }
 
     public PlayerFSMState TransitionTo(ePlayerFSMTrans trans)
@@ -78,22 +78,18 @@ public class PlayerFSMState
 
     public virtual void DoBeforeEnter(PlayerController data)
     {
-
     }
 
     public virtual void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public virtual void Do(PlayerController data)
     {
-
     }
 
     public virtual void CheckCondition(PlayerController data)
     {
-
     }
 }
 
@@ -104,15 +100,12 @@ public class PlayerFSMStartState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.StartStateID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
-
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-        
     }
 
     public override void Do(PlayerController data)
@@ -135,16 +128,15 @@ public class PlayerFSMStartState : PlayerFSMState
 
 public class PlayerFSMGunState : PlayerFSMState
 {
-    bool shoot;
+    private bool shoot;
+
     public PlayerFSMGunState()
     {
         m_StateID = ePlayerFSMStateID.GunStateID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
-
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -187,7 +179,7 @@ public class PlayerFSMGunState : PlayerFSMState
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Reload);
             }
         }
-        if (Input.GetButton("Stratagem") && shoot ==false)
+        if (Input.GetButton("Stratagem") && shoot == false)
         {
             if (data.m_StratagemController.Stratagems.Count > 0)
             {
@@ -219,7 +211,6 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.MeleeAttackID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_PAC.SetAnimator(m_StateID);
@@ -228,12 +219,10 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public override void Do(PlayerController data)
     {
-      
     }
 
     public override void CheckCondition(PlayerController data)
@@ -249,13 +238,12 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
     }
 }
 
-public class PlayerFSMReloadState  : PlayerFSMState
+public class PlayerFSMReloadState : PlayerFSMState
 {
     public PlayerFSMReloadState()
     {
         m_StateID = ePlayerFSMStateID.ReloadStateID;
     }
-
 
     public override void DoBeforeEnter(PlayerController data)
     {
@@ -264,12 +252,10 @@ public class PlayerFSMReloadState  : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public override void Do(PlayerController data)
     {
-
     }
 
     public override void CheckCondition(PlayerController data)
@@ -291,10 +277,12 @@ public class PlayerFSMStratagemState : PlayerFSMState
     {
         m_StateID = ePlayerFSMStateID.StratagemStateID;
     }
+
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID, true);
+        data.m_StratagemController.StartCheckCodes();
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -304,10 +292,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (data.m_StratagemController.IsCheckingCode == false)
-        {
-            data.m_StratagemController.StartCheckCodes();
-        }
     }
 
     public override void CheckCondition(PlayerController data)
@@ -317,7 +301,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
             data.m_PAC.SetAnimator(m_StateID);
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
-
         else if (Input.GetButtonUp("Stratagem"))
         {
             data.m_StratagemController.StopCheckCodes();
@@ -329,12 +312,10 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
 public class PlayerFSMThrowState : PlayerFSMState
 {
-
     public PlayerFSMThrowState()
     {
         m_StateID = ePlayerFSMStateID.ThrowStateID;
     }
-
 
     public override void DoBeforeEnter(PlayerController data)
     {
@@ -353,7 +334,7 @@ public class PlayerFSMThrowState : PlayerFSMState
             data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);
         }
-        
+
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
@@ -384,7 +365,6 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.SwitchWeaponID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_MoveMode = "MoveOnly";
@@ -393,12 +373,10 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public override void Do(PlayerController data)
     {
-
     }
 
     public override void CheckCondition(PlayerController data)
@@ -416,12 +394,13 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
 
 public class PlayerFSMPickUpState : PlayerFSMState
 {
-    float Count = 0;
+    private float Count = 0;
+
     public PlayerFSMPickUpState()
     {
         m_StateID = ePlayerFSMStateID.PickUpID;
     }
-    
+
     public override void DoBeforeEnter(PlayerController data)
     {
         Count = 0;
@@ -430,7 +409,6 @@ public class PlayerFSMPickUpState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-        
     }
 
     public override void Do(PlayerController data)
@@ -464,7 +442,6 @@ public class PlayerFSMVictoryState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.VictoryID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_PAC.SetAnimator(m_StateID);
@@ -472,12 +449,10 @@ public class PlayerFSMVictoryState : PlayerFSMState
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public override void Do(PlayerController data)
     {
-
     }
 
     public override void CheckCondition(PlayerController data)
@@ -500,16 +475,14 @@ public class PlayerFSMDeadState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.DeadStateID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_MoveMode = "Stop";
+        data.m_MoveMode = "Dead";
         data.m_PAC.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
     }
 
     public override void Do(PlayerController data)
@@ -529,17 +502,15 @@ public class PlayerFSMDeadState : PlayerFSMState
 
     public override void CheckCondition(PlayerController data)
     {
-
     }
 }
-  
+
 public class PlayerFSMReliveState : PlayerFSMState
 {
     public PlayerFSMReliveState()
     {
         m_StateID = ePlayerFSMStateID.ReliveStateID;
     }
-
 
     public override void DoBeforeEnter(PlayerController data)
     {
@@ -567,6 +538,7 @@ public class PlayerFSMReliveState : PlayerFSMState
             return;
         }
     }
+
     public override void CheckCondition(PlayerController data)
     {
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
@@ -588,7 +560,6 @@ public class PlayerFSMRollState : PlayerFSMState
         m_StateID = ePlayerFSMStateID.RollStateID;
     }
 
-
     public override void DoBeforeEnter(PlayerController data)
     {
         data.m_MoveMode = "Stop";
@@ -602,9 +573,7 @@ public class PlayerFSMRollState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        
     }
-
 
     public override void CheckCondition(PlayerController data)
     {

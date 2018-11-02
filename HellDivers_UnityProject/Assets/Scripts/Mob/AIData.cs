@@ -14,6 +14,7 @@ public class AIData
     public float m_fMaxRot;
     public GameObject m_Go;
     public GameObject m_PlayerGO;
+    public bool m_bIsPlayerDead;
 
     [HideInInspector] public float m_fRot;
     [HideInInspector] public float m_fTempTurnForce;

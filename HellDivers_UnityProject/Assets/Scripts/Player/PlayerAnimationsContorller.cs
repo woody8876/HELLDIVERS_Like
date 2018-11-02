@@ -19,7 +19,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void Update()
     {
-        
+
     }
     public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
@@ -96,7 +96,11 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
         else if (inBattle)
         {
-            if (Vector3.Angle(this.transform.forward, move) > 20) m_Animator.SetBool("RotateStart", true);
+            if (Vector3.Angle(this.transform.forward, move) > 20)
+            {
+                m_Animator.SetBool("RotateStart", true);
+                m_Animator.Play("Rotate", 0, 0);
+            }
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);
