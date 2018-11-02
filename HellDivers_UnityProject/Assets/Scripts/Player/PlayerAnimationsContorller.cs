@@ -19,7 +19,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void Update()
     {
-        
+
     }
     public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
@@ -89,6 +89,11 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         if (!inBattle)
         {
+            //float h = Input.GetAxis("Horizontal");
+            //float v = Input.GetAxis("Vertical");
+            //Vector3 m_Move = v * Vector3.forward + h * Vector3.right;
+            //m_Animator.SetFloat("WalkForward", 0.0f, 0.1f, Time.deltaTime);
+            //m_Animator.SetFloat("WalkRight", 0.0f, 0.1f, Time.deltaTime);
             m_Animator.SetBool("WalkShoot", false);
             m_Animator.SetBool("RotateStart", false);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
