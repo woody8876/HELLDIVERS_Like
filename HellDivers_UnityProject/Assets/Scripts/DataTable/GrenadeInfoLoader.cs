@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class GrenadeInfoLoader {
 
-    public static Dictionary<int, WeaponInfo> LoadData(string filePath)
+    public static Dictionary<int, GrenaderInfo> LoadData(string filePath)
     {
-        Dictionary<int, WeaponInfo> weaponInfo = new Dictionary<int, WeaponInfo>();
-        if (_LoadDataBase(filePath, ref weaponInfo) == true)
+        Dictionary<int, GrenaderInfo> grenadeInfo = new Dictionary<int, GrenaderInfo>();
+        if (_LoadDataBase(filePath, ref grenadeInfo) == true)
         {
-            Debug.Log("WeaponInfo has been load.");
-            return weaponInfo;
+            Debug.Log("GrenadeInfo has been load.");
+            return grenadeInfo;
         }
         else
         {
-            Debug.Log("WeaponInfo load failed.");
+            Debug.Log("GrenadeInfo load failed.");
             return null;
         }
     }
 
-    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, WeaponInfo> Info)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, GrenaderInfo> Info)
     {
         Info.Clear();
         TextAsset datas = Resources.Load<TextAsset>(tablePath);
@@ -28,25 +28,15 @@ public class GrenadeInfoLoader {
             string[] lines = datas.text.Split('\n');
             for (int i = 1; i < lines.Length - 1; i++)
             {
-                string[] weaponInfo = lines[i].Split(',');
-                WeaponInfo data = new WeaponInfo();
-                data._ID = int.Parse(weaponInfo[0]);
-                data._Type = int.Parse(weaponInfo[1]);
-                data._Title = weaponInfo[2];
-                data._Damage = int.Parse(weaponInfo[3]);
-                data._Explosion_Damage = int.Parse(weaponInfo[4]);
-                data._FireRate = float.Parse(weaponInfo[5]);
-                data._Capacity = int.Parse(weaponInfo[6]);
-                data._Start_Mags = int.Parse(weaponInfo[7]);
-                data._Max_Mags = int.Parse(weaponInfo[8]);
-                data._Empty_Reload_Speed = float.Parse(weaponInfo[9]);
-                data._Tactical_Reload_Speed= float.Parse(weaponInfo[10]);
-                data._Min_Spread = float.Parse(weaponInfo[11]);
-                data._Max_Spread = float.Parse(weaponInfo[12]);
-                data._Spread_Increase_per_shot = float.Parse(weaponInfo[13]);
-                data._Range = float.Parse(weaponInfo[14]);
-                data._FireMode = float.Parse(weaponInfo[15]);
-                Info.Add(data._ID, data);
+                string[] grenadeInfo = lines[i].Split(',');
+                GrenaderInfo data = new GrenaderInfo();
+                data.SetID(int.Parse(grenadeInfo[0]));
+                data.SetType(int.Parse(grenadeInfo[1]));
+                data.SetTitle(grenadeInfo[2]);
+                data.SetDamage(float.Parse(grenadeInfo[3]));
+                data.SetTimer(float.Parse(grenadeInfo[4]));
+                data.SetRange(float.Parse(grenadeInfo[5]));
+                Info.Add(data.ID, data);
             }
             return true;
         }

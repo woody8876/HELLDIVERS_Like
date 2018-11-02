@@ -10,44 +10,45 @@ using UnityEngine;
 
 public class WeaponInfo
 {
-    #region Stauts for setting
-    public int _ID;
-    public int _Type;
-    public string _Title;
-    public float _Damage;
-    public float _Explosion_Damage;
-    public float _FireRate;
-    public int _Capacity;
-    public int _Start_Mags;
-    public int _Max_Mags;
-    public float _Tactical_Reload_Speed;
-    public float _Empty_Reload_Speed;
-    public float _Min_Spread;
-    public float _Max_Spread;
-    public float _Range;
-    public float _Spread_Increase_per_shot;
-    public float _FireMode;
-    #endregion
+    private float _FireRate;
 
-    #region Status get only
-    public int ID { get { return _ID; } }
-    public int Type { get { return _Type; } }
-    public string Title { get { return _Title; } }
-    public float Damage { get { return _Damage; } }
-    public float Explosion_Damage { get { return _Explosion_Damage; } }
+    #region Properties
+    public int ID { private set; get; }
+    public int Type { private set; get; }
+    public string Title { private set; get; }
+    public float Damage { private set; get; }
+    public float Explosion_Damage { private set; get; }
     public float FireRate { get { return 1 / (_FireRate * 0.017f); } }
-    public int Capacity { get { return _Capacity; } }
-    public int Start_Mags { get { return _Start_Mags; } }
-    public int Max_Mags { get { return _Max_Mags; } }
-    public float Empty_Reload_Speed { get { return _Empty_Reload_Speed; } }
-    public float Tactical_Reload_Speed { get { return _Tactical_Reload_Speed; } }
-    public float Min_Spread { get { return _Min_Spread; } }
-    public float Max_Spread { get { return _Max_Spread; } }
-    public float Spread_Increase_per_shot { get { return _Spread_Increase_per_shot; } }
-    public float Range { get { return _Range; } }
-    public float FireMode { get { return _FireMode; } }
-
+    public int Capacity { private set; get; }
+    public int Start_Mags { private set; get; }
+    public int Max_Mags { private set; get; }
+    public float Empty_Reload_Speed { private set; get; }
+    public float Tactical_Reload_Speed { private set; get; }
+    public float Min_Spread { private set; get; }
+    public float Max_Spread { private set; get; }
+    public float Spread_Increase_per_shot { private set; get; }
+    public float Range { private set; get; }
+    public float FireMode { private set; get; }
     #endregion
+    #region Set Properties
+    public void SetID(int id) { ID = id; }
+    public void SetType(int type) { Type = type; }
+    public void SetTitle(string title) { Title = title; }
+    public void SetDamage(float damage) { Damage = damage; }
+    public void SetExplosion(float explosion) { Explosion_Damage = explosion; }
+    public void SetFireRate(float fireRate) { _FireRate = fireRate; }
+    public void SetCapacity(int capacity) { Capacity = capacity; }
+    public void SetStart_Mags(int sMags) { Start_Mags = sMags; }
+    public void SetMax_Mags(int mMags) { Max_Mags = mMags; }
+    public void SetEmpty_Reload_Speed(float erSpeed) { Empty_Reload_Speed = erSpeed; }
+    public void SetTactical_Reload_Speed(float trSpeed) { Tactical_Reload_Speed = trSpeed; }
+    public void SetMin_Spread(float minSpread) { Min_Spread = minSpread; }
+    public void SetMax_Spread(float maxSpread) { Max_Spread = maxSpread; }
+    public void SetSpread_Increase_per_shot(float SpreadIPS) { Spread_Increase_per_shot = SpreadIPS; }
+    public void SetRange(float range) { Range = range; }
+    public void SetFireMode(float mode) { FireMode = mode; }
+    #endregion
+
 
     private int m_Ammo;
     public int Ammo
