@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnEnable()
     {
+        if (m_PlayerFSM == null) return;
         m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         m_PAC.ResetAnimator(this);
     }
