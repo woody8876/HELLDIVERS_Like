@@ -48,9 +48,11 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public float ActTimer { get { return m_ActivationTimer; } }
 
-    public delegate void ThrowEventHolder();
+    public delegate void EventHolder();
 
-    public event ThrowEventHolder OnThrow;
+    public event EventHolder OnThrow;
+
+    public event EventHolder OnGetReady;
 
     #endregion Properties
 
@@ -212,7 +214,11 @@ public class Stratagem : MonoBehaviour
         this.transform.localEulerAngles = Vector3.zero;
         m_Animator.SetTrigger("Start");
 
+        // Uses add count. ( Info.uses = -1 ) is meaning for unlimited.
+        if (Info.Uses != -1) m_UsesCount++;
+
         m_eState = eState.Ready;
+        if (OnGetReady != null) OnGetReady();
     }
 
     /// <summary>
@@ -231,9 +237,6 @@ public class Stratagem : MonoBehaviour
         m_Rigidbody.AddRelativeForce(force);
         m_IsCooling = true;
         m_Animator.SetTrigger("Throw");
-
-        // Uses add count. ( Info.uses = -1 ) is meaning for unlimited.
-        if (Info.Uses != -1) m_UsesCount++;
 
         // Start the cooldown timer.
         if (Info.CoolDown > 0) StartCoroutine(DoCoolDown(Info.CoolDown));

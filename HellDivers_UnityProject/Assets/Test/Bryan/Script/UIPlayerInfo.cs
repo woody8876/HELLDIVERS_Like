@@ -129,24 +129,25 @@ public class UIPlayerInfo : MonoBehaviour
             stratagemUI.Initialize(currentStratagem);
             stratagemUI.gameObject.SetActive(false);
 
-            currentStratagem.OnThrow += stratagemUI.UpdateUses;
-            m_Player.StratagemController.OnStartCheckingCode += DrawStratagemUI;
-            m_Player.StratagemController.OnStopCheckingCode += HideStratagemUI;
+            currentStratagem.OnThrow += stratagemUI.CloseUI;
+            currentStratagem.OnGetReady += stratagemUI.UpdateUses;
+            m_Player.StratagemController.OnStartCheckingCode += StartStratagemUI;
+            m_Player.StratagemController.OnStopCheckingCode += StopStratagemUI;
             m_Player.StratagemController.OnCheckingCode += CheckingCodes;
+            m_Player.StratagemController.OnGetReady += GetReady;
 
             m_UIStratagems.Add(currentStratagem.Info.ID, stratagemUI);
         }
     }
 
-    private void DrawStratagemUI()
+    private void StartStratagemUI()
     {
         HideWeaponUI();
 
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            stratagemUI.Value.UpdateUses();
             if (stratagemUI.Value.CurrentStratagem.IsCooling == false) stratagemUI.Value.StartCheckCodes();
-            stratagemUI.Value.gameObject.SetActive(true);
+            stratagemUI.Value.StartUI();
         }
     }
 
@@ -165,11 +166,26 @@ public class UIPlayerInfo : MonoBehaviour
         }
     }
 
-    private void HideStratagemUI()
+    private void GetReady()
     {
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            stratagemUI.Value.gameObject.SetActive(false);
+            if (m_Player.StratagemController.CurrentStratagem.Info.ID == stratagemUI.Key)
+            {
+                stratagemUI.Value.GetReady();
+            }
+            else
+            {
+                stratagemUI.Value.CloseUI();
+            }
+        }
+    }
+
+    private void StopStratagemUI()
+    {
+        foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
+        {
+            stratagemUI.Value.CloseUI();
         }
 
         DrawCurrentWeaponUI();

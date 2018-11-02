@@ -10,6 +10,7 @@ public class UIPlayerStratagemInfo : MonoBehaviour
     private List<Image> m_CodeImgs;
     [SerializeField] private Image m_Icon;
     [SerializeField] private Text m_Uses;
+    [SerializeField] private Text m_Title;
     [SerializeField] private Transform m_ArrowRoot;
     [SerializeField] private Image m_Arrow;
     [SerializeField] private Color m_LightColor;
@@ -18,10 +19,24 @@ public class UIPlayerStratagemInfo : MonoBehaviour
     public void Initialize(Stratagem stratagem)
     {
         m_CurrentStratagem = stratagem;
-
+        m_Title.text = stratagem.Info.Title;
         m_Icon.sprite = LoadIcon();
         CreateCodesDisplaye();
         UpdateUses();
+    }
+
+    public void StartUI()
+    {
+        UpdateUses();
+        this.gameObject.SetActive(true);
+    }
+
+    public void CloseUI()
+    {
+        this.gameObject.SetActive(false);
+        m_Title.gameObject.SetActive(false);
+        m_ArrowRoot.gameObject.SetActive(true);
+        StopCheckCodes();
     }
 
     public void UpdateUses()
@@ -51,6 +66,12 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         {
             codeImg.color = m_DarkColor;
         }
+    }
+
+    public void GetReady()
+    {
+        m_ArrowRoot.gameObject.SetActive(false);
+        m_Title.gameObject.SetActive(true);
     }
 
     private Sprite LoadIcon()

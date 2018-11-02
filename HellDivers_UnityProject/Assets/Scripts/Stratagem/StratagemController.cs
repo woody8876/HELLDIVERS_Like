@@ -60,21 +60,15 @@ public class StratagemController : MonoBehaviour
 
     #endregion Properties
 
-    public delegate void StartCheckingCodeAction();
+    public delegate void EventHolder();
 
-    public delegate void CheckingCodeAction();
+    public event EventHolder OnStartCheckingCode;
 
-    public delegate void StopCheckingCodeAction();
+    public event EventHolder OnCheckingCode;
 
-    public delegate void GetReadyAction();
+    public event EventHolder OnStopCheckingCode;
 
-    public event StartCheckingCodeAction OnStartCheckingCode;
-
-    public event CheckingCodeAction OnCheckingCode;
-
-    public event StopCheckingCodeAction OnStopCheckingCode;
-
-    public event GetReadyAction OnGetReady;
+    public event EventHolder OnGetReady;
 
     #region Private Variable
 
@@ -223,8 +217,6 @@ public class StratagemController : MonoBehaviour
     {
         StopCoroutine(CheckInputCode());
         m_bCheckingCode = false;
-
-        if (OnStopCheckingCode != null) OnStopCheckingCode();
     }
 
     /// <summary>
@@ -284,6 +276,8 @@ public class StratagemController : MonoBehaviour
                 _Open.Add(s);
         }
 
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
+
         if (_Open.Count <= 0) yield break;
 
         StratagemInfo.eCode? input = null;
@@ -304,6 +298,7 @@ public class StratagemController : MonoBehaviour
                         m_bCheckingCode = false;
 
                         if (OnGetReady != null) OnGetReady();
+                        StopCheckCodes();
                         yield break;
                     }
                     continue;
