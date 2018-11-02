@@ -225,6 +225,7 @@ public class StratagemController : MonoBehaviour
     {
         StopAllCoroutines();
         m_bCheckingCode = false;
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
     }
 
     /// <summary>
@@ -283,8 +284,6 @@ public class StratagemController : MonoBehaviour
             if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
                 _Open.Add(s);
         }
-
-        if (OnStopCheckingCode != null) OnStopCheckingCode();
 
         if (_Open.Count <= 0) yield break;
 
