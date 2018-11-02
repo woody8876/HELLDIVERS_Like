@@ -400,6 +400,7 @@ public class FSMDeadState : FSMState
             if (info.normalizedTime > 0.9f)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                Debug.LogError("Dead");
                 ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
                 MobManager.m_FishCount--;
             }
