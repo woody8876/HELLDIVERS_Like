@@ -6,6 +6,7 @@ public class Grenades : MonoBehaviour {
 
 
     [SerializeField] EGrenades m_Type;
+    [SerializeField] int m_ID;
     [SerializeField] float m_fAngle = 30;
 
     public float m_Force
@@ -17,15 +18,17 @@ public class Grenades : MonoBehaviour {
         }
         get { return m_fForce; }
     }
+
     public void Throw()
     {
         if (m_gEffect == null)
         {
-            m_gEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(3011);
+            m_gEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(m_ID + 100);
             m_gEffect.SetActive(true);
         }
         m_bGround = false;
     }
+
     #region Private function
     void Falling(float force)
     {
@@ -40,11 +43,11 @@ public class Grenades : MonoBehaviour {
     }
     void Damage(Vector3 pos)
     {
-        var enemies = Physics.OverlapSphere(pos, 10, 1<<LayerMask.NameToLayer("Enemies"));
+        var enemies = Physics.OverlapSphere(pos, grenadeInfo.Range, 1<<LayerMask.NameToLayer("Enemies"));
         foreach (var enemy in enemies)
         {
             IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
-            target.TakeDamage(80, enemy.transform.position);
+            target.TakeDamage(grenadeInfo.Damage, enemy.transform.position);
         }
     }
 
@@ -56,13 +59,14 @@ public class Grenades : MonoBehaviour {
             m_fDamageTime += Time.fixedDeltaTime;
             m_fTime = m_fForce = 0;
             m_gEffect.transform.position = rh.point + Vector3.up;
+            DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
             if (m_fDamageTime <= Time.fixedDeltaTime) m_gEffect.GetComponent<Animator>().SetTrigger("startTrigger");
-            if (m_fDamageTime > 0.4f)
+            if (m_fDamageTime > grenadeInfo.Timer)
             {
                 m_fForce = 10;
                 Damage(rh.point);
                 m_fDamageTime = 0;
-                ObjectPool.m_Instance.UnLoadObjectToPool(3001, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
                 return true;
             }
         }
@@ -71,6 +75,10 @@ public class Grenades : MonoBehaviour {
     #endregion
 
     #region MonoBehaviors
+    private void Start()
+    {
+        grenadeInfo = GameData.Instance.GrenadeInfoTable[m_ID];
+    }
     private void FixedUpdate()
     {
         if (!m_bGround )
@@ -90,5 +98,6 @@ public class Grenades : MonoBehaviour {
     float m_fDamageTime;
     bool m_bGround = true;
     GameObject m_gEffect;
+    GrenadeInfo grenadeInfo;
     #endregion
 }
