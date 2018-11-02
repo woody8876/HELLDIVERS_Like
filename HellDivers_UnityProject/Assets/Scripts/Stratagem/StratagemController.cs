@@ -305,7 +305,6 @@ public class StratagemController : MonoBehaviour
                         m_bCheckingCode = false;
 
                         if (OnGetReady != null) OnGetReady();
-                        StopCheckCodes();
                         yield break;
                     }
                     continue;
