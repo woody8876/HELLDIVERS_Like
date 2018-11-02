@@ -99,7 +99,7 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitReloading()
     {
         if (OnReload != null) OnReload();
-        yield return new WaitForSeconds(ReloadSpeed);
+        yield return new WaitForSeconds((m_dActiveWeapon[_CurrentWeapon].weaponInfo.ReloadSpeed));
         m_dActiveWeapon[_CurrentWeapon].Reload();
         if (OnReloadEnd != null) OnReloadEnd();
         m_bReloading = false;
@@ -134,15 +134,6 @@ public class WeaponController : MonoBehaviour
 
     public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
     public int _CurrentWeapon { get; private set; }
-    public float ReloadSpeed
-    {
-        get
-        {
-            float reloadTime = (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) ?
-                m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed : m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed;
-            return reloadTime;
-        }
-    }
     public int[] ActivedWeaponID
     {
         get
