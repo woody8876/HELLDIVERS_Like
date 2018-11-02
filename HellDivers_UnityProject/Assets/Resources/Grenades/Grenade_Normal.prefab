@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23493255904424626}
   - component: {fileID: 114989726683383646}
   m_Layer: 0
-  m_Name: Grenade
+  m_Name: Grenade_Normal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c381c25fdfa2e45bd963584257cbe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Type: 0
   m_fAngle: 30
 --- !u!135 &135208761491967968
 SphereCollider:

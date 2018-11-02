@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class GrenadesController : MonoBehaviour {
 
+    [SerializeField] 
+
     GameObject m_Grenades;
     bool m_bHolding;
 
 	// Use this for initialization
-	void Start () {
-        Object Grenades = Resources.Load("Grenades/Grenade");
+	public void Start()
+    {
+        Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");
+        Object Effect = Resources.Load("Grenades/Effect_Pumpkin");
         ObjectPool.m_Instance.InitGameObjects(Grenades, 10, 3001);
+        ObjectPool.m_Instance.InitGameObjects(Effect, 5, 3011);
 	}
 
     // Update is called once per frame
@@ -18,6 +23,17 @@ public class GrenadesController : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.Space)) { Holding(); }
         if (!Input.GetKey(KeyCode.Space) && m_bHolding)  { Throw(); }
+    }
+
+    public void Holding()
+    {
+        if (!m_bHolding) { LoadGrenade(); }
+        m_Grenades.GetComponent<Grenades>().m_Force += 10 * Time.fixedDeltaTime;
+    }
+    public void Throw()
+    {
+        m_Grenades.GetComponent<Grenades>().Throw();
+        m_bHolding = false;
     }
     private void LoadGrenade()
     {
@@ -27,21 +43,5 @@ public class GrenadesController : MonoBehaviour {
         m_Grenades.SetActive(true);
         m_bHolding = true;
     }
-
-    public void Holding()
-    {
-        if (!m_bHolding) { LoadGrenade(); }
-        m_Grenades.GetComponent<Grenades>().m_fForce += 5 * Time.fixedDeltaTime;
-    }
-    public void Throw()
-    {
-        m_Grenades.GetComponent<Grenades>().Throw();
-        m_bHolding = false;
-    }
-
-
-
-
-
-
+       
 }
