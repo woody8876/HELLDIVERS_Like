@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class GrenadesController : MonoBehaviour {
 
-    [SerializeField] 
+    [SerializeField]
 
+    GrenaderInfo grenader = new GrenaderInfo();
     GameObject m_Grenades;
     bool m_bHolding;
 
-	// Use this for initialization
 	public void Start()
     {
         Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");
         Object Effect = Resources.Load("Grenades/Effect_Pumpkin");
-        ObjectPool.m_Instance.InitGameObjects(Grenades, 10, 3001);
-        ObjectPool.m_Instance.InitGameObjects(Effect, 5, 3011);
+        //ObjectPool.m_Instance.InitGameObjects(Grenades, 10, );
+        //ObjectPool.m_Instance.InitGameObjects(Effect, 5, );
 	}
 
     // Update is called once per frame

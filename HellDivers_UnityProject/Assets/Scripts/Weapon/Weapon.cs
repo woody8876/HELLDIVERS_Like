@@ -91,7 +91,7 @@ public class Weapon : IWeaponBehaviour
         string m_sWeapon = "Bullet_" + weaponInfo.Title;
         string m_sEffect = "Effect_" + weaponInfo.Title;
         Object m_Weapon;
-        GameObject effect;
+        GameObject effect;  
         if (ResourceManager.m_Instance != null)
         {
             m_Weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
