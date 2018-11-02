@@ -58,7 +58,7 @@ public class WeaponController : MonoBehaviour
         if (m_dActiveWeapon.ContainsKey(weaponID) == false) { return false; }
         if (m_dActiveWeapon[weaponID].weaponInfo.Mags >= m_dActiveWeapon[weaponID].weaponInfo.Max_Mags) { return false; }
         m_dActiveWeapon[weaponID].weaponInfo.Mags += quantity;
-        OnPickMags();
+        if (OnPickMags != null) OnPickMags();
         return true;
     }
 
@@ -67,11 +67,7 @@ public class WeaponController : MonoBehaviour
     #region WeaponBehaviours
     public bool ShootState()
     {
-        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0 )
-        {
-            Debug.Log("Ammo");
-            return false;
-        }
+        if (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0 ) { return false; }
         if (!m_bShooting) { return false; }
         m_bShooting = false;
         m_cCoolDown = StartCoroutine(WaitCooling());
@@ -88,7 +84,6 @@ public class WeaponController : MonoBehaviour
         m_bShooting = true;
         m_fSpreadIncrease += m_dActiveWeapon[_CurrentWeapon].weaponInfo.Spread_Increase_per_shot;
         m_cCoolDown = null;
-        //        yield break;
     }
 
     public bool ReloadState()
@@ -104,9 +99,7 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitReloading()
     {
         if (OnReload != null) OnReload();
-        float reloadTime = (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) ? 
-            m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed : m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed;
-        yield return new WaitForSeconds(reloadTime);
+        yield return new WaitForSeconds(ReloadSpeed);
         m_dActiveWeapon[_CurrentWeapon].Reload();
         if (OnReloadEnd != null) OnReloadEnd();
         m_bReloading = false;
@@ -141,6 +134,15 @@ public class WeaponController : MonoBehaviour
 
     public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
     public int _CurrentWeapon { get; private set; }
+    public float ReloadSpeed
+    {
+        get
+        {
+            float reloadTime = (m_dActiveWeapon[_CurrentWeapon].weaponInfo.Ammo <= 0) ?
+                m_dActiveWeapon[_CurrentWeapon].weaponInfo.Empty_Reload_Speed : m_dActiveWeapon[_CurrentWeapon].weaponInfo.Tactical_Reload_Speed;
+            return reloadTime;
+        }
+    }
     public int[] ActivedWeaponID
     {
         get
