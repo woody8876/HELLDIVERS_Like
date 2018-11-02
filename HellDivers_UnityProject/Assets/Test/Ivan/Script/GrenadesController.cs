@@ -19,6 +19,7 @@ public class GrenadesController : MonoBehaviour {
         if (ResourceManager.m_Instance != null)
         {
             Object grenade = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sGrenade, false);
+            Object effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Grenades", m_sEffect, false);
                 
         }
         Object Grenades = Resources.Load("Grenades/Grenade_Pumpkin");

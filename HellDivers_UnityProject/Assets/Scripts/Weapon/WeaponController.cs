@@ -99,7 +99,7 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitReloading()
     {
         if (OnReload != null) OnReload();
-        yield return new WaitForSeconds((m_dActiveWeapon[_CurrentWeapon].weaponInfo.ReloadSpeed));
+        yield return new WaitForSeconds(CurrentWeaponInfo.ReloadSpeed);
         m_dActiveWeapon[_CurrentWeapon].Reload();
         if (OnReloadEnd != null) OnReloadEnd();
         m_bReloading = false;
@@ -133,6 +133,7 @@ public class WeaponController : MonoBehaviour
     [SerializeField] private int currentAmmo;
 
     public Dictionary<int, IWeaponBehaviour> ActiveWeapon { get { return m_dActiveWeapon; } }
+    public WeaponInfo CurrentWeaponInfo { get { return m_dActiveWeapon[_CurrentWeapon].weaponInfo; } }
     public int _CurrentWeapon { get; private set; }
     public int[] ActivedWeaponID
     {
