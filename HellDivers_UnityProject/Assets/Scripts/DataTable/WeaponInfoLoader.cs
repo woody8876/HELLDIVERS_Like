@@ -30,23 +30,23 @@ public class WeaponInfoLoader {
             {
                 string[] weaponInfo = lines[i].Split(',');
                 WeaponInfo data = new WeaponInfo();
-                data._ID = int.Parse(weaponInfo[0]);
-                data._Type = int.Parse(weaponInfo[1]);
-                data._Title = weaponInfo[2];
-                data._Damage = int.Parse(weaponInfo[3]);
-                data._Explosion_Damage = int.Parse(weaponInfo[4]);
-                data._FireRate = float.Parse(weaponInfo[5]);
-                data._Capacity = int.Parse(weaponInfo[6]);
-                data._Start_Mags = int.Parse(weaponInfo[7]);
-                data._Max_Mags = int.Parse(weaponInfo[8]);
-                data._Empty_Reload_Speed = float.Parse(weaponInfo[9]);
-                data._Tactical_Reload_Speed= float.Parse(weaponInfo[10]);
-                data._Min_Spread = float.Parse(weaponInfo[11]);
-                data._Max_Spread = float.Parse(weaponInfo[12]);
-                data._Spread_Increase_per_shot = float.Parse(weaponInfo[13]);
-                data._Range = float.Parse(weaponInfo[14]);
-                data._FireMode = float.Parse(weaponInfo[15]);
-                Info.Add(data._ID, data);
+                data.SetID(int.Parse(weaponInfo[0]));
+                data.SetType(int.Parse(weaponInfo[1]));
+                data.SetTitle(weaponInfo[2]);
+                data.SetDamage(float.Parse(weaponInfo[3]));
+                data.SetExplosion(float.Parse(weaponInfo[4]));
+                data.SetFireRate(float.Parse(weaponInfo[5]));
+                data.SetCapacity(int.Parse(weaponInfo[6]));
+                data.SetStart_Mags(int.Parse(weaponInfo[7]));
+                data.SetMax_Mags(int.Parse(weaponInfo[8]));
+                data.SetEmpty_Reload_Speed (float.Parse(weaponInfo[9]));
+                data.SetTactical_Reload_Speed(float.Parse(weaponInfo[10]));
+                data.SetMin_Spread (float.Parse(weaponInfo[11]));
+                data.SetMax_Spread (float.Parse(weaponInfo[12]));
+                data.SetSpread_Increase_per_shot (float.Parse(weaponInfo[13]));
+                data.SetRange (float.Parse(weaponInfo[14]));
+                data.SetFireMode (float.Parse(weaponInfo[15]));
+                Info.Add(data.ID, data);
             }
             return true;
         }

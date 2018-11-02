@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Grenades : MonoBehaviour {
 
-    public enum EGrenades
-    {
-        GRENADES
-    }
+
     [SerializeField] EGrenades m_Type;
     [SerializeField] float m_fAngle = 30;
 

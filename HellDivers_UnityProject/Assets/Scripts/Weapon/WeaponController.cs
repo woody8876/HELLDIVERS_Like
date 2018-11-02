@@ -58,6 +58,7 @@ public class WeaponController : MonoBehaviour
         if (m_dActiveWeapon.ContainsKey(weaponID) == false) { return false; }
         if (m_dActiveWeapon[weaponID].weaponInfo.Mags >= m_dActiveWeapon[weaponID].weaponInfo.Max_Mags) { return false; }
         m_dActiveWeapon[weaponID].weaponInfo.Mags += quantity;
+        OnPickMags();
         return true;
     }
 
@@ -158,6 +159,7 @@ public class WeaponController : MonoBehaviour
     public event EventHolder OnReload;
     public event EventHolder OnReloadEnd;
     public event EventHolder OnSwitch;
+    public event EventHolder OnPickMags;
     #endregion
 
     #region Private member
