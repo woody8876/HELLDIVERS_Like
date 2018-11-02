@@ -28,12 +28,6 @@ public class Weapon_ShotGun : Weapon
                     Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread));
                 go.SetActive(true);
                 weaponInfo.Ammo--;
-                Debug.DrawRay(pos, go.transform.forward * 10, Color.green, 1f);
-                if (CheckHit(pos, go.transform.forward))
-                {
-                    damage = weaponInfo.Damage;
-                }
-
             }
             else
             {
@@ -45,8 +39,7 @@ public class Weapon_ShotGun : Weapon
 
     public override void Reload()
     {
-        int i = (int)((weaponInfo.Capacity - weaponInfo.Ammo) * 0.1f);
-        weaponInfo.Ammo = weaponInfo.Capacity;
-        weaponInfo.Mags -= i;
+        weaponInfo.Ammo += 10;
+        weaponInfo.Mags -= 1;
     }
 }
