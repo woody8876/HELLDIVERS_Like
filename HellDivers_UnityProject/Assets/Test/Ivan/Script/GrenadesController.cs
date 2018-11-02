@@ -114,6 +114,7 @@ public class GrenadesController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1)) { Equipment(4001, 10); }
         if (Input.GetKeyDown(KeyCode.Alpha2)) { Equipment(4002, 10); }
         if (Input.GetKeyDown(KeyCode.Alpha3)) { Equipment(4003, 10); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) { Equipment(4005, 10); }
         
         if (Input.GetKey(KeyCode.Space)) { Holding(); }
         if (!Input.GetKey(KeyCode.Space) && m_bHolding)  { Throw(); }

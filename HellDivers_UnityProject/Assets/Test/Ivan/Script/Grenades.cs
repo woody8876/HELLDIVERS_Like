@@ -50,28 +50,33 @@ public class Grenades : MonoBehaviour {
             target.TakeDamage(grenadeInfo.Damage, enemy.transform.position);
         }
     }
-
     bool GroundCheck()
     {
         RaycastHit rh;
         if (Physics.Raycast(transform.position, -transform.up, out rh, .5f, 1 << LayerMask.NameToLayer("Terrain")))
         {
-            m_fDamageTime += Time.fixedDeltaTime;
             m_fTime = m_fForce = 0;
             m_gEffect.transform.position = rh.point + Vector3.up;
             DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
-            if (m_fDamageTime <= Time.fixedDeltaTime) m_gEffect.GetComponent<Animator>().SetTrigger("startTrigger");
-            if (m_fDamageTime > grenadeInfo.Timer)
-            {
-                m_fForce = 10;
-                Damage(rh.point);
-                m_fDamageTime = 0;
-                ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
-                return true;
-            }
+            m_bCounting = true;
+            return true;
         }
         return false;
     }
+    void CountDown()
+    {
+        m_fDamageTime += Time.fixedDeltaTime;
+        if (m_fDamageTime <= Time.fixedDeltaTime) m_gEffect.GetComponent<Animator>().SetTrigger("startTrigger");
+        if (m_fDamageTime > grenadeInfo.Timer)
+        {
+            m_fForce = 10;
+            Damage(this.transform.position);
+            m_fDamageTime = 0;
+            ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
+            m_bCounting = false;
+        }
+    }
+
     #endregion
 
     #region MonoBehaviors
@@ -88,6 +93,10 @@ public class Grenades : MonoBehaviour {
             m_fTime += Time.fixedDeltaTime;
             m_bGround = GroundCheck();
         }
+        if (m_bCounting)
+        {
+            CountDown();
+        }
 
     }
     #endregion
@@ -97,6 +106,7 @@ public class Grenades : MonoBehaviour {
     float m_fTime;
     float m_fDamageTime;
     bool m_bGround = true;
+    bool m_bCounting;
     GameObject m_gEffect;
     GrenadeInfo grenadeInfo;
     #endregion
