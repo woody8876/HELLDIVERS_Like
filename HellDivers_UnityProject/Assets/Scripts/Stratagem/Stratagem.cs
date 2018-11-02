@@ -28,6 +28,8 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public eState State { get { return m_eState; } }
 
+    public bool IsOutOfUses { get { return (m_UsesCount >= Info.Uses); } }
+
     /// <summary>
     /// Represention the number of how many times has been used.
     /// </summary>

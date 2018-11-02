@@ -36,7 +36,7 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         this.gameObject.SetActive(false);
         m_Title.gameObject.SetActive(false);
         m_ArrowRoot.gameObject.SetActive(true);
-        StopCheckCodes();
+        DarkDisplay();
     }
 
     public void UpdateUses()
@@ -45,7 +45,7 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         m_Uses.text = count.ToString();
     }
 
-    public void StartCheckCodes()
+    public void BrightDisplay()
     {
         m_Icon.color = m_LightColor;
         foreach (Image codeImg in m_CodeImgs)
@@ -54,12 +54,12 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         }
     }
 
-    public void CheckingCode(int step)
+    public void HilightArrow(int step)
     {
         m_CodeImgs[step - 1].color = m_LightColor;
     }
 
-    public void StopCheckCodes()
+    public void DarkDisplay()
     {
         m_Icon.color = m_DarkColor;
         foreach (Image codeImg in m_CodeImgs)

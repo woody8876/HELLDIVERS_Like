@@ -146,7 +146,14 @@ public class UIPlayerInfo : MonoBehaviour
 
         foreach (KeyValuePair<int, UIPlayerStratagemInfo> stratagemUI in m_UIStratagems)
         {
-            if (stratagemUI.Value.CurrentStratagem.IsCooling == false) stratagemUI.Value.StartCheckCodes();
+            if (stratagemUI.Value.CurrentStratagem.IsCooling == false || stratagemUI.Value.CurrentStratagem.IsOutOfUses == false)
+            {
+                stratagemUI.Value.BrightDisplay();
+            }
+            else
+            {
+                stratagemUI.Value.DarkDisplay();
+            }
             stratagemUI.Value.StartUI();
         }
     }
@@ -157,11 +164,11 @@ public class UIPlayerInfo : MonoBehaviour
         {
             if (m_Player.StratagemController.StratagemsOnCheckingCode.Contains(stratagemUI.Value.CurrentStratagem))
             {
-                stratagemUI.Value.CheckingCode(m_Player.StratagemController.InputCodeStep);
+                stratagemUI.Value.HilightArrow(m_Player.StratagemController.InputCodeStep);
             }
             else
             {
-                stratagemUI.Value.StopCheckCodes();
+                stratagemUI.Value.DarkDisplay();
             }
         }
     }
