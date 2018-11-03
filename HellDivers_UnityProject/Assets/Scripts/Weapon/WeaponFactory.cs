@@ -23,12 +23,11 @@ public enum eWeaponType { FirstOne = -1,
 
 public interface IWeaponBehaviour
 {
-    WeaponInfo weaponInfo { get; }
     GameObject WeaponLoader();
+    WeaponInfo weaponInfo { get; }
     void Init(int weaponType);
     void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
     void Reload();
-
 }
 
 

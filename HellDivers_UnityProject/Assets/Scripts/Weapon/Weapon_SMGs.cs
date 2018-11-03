@@ -16,6 +16,7 @@ public class Weapon_SMGs : Weapon
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             weaponInfo.Ammo--;
+
         }
         else { Debug.Log("There is no ammo."); }
     }

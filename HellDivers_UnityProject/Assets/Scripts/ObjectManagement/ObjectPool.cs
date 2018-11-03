@@ -37,20 +37,52 @@ public class ObjectPool
         for (int i = 0; i < iCount; i++)
         {
             GameObjectData gData = new GameObjectData();
-
             gData.m_go = GameObject.Instantiate(o) as GameObject;
+            SetParent(iType, gData.m_go);
             gData.m_bUse = false;
             gData.m_go.SetActive(false);
             pList.Add(gData);
         }
     }
 
+    private void SetParent(int type, GameObject go)
+    {
+        GameObject parent ;
+        int i = (int)(type * 0.001f);
+        switch (i)
+        {
+            case 1:
+                parent = GameObject.Find("Bullet");
+                if (parent == null) parent = new GameObject("Bullet");
+                go.transform.parent = parent.transform;
+                break;
+            case 2:
+                break;
+            case 3:
+                parent = GameObject.Find("Enemies");
+                if (parent == null) parent = new GameObject("Enemies");
+                go.transform.parent = parent.transform;
+                break;
+            case 4:
+                parent = GameObject.Find("Grenades");
+                if (parent == null) parent = new GameObject("Grenades");
+                go.transform.parent = parent.transform;
+                break;
+            default:
+                parent = GameObject.Find("Others");
+                if (parent == null) parent = new GameObject("Others");
+                go.transform.parent = parent.transform;
+                break;
+        }
+    }
+
+
     public void RemoveObjectFromPool(int iType)
     {
         if (m_dObjectDitc.ContainsKey(iType) == false) { return; }
-        List<GameObjectData> pList;
-        pList = m_dObjectDitc[iType];
-        pList.Clear();
+        
+        m_dObjectDitc[iType].Clear();
+        m_dObjectDitc.Remove(iType);
     }
 
     public GameObject LoadGameObjectFromPool(int iType)

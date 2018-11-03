@@ -22,18 +22,25 @@ public class WeaponController : MonoBehaviour
     public void AddWeapon(int weaponID, Transform pos)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
-        if (m_dActiveWeapon.ContainsKey(weaponID) == true) { return; }
-        m_dActiveWeapon.Add(weaponID, m_weaponFactory.CreateWeapon(weaponID));
-        Debug.Log(m_dActiveWeapon.Count);
-        m_dActiveWeapon[weaponID].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[weaponID].Start_Mags;
-        m_dActiveWeapon[weaponID].weaponInfo.Ammo = GameData.Instance.WeaponInfoTable[weaponID].Capacity;
-        m_GOEffect = m_dActiveWeapon[weaponID].WeaponLoader();
-        m_GOEffect.transform.parent = pos;
-        m_GOEffect.transform.localPosition = Vector3.zero;
-        m_AnimEffect = m_GOEffect.GetComponent<Animator>();
-        _CurrentWeapon = weaponID;
+        if (!m_dActiveWeapon.ContainsKey(weaponID))
+        {
+            m_dActiveWeapon.Add(weaponID, m_weaponFactory.CreateWeapon(weaponID));
+            m_GOEffect = m_dActiveWeapon[weaponID].WeaponLoader();
+            m_GOEffect.transform.parent = pos;
+            m_GOEffect.transform.localPosition = Vector3.zero;
+            m_AnimEffect = m_GOEffect.GetComponent<Animator>();
+            _CurrentWeapon = weaponID;
+            m_tGunPos = pos;
+        }
+        SetWeaponInfo(weaponID);
+    }
+    
+    public void ResetWeaponInfo() { for (int i = 0; i < ActivedWeaponID.Length; i++) { SetWeaponInfo(ActivedWeaponID[i]); } }
 
-        m_tGunPos = pos;
+    public void SetWeaponInfo(int type)
+    {
+        m_dActiveWeapon[type].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[type].Start_Mags;
+        m_dActiveWeapon[type].weaponInfo.Ammo = GameData.Instance.WeaponInfoTable[type].Capacity;
     }
 
     public void RemoveWeapon(int weaponID)
@@ -48,6 +55,10 @@ public class WeaponController : MonoBehaviour
     {
         for (int i = 0; i < ActivedWeaponID.Length; i++)
         {
+            //while() 
+            //    {
+            //    Destroy(ObjectPool.m_Instance.LoadGameObjectFromPool(ActivedWeaponID[i]));
+            //}
             ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeaponID[i]);
         }
         m_dActiveWeapon.Clear();
@@ -148,6 +159,7 @@ public class WeaponController : MonoBehaviour
             return keys;
         }
     }
+    
     public float m_fSpreadIncrease;
     public bool m_bAutoFire = true;
     public bool m_bShooting = true;

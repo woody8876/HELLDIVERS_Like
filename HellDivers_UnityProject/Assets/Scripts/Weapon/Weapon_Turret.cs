@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Weapon_Turret : Weapon {
 
-    protected override int activeAmmo　{　get　{　return base.activeAmmo - 5;　}　}
+    protected override int activeAmmo { get { return base.activeAmmo - 10; } }
+    public override GameObject WeaponLoader() { return base.WeaponLoader(); }
 
     public override void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage)
     {
