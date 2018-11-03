@@ -1,15 +1,10 @@
-﻿///2018.09.10
-///Ivan.CC
-///
-/// Weapon Rifle's behaviour.
-///
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Rifle : Weapon
+public class Weapon_SMGs : Weapon
 {
-    public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot,ref float damage)
+    public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot, ref float damage)
     {
         float fCurSpread = weaponInfo.Min_Spread + fSpreadperShot;
         if (fCurSpread > weaponInfo.Max_Spread) fCurSpread = weaponInfo.Max_Spread;
@@ -29,4 +24,5 @@ public class Weapon_Rifle : Weapon
         weaponInfo.Ammo = weaponInfo.Capacity;
         weaponInfo.Mags--;
     }
+
 }

@@ -126,15 +126,4 @@ public class Weapon : IWeaponBehaviour
     }
     #endregion
 
-
-    protected bool CheckHit(Vector3 pos, Vector3 vec)
-    {
-        RaycastHit raycastHit;
-        if (Physics.Raycast(pos, vec, out raycastHit, _weaponInfo.Range, 1 << LayerMask.NameToLayer("Enemy")))
-        {
-            Debug.Log("Hit");
-            return true;
-        }
-        return false;
-    }
 }

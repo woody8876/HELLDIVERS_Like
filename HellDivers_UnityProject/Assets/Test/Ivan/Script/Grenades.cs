@@ -25,6 +25,7 @@ public class Grenades : MonoBehaviour {
         {
             m_gEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(m_ID + 100);
             m_gEffect.SetActive(true);
+            m_vForward = transform.forward;
         }
         m_bGround = false;
     }
@@ -39,7 +40,8 @@ public class Grenades : MonoBehaviour {
     protected void Moving(float force)
     {
         var vF = force * Mathf.Cos(m_fAngle * Mathf.Deg2Rad);
-        transform.position += transform.forward * vF * Time.fixedDeltaTime;
+        transform.position += m_vForward * vF * Time.fixedDeltaTime;
+        transform.Rotate(0, 30, 0);
     }
     protected void Damage(Vector3 pos)
     {
@@ -110,5 +112,6 @@ public class Grenades : MonoBehaviour {
     protected bool m_bCounting;
     protected GameObject m_gEffect;
     protected GrenadeInfo grenadeInfo;
+    protected Vector3 m_vForward;
     #endregion
 }

@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class Weapon_ShotGun : Weapon
 {
-    public override WeaponInfo weaponInfo { get { return _weaponInfo; } }
     protected override int activeAmmo { get { return base.activeAmmo * 10; } }
     public override GameObject WeaponLoader() { return base.WeaponLoader(); }
 
