@@ -25,26 +25,26 @@ public class GrenadesController : MonoBehaviour
 
     #endregion Delegate of EventHolder
 
+    private Dictionary<int, int> m_dActiveCount = new Dictionary<int, int>();
     private List<int> m_lActiveGrenades = new List<int>();
     private GrenadeInfo grenaderInfo;
     private GameObject m_Grenades;
+    private Transform m_StarPos;
     private bool m_bHolding;
     private int m_iCounter;
-
-    public void AddGrenades(List<int> ids)
-    {
-        foreach (int id in ids)
-        {
-            Equipment(id);
-        }
-    }
 
     /// <summary>
     /// Equip grenades and set grenade to current active grenade, refresh grenade counter
     /// </summary>
     /// <param name="id">Grenade's ID</param>
-    /// <param name="count">The quality of grenade-equipment</param>
-    public void Equipment(int id, int count = 2)
+    public void AddGrenades(List<int> ids, Transform t)
+    {
+        foreach (int id in ids) { Equipment(id); }
+        m_StarPos = t; 
+    }
+
+
+    private void Equipment(int id, int count = 2)
     {
         bool bExist = false;
         for (int i = 0; i < m_lActiveGrenades.Count; i++)
@@ -55,7 +55,7 @@ public class GrenadesController : MonoBehaviour
                 break;
             }
         }
-        if (!bExist) AddGrenades(id, count);
+        if (!bExist) CreateGrenades(id, count);
         CurrentID = id;
         GrenadeCounter = count;
         if (OnCount != null) OnCount();
@@ -81,13 +81,13 @@ public class GrenadesController : MonoBehaviour
     private void LoadGrenade()
     {
         m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
-        m_Grenades.transform.position = this.transform.position;
-        m_Grenades.transform.forward = this.transform.forward;
+        m_Grenades.transform.position = m_StarPos.position;
+        m_Grenades.transform.forward = m_StarPos.forward;
         m_Grenades.SetActive(true);
         m_bHolding = true;
     }
 
-    private void AddGrenades(int id, int count)
+    private void CreateGrenades(int id, int count)
     {
         grenaderInfo = GameData.Instance.GrenadeInfoTable[id];
         string m_sGrenade = "Grenade_" + grenaderInfo.Title;
