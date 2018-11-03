@@ -19,6 +19,7 @@ public class UIPlayerInfo : MonoBehaviour
     private Player m_Player;
     private Dictionary<int, UIPlayerWeaponInfo> m_UIWeapons;
     private Dictionary<int, UIPlayerStratagemInfo> m_UIStratagems;
+    [SerializeField] private List<Color> m_PlayerColors;
     [SerializeField] private Text m_PlayerName;
     [SerializeField] private Text m_PlayerRank;
     [SerializeField] private Image m_PlayerRankImg;
