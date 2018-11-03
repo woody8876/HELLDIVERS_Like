@@ -55,12 +55,9 @@ public class WeaponController : MonoBehaviour
     {
         for (int i = 0; i < ActivedWeaponID.Length; i++)
         {
-            //while() 
-            //    {
-            //    Destroy(ObjectPool.m_Instance.LoadGameObjectFromPool(ActivedWeaponID[i]));
-            //}
             ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeaponID[i]);
         }
+        Destroy(GameObject.Find("Bullet"));
         m_dActiveWeapon.Clear();
     }
 

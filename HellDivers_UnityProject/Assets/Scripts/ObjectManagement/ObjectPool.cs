@@ -45,38 +45,6 @@ public class ObjectPool
         }
     }
 
-    private void SetParent(int type, GameObject go)
-    {
-        GameObject parent ;
-        int i = (int)(type * 0.001f);
-        switch (i)
-        {
-            case 1:
-                parent = GameObject.Find("Bullet");
-                if (parent == null) parent = new GameObject("Bullet");
-                go.transform.parent = parent.transform;
-                break;
-            case 2:
-                break;
-            case 3:
-                parent = GameObject.Find("Enemies");
-                if (parent == null) parent = new GameObject("Enemies");
-                go.transform.parent = parent.transform;
-                break;
-            case 4:
-                parent = GameObject.Find("Grenades");
-                if (parent == null) parent = new GameObject("Grenades");
-                go.transform.parent = parent.transform;
-                break;
-            default:
-                parent = GameObject.Find("Others");
-                if (parent == null) parent = new GameObject("Others");
-                go.transform.parent = parent.transform;
-                break;
-        }
-    }
-
-
     public void RemoveObjectFromPool(int iType)
     {
         if (m_dObjectDitc.ContainsKey(iType) == false) { return; }
@@ -118,4 +86,35 @@ public class ObjectPool
             }
         }
     }
+
+    private void SetParent(int type, GameObject go)
+    {
+        GameObject parent ;
+        int i = (int)(type * 0.001f);
+        switch (i)
+        {
+            case 1:
+                parent = GameObject.Find("Bullet");
+                if (parent == null) parent = new GameObject("Bullet");
+                go.transform.parent = parent.transform;
+                break;
+            case 2:
+                break;
+            case 3:
+                parent = GameObject.Find("Enemies");
+                if (parent == null) parent = new GameObject("Enemies");
+                go.transform.parent = parent.transform;
+                break;
+            case 4:
+                parent = GameObject.Find("Grenades");
+                if (parent == null) parent = new GameObject("Grenades");
+                go.transform.parent = parent.transform;
+                break;
+            default:
+                parent = GameObject.Find("Others");
+                if (parent == null) parent = new GameObject("Others");
+                go.transform.parent = parent.transform;
+                break;
+        }
+     }
 }
