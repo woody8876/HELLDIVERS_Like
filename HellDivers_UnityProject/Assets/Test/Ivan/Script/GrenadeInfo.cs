@@ -19,7 +19,7 @@ public class GrenadeInfo {
     public float Damage { private set; get; }
     public float Timer { private set; get; }
     public float Range { private set; get; }
-    public float MaxCount { private set; get; }
+    public int MaxCount { private set; get; }
 
     public void SetID(int id) { ID = id; }
     public void SetType(int type) { Type = type; }
@@ -28,6 +28,7 @@ public class GrenadeInfo {
     public void SetTimer(float timer) { Timer = timer; }
     public void SetRange(float range) { Range = range; }
     public void SetMaxCount(int count) { MaxCount = count; }
+
 
 
 }

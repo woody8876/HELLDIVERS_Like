@@ -10,7 +10,11 @@ using UnityEngine;
 public class WeaponController : MonoBehaviour
 {
     #region SetWeapon
-
+    /// <summary>
+    /// Add multi weapons into player
+    /// </summary>
+    /// <param name="WeaponsID">weapon's ID</param>
+    /// <param name="pos">weapon's position</param>
     public void AddMultiWeapons(List<int> WeaponsID, Transform pos)
     {
         for (int i = 0; i < WeaponsID.Count; i++)
@@ -18,7 +22,11 @@ public class WeaponController : MonoBehaviour
             AddWeapon(WeaponsID[i], pos);
         }
     }
-
+    /// <summary>
+    /// Add single weapon into player
+    /// </summary>
+    /// <param name="weaponID">weapon's ID</param>
+    /// <param name="pos">weapon's position</param>
     public void AddWeapon(int weaponID, Transform pos)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
@@ -35,15 +43,23 @@ public class WeaponController : MonoBehaviour
         }
         SetWeaponInfo(weaponID);
     }
-    
+    /// <summary>
+    /// Reset active weapons' ammo and mags to origine
+    /// </summary>
     public void ResetWeaponInfo() { for (int i = 0; i < ActivedWeaponID.Length; i++) { SetWeaponInfo(ActivedWeaponID[i]); } }
-
+    /// <summary>
+    /// Reset the designate weapon to origine
+    /// </summary>
+    /// <param name="type"></param>
     public void SetWeaponInfo(int type)
     {
         m_dActiveWeapon[type].weaponInfo.Mags = GameData.Instance.WeaponInfoTable[type].Start_Mags;
         m_dActiveWeapon[type].weaponInfo.Ammo = GameData.Instance.WeaponInfoTable[type].Capacity;
     }
-
+    /// <summary>
+    /// Remove the designate weapon's info from dictionary and objectpool's dictionary
+    /// </summary>
+    /// <param name="weaponID"></param>
     public void RemoveWeapon(int weaponID)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
@@ -51,7 +67,9 @@ public class WeaponController : MonoBehaviour
         m_dActiveWeapon.Remove(weaponID);
         ObjectPool.m_Instance.RemoveObjectFromPool(weaponID);
     }
-
+    /// <summary>
+    /// Remove all the weapon from dictionary and objectpool
+    /// </summary>
     public void ClearWeapon()
     {
         if (ActivedWeaponID.Length == 0) { return; }
@@ -63,28 +81,36 @@ public class WeaponController : MonoBehaviour
         m_dActiveWeapon.Clear();
         m_dActiveEffect.Clear();
     }
-
-    public bool AddMags(int weaponID, int quantity)
+    /// <summary>
+    /// Add the designate weapon's mags
+    /// </summary>
+    /// <param name="weaponID">weapon's ID</param>
+    /// <param name="count">mags count</param>
+    /// <returns></returns>
+    public bool AddMags(int weaponID, int count)
     {
         if (m_dActiveWeapon.ContainsKey(weaponID) == false) { return false; }
         if (m_dActiveWeapon[weaponID].weaponInfo.Mags >= m_dActiveWeapon[weaponID].weaponInfo.Max_Mags) { return false; }
-        m_dActiveWeapon[weaponID].weaponInfo.Mags += quantity;
+        m_dActiveWeapon[weaponID].weaponInfo.Mags += count;
         if (OnPickMags != null) OnPickMags();
         return true;
     }
-
     #endregion SetWeapon
 
     #region WeaponBehaviours
+    /// <summary>
+    /// Define if weapon is shooting, and the ammo's left; 
+    /// </summary>
+    /// <returns></returns>
     public bool ShootState()
     {
         if (CurrentWeaponInfo.Ammo <= 0 ) { return false; }
         if (!m_bShooting) { return false; }
         m_bShooting = false;
-        m_cCoolDown = StartCoroutine(WaitCooling());
+        StartCoroutine(WaitCooling());
         return true;
     }
-
+    //Weapon's cooling after shooting, it's time decide by shooting rate
     private IEnumerator WaitCooling()
     {
         m_currentWeaponEffect.SetTrigger("startTrigger");
@@ -96,18 +122,21 @@ public class WeaponController : MonoBehaviour
         m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
         if (_CurrentWeapon == 1401|| _CurrentWeapon == 1601|| _CurrentWeapon == 1701)
              m_currentWeaponEffect.SetTrigger("endTrigger");
-        m_cCoolDown = null;
+        yield break;
     }
-
+    /// <summary>
+    /// Define weapon is reloading, and the ammo is full or not.
+    /// </summary>
+    /// <returns></returns>
     public bool ReloadState()
     {
         if (CurrentWeaponInfo.Ammo >= CurrentWeaponInfo.Capacity || CurrentWeaponInfo.Mags <= 0) { return false; }
         else if (m_bReloading) { return false; }
         m_bReloading = true;
-        m_cCoolDown = StartCoroutine(WaitReloading());
+        StartCoroutine(WaitReloading());
         return true;
     }
-
+    //Weapon reloading speed decided by reloading speed.
     private IEnumerator WaitReloading()
     {
         if (OnReload != null) OnReload();
@@ -115,9 +144,12 @@ public class WeaponController : MonoBehaviour
         m_dActiveWeapon[_CurrentWeapon].Reload();
         if (OnReloadEnd != null) OnReloadEnd();
         m_bReloading = false;
-        m_cCoolDown = null;
+        yield break;
     }
-
+    /// <summary>
+    /// Switch weapon into next.
+    /// </summary>
+    /// <returns></returns>
     public bool SwitchWeaponState()
     {
         for (int i = 0; i < ActivedWeaponID.Length; i++)
@@ -161,7 +193,6 @@ public class WeaponController : MonoBehaviour
             return keys;
         }
     }
-    
     public float m_fSpreadIncrease;
     public bool m_bAutoFire = true;
     public bool m_bShooting = true;
@@ -172,7 +203,6 @@ public class WeaponController : MonoBehaviour
     private GameObject m_GOEffect;
     private Animator m_AnimEffect;
     private Transform m_tGunPos;
-    private Coroutine m_cCoolDown;
     private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();
     private Dictionary<int, Animator> m_dActiveEffect = new Dictionary<int, Animator>();
     private Animator m_currentWeaponEffect { get { return m_dActiveEffect[_CurrentWeapon]; } }
