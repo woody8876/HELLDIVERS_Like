@@ -48,6 +48,8 @@ public class GrenadesController : MonoBehaviour
     {
         if (GrenadeCounter <= 0) { return false; }
         if (!m_bHolding) { LoadGrenade(); }
+        m_Grenades.transform.position = m_StarPos.position;
+        m_Grenades.transform.forward = m_StarPos.forward;
         m_Grenades.GetComponent<Grenades>().m_Force += 7 * Time.fixedDeltaTime;
         return true;
     }
@@ -125,8 +127,6 @@ public class GrenadesController : MonoBehaviour
     private void LoadGrenade()
     {
         m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
-        m_Grenades.transform.position = m_StarPos.position;
-        m_Grenades.transform.forward = m_StarPos.forward;
         m_Grenades.SetActive(true);
         m_bHolding = true;
     }

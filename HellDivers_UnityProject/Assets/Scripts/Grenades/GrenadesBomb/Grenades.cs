@@ -60,7 +60,7 @@ public class Grenades : MonoBehaviour {
             m_fTime = m_fForce = 0;
             
             m_gEffect.transform.position = rh.point - .3f * Vector3.up ;
-            DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
+            //DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
             m_bCounting = true;
             return true;
         }
