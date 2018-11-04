@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class Weapon_SMGs : Weapon
 {
-    public override void Shot(Vector3 pos, Vector3 vec, float fSpreadperShot, ref float damage)
+    public override void Shot(Transform t, float fSpreadperShot)
     {
         float fCurSpread = weaponInfo.Min_Spread + fSpreadperShot;
         if (fCurSpread > weaponInfo.Max_Spread) fCurSpread = weaponInfo.Max_Spread;
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
         if (go != null)
         {
-            go.transform.position = pos;
-            go.transform.forward = vec;
+            go.transform.position = t.position;
+            go.transform.forward = t.forward;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             weaponInfo.Ammo--;
-
         }
         else { Debug.Log("There is no ammo."); }
     }

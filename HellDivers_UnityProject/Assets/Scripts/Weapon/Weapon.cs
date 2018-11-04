@@ -111,7 +111,7 @@ public class Weapon : IWeaponBehaviour
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID); 
         return effect;
     }
-    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) { }
+    public virtual void Shot(Transform t, float spread) { }
     public virtual void Reload() { }
     #endregion
 }

@@ -29,6 +29,7 @@ public class WeaponController : MonoBehaviour
             m_GOEffect.transform.parent = pos;
             m_GOEffect.transform.localPosition = Vector3.zero;
             m_AnimEffect = m_GOEffect.GetComponent<Animator>();
+            m_dActiveEffect.Add(weaponID, m_AnimEffect);
             _CurrentWeapon = weaponID;
             m_tGunPos = pos;
         }
@@ -53,12 +54,14 @@ public class WeaponController : MonoBehaviour
 
     public void ClearWeapon()
     {
-        for (int i = 0; i < ActivedWeaponID.Length; i++)
-        {
-            ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeaponID[i]);
-        }
-        Destroy(GameObject.Find("Bullet"));
+        if (ActivedWeaponID.Length == 0) { return; }
+        for (int i = 0; i < ActivedWeaponID.Length; i++) { ObjectPool.m_Instance.RemoveObjectFromPool(ActivedWeaponID[i]); }
+        Transform t = GameObject.Find("Bullet").transform;
+        Debug.Log(t.childCount);
+        for (int i = 0; i < t.childCount; i++) { Destroy(t.GetChild(i).gameObject); }
+        for (int i = 0; i < ActivedWeaponID.Length; i++) { Destroy(m_dActiveEffect[ActivedWeaponID[i]].gameObject); }
         m_dActiveWeapon.Clear();
+        m_dActiveEffect.Clear();
     }
 
     public bool AddMags(int weaponID, int quantity)
@@ -84,13 +87,14 @@ public class WeaponController : MonoBehaviour
 
     private IEnumerator WaitCooling()
     {
-        m_AnimEffect.SetTrigger("startTrigger");
+        m_currentWeaponEffect.SetTrigger("startTrigger");
         yield return new WaitForSeconds(0.2f);
-        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos.position, m_tGunPos.forward, m_fSpreadIncrease, ref m_fDamage);
+        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos, m_fSpreadIncrease);
         if (OnFire != null) OnFire();
         yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
         m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
+        if (_CurrentWeapon == 1401|| _CurrentWeapon == 1701) m_currentWeaponEffect.SetTrigger("endTrigger");
         m_cCoolDown = null;
     }
 
@@ -169,7 +173,8 @@ public class WeaponController : MonoBehaviour
     private Transform m_tGunPos;
     private Coroutine m_cCoolDown;
     private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();
-    private float m_fDamage;
+    private Dictionary<int, Animator> m_dActiveEffect = new Dictionary<int, Animator>();
+    private Animator m_currentWeaponEffect { get { return m_dActiveEffect[_CurrentWeapon]; } }
     private bool m_bReloading;
     #endregion Private member
 }

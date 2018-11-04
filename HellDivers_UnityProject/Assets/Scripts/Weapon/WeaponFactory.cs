@@ -26,7 +26,7 @@ public interface IWeaponBehaviour
     GameObject WeaponLoader();
     WeaponInfo weaponInfo { get; }
     void Init(int weaponType);
-    void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
+    void Shot(Transform t, float spread);
     void Reload();
 }
 
@@ -75,10 +75,9 @@ public class WeaponFactory {
         }
 
         #region WeaponBehaviour 
-        float damage = 0f;
         weaponBehaviour.Init(weaponID);
-        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f, ref damage);
-        weaponBehaviour.Reload();
+//        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f);
+//        weaponBehaviour.Reload();
         #endregion
 
         return weaponBehaviour;
