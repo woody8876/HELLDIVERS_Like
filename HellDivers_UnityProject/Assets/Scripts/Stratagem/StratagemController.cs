@@ -70,7 +70,7 @@ public class StratagemController : MonoBehaviour
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
     [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
     [SerializeField] private float m_MaxScaleForce = 2;
-    private float m_ScaleForce;
+    private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
     private Transform m_ReadyPos;
@@ -267,8 +267,11 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public void Throw()
     {
+        if (IsReady == false) return;
+
         StopAllCoroutines();
-        m_CurrentStratagem.Throw(m_ThrowForce * m_ScaleForce);
+        Vector3 force = m_ThrowForce * m_ScaleForce;
+        m_CurrentStratagem.Throw(force);
         m_CurrentStratagem = null;
     }
 
