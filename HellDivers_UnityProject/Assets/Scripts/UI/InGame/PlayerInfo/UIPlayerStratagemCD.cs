@@ -19,6 +19,8 @@ public class UIPlayerStratagemCD : MonoBehaviour
 
         fileName = string.Format("icon_{0}_gray", m_CurrentStratagem.Info.ID);
         m_Icon.sprite = LoadIcon(fileName);
+
+        stratagem.OnCoolDown += RefreshDisplay;
     }
 
     public void RefreshDisplay()

@@ -153,7 +153,6 @@ public class UIPlayerInfo : MonoBehaviour
 
             UIPlayerStratagemCD stratagemCD = Instantiate(m_StratagemCDIconPrefab, m_StratagemCDPanel).GetComponent<UIPlayerStratagemCD>();
             stratagemCD.Initialize(currentStratagem);
-            currentStratagem.OnCoolDown += stratagemCD.RefreshDisplay;
 
             m_UIStratagems.Add(currentStratagem.Info.ID, stratagemUI);
         }
