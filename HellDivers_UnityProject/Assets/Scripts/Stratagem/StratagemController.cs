@@ -47,16 +47,7 @@ public class StratagemController : MonoBehaviour
     /// Represent of the throw out force scale.
     /// [Range( 0 , MaxScaleForce )]
     /// </summary>
-    public float ScaleThrowForce
-    {
-        get { return m_ScaleForce; }
-        set
-        {
-            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
-            else if (value < 0) m_ScaleForce = 0;
-            else m_ScaleForce = value;
-        }
-    }
+    public float ScaleThrowForce { get { return m_ScaleForce; } }
 
     #endregion Properties
 
@@ -79,7 +70,7 @@ public class StratagemController : MonoBehaviour
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
     [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
     [SerializeField] private float m_MaxScaleForce = 2;
-    private float m_ScaleForce = 1;
+    private float m_ScaleForce;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
     private Transform m_ReadyPos;
@@ -274,24 +265,41 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Throw out the current stratagem.
     /// </summary>
-    /// <param name="scale">Scale of the force for throwing.</param>
-    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
-    public bool Throw(float scale)
+    public void Throw()
+    {
+        StopAllCoroutines();
+        m_CurrentStratagem.Throw(m_ThrowForce * m_ScaleForce);
+        m_CurrentStratagem = null;
+    }
+
+    /// <summary>
+    /// Start add on throw force.
+    /// </summary>
+    /// <returns>Was there is stratagem which is ready ?</returns>
+    public bool PrepareThrow()
     {
         if (IsReady == false) return false;
-        ScaleThrowForce = scale;
-        m_CurrentStratagem.Throw(m_ThrowForce * ScaleThrowForce);
-        m_CurrentStratagem = null;
+
+        StopAllCoroutines();
+        StartCoroutine(ThorwForceAddOn());
         return true;
     }
 
     /// <summary>
-    /// Throw out the current stratagem.
+    /// Add throw force scale on timer.
     /// </summary>
-    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
-    public bool Throw()
+    private IEnumerator ThorwForceAddOn()
     {
-        return Throw(1.0f);
+        m_ScaleForce = 0;
+
+        while (m_ScaleForce < m_MaxScaleForce)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            m_ScaleForce += Time.deltaTime;
+            if (m_ScaleForce > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+        }
+
+        yield break;
     }
 
     #endregion Public Function
