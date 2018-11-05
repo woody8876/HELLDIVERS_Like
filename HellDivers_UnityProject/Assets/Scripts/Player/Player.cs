@@ -69,7 +69,7 @@ public class Player : Character
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
 
         // Setup grenades
-        m_GrenadesController.AddGrenades(data.Grenades);
+        m_GrenadesController.AddGrenades(data.Grenades, m_Parts.LaunchPoint);
     }
 
     #endregion Initializer
@@ -111,9 +111,6 @@ public class Player : Character
         m_CurrentHp = m_MaxHp;
 
         this.transform.position = spawnPos;
-
-        // Reset stragem
-        m_StratagemController.ResetAllUses();
 
         // Reset weapons
         m_WeapoonController.ResetWeaponInfo();
@@ -163,6 +160,9 @@ public class Player : Character
         if (IsDead) return;
         m_bDead = true;
         StartCoroutine(DoDeath());
+
+        // Reset stragem
+        m_StratagemController.Reset();
 
         if (OnStartDeathNotify != null) OnStartDeathNotify();
     }

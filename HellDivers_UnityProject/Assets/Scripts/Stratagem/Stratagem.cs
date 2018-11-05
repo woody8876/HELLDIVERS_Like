@@ -28,6 +28,9 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public eState State { get { return m_eState; } }
 
+    /// <summary>
+    /// Is the stratagem has any uses ?
+    /// </summary>
     public bool IsOutOfUses { get { return (m_UsesCount >= Info.Uses); } }
 
     /// <summary>
@@ -50,15 +53,26 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public float ActTimer { get { return m_ActivationTimer; } }
 
-    public delegate void EventHolder();
-
-    public event EventHolder OnThrow;
-
-    public event EventHolder OnGetReady;
-
-    public event EventHolder OnCoolDown;
+    /// <summary>
+    ///
+    /// </summary>
+    public bool IsAbandonable { get { return m_IsAbandonable; } set { m_IsAbandonable = value; } }
 
     #endregion Properties
+
+    #region Events
+
+    public delegate void StratagemEventHolder();
+
+    public event StratagemEventHolder OnThrow;
+
+    public event StratagemEventHolder OnGetReady;
+
+    public event StratagemEventHolder OnCoolDown;
+
+    public event StratagemEventHolder OnAbanadon;
+
+    #endregion Events
 
     #region Private Variable
 
@@ -75,6 +89,7 @@ public class Stratagem : MonoBehaviour
     private bool m_IsCooling;
     private float m_CoolTimer;
     private float m_ActivationTimer;
+    private bool m_IsAbandonable;
 
     #endregion Private Variable
 
@@ -139,7 +154,6 @@ public class Stratagem : MonoBehaviour
 
         m_LaunchPos = launchPos;
         m_ReadyPos = readyPos;
-        this.transform.parent = m_LaunchPos;
         this.transform.localPosition = Vector3.zero;
         this.transform.localEulerAngles = Vector3.zero;
 
@@ -254,9 +268,15 @@ public class Stratagem : MonoBehaviour
     /// <summary>
     /// Reset used count = 0.
     /// </summary>
-    public void ResetUses()
+    public void Reset()
     {
+        StopAllCoroutines();
         m_UsesCount = 0;
+        m_CoolTimer = 0;
+        m_IsCooling = false;
+        m_ActivationTimer = 0;
+        m_eState = eState.Idle;
+        m_Animator.SetTrigger("Idle");
     }
 
     #endregion Public Function
@@ -342,6 +362,12 @@ public class Stratagem : MonoBehaviour
         });
 
         LoadResult();  // Load stratagem result from object pool.
+
+        if (IsAbandonable)
+        {
+            if (OnAbanadon != null) OnAbanadon();
+            else Destroy(this.gameObject);
+        }
 
         m_eState = eState.Idle;
         yield break;

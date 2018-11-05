@@ -82,6 +82,8 @@ public class StratagemController : MonoBehaviour
     private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
+    private Transform m_ReadyPos;
+    private Transform m_LaunchPos;
 
     // A container use to checking codes.
     private List<Stratagem> m_Open = new List<Stratagem>();
@@ -109,10 +111,41 @@ public class StratagemController : MonoBehaviour
             if (m_Stratagems[i].Info.ID == id) return false;
         }
 
-        GameObject go = new GameObject("Stratagem");
-        Stratagem s = go.AddComponent<Stratagem>();
-        s.SetStratagemInfo(id, readyPos, launchPos);
-        m_Stratagems.Add(s);
+        Stratagem stratagem;
+        GameObject stratagemGo;
+
+        if (ObjectPool.m_Instance != null)
+        {
+            stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+
+            if (stratagemGo != null)
+            {
+                stratagem = stratagemGo.GetComponent<Stratagem>();
+            }
+            else
+            {
+                string name = string.Format("Stratagem{0}", id);
+                stratagemGo = new GameObject(name);
+                stratagem = stratagemGo.AddComponent<Stratagem>();
+                ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
+                DestroyImmediate(stratagemGo.gameObject);
+
+                stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+                stratagem = stratagemGo.GetComponent<Stratagem>();
+            }
+        }
+        else
+        {
+            string name = string.Format("Stratagem{0}", id);
+            stratagemGo = new GameObject(name);
+            stratagem = stratagemGo.AddComponent<Stratagem>();
+        }
+
+        m_ReadyPos = readyPos;
+        m_LaunchPos = launchPos;
+        stratagemGo.SetActive(true);
+        stratagem.SetStratagemInfo(id, readyPos, launchPos);
+        m_Stratagems.Add(stratagem);
         return true;
     }
 
@@ -195,14 +228,22 @@ public class StratagemController : MonoBehaviour
 
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (m_Stratagems[i] != null)
-            {
-                DestroyImmediate(m_Stratagems[i].gameObject);
-            }
+            DestroyImmediate(m_Stratagems[i].gameObject);
         }
 
         m_Stratagems.Clear();
         m_CurrentStratagem = null;
+    }
+
+    /// <summary>
+    /// Reset all stratagem uses = 0.
+    /// </summary>
+    public void Reset()
+    {
+        foreach (Stratagem stratagem in m_Stratagems)
+        {
+            stratagem.Reset();
+        }
     }
 
     #endregion Management
@@ -251,17 +292,6 @@ public class StratagemController : MonoBehaviour
     public bool Throw()
     {
         return Throw(1.0f);
-    }
-
-    /// <summary>
-    /// Reset all stratagem uses = 0.
-    /// </summary>
-    public void ResetAllUses()
-    {
-        foreach (Stratagem s in m_Stratagems)
-        {
-            s.ResetUses();
-        }
     }
 
     #endregion Public Function
