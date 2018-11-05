@@ -11,6 +11,8 @@ using UnityEngine;
 public class WeaponInfo
 {
     private float _FireRate;
+    private int m_Ammo;
+    private int m_Mags;
 
     #region Properties
     public int ID { private set; get; }
@@ -49,8 +51,6 @@ public class WeaponInfo
     public void SetFireMode(float mode) { FireMode = mode; }
     #endregion
 
-
-    private int m_Ammo;
     public int Ammo
     {
         get { return m_Ammo; }
@@ -61,7 +61,6 @@ public class WeaponInfo
             else m_Ammo = value;
         }
     }
-    private int m_Mags;
     public int Mags
     {
         get { return m_Mags; }
@@ -80,61 +79,39 @@ public class WeaponInfo
             return reloadTime;
         }
     }
-
 }
 
 [System.Serializable]
 public class Weapon : IWeaponBehaviour
 {
-
     protected WeaponInfo _weaponInfo;
     protected virtual int activeAmmo { get { return (int)((weaponInfo.Range * 0.01f) / weaponInfo.FireRate) + 1; } }
 
     #region Behaviours
     public virtual WeaponInfo weaponInfo { get { return _weaponInfo; } }
     public virtual void Init(int weaponID) { _weaponInfo = GameData.Instance.WeaponInfoTable[(int)weaponID]; }
-    public virtual void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage) { }
-    public virtual void Reload() { }
     public virtual GameObject WeaponLoader()
     {
         string m_sWeapon = "Bullet_" + weaponInfo.Title;
         string m_sEffect = "Effect_" + weaponInfo.Title;
-        Object m_Weapon;
-        GameObject effect;  
+        Object weapon;
+        GameObject effect;
         if (ResourceManager.m_Instance != null)
         {
-            m_Weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
+            weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
             effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
         }
         else
         {
             Debug.LogWarning("No ResourceManager.");
-            m_Weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
+            weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
             effect = Resources.Load("WeaponStorage/" + m_sEffect) as GameObject;
         }
-
-        if (ObjectPool.m_Instance != null)
-        {
-            ObjectPool.m_Instance.InitGameObjects(m_Weapon, activeAmmo, weaponInfo.ID);
-        }
-        else
-        {
-            ObjectPool OP = new ObjectPool();
-            OP.InitGameObjects(m_Weapon, activeAmmo, weaponInfo.ID);
-        }
+        if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
+        ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID); 
         return effect;
     }
+    public virtual void Shot(Transform t, float spread) { }
+    public virtual void Reload() { }
     #endregion
-
-
-    protected bool CheckHit(Vector3 pos, Vector3 vec)
-    {
-        RaycastHit raycastHit;
-        if (Physics.Raycast(pos, vec, out raycastHit, _weaponInfo.Range, 1 << LayerMask.NameToLayer("Enemy")))
-        {
-            Debug.Log("Hit");
-            return true;
-        }
-        return false;
-    }
 }

@@ -36,6 +36,7 @@ public class GrenadeInfoLoader {
                 data.SetDamage(float.Parse(grenadeInfo[3]));
                 data.SetTimer(float.Parse(grenadeInfo[4]));
                 data.SetRange(float.Parse(grenadeInfo[5]));
+                data.SetMaxCount(int.Parse(grenadeInfo[6]));
                 Info.Add(data.ID, data);
             }
             return true;

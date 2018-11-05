@@ -1,6 +1,6 @@
-ID,Type,GrenadeTitle,Damage,ExplosionTime,RANGE
-4001,0,Normal,100,0.4,10
-4002,1,Lighting,300,0.4,3
-4003,2,Pumpkin,150,0.4,5
-4004,3,Mine,100,-1,8
-4005,4,TimeBomb,150,3,10
+ID,Type,GrenadeTitle,Damage,ExplosionTime,RANGE,Maximum
+4001,0,Normal,100,0.4,10,2
+4002,1,Lighting,300,0.4,3,2
+4003,2,Pumpkin,150,0.4,5,2
+4004,3,Mine,200,100,3,2
+4005,4,TimeBomb,150,3.24,8,2

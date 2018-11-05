@@ -141,10 +141,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PlayerData:
-    weapons: 150500004d040000
+    weapons: 15050000a5060000
     stratagems: d1070000d2070000
+    grenades: a10f0000
     username: Bryan
     rank: 40
+  m_RespawnTime: 1
 --- !u!4 &858686616
 Transform:
   m_ObjectHideFlags: 0
@@ -633,4 +635,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerInfoPanel: {fileID: 1688448866}
   m_PlayerInfoPrefab: {fileID: 1173801519516198, guid: 16e2ed8e742812146b68930046b18a9b,
+    type: 2}
+  m_DynamicHPBar: {fileID: 1559287208694456, guid: cbd0e436a13241946b1dab8301dea9e9,
     type: 2}
