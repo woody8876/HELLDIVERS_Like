@@ -111,7 +111,7 @@ public class FishAI : Character
         if (IsDead) return;
 
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("GetHurt"))
+        if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
         {
             return;
         }

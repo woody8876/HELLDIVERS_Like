@@ -41,6 +41,10 @@ public class MobAnimationsController : MonoBehaviour {
         {
             m_Animator.SetTrigger("GetHurt");
         }
+        else if (state == eFSMStateID.PatrolGetHurtID)
+        {
+            m_Animator.SetTrigger("GetHurt");
+        }
         else if (state == eFSMStateID.WanderIdleStateID)
         {
             m_Animator.SetTrigger("WanderIdle");

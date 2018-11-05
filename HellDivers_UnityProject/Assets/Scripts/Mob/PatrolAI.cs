@@ -17,7 +17,7 @@ public class PatrolAI : Character{
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start() {
-        m_MaxHp = 50;
+        m_MaxHp = 450;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
@@ -52,6 +52,7 @@ public class PatrolAI : Character{
         m_GetHurtState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
         m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_PatrolGetHurt, m_GetHurtState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
         m_FSM.AddState(m_WanderIdleState);
@@ -75,30 +76,6 @@ public class PatrolAI : Character{
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
-    public void PerformGetHurt()
-    {
-        if (IsDead) return;
-
-        AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("GetHurt"))
-        {
-            return;
-        }
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_PatrolGetHurt);
-        return;
-    }
-    public void PerformDead()
-    {
-        m_MobAnimator.Animator.ResetTrigger("GetHurt");
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
-    }
-
-    public override void Death()
-    {
-        m_bDead = true;
-        PerformDead();
-    }
-
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
@@ -119,6 +96,31 @@ public class PatrolAI : Character{
     {
         return TakeDamage(damager.Damage, hitPoint);
     }
+
+    public void PerformGetHurt()
+    {
+        if (IsDead) return;
+
+        AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
+        if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
+        {
+            return;
+        }
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_PatrolGetHurt);
+        return;
+    }
+    public void PerformDead()
+    {
+        m_MobAnimator.Animator.ResetTrigger("GetHurt");
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
+    }
+
+    public override void Death()
+    {
+        m_bDead = true;
+        PerformDead();
+    }
+
 
     private void OnDrawGizmos()
     {

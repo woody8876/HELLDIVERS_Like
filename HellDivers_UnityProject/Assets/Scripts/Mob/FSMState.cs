@@ -409,17 +409,7 @@ public class FSMPatrolGetHurtState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                Vector3 v = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
-                float fDist = v.magnitude;
-
-                if (fDist < data.m_fAttackRange)
-                {
-                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
-                }
-                else
-                {
-                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-                }
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
             }
         }
     }

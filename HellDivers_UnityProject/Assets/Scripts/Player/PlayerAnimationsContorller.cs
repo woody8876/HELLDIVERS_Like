@@ -144,17 +144,17 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void UpdateAnimator(ePlayerFSMStateID state, bool Bool)
     {
-        if (state == ePlayerFSMStateID.GunStateID)
+        switch (state)
         {
-            m_Animator.SetBool("Shoot", Bool);
-        }
-        else if (state == ePlayerFSMStateID.StratagemStateID)
-        {
-            m_Animator.SetBool("InputCodes", Bool);
-        }
-        else if (state == ePlayerFSMStateID.ThrowStateID)
-        {
-            m_Animator.SetBool("ThrowOut", Bool);
+            case ePlayerFSMStateID.GunStateID:
+                m_Animator.SetBool("Shoot", Bool);
+                break;
+            case ePlayerFSMStateID.StratagemStateID:
+                m_Animator.SetBool("InputCodes", Bool);
+                break;
+            case ePlayerFSMStateID.ThrowStateID:
+                m_Animator.SetBool("ThrowOut", Bool);
+                break;
         }
     }
 
