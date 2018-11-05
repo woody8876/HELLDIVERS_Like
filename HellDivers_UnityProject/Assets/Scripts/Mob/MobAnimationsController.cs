@@ -7,14 +7,15 @@ public class MobAnimationsController : MonoBehaviour {
     public Animator Animator { get { return m_Animator; } set { m_Animator = value; } }
 
     private Animator m_Animator;
+
     private void Awake()
     {
         m_Animator = this.GetComponent<Animator>();
     }
     // Use this for initialization
     void Start () {
-		
-	}
+        
+    }
 	
 	// Update is called once per frame
 	void Update () {

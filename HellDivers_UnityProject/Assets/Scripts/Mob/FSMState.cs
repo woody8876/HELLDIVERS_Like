@@ -463,7 +463,10 @@ public class FSMDeadState : FSMState
 public class FSMWanderIdleState : FSMState
 {
     private float m_fIdleTime;
-    
+    Animator m_Animator;
+    Object obj;
+    Vector3 vec;
+    GameObject GO;
     public FSMWanderIdleState()
     {
         m_StateID = eFSMStateID.WanderIdleStateID;
@@ -599,6 +602,9 @@ public class FSMCallArmyState : FSMState
 
 public class FSMFleeState : FSMState
 {
+    Animator m_Animator;
+    Vector3 vec;
+    GameObject GO;
     public FSMFleeState()
     {
         m_StateID = eFSMStateID.FleeStateID;
@@ -609,15 +615,27 @@ public class FSMFleeState : FSMState
     {
         data.navMeshAgent.enabled = true;
         data.m_AnimationController.SetAnimator(m_StateID, true);
+        
+        GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+        GO.SetActive(true);
+        m_Animator = GO.GetComponent<Animator>();
+        m_Animator.SetTrigger("startTrigger");
     }
 
     public override void DoBeforeLeave(AIData data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
+        m_Animator.SetTrigger("endTrigger");
+        ObjectPool.m_Instance.UnLoadObjectToPool(3100 ,GO);
     }
 
     public override void Do(AIData data)
     {
+        vec = data.m_Go.transform.forward;
+        vec += data.m_Go.transform.position;
+        vec.y += 0.5f;
+        GO.transform.position = vec;
+
         data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_PlayerGO.transform.position).normalized;
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);

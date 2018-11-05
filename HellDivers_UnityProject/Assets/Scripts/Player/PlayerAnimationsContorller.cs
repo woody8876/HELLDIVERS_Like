@@ -111,6 +111,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
         switch (state)
         {
+            case ePlayerFSMStateID.GunStateID:
+                m_Animator.SetTrigger("Shoot");
+                break;
             case ePlayerFSMStateID.ReloadStateID:
                 m_Animator.SetTrigger("Reload");
                 break;

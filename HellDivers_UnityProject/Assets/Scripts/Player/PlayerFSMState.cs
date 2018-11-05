@@ -146,16 +146,15 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
-        if (info.IsName("Reload"))
-        {
-            return;
-        }
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
             if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
             {
-                if (data.m_WeaponController.ShootState()) shoot = true;
+                if (data.m_WeaponController.ShootState())
+                {
+                    data.m_PAC.SetAnimator(m_StateID);
+                    shoot = true;
+                }
                 else shoot = false;
             }
             else shoot = false;
@@ -164,7 +163,11 @@ public class PlayerFSMGunState : PlayerFSMState
         {
             if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0)
             {
-                if (data.m_WeaponController.ShootState()) shoot = true;
+                if (data.m_WeaponController.ShootState())
+                {
+                    data.m_PAC.SetAnimator(m_StateID);
+                    shoot = true;
+                }
             }
             else
             {
@@ -172,7 +175,6 @@ public class PlayerFSMGunState : PlayerFSMState
                 shoot = false;
             }
         }
-        data.m_PAC.SetAnimator(m_StateID, shoot);
     }
 
     public override void CheckCondition(PlayerController data)

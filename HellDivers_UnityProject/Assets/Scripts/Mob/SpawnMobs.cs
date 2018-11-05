@@ -13,6 +13,7 @@ public class MobManager
     public static int m_PatrolCount;
     private GameObject m_GoFish;
     private GameObject m_GoPatrol;
+    private GameObject m_GoWarning;
 
     public void Init()
     {
@@ -23,8 +24,10 @@ public class MobManager
 
         m_GoFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GoPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
+        m_GoWarning = Resources.Load("Mobs/EnemyAlert") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GoFish, 40, 3001);
         ObjectPool.m_Instance.InitGameObjects(m_GoPatrol, 40, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GoWarning, 5, 3100);
     }
     
     public void SpawnPatrol(int num)
