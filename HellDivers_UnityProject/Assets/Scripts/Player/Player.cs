@@ -69,7 +69,7 @@ public class Player : Character
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
 
         // Setup grenades
-        m_GrenadesController.AddGrenades(data.Grenades);
+        m_GrenadesController.AddGrenades(data.Grenades, m_Parts.LaunchPoint);
     }
 
     #endregion Initializer
