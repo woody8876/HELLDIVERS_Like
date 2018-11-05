@@ -29,9 +29,9 @@ public class DrawTools {
             GO = new GameObject("mesh");
             mf = GO.AddComponent<MeshFilter>();
             mr = GO.AddComponent<MeshRenderer>();
-            shader = Shader.Find("Unlit/Color");
+            shader = Shader.Find("UI/Default");
             mr.material.shader = shader ;
-            mr.material.color = Color.red;
+            mr.material.color = new Color(1, 0, 0, 0.3f);
         }
         else
         {

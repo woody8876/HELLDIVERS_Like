@@ -16,7 +16,6 @@ public class Bullet : MonoBehaviour {
     private float m_fSpeed = 100;
     private float m_fNextPosDis;
     private float m_fRange;
-    private int m_iID;
     private float m_fDamage;
     private float m_Time;
     //Renderer m_bullet;
@@ -24,7 +23,6 @@ public class Bullet : MonoBehaviour {
     void Start () {
         //m_bullet = this.gameObject.GetComponent<Renderer>();
         m_fRange = GameData.Instance.WeaponInfoTable[m_ID].Range;
-        m_iID = GameData.Instance.WeaponInfoTable[m_ID].ID;
         m_fDamage = GameData.Instance.WeaponInfoTable[m_ID].Damage;
         m_fNextPosDis = Time.fixedDeltaTime * m_fSpeed;
     }
@@ -73,7 +71,7 @@ public class Bullet : MonoBehaviour {
 
     private void BulletDeath()
     {
-        ObjectPool.m_Instance.UnLoadObjectToPool(m_iID, this.gameObject);
+        ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
 
 

@@ -15,7 +15,7 @@ public enum eWeaponType { FirstOne = -1,
     Shotguns,
     SMGs,
     Precision,
-    Explosive,
+    FireGun,
     Laser,
     Anti_Tank,
     Turret,
@@ -23,12 +23,11 @@ public enum eWeaponType { FirstOne = -1,
 
 public interface IWeaponBehaviour
 {
-    WeaponInfo weaponInfo { get; }
     GameObject WeaponLoader();
+    WeaponInfo weaponInfo { get; }
     void Init(int weaponType);
-    void Shot(Vector3 pos, Vector3 vec, float spread, ref float damage);
+    void Shot(Transform t, float spread);
     void Reload();
-
 }
 
 
@@ -40,11 +39,32 @@ public class WeaponFactory {
         IWeaponBehaviour weaponBehaviour;
         switch ((eWeaponType)iType)
         {
+            case eWeaponType.Sidearms:
+                weaponBehaviour = new Weapon_Sidearms();
+                break;
             case eWeaponType.Assault_Rifles:
                 weaponBehaviour = new Weapon_Rifle();
                 break;
+            case eWeaponType.LMGs:
+                weaponBehaviour = new Weapon_LMGs();
+                break;
             case eWeaponType.Shotguns:
                 weaponBehaviour = new Weapon_ShotGun();
+                break;
+            case eWeaponType.SMGs:
+                weaponBehaviour = new Weapon_SMGs();
+                break;
+            case eWeaponType.Precision:
+                weaponBehaviour = new Weapon_Precision();
+                break;
+            case eWeaponType.FireGun:
+                weaponBehaviour = new Weapon_FireGun();
+                break;
+            case eWeaponType.Laser:
+                weaponBehaviour = new Weapon_Laser();
+                break;
+            case eWeaponType.Anti_Tank:
+                weaponBehaviour = new Weapon_Anti_Tank();
                 break;
             case eWeaponType.Turret:
                 weaponBehaviour = new Weapon_Turret();
@@ -55,10 +75,9 @@ public class WeaponFactory {
         }
 
         #region WeaponBehaviour 
-        float damage = 0f;
         weaponBehaviour.Init(weaponID);
-        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f, ref damage);
-        weaponBehaviour.Reload();
+//        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f);
+//        weaponBehaviour.Reload();
         #endregion
 
         return weaponBehaviour;
