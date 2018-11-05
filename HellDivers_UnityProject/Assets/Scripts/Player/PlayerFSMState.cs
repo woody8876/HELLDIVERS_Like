@@ -328,6 +328,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
 public class PlayerFSMThrowState : PlayerFSMState
 {
     bool bThrow;
+    float count = 0;
     public PlayerFSMThrowState()
     {
         m_StateID = ePlayerFSMStateID.ThrowStateID;
@@ -335,6 +336,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        count = 0;
         bThrow = false;
         data.m_MoveMode = "Throw";
     }
@@ -346,9 +348,11 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (Input.GetAxis("Fire1") < 0)
+        if (Input.GetAxis("Fire1") < 0 && count < 1)
         {
             bThrow = true;
+            data.m_StratagemController.PrepareThrow();
+            count++;
             //Start Timer...
         }
 
