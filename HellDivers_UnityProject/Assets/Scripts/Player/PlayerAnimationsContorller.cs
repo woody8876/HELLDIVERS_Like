@@ -56,7 +56,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     public void ResetAnimator(PlayerController data)
     {
-        m_Animator.SetTrigger("Reset");
+        m_Animator.ResetTrigger("Reset");
     }
     /// <summary>
     /// Set Trigger Animator

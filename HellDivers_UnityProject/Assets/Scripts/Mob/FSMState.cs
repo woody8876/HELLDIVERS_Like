@@ -262,6 +262,8 @@ public class FSMAttackState : FSMState
 
     public override void Do(AIData data)
     {
+        data.navMeshAgent.enabled = true;
+
         data.m_vTarget = data.m_PlayerGO.transform.position;
         vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
 
@@ -289,7 +291,7 @@ public class FSMAttackState : FSMState
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
-            if (info.normalizedTime > 0.2f && AttackCount < 1)
+            if (info.normalizedTime > 0.27f && AttackCount < 1)
             {
                 DoDamage(data);
                 AttackCount++;

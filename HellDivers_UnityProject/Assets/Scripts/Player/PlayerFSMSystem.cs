@@ -117,9 +117,10 @@ public class PlayerFSMSystem
         {
             if (m_CurrentGlobalStateID == ePlayerFSMStateID.RollStateID)
             {
-
+                m_currentState.CheckCondition(m_Data);
             }
-            else {
+            else
+            {
                 m_currentState.CheckCondition(m_Data);
                 m_currentState.Do(m_Data);
             }

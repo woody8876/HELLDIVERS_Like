@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     public Player m_Player;
     public bool m_FinishAni = false;
-    public string m_MoveMode = "Origin";
+    public string m_MoveMode = "Stop";
     public Animator m_Animator;
     public PlayerAnimationsContorller m_PAC;
     public WeaponController m_WeaponController;
@@ -140,12 +140,16 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
-            if (m_MoveMode.Equals("Stop")) return;
+            AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
+            if (m_PAC.Animator.IsInTransition(3) || info.IsName("Roll"))
+            {
+                return;
+            }
 
             PerformPlayerRoll();
+            return;
         }
         #endregion
-
         SelectMotionState();
         m_PlayerFSM.DoState();
     }

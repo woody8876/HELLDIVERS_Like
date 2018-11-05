@@ -248,6 +248,7 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
 
 public class PlayerFSMReloadState : PlayerFSMState
 {
+    bool bCheck;
     public PlayerFSMReloadState()
     {
         m_StateID = ePlayerFSMStateID.ReloadStateID;
@@ -276,13 +277,10 @@ public class PlayerFSMReloadState : PlayerFSMState
     public override void CheckCondition(PlayerController data)
     {
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
-        if (info.IsName("Reload"))
+        if (info.IsName("Reload") || data.m_PAC.Animator.IsInTransition(1))
         {
-            if(info.normalizedTime > 0.9f)
-            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
-        }
-        else
-        {
+            bCheck = true;
+            if (info.normalizedTime > 0.9f)
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
@@ -297,7 +295,6 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-        data.m_MoveMode = "Stop";
         data.m_PAC.SetAnimator(m_StateID, true);
         data.m_StratagemController.StartCheckCodes();
     }
@@ -309,6 +306,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
+        data.m_MoveMode = "Stop";
     }
 
     public override void CheckCondition(PlayerController data)

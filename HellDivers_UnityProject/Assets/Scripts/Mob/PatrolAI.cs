@@ -19,7 +19,7 @@ public class PatrolAI : Character{
     protected override void Start() {
         m_MaxHp = 450;
         base.Start();
-        
+
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
@@ -30,6 +30,7 @@ public class PatrolAI : Character{
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
 
+        #region FSMMap
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
         FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
@@ -61,6 +62,7 @@ public class PatrolAI : Character{
         m_FSM.AddState(m_CallArmyState);
         m_FSM.AddState(m_FleeState);
         m_FSM.AddState(m_DeadState);
+        #endregion
     }
 
     // Update is called once per frame

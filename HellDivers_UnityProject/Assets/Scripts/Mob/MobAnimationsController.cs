@@ -34,57 +34,48 @@ public class MobAnimationsController : MonoBehaviour {
 
     private void UpdateAnimator(eFSMStateID state)
     {
-        if(state == eFSMStateID.MoveToStateID)
+        switch (state)
         {
-           // m_Animator.SetBool();
-        }
-        else if (state == eFSMStateID.FishGetHurtStateID)
-        {
-            m_Animator.SetTrigger("GetHurt");
-        }
-        else if (state == eFSMStateID.PatrolGetHurtID)
-        {
-            m_Animator.SetTrigger("GetHurt");
-        }
-        else if (state == eFSMStateID.WanderIdleStateID)
-        {
-            m_Animator.SetTrigger("WanderIdle");
-        }
-        else if (state == eFSMStateID.AttackStateID)
-        {
-            m_Animator.SetTrigger("Attack");
-        }
-        else if (state == eFSMStateID.CallArmyState)
-        {
-            m_Animator.SetTrigger("CallArmy");
-        }
-        else if (state == eFSMStateID.DeadStateID)
-        {
-            m_Animator.SetTrigger("Dead");
+            case eFSMStateID.WanderIdleStateID:
+                m_Animator.SetTrigger("WanderIdle");
+                break;
+            case eFSMStateID.AttackStateID:
+                m_Animator.SetTrigger("Attack");
+                break;
+            case eFSMStateID.CallArmyState:
+                m_Animator.SetTrigger("CallArmy");
+                break;
+            case eFSMStateID.FishGetHurtStateID:
+                m_Animator.SetTrigger("GetHurt");
+                break;
+            case eFSMStateID.PatrolGetHurtID:
+                m_Animator.SetTrigger("GetHurt");
+                break;
+            case eFSMStateID.DeadStateID:
+                m_Animator.SetTrigger("Dead");
+                break;
         }
     }
 
     private void UpdateAnimator(eFSMStateID state, bool Bool)
     {
-        if (state == eFSMStateID.ChaseStateID)
+        switch (state)
         {
-            m_Animator.SetBool("Chase", Bool);
-        }
-        else if (state == eFSMStateID.IdleStateID)
-        {
-            m_Animator.SetBool("Idle", Bool);
-        }
-        else if (state == eFSMStateID.WanderStateID)
-        {
-            m_Animator.SetBool("Wander", Bool);
-        }
-        else if (state == eFSMStateID.WanderIdleStateID)
-        {
-            m_Animator.SetBool("WanderIdle", Bool);
-        }
-        else if (state == eFSMStateID.FleeStateID)
-        {
-            m_Animator.SetBool("Flee", Bool);
+            case eFSMStateID.ChaseStateID:
+                m_Animator.SetBool("Chase", Bool);
+                break;
+            case eFSMStateID.IdleStateID:
+                m_Animator.SetBool("Idle", Bool);
+                break;
+            case eFSMStateID.WanderStateID:
+                m_Animator.SetBool("Wander", Bool);
+                break;
+            case eFSMStateID.WanderIdleStateID:
+                m_Animator.SetBool("WanderIdle", Bool);
+                break;
+            case eFSMStateID.FleeStateID:
+                m_Animator.SetBool("Flee", Bool);
+                break;
         }
     }
 }
