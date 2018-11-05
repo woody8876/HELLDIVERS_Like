@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(GrenadesController))]
 [RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(StratagemController))]
 [RequireComponent(typeof(PlayerController))]
@@ -35,8 +36,19 @@ public class Player : Character
     private PlayerController m_Controller;
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
+    private GrenadesController m_GrenadesController;
 
     #endregion Private Variable
+
+    #region Event
+
+    public delegate void PlayerEventHolder();
+
+    public event PlayerEventHolder OnStartSpawnNotify;
+
+    public event PlayerEventHolder OnStartDeathNotify;
+
+    #endregion Event
 
     #region Initializer
 
@@ -55,6 +67,9 @@ public class Player : Character
         // Setup weapons
         m_WeapoonController.ClearWeapon();
         m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+
+        // Setup grenades
+        m_GrenadesController.AddGrenades(data.Grenades);
     }
 
     #endregion Initializer
@@ -69,6 +84,7 @@ public class Player : Character
         m_Controller = GetComponent<PlayerController>();
         m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
+        m_GrenadesController = GetComponent<GrenadesController>();
     }
 
     // Use this for initialization
@@ -95,14 +111,20 @@ public class Player : Character
         m_CurrentHp = m_MaxHp;
 
         this.transform.position = spawnPos;
+
+        // Reset stragem
         m_StratagemController.ResetAllUses();
 
-        // Setup weapons
-        m_WeapoonController.ClearWeapon();
-        m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+        // Reset weapons
+        m_WeapoonController.ResetWeaponInfo();
+
+        // Reset grenades
+        //......
 
         this.gameObject.SetActive(true);
         StartCoroutine(OnSpawn());
+
+        if (OnStartSpawnNotify != null) OnStartSpawnNotify();
     }
 
     /// <summary>
@@ -141,6 +163,8 @@ public class Player : Character
         if (IsDead) return;
         m_bDead = true;
         StartCoroutine(DoDeath());
+
+        if (OnStartDeathNotify != null) OnStartDeathNotify();
     }
 
     /// <summary>
