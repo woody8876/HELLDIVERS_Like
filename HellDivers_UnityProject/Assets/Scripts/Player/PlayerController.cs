@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     public Player m_Player;
     public bool m_FinishAni = false;
-    public string m_MoveMode = "Origin";
+    public string m_MoveMode = "Stop";
     public Animator m_Animator;
     public PlayerAnimationsContorller m_PAC;
     public WeaponController m_WeaponController;
@@ -140,15 +140,18 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
-            if (m_MoveMode.Equals("Dead")) return;
+            AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
+            if (m_PAC.Animator.IsInTransition(3) || info.IsName("Roll"))
+            {
+                return;
+            }
 
             PerformPlayerRoll();
+            return;
         }
         #endregion
-
         SelectMotionState();
         m_PlayerFSM.DoState();
-        CheckState();
     }
 
     #endregion MonoBehaviour
@@ -349,17 +352,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void CheckState()
-    {
-        if (!Input.GetButton("Stratagem"))
-        {
-            if(m_PlayerFSM.CurrentStateID == ePlayerFSMStateID.StratagemStateID)
-            {
-                m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
-            }
-        }
-    }
-
     #region Public Function
     public void PerformPlayerVictory()
     {
@@ -386,7 +378,7 @@ public class PlayerController : MonoBehaviour
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
-        if (info.IsName("GetGurt"))
+        if (m_PAC.Animator.IsInTransition(2) || info.IsName("GetGurt"))
         {
             return false;
         }

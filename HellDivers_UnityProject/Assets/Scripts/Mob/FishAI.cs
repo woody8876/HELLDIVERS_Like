@@ -18,21 +18,25 @@ public class FishAI : Character
     }
     private void OnEnable()
     {
+        if (m_FSM == null) return;
+        m_FSM.PerformTransition(eFSMTransition.Go_Chase);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start()
     {
-        m_MaxHp = 1000;
+        m_MaxHp = 450;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
+        m_AIData.m_ID= 3001;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
+        m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
         m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         if (m_AIData.m_PlayerGO != null)
@@ -63,7 +67,7 @@ public class FishAI : Character
         m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
         m_WanderState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
-        FSMGetHurtState m_GetHurtState = new FSMGetHurtState();
+        FSMFishGetHurtState m_GetHurtState = new FSMFishGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
 
         m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
@@ -72,13 +76,13 @@ public class FishAI : Character
         m_DeadState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
-        m_FSM.AddGlobalTransition(eFSMTransition.Go_GetHurt, m_GetHurtState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
+        m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_GetHurtState);
         m_FSM.AddState(m_DeadState);
-        m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_WanderState);
     }
 
@@ -99,20 +103,6 @@ public class FishAI : Character
         }
         m_FSM.DoState();
 
-        //if (m_bDead)
-        //{
-        //    AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        //    if (info.IsName("Dead"))
-        //    {
-        //        if (info.normalizedTime > 0.9f)
-        //        {
-        //            m_FSM.PerformTransition(eFSMTransition.Go_Chase);
-        //            ObjectPool.m_Instance.UnLoadObjectToPool(3001, this.gameObject);
-        //            MobManager.m_FishCount--;
-        //        }
-        //    }
-        //}
-
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
@@ -121,11 +111,11 @@ public class FishAI : Character
         if (IsDead) return;
 
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("GetHurt"))
+        if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
         {
             return;
         }
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_GetHurt);
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
         return;
     }
     public void PerformDead()
@@ -144,27 +134,16 @@ public class FishAI : Character
     {
         if (IsDead) return false;
 
-        lock (this)
+        CurrentHp -= dmg;
+        if (m_CurrentHp <= 0)
         {
-            CurrentHp -= dmg;
-            if (m_CurrentHp <= 0)
-            {
-                Death();
-                return true;
-            }
-            else
-            {
-                PerformGetHurt();
-            }
+            Death();
+            return true;
         }
-        //CurrentHp -= dmg;
-        //if (m_CurrentHp <= 0)
-        //{
-        //    Death();
-        //    return true;
-        //}
-
-
+        else
+        {
+            PerformGetHurt();
+        }
         return true;
     }
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)

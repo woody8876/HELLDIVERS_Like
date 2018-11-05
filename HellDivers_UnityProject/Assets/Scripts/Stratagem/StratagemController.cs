@@ -50,10 +50,9 @@ public class StratagemController : MonoBehaviour
     public float ScaleThrowForce
     {
         get { return m_ScaleForce; }
-        set
+        private set
         {
             if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
-            else if (value < 0) m_ScaleForce = 0;
             else m_ScaleForce = value;
         }
     }
@@ -274,24 +273,43 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Throw out the current stratagem.
     /// </summary>
-    /// <param name="scale">Scale of the force for throwing.</param>
-    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
-    public bool Throw(float scale)
+    public void Throw()
+    {
+        if (IsReady == false) return;
+
+        StopAllCoroutines();
+        Vector3 force = m_ThrowForce * ScaleThrowForce;
+        m_CurrentStratagem.Throw(force);
+        m_CurrentStratagem = null;
+    }
+
+    /// <summary>
+    /// Start add on throw force.
+    /// </summary>
+    /// <returns>Was there is stratagem which is ready ?</returns>
+    public bool PrepareThrow()
     {
         if (IsReady == false) return false;
-        ScaleThrowForce = scale;
-        m_CurrentStratagem.Throw(m_ThrowForce * ScaleThrowForce);
-        m_CurrentStratagem = null;
+
+        StopAllCoroutines();
+        StartCoroutine(ThorwForceAddOn());
         return true;
     }
 
     /// <summary>
-    /// Throw out the current stratagem.
+    /// Add throw force scale on timer.
     /// </summary>
-    /// <returns>Was there is stratagem which is ready and thorw out success ?</returns>
-    public bool Throw()
+    private IEnumerator ThorwForceAddOn()
     {
-        return Throw(1.0f);
+        ScaleThrowForce = 0;
+
+        while (ScaleThrowForce < m_MaxScaleForce)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            ScaleThrowForce += Time.deltaTime * 0.1f;
+        }
+
+        yield break;
     }
 
     #endregion Public Function
