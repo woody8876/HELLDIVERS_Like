@@ -15,17 +15,29 @@ public class UIDynamicHPBar : MonoBehaviour
     {
         m_CurrentPlayer = player;
         m_PlayerName.text = player.Info.Username;
+        player.OnStartSpawnNotify += StartHPBar;
+        player.OnStartDeathNotify += StopHPBar;
+    }
+
+    private void StartHPBar()
+    {
+        UpdateHPAmout();
+        this.gameObject.SetActive(true);
     }
 
     public void UpdateHPAmout()
     {
-        this.gameObject.SetActive(!m_CurrentPlayer.IsDead);
-
         Vector3 pos = Camera.main.WorldToScreenPoint(m_CurrentPlayer.transform.position);
         pos.x += m_Position.x;
         pos.y += m_Position.y;
         this.transform.position = pos;
         m_Fill.fillAmount = m_CurrentPlayer.CurrentHpPercent;
+    }
+
+    private void StopHPBar()
+    {
+        UpdateHPAmout();
+        this.gameObject.SetActive(false);
     }
 
     private void Update()

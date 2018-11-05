@@ -112,9 +112,6 @@ public class Player : Character
 
         this.transform.position = spawnPos;
 
-        // Reset stragem
-        m_StratagemController.ResetAllUses();
-
         // Reset weapons
         m_WeapoonController.ResetWeaponInfo();
 
@@ -163,6 +160,9 @@ public class Player : Character
         if (IsDead) return;
         m_bDead = true;
         StartCoroutine(DoDeath());
+
+        // Reset stragem
+        m_StratagemController.Reset();
 
         if (OnStartDeathNotify != null) OnStartDeathNotify();
     }
