@@ -115,8 +115,11 @@ public class PlayerFSMSystem
         Debug.Log(m_currentState);
         if (m_Data.m_MoveMode.Equals("Dead") == false)
         {
-            if (m_CurrentGlobalStateID != ePlayerFSMStateID.RollStateID)
+            if (m_CurrentGlobalStateID == ePlayerFSMStateID.RollStateID)
             {
+
+            }
+            else {
                 m_currentState.CheckCondition(m_Data);
                 m_currentState.Do(m_Data);
             }

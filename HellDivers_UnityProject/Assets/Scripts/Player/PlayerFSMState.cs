@@ -281,6 +281,10 @@ public class PlayerFSMReloadState : PlayerFSMState
             if(info.normalizedTime > 0.9f)
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
+        else
+        {
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        }
     }
 }
 

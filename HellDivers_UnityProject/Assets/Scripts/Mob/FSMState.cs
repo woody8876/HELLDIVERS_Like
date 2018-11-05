@@ -417,6 +417,9 @@ public class FSMPatrolGetHurtState : FSMState
 
 public class FSMDeadState : FSMState
 {
+    Animator m_Animator;
+    GameObject GO;
+
     public FSMDeadState()
     {
         m_StateID = eFSMStateID.DeadStateID;
@@ -463,10 +466,6 @@ public class FSMDeadState : FSMState
 public class FSMWanderIdleState : FSMState
 {
     private float m_fIdleTime;
-    Animator m_Animator;
-    Object obj;
-    Vector3 vec;
-    GameObject GO;
     public FSMWanderIdleState()
     {
         m_StateID = eFSMStateID.WanderIdleStateID;
@@ -615,9 +614,10 @@ public class FSMFleeState : FSMState
     {
         data.navMeshAgent.enabled = true;
         data.m_AnimationController.SetAnimator(m_StateID, true);
-        
+
         GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
         GO.SetActive(true);
+        data.m_GOEffectWarning = GO;
         m_Animator = GO.GetComponent<Animator>();
         m_Animator.SetTrigger("startTrigger");
     }
@@ -626,7 +626,8 @@ public class FSMFleeState : FSMState
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
-        ObjectPool.m_Instance.UnLoadObjectToPool(3100 ,GO);
+        ObjectPool.m_Instance.UnLoadObjectToPool(3100 , GO);
+
     }
 
     public override void Do(AIData data)
