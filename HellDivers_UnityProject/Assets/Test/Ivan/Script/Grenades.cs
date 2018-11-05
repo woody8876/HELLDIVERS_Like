@@ -13,7 +13,7 @@ public class Grenades : MonoBehaviour {
     {
         set
         {
-            if (m_fForce > 20) m_fForce = 20;
+            if (m_fForce > 15) m_fForce = 15;
             else m_fForce = value;
         }
         get { return m_fForce; }
@@ -72,7 +72,7 @@ public class Grenades : MonoBehaviour {
         if (m_fDamageTime <= Time.fixedDeltaTime) m_gEffect.GetComponent<Animator>().SetTrigger("startTrigger");
         if (m_fDamageTime > grenadeInfo.Timer)
         {
-            m_fForce = 10;
+            m_fForce = 5;
             Damage(this.transform.position);
             m_fDamageTime = 0;
             ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
@@ -104,7 +104,7 @@ public class Grenades : MonoBehaviour {
     #endregion
 
     #region Private Field
-    protected float m_fForce = 10;
+    protected float m_fForce = 5;
     protected float m_fGravity = -9.8f;
     protected float m_fTime;
     protected float m_fDamageTime;
