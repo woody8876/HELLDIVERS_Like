@@ -47,7 +47,15 @@ public class StratagemController : MonoBehaviour
     /// Represent of the throw out force scale.
     /// [Range( 0 , MaxScaleForce )]
     /// </summary>
-    public float ScaleThrowForce { get { return m_ScaleForce; } }
+    public float ScaleThrowForce
+    {
+        get { return m_ScaleForce; }
+        private set
+        {
+            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            else m_ScaleForce = value;
+        }
+    }
 
     #endregion Properties
 
@@ -270,7 +278,7 @@ public class StratagemController : MonoBehaviour
         if (IsReady == false) return;
 
         StopAllCoroutines();
-        Vector3 force = m_ThrowForce * m_ScaleForce;
+        Vector3 force = m_ThrowForce * ScaleThrowForce;
         m_CurrentStratagem.Throw(force);
         m_CurrentStratagem = null;
     }
@@ -293,13 +301,12 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     private IEnumerator ThorwForceAddOn()
     {
-        m_ScaleForce = 0;
+        ScaleThrowForce = 0;
 
-        while (m_ScaleForce < m_MaxScaleForce)
+        while (ScaleThrowForce < m_MaxScaleForce)
         {
             yield return new WaitForSeconds(Time.deltaTime);
-            m_ScaleForce += Time.deltaTime;
-            if (m_ScaleForce > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            ScaleThrowForce += Time.deltaTime * 0.1f;
         }
 
         yield break;
