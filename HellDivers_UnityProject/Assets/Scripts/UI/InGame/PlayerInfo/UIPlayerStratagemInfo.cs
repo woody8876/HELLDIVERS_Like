@@ -5,7 +5,17 @@ using UnityEngine.UI;
 
 public class UIPlayerStratagemInfo : MonoBehaviour
 {
+    #region Propertie
+
+    /// <summary>
+    /// Represent of the stratagem which is observing.
+    /// </summary>
     public Stratagem CurrentStratagem { get { return m_CurrentStratagem; } }
+
+    #endregion Propertie
+
+    #region Private Variable
+
     private Stratagem m_CurrentStratagem;
     private List<Image> m_CodeImgs;
     [SerializeField] private Image m_Icon;
@@ -16,6 +26,10 @@ public class UIPlayerStratagemInfo : MonoBehaviour
     [SerializeField] private Color m_LightColor;
     [SerializeField] private Color m_DarkColor;
 
+    #endregion Private Variable
+
+    #region Initizlizer
+
     public void Initialize(Stratagem stratagem)
     {
         m_CurrentStratagem = stratagem;
@@ -23,55 +37,6 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         m_Icon.sprite = LoadIcon();
         CreateCodesDisplaye();
         UpdateUses();
-    }
-
-    public void StartUI()
-    {
-        UpdateUses();
-        this.gameObject.SetActive(true);
-    }
-
-    public void CloseUI()
-    {
-        this.gameObject.SetActive(false);
-        m_Title.gameObject.SetActive(false);
-        m_ArrowRoot.gameObject.SetActive(true);
-        DarkDisplay();
-    }
-
-    public void UpdateUses()
-    {
-        int count = m_CurrentStratagem.Info.Uses - m_CurrentStratagem.UsesCount;
-        m_Uses.text = count.ToString();
-    }
-
-    public void BrightDisplay()
-    {
-        m_Icon.color = m_LightColor;
-        foreach (Image codeImg in m_CodeImgs)
-        {
-            codeImg.color = m_DarkColor;
-        }
-    }
-
-    public void HilightArrow(int step)
-    {
-        m_CodeImgs[step - 1].color = m_LightColor;
-    }
-
-    public void DarkDisplay()
-    {
-        m_Icon.color = m_DarkColor;
-        foreach (Image codeImg in m_CodeImgs)
-        {
-            codeImg.color = m_DarkColor;
-        }
-    }
-
-    public void GetReady()
-    {
-        m_ArrowRoot.gameObject.SetActive(false);
-        m_Title.gameObject.SetActive(true);
     }
 
     private Sprite LoadIcon()
@@ -128,4 +93,59 @@ public class UIPlayerStratagemInfo : MonoBehaviour
             m_CodeImgs.Add(codeArrow);
         }
     }
+
+    #endregion Initizlizer
+
+    #region Public Function
+
+    public void StartUI()
+    {
+        UpdateUses();
+        this.gameObject.SetActive(true);
+    }
+
+    public void CloseUI()
+    {
+        this.gameObject.SetActive(false);
+        m_Title.gameObject.SetActive(false);
+        m_ArrowRoot.gameObject.SetActive(true);
+        DarkDisplay();
+    }
+
+    public void UpdateUses()
+    {
+        int count = m_CurrentStratagem.Info.Uses - m_CurrentStratagem.UsesCount;
+        m_Uses.text = count.ToString();
+    }
+
+    public void GetReady()
+    {
+        m_ArrowRoot.gameObject.SetActive(false);
+        m_Title.gameObject.SetActive(true);
+    }
+
+    public void BrightDisplay()
+    {
+        m_Icon.color = m_LightColor;
+        foreach (Image codeImg in m_CodeImgs)
+        {
+            codeImg.color = m_DarkColor;
+        }
+    }
+
+    public void DarkDisplay()
+    {
+        m_Icon.color = m_DarkColor;
+        foreach (Image codeImg in m_CodeImgs)
+        {
+            codeImg.color = m_DarkColor;
+        }
+    }
+
+    public void HilightArrow(int step)
+    {
+        m_CodeImgs[step - 1].color = m_LightColor;
+    }
+
+    #endregion Public Function
 }

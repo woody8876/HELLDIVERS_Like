@@ -36,7 +36,7 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Represent of stratagems is ready to checking code.
     /// </summary>
-    public List<Stratagem> StratagemsOnCheckingCode { get { return _Open; } }
+    public List<Stratagem> StratagemsOnCheckingCode { get { return m_Open; } }
 
     /// <summary>
     /// Represent of current checking code input step.
@@ -84,7 +84,9 @@ public class StratagemController : MonoBehaviour
     private Stratagem m_CurrentStratagem;
 
     // A container use to checking codes.
-    private List<Stratagem> _Open = new List<Stratagem>();
+    private List<Stratagem> m_Open = new List<Stratagem>();
+
+    private List<Stratagem> m_Close = new List<Stratagem>();
 
     private int m_CodeInputStep;
 
@@ -225,6 +227,7 @@ public class StratagemController : MonoBehaviour
     {
         StopAllCoroutines();
         m_bCheckingCode = false;
+        if (OnStopCheckingCode != null) OnStopCheckingCode();
     }
 
     /// <summary>
@@ -276,44 +279,51 @@ public class StratagemController : MonoBehaviour
     {
         m_bCheckingCode = true;
         m_CodeInputStep = 0;
-        _Open.Clear();
+        m_Open.Clear();
+        m_Close.Clear();
 
         foreach (Stratagem s in m_Stratagems)
         {
             if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
-                _Open.Add(s);
+                m_Open.Add(s);
         }
 
-        if (OnStopCheckingCode != null) OnStopCheckingCode();
-
-        if (_Open.Count <= 0) yield break;
+        if (m_Open.Count <= 0) yield break;
 
         StratagemInfo.eCode? input = null;
-        while (_Open.Count > 0)
+        while (m_Open.Count > 0)
         {
             yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
             yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
             m_CodeInputStep++;
 
-            for (int i = 0; i < _Open.Count; i++)
+            for (int i = 0; i < m_Open.Count; i++)
             {
-                if (_Open[i].Info.Codes[m_CodeInputStep - 1] == input)
+                int index = m_CodeInputStep - 1;
+                if (m_Open[i].Info.Codes[index] == input)
                 {
-                    if (_Open[i].Info.Codes.Length == m_CodeInputStep)
+                    if (m_Open[i].Info.Codes.Length == m_CodeInputStep)
                     {
-                        m_CurrentStratagem = _Open[i];
+                        m_CurrentStratagem = m_Open[i];
                         m_CurrentStratagem.GetReady();
                         m_bCheckingCode = false;
 
                         if (OnGetReady != null) OnGetReady();
-                        StopCheckCodes();
                         yield break;
                     }
                     continue;
                 }
                 else
-                { _Open.RemoveAt(i); }
+                {
+                    m_Close.Add(m_Open[i]);
+                }
             }
+
+            for (int i = 0; i < m_Close.Count; i++)
+            {
+                m_Open.Remove(m_Close[i]);
+            }
+
             if (OnCheckingCode != null) OnCheckingCode();
         }
         m_bCheckingCode = false;
@@ -325,10 +335,10 @@ public class StratagemController : MonoBehaviour
 
     private StratagemInfo.eCode? GetInputCode()
     {
-        if (Input.GetAxisRaw(m_InputVertical) >= 1) { return StratagemInfo.eCode.Up; }
-        else if (Input.GetAxisRaw(m_InputVertical) <= -1) { return StratagemInfo.eCode.Down; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) <= -1) { return StratagemInfo.eCode.Left; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) >= 1) { return StratagemInfo.eCode.Right; }
+        if (Input.GetAxisRaw(m_InputVertical) == 1) { return StratagemInfo.eCode.Up; }
+        else if (Input.GetAxisRaw(m_InputVertical) == -1) { return StratagemInfo.eCode.Down; }
+        else if (Input.GetAxisRaw(m_InputHorizontal) == -1) { return StratagemInfo.eCode.Left; }
+        else if (Input.GetAxisRaw(m_InputHorizontal) == 1) { return StratagemInfo.eCode.Right; }
         else { return null; }
     }
 

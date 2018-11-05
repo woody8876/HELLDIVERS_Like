@@ -56,6 +56,8 @@ public class Stratagem : MonoBehaviour
 
     public event EventHolder OnGetReady;
 
+    public event EventHolder OnCoolDown;
+
     #endregion Properties
 
     #region Private Variable
@@ -356,10 +358,12 @@ public class Stratagem : MonoBehaviour
         m_CoolTimer = 0.0f;
         while (m_CoolTimer < targetTime)
         {
+            if (OnCoolDown != null) OnCoolDown();
             yield return new WaitForSeconds(Time.deltaTime);
             m_CoolTimer += Time.deltaTime;
         }
         m_IsCooling = false;
+        if (OnCoolDown != null) OnCoolDown();
         yield break;
     }
 
