@@ -10,119 +10,47 @@ Material:
   m_Shader: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
+  disabledShaderPasses: []
   m_SavedProperties:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 70fc88cd34a33d94e924c3b271e8926e, type: 3}
-          m_Scale: {x: 10, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _BumpMap
-        second:
-          m_Texture: {fileID: 2800000, guid: 984639d35625032479433f0f906a8bda, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _DetailTex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 984639d35625032479433f0f906a8bda, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 70fc88cd34a33d94e924c3b271e8926e, type: 3}
+        m_Scale: {x: 10, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .558928609
-      data:
-        first:
-          name: _Shininess
-        second: .70927906
-      data:
-        first:
-          name: _InvFade
-        second: .00999999978
-      data:
-        first:
-          name: _ScrollX
-        second: 1
-      data:
-        first:
-          name: _ScrollY
-        second: 0
-      data:
-        first:
-          name: _Scroll2X
-        second: 1
-      data:
-        first:
-          name: _Scroll2Y
-        second: 0
-      data:
-        first:
-          name: _ReplaySpeed
-        second: 1
-      data:
-        first:
-          name: _SineAmplX
-        second: .5
-      data:
-        first:
-          name: _SineAmplY
-        second: .5
-      data:
-        first:
-          name: _SineFreqX
-        second: 10
-      data:
-        first:
-          name: _SineFreqY
-        second: 10
-      data:
-        first:
-          name: _SineAmplX2
-        second: .5
-      data:
-        first:
-          name: _SineAmplY2
-        second: .5
-      data:
-        first:
-          name: _SineFreqX2
-        second: 10
-      data:
-        first:
-          name: _SineFreqY2
-        second: 10
-      data:
-        first:
-          name: _MMultiplier
-        second: 2
+    - _Cutoff: 0.5589286
+    - _InvFade: 1.52
+    - _MMultiplier: 2
+    - _ReplaySpeed: 1
+    - _Scroll2X: 1
+    - _Scroll2Y: 0
+    - _ScrollX: 1
+    - _ScrollY: 0
+    - _Shininess: 0.70927906
+    - _SineAmplX: 0.5
+    - _SineAmplX2: 0.5
+    - _SineAmplY: 0.5
+    - _SineAmplY2: 0.5
+    - _SineFreqX: 10
+    - _SineFreqX2: 10
+    - _SineFreqY: 10
+    - _SineFreqY2: 10
     m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 1, g: 1, b: 1, a: .0274509806}
-      data:
-        first:
-          name: _SpecColor
-        second: {r: .139705896, g: .139705896, b: .139705896, a: 1}
-      data:
-        first:
-          name: _TintColor
-        second: {r: .501960814, g: .501960814, b: .501960814, a: 1}
-      data:
-        first:
-          name: _EmisColor
-        second: {r: .200000003, g: .200000003, b: .200000003, a: 0}
-      data:
-        first:
-          name: _NumTexTiles
-        second: {r: 1, g: 10, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.02745098}
+    - _EmisColor: {r: 0.2, g: 0.2, b: 0.2, a: 0}
+    - _NumTexTiles: {r: 1, g: 10, b: 0, a: 0}
+    - _SpecColor: {r: 0.1397059, g: 0.1397059, b: 0.1397059, a: 1}
+    - _TintColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
