@@ -6,6 +6,7 @@ using UnityEngine.AI;
 [System.Serializable]
 public class AIData
 {
+    public int m_ID;
     public float m_fRadius = 1;
     public float m_fProbeLength = 10;
     public float m_fPatrolVisionLength = 7;
@@ -31,6 +32,7 @@ public class AIData
     public FSMSystem m_FSMSystem;
 
     public MobAnimationsController m_AnimationController;
+    public GameObject m_GOEffectWarning;
     
 
     #region Attack attribute
