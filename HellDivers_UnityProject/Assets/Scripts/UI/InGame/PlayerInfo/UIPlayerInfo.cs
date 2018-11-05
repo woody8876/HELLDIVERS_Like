@@ -70,6 +70,23 @@ public class UIPlayerInfo : MonoBehaviour
         string rankImgPath = string.Format("UI/Resource/Icons/Rank/{0}", rankImgFile);
         Sprite rankImg = Resources.Load<Sprite>(rankImgPath);
         m_PlayerRankImg.sprite = rankImg;
+
+        m_Player.OnStartSpawnNotify += DrawAliveTitle;
+        m_Player.OnStartDeathNotify += DrawDathTitle;
+    }
+
+    private void DrawAliveTitle()
+    {
+        m_PlayerDeathImg.gameObject.SetActive(false);
+        m_PlayerRankImg.gameObject.SetActive(true);
+        m_PlayerRank.gameObject.SetActive(true);
+    }
+
+    private void DrawDathTitle()
+    {
+        m_PlayerDeathImg.gameObject.SetActive(true);
+        m_PlayerRankImg.gameObject.SetActive(false);
+        m_PlayerRank.gameObject.SetActive(false);
     }
 
     #endregion UI Title
