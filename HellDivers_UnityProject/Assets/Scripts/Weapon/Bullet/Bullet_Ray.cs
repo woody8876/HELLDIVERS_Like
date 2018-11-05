@@ -40,6 +40,7 @@ public class Bullet_Ray : MonoBehaviour {
         {
             m_animator.SetTrigger("endTrigger");
             m_bActive = m_bTrigger = false;
+            ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
         }
         SetPosition();
         Detect();
@@ -55,7 +56,6 @@ public class Bullet_Ray : MonoBehaviour {
     private void SetLength(float length)
     {
         m_vEndPos = Vector3.forward * length;
-//        if (m_Line = null) { return; }
         m_Line.SetPosition(1, m_vEndPos);
     }
 
