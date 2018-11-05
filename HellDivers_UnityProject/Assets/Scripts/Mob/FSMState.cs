@@ -9,7 +9,8 @@ public enum eFSMTransition
     Go_MoveTo,
     Go_Chase,
     Go_Attack,
-    Go_GetHurt,
+    Go_FishGetHurt,
+    Go_PatrolGetHurt,
     GO_WanderIdle,
     GO_Wander,
     Go_CallArmy,
@@ -23,7 +24,8 @@ public enum eFSMStateID
     MoveToStateID,
     ChaseStateID,
     AttackStateID,
-    GetHurtStateID,
+    FishGetHurtStateID,
+    PatrolGetHurtID,
     WanderIdleStateID,
     WanderStateID,
     CallArmyState,
@@ -36,6 +38,7 @@ public class FSMState
     public eFSMStateID m_StateID;
     public Dictionary<eFSMTransition, FSMState> m_Map;
     public float m_fCurrentTime;
+    public float m_AnimatorLeaveTime;
 
     public FSMState()
     {
@@ -247,6 +250,7 @@ public class FSMAttackState : FSMState
     {
         AttackCount = 0;
         Count = 0;
+        m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
     }
 
@@ -279,7 +283,7 @@ public class FSMAttackState : FSMState
             Count++;
         }
 
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 10, true) + SteeringBehaviours.GroupBehavior(data, 10, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
 
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
@@ -298,7 +302,7 @@ public class FSMAttackState : FSMState
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
-            if (info.normalizedTime > 0.9f)
+            if (info.normalizedTime > m_AnimatorLeaveTime)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
@@ -306,11 +310,17 @@ public class FSMAttackState : FSMState
         }
         if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+            }
         }
         if (data.m_bIsPlayerDead)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            }
         }
     }
 
@@ -321,11 +331,58 @@ public class FSMAttackState : FSMState
     }
 }
 
-public class FSMGetHurtState : FSMState
+public class FSMFishGetHurtState : FSMState
 {
-    public FSMGetHurtState()
+    public FSMFishGetHurtState()
     {
-        m_StateID = eFSMStateID.GetHurtStateID;
+        m_StateID = eFSMStateID.FishGetHurtStateID;
+    }
+
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        data.navMeshAgent.enabled = false;
+        data.m_AnimationController.SetAnimator(m_StateID);
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+
+    }
+
+    public override void Do(AIData data)
+    {
+
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("GetHurt"))
+        {
+            if (info.normalizedTime > 0.7f)
+            {
+                Vector3 v = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+                float fDist = v.magnitude;
+
+                if (fDist < data.m_fAttackRange)
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
+                }
+                else
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                }
+            }
+        }
+    }
+}
+
+public class FSMPatrolGetHurtState : FSMState
+{
+    public FSMPatrolGetHurtState()
+    {
+        m_StateID = eFSMStateID.PatrolGetHurtID;
     }
 
 
@@ -399,8 +456,15 @@ public class FSMDeadState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                ObjectPool.m_Instance.UnLoadObjectToPool(3001, data.m_Go);
-                MobManager.m_FishCount--;
+                ObjectPool.m_Instance.UnLoadObjectToPool(data.m_ID, data.m_Go);
+                if(data.m_ID == 3001)
+                {
+                    MobManager.m_FishCount--;
+                }
+                else if (data.m_ID == 3002)
+                {
+                    MobManager.m_PatrolCount--;
+                }
             }
         }
     }
@@ -417,6 +481,8 @@ public class FSMWanderIdleState : FSMState
     
     public override void DoBeforeEnter(AIData data)
     {
+        m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
+        data.navMeshAgent.enabled = false;
         data.m_vTarget = new Vector3(0, 0, 0);
         m_fCurrentTime = 0.0f;
         m_fIdleTime = Random.Range(1.0f, 3.0f);
@@ -444,11 +510,16 @@ public class FSMWanderIdleState : FSMState
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
-            return;
         }
+        //FishAI
         if (data.m_bIsPlayerDead == false)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("WanderIdle"))
+            {
+                if (info.normalizedTime > m_AnimatorLeaveTime)
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+            }
         }
     }
 }
@@ -466,7 +537,6 @@ public class FSMWanderState : FSMState
     }
     public override void DoBeforeLeave(AIData data)
     {
-        data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
     public override void Do(AIData data)
@@ -553,7 +623,6 @@ public class FSMFleeState : FSMState
 
     public override void DoBeforeLeave(AIData data)
     {
-        data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 

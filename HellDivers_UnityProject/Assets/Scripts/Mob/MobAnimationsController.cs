@@ -37,7 +37,7 @@ public class MobAnimationsController : MonoBehaviour {
         {
            // m_Animator.SetBool();
         }
-        else if (state == eFSMStateID.GetHurtStateID)
+        else if (state == eFSMStateID.FishGetHurtStateID)
         {
             m_Animator.SetTrigger("GetHurt");
         }

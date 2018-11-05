@@ -53,6 +53,7 @@ public class FSMSystem
         {
             m_states.Add(s);
             m_currentState = s;
+            m_currentState.DoBeforeEnter(m_Data);
             m_currentStateID = s.m_StateID;
             return;
         }

@@ -107,14 +107,18 @@ public class PlayerFSMSystem
     {
         m_CurrentGlobalState.DoBeforeLeave(m_Data);
         m_CurrentGlobalState = null;
+        m_CurrentGlobalStateID = ePlayerFSMStateID.NullStateID;
     }
 
     public void DoState()
     {
         if (m_Data.m_MoveMode.Equals("Dead") == false)
         {
-            m_currentState.CheckCondition(m_Data);
-            m_currentState.Do(m_Data);
+            if (m_CurrentGlobalStateID != ePlayerFSMStateID.RollStateID)
+            {
+                m_currentState.CheckCondition(m_Data);
+                m_currentState.Do(m_Data);
+            }
         }
         
         if (m_CurrentGlobalState == null) return;

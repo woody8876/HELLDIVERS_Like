@@ -31,10 +31,12 @@ public class FishAI : Character
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
+        m_AIData.m_ID= 3001;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
+        m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
         m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         if (m_AIData.m_PlayerGO != null)
@@ -65,7 +67,7 @@ public class FishAI : Character
         m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
         m_WanderState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
-        FSMGetHurtState m_GetHurtState = new FSMGetHurtState();
+        FSMFishGetHurtState m_GetHurtState = new FSMFishGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
 
         m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
@@ -74,13 +76,13 @@ public class FishAI : Character
         m_DeadState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
-        m_FSM.AddGlobalTransition(eFSMTransition.Go_GetHurt, m_GetHurtState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
+        m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_GetHurtState);
         m_FSM.AddState(m_DeadState);
-        m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_WanderState);
     }
 
@@ -113,7 +115,7 @@ public class FishAI : Character
         {
             return;
         }
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_GetHurt);
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
         return;
     }
     public void PerformDead()

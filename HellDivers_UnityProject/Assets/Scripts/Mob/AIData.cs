@@ -6,6 +6,7 @@ using UnityEngine.AI;
 [System.Serializable]
 public class AIData
 {
+    public int m_ID;
     public float m_fRadius = 1;
     public float m_fProbeLength = 10;
     public float m_fPatrolVisionLength = 7;

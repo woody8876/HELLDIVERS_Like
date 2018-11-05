@@ -21,6 +21,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     {
 
     }
+
     public void Move(Vector3 move, Vector3 direction, bool run, bool inBattle)
     {
         if (!inBattle)
@@ -53,14 +54,6 @@ public class PlayerAnimationsContorller : MonoBehaviour
         transform.Rotate(0, m_TurnAmount * turnSpeed * 3f * Time.deltaTime, 0);
     }
 
-    public bool FinishAnimator(PlayerController data)
-    {
-        data.m_FinishAni = false;
-        AnimatorStateInfo info = m_Animator.GetCurrentAnimatorStateInfo(1);
-        data.m_FinishAni = (info.normalizedTime >= 0.9f) ? true : false;
-        return data.m_FinishAni;
-    }
-
     public void ResetAnimator(PlayerController data)
     {
         m_Animator.SetTrigger("Reset");
@@ -69,6 +62,7 @@ public class PlayerAnimationsContorller : MonoBehaviour
     /// Set Trigger Animator
     /// </summary>
     /// <param name="state"></param>
+    /// 
     public void SetAnimator(ePlayerFSMStateID state)
     {
         UpdateAnimator(state);
@@ -101,11 +95,11 @@ public class PlayerAnimationsContorller : MonoBehaviour
         }
         else if (inBattle)
         {
-            if (Vector3.Angle(this.transform.forward, move) > 20)
-            {
-                m_Animator.SetBool("RotateStart", true);
-                //m_Animator.Play("Rotate", 0, 0);
-            }
+            //if (Vector3.Angle(this.transform.forward, move) > 20)
+            //{
+            //    m_Animator.SetBool("RotateStart", true);
+            //    //m_Animator.Play("Rotate", 0, 0);
+            //}
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
             m_Animator.SetFloat("WalkForward", m_BattleForward/*, 0.1f, Time.deltaTime*/);
@@ -115,42 +109,36 @@ public class PlayerAnimationsContorller : MonoBehaviour
 
     private void UpdateAnimator(ePlayerFSMStateID state)
     {
-        if (state == ePlayerFSMStateID.ReloadStateID)
+        switch (state)
         {
-            m_Animator.SetTrigger("Reload");
-        }
-        else if (state == ePlayerFSMStateID.MeleeAttackID)
-        {
-            m_Animator.SetTrigger("MeleeAttack");
-        }
-        else if (state == ePlayerFSMStateID.SwitchWeaponID)
-        {
-            m_Animator.SetTrigger("SwitchWeapon");
-        }
-        else if (state == ePlayerFSMStateID.StratagemStateID)
-        {
-            m_Animator.SetTrigger("ThrowStandby");
-        }
-        else if (state == ePlayerFSMStateID.DeadStateID)
-        {
-            m_Animator.SetTrigger("Death");
-            m_Animator.SetTrigger("Reset");
-        }
-        else if (state == ePlayerFSMStateID.VictoryID)
-        {
-            m_Animator.SetTrigger("Victory");
-        }
-        else if (state == ePlayerFSMStateID.ReliveStateID)
-        {
-            m_Animator.SetTrigger("Relive");
-        }
-        else if (state == ePlayerFSMStateID.PickUpID)
-        {
-            m_Animator.SetTrigger("Pick");
-        }
-        else if (state == ePlayerFSMStateID.RollStateID)
-        {
-            m_Animator.SetTrigger("Roll");
+            case ePlayerFSMStateID.ReloadStateID:
+                m_Animator.SetTrigger("Reload");
+                break;
+            case ePlayerFSMStateID.MeleeAttackID:
+                m_Animator.SetTrigger("MeleeAttack");
+                break;
+            case ePlayerFSMStateID.SwitchWeaponID:
+                m_Animator.SetTrigger("SwitchWeapon");
+                break;
+            case ePlayerFSMStateID.StratagemStateID:
+                m_Animator.SetTrigger("ThrowStandby");
+                break;
+            case ePlayerFSMStateID.DeadStateID:
+                m_Animator.SetTrigger("Death");
+                m_Animator.SetTrigger("Reset");
+                break;
+            case ePlayerFSMStateID.VictoryID:
+                m_Animator.SetTrigger("Victory");
+                break;
+            case ePlayerFSMStateID.ReliveStateID:
+                m_Animator.SetTrigger("Relive");
+                break;
+            case ePlayerFSMStateID.PickUpID:
+                m_Animator.SetTrigger("Pick");
+                break;
+            case ePlayerFSMStateID.RollStateID:
+                m_Animator.SetTrigger("Roll");
+                break;
         }
     }
 

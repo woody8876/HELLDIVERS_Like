@@ -146,6 +146,11 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("Reload"))
+        {
+            return;
+        }
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
             if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
@@ -157,7 +162,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))/* && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0*/)
+            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0)
             {
                 if (data.m_WeaponController.ShootState()) shoot = true;
             }
@@ -172,32 +177,33 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void CheckCondition(PlayerController data)
     {
-        if (Input.GetButtonDown("Reload"))
+        if (Input.GetButton("Reload"))
         {
             if (data.m_WeaponController.ReloadState())
             {
+                data.m_PAC.SetAnimator(m_StateID, false);
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Reload);
             }
         }
-        if (Input.GetButton("Stratagem") && shoot == false)
+        else if (Input.GetButton("Stratagem") && shoot == false)
         {
             if (data.m_StratagemController.Stratagems.Count > 0)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
             }
         }
-        if (Input.GetButtonDown("WeaponSwitch"))
+        else if (Input.GetButtonDown("WeaponSwitch"))
         {
             if (data.m_WeaponController.SwitchWeaponState())
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
             }
         }
-        if (Input.GetButtonDown("Interactive"))
+        else if (Input.GetButtonDown("Interactive"))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_PickUp);
         }
-        if (Input.GetButtonDown("MeleeAttack"))
+        else if (Input.GetButtonDown("MeleeAttack"))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_MeleeAttack);
         }
@@ -247,7 +253,13 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
+        if (!info.IsName("Reload") || !data.m_PAC.Animator.IsInTransition(1))
+        {
+            float speed = data.m_WeaponController.CurrentWeaponInfo.ReloadSpeed;
+            speed = (3.33f / speed);
+            data.m_PAC.SetAnimator(m_StateID, speed);
+        }
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -256,26 +268,16 @@ public class PlayerFSMReloadState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (Input.GetButton("Reload"))
-        {
-            float speed = data.m_WeaponController.ReloadSpeed;
-            speed = (3.33f / speed);
-            data.m_PAC.SetAnimator(m_StateID, speed);
-        }
+
     }
 
     public override void CheckCondition(PlayerController data)
     {
-        if (!Input.GetButton("Reload"))
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("Reload"))
         {
-            AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
-            if (info.IsName("Reload"))
-            {
-                if (data.m_PAC.FinishAnimator(data))
-                {
-                    data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
-                }
-            }
+            if(info.normalizedTime > 0.9f)
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
 }
@@ -321,6 +323,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
 
 public class PlayerFSMThrowState : PlayerFSMState
 {
+    bool bThrow;
     public PlayerFSMThrowState()
     {
         m_StateID = ePlayerFSMStateID.ThrowStateID;
@@ -328,6 +331,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        bThrow = false;
         data.m_MoveMode = "Throw";
     }
 
@@ -338,10 +342,17 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
+        if (Input.GetAxis("Fire1") < 0)
+        {
+            bThrow = true;
+            //Start Timer...
+        }
+
+        if ((Input.GetAxis("Fire1") == 0 && bThrow) || Input.GetButton("Fire1"))
         {
             data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);
+            //Get Force...
         }
 
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
@@ -359,7 +370,7 @@ public class PlayerFSMThrowState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
-            if (data.m_PAC.FinishAnimator(data))
+            if (info.normalizedTime > 0.9f)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
@@ -393,7 +404,7 @@ public class PlayerFSMSwitchWeaponState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("SwitchWeapon"))
         {
-            if (data.m_PAC.FinishAnimator(data))
+            if (info.normalizedTime > 0.9f)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
             }
@@ -432,7 +443,6 @@ public class PlayerFSMPickUpState : PlayerFSMState
         {
             if (info.normalizedTime > 0.6f && Count < 1)
             {
-                Debug.Log("Pick Up");
                 data.m_Player.InteractWithItem();
                 Count++;
             }
