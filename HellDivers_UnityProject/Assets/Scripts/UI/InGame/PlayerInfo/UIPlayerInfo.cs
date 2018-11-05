@@ -19,9 +19,11 @@ public class UIPlayerInfo : MonoBehaviour
     private Player m_Player;
     private Dictionary<int, UIPlayerWeaponInfo> m_UIWeapons;
     private Dictionary<int, UIPlayerStratagemInfo> m_UIStratagems;
+    [SerializeField] private List<Color> m_PlayerColors;
     [SerializeField] private Text m_PlayerName;
     [SerializeField] private Text m_PlayerRank;
     [SerializeField] private Image m_PlayerRankImg;
+    [SerializeField] private Image m_PlayerDeathImg;
     [SerializeField] private GameObject m_WeaponInfoPrefab;
     [SerializeField] private GameObject m_StratagemInfoPrefab;
     [SerializeField] private GameObject m_StratagemCDIconPrefab;
@@ -93,8 +95,10 @@ public class UIPlayerInfo : MonoBehaviour
             m_UIWeapons.Add(weapon.Value.weaponInfo.ID, weaponUI);
         }
 
-        DrawCurrentWeaponUI();
+        m_Player.OnStartSpawnNotify += DrawCurrentWeaponUI;
+        m_Player.OnStartDeathNotify += HideWeaponUI;
         m_Player.WeaponController.OnSwitch += DrawCurrentWeaponUI;
+        DrawCurrentWeaponUI();
     }
 
     private void DrawCurrentWeaponUI()
@@ -142,9 +146,7 @@ public class UIPlayerInfo : MonoBehaviour
             stratagemUI.Initialize(currentStratagem);
             stratagemUI.gameObject.SetActive(false);
 
-            currentStratagem.OnThrow += stratagemUI.CloseUI;
             currentStratagem.OnThrow += StopStratagemUI;
-            currentStratagem.OnGetReady += stratagemUI.UpdateUses;
             m_Player.StratagemController.OnStartCheckingCode += StartStratagemUI;
             m_Player.StratagemController.OnStopCheckingCode += StopStratagemUI;
             m_Player.StratagemController.OnCheckingCode += CheckingCodes;
@@ -152,7 +154,6 @@ public class UIPlayerInfo : MonoBehaviour
 
             UIPlayerStratagemCD stratagemCD = Instantiate(m_StratagemCDIconPrefab, m_StratagemCDPanel).GetComponent<UIPlayerStratagemCD>();
             stratagemCD.Initialize(currentStratagem);
-            currentStratagem.OnCoolDown += stratagemCD.RefreshDisplay;
 
             m_UIStratagems.Add(currentStratagem.Info.ID, stratagemUI);
         }

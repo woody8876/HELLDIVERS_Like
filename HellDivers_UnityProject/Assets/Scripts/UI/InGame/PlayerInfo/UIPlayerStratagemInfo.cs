@@ -37,6 +37,9 @@ public class UIPlayerStratagemInfo : MonoBehaviour
         m_Icon.sprite = LoadIcon();
         CreateCodesDisplaye();
         UpdateUses();
+
+        stratagem.OnThrow += CloseUI;
+        stratagem.OnGetReady += UpdateUses;
     }
 
     private Sprite LoadIcon()

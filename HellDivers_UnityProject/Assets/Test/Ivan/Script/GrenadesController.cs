@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadesController : MonoBehaviour {
-
+public class GrenadesController : MonoBehaviour
+{
     public int CurrentID { private set; get; }
-    public int GrenadeCounter {
+
+    public int GrenadeCounter
+    {
         private set
         {
             if (m_iCounter < 0) m_iCounter = 0;
@@ -13,26 +15,36 @@ public class GrenadesController : MonoBehaviour {
         }
         get { return m_iCounter; }
     }
-    
+
     #region Delegate of EventHolder
+
     public delegate void EventHolder();
+
     public EventHolder OnCount;
     public EventHolder OnChangeID;
-    #endregion
 
-    List<int> m_lActiveGrenades = new List<int>();
-    GrenadeInfo grenaderInfo;
-    GameObject m_Grenades;
-    bool m_bHolding;
-    int m_iCounter;
+    #endregion Delegate of EventHolder
 
+    private List<int> m_lActiveGrenades = new List<int>();
+    private GrenadeInfo grenaderInfo;
+    private GameObject m_Grenades;
+    private bool m_bHolding;
+    private int m_iCounter;
+
+    public void AddGrenades(List<int> ids)
+    {
+        foreach (int id in ids)
+        {
+            Equipment(id);
+        }
+    }
 
     /// <summary>
     /// Equip grenades and set grenade to current active grenade, refresh grenade counter
     /// </summary>
     /// <param name="id">Grenade's ID</param>
     /// <param name="count">The quality of grenade-equipment</param>
-    public void Equipment(int id, int count)
+    public void Equipment(int id, int count = 2)
     {
         bool bExist = false;
         for (int i = 0; i < m_lActiveGrenades.Count; i++)
@@ -52,7 +64,7 @@ public class GrenadesController : MonoBehaviour {
 
     public bool Holding()
     {
-        if (GrenadeCounter <=0) { return false; }
+        if (GrenadeCounter <= 0) { return false; }
         if (!m_bHolding) { LoadGrenade(); }
         m_Grenades.GetComponent<Grenades>().m_Force += 10 * Time.fixedDeltaTime;
         return true;
@@ -66,8 +78,6 @@ public class GrenadesController : MonoBehaviour {
         if (OnCount != null) OnCount();
     }
 
-
-
     private void LoadGrenade()
     {
         m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
@@ -77,7 +87,7 @@ public class GrenadesController : MonoBehaviour {
         m_bHolding = true;
     }
 
-	private void AddGrenades(int id, int count)
+    private void AddGrenades(int id, int count)
     {
         grenaderInfo = GameData.Instance.GrenadeInfoTable[id];
         string m_sGrenade = "Grenade_" + grenaderInfo.Title;
@@ -96,18 +106,16 @@ public class GrenadesController : MonoBehaviour {
         }
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
         ObjectPool.m_Instance.InitGameObjects(grenade, count, id);
-        ObjectPool.m_Instance.InitGameObjects(effect, (int)(count*0.5f), id + 100);
+        ObjectPool.m_Instance.InitGameObjects(effect, (int)(count * 0.5f), id + 100);
 
         m_lActiveGrenades.Add(id);
-	}
-
-
-
+    }
 
     private void Start()
     {
         //Equipment(4001, 10);
     }
+
     // Update is called once per frame
     private void FixedUpdate()
     {
@@ -116,8 +124,8 @@ public class GrenadesController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha3)) { Equipment(4003, 10); }
         if (Input.GetKeyDown(KeyCode.Alpha4)) { Equipment(4004, 10); }
         if (Input.GetKeyDown(KeyCode.Alpha5)) { Equipment(4005, 10); }
-        
+
         if (Input.GetKey(KeyCode.Space)) { Holding(); }
-        if (!Input.GetKey(KeyCode.Space) && m_bHolding)  { Throw(); }
+        if (!Input.GetKey(KeyCode.Space) && m_bHolding) { Throw(); }
     }
 }

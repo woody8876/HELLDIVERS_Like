@@ -11,6 +11,7 @@ public class PlayerInfo
     public int Rank { get { return rank; } }
     public List<int> Weapons { get { return weapons; } }
     public List<int> Stratagems { get { return stratagems; } }
+    public List<int> Grenades { get { return grenades; } }
 
     #endregion Properties
 
@@ -18,6 +19,7 @@ public class PlayerInfo
 
     [SerializeField] private List<int> weapons;
     [SerializeField] private List<int> stratagems;
+    [SerializeField] private List<int> grenades;
     [SerializeField] private string username;
     [SerializeField] private int rank;
     private int totalMissionFought;

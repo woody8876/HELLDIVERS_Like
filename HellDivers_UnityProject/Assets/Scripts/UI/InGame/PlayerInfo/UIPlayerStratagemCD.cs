@@ -13,7 +13,14 @@ public class UIPlayerStratagemCD : MonoBehaviour
     public void Initialize(Stratagem stratagem)
     {
         m_CurrentStratagem = stratagem;
-        LoadIcon();
+
+        string fileName = string.Format("icon_{0}", m_CurrentStratagem.Info.ID);
+        m_Fill.sprite = LoadIcon(fileName);
+
+        fileName = string.Format("icon_{0}_gray", m_CurrentStratagem.Info.ID);
+        m_Icon.sprite = LoadIcon(fileName);
+
+        stratagem.OnCoolDown += RefreshDisplay;
     }
 
     public void RefreshDisplay()
@@ -22,20 +29,19 @@ public class UIPlayerStratagemCD : MonoBehaviour
         m_Fill.fillAmount = m_CurrentStratagem.CoolTimer / m_CurrentStratagem.Info.CoolDown;
     }
 
-    private void LoadIcon()
+    private Sprite LoadIcon(string fileName)
     {
         Sprite iconImg = null;
-        string imgName = string.Format("icon_{0}", m_CurrentStratagem.Info.ID);
         string imgPath = "UI/Resource/Icons/Stratagem";
-        string fullPath = imgPath + "/" + imgName;
+        string fullPath = imgPath + "/" + fileName;
 
         if (AssetManager.m_Instance != null)
         {
-            iconImg = AssetManager.m_Instance.GetAsset(typeof(Sprite), imgName, imgPath) as Sprite;
+            iconImg = AssetManager.m_Instance.GetAsset(typeof(Sprite), fileName, imgPath) as Sprite;
             if (iconImg == null)
             {
                 iconImg = Resources.Load<Sprite>(fullPath);
-                AssetManager.m_Instance.AddAsset(typeof(Sprite), imgName, imgPath, iconImg);
+                AssetManager.m_Instance.AddAsset(typeof(Sprite), fileName, imgPath, iconImg);
             }
         }
         else
@@ -43,7 +49,6 @@ public class UIPlayerStratagemCD : MonoBehaviour
             iconImg = Resources.Load<Sprite>(fullPath);
         }
 
-        m_Icon.sprite = iconImg;
-        m_Fill.sprite = iconImg;
+        return iconImg;
     }
 }
