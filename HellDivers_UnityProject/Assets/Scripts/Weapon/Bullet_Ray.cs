@@ -55,6 +55,7 @@ public class Bullet_Ray : MonoBehaviour {
     private void SetLength(float length)
     {
         m_vEndPos = Vector3.forward * length;
+//        if (m_Line = null) { return; }
         m_Line.SetPosition(1, m_vEndPos);
     }
 

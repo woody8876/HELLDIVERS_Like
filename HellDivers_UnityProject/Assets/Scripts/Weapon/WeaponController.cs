@@ -94,7 +94,8 @@ public class WeaponController : MonoBehaviour
         yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
         m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
-        if (_CurrentWeapon == 1401|| _CurrentWeapon == 1701) m_currentWeaponEffect.SetTrigger("endTrigger");
+        if (_CurrentWeapon == 1401|| _CurrentWeapon == 1601|| _CurrentWeapon == 1701)
+             m_currentWeaponEffect.SetTrigger("endTrigger");
         m_cCoolDown = null;
     }
 
