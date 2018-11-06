@@ -20,14 +20,12 @@ public class UIPlayerInfo : MonoBehaviour
     private Dictionary<int, UIPlayerWeaponInfo> m_UIWeapons;
     private Dictionary<int, UIPlayerStratagemInfo> m_UIStratagems;
     [SerializeField] private List<Color> m_PlayerColors;
-    [SerializeField] private Text m_PlayerName;
-    [SerializeField] private Text m_PlayerRank;
-    [SerializeField] private Image m_PlayerRankImg;
-    [SerializeField] private Image m_PlayerDeathImg;
+    [SerializeField] private UIPlayerTitle m_PlayerTitlePrefab;
     [SerializeField] private GameObject m_WeaponInfoPrefab;
+    [SerializeField] private GameObject m_GrenadeInfoPrefab;
     [SerializeField] private GameObject m_StratagemInfoPrefab;
-    [SerializeField] private GameObject m_StratagemCDIconPrefab;
     [SerializeField] private Transform m_StratagemCDPanel;
+    [SerializeField] private GameObject m_StratagemCDIconPrefab;
 
     #endregion Private Variable
 
@@ -50,43 +48,8 @@ public class UIPlayerInfo : MonoBehaviour
     {
         if (m_Player == null) return;
 
-        m_PlayerName.text = m_Player.Info.Username;
-        m_PlayerRank.text = m_Player.Info.Rank.ToString();
-
-        string rankImgFile = "icon_rank_";
-        if (m_Player.Info.Rank < 1)
-        {
-            rankImgFile += "01";
-        }
-        else if (m_Player.Info.Rank > 40)
-        {
-            rankImgFile += "40";
-        }
-        else
-        {
-            rankImgFile += m_Player.Info.Rank.ToString("00");
-        }
-
-        string rankImgPath = string.Format("UI/Resource/Icons/Rank/{0}", rankImgFile);
-        Sprite rankImg = Resources.Load<Sprite>(rankImgPath);
-        m_PlayerRankImg.sprite = rankImg;
-
-        m_Player.OnStartSpawnNotify += DrawAliveTitle;
-        m_Player.OnStartDeathNotify += DrawDathTitle;
-    }
-
-    private void DrawAliveTitle()
-    {
-        m_PlayerDeathImg.gameObject.SetActive(false);
-        m_PlayerRankImg.gameObject.SetActive(true);
-        m_PlayerRank.gameObject.SetActive(true);
-    }
-
-    private void DrawDathTitle()
-    {
-        m_PlayerDeathImg.gameObject.SetActive(true);
-        m_PlayerRankImg.gameObject.SetActive(false);
-        m_PlayerRank.gameObject.SetActive(false);
+        UIPlayerTitle titleUI = Instantiate(m_PlayerTitlePrefab, this.transform).GetComponent<UIPlayerTitle>();
+        titleUI.Initialize(m_Player);
     }
 
     #endregion UI Title
@@ -104,10 +67,10 @@ public class UIPlayerInfo : MonoBehaviour
             weaponUI.Initialize(weapon.Value.weaponInfo);
             weaponUI.gameObject.SetActive(false);
 
-            m_Player.WeaponController.OnFire += weaponUI.UpdateAmmoDisplay;
-            m_Player.WeaponController.OnPickMags += weaponUI.UpdateAmmoDisplay;
+            m_Player.WeaponController.OnFire += weaponUI.UpdateAmmo;
+            m_Player.WeaponController.OnPickMags += weaponUI.UpdateAmmo;
             m_Player.WeaponController.OnReload += weaponUI.StartReload;
-            m_Player.WeaponController.OnReloadEnd += weaponUI.UpdateAmmoDisplay;
+            m_Player.WeaponController.OnReloadEnd += weaponUI.UpdateAmmo;
 
             m_UIWeapons.Add(weapon.Value.weaponInfo.ID, weaponUI);
         }
@@ -127,7 +90,7 @@ public class UIPlayerInfo : MonoBehaviour
             if (weaponUI.Key == m_Player.WeaponController._CurrentWeapon)
             {
                 weaponUI.Value.gameObject.SetActive(true);
-                weaponUI.Value.UpdateAmmoDisplay();
+                weaponUI.Value.UpdateAmmo();
             }
             else
             {

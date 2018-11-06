@@ -89,9 +89,9 @@ public class GameMain : MonoBehaviour
         if (spawnPos == null) spawnPos = this.transform;
         player.Spawn(spawnPos.position);
 
-        if (UIMain.Instance != null)
+        if (UIGameMain.Instance != null)
         {
-            UIMain.Instance.AddPlayerInfo(player);
+            UIGameMain.Instance.AddPlayer(player);
         }
 
         // Camera start following player

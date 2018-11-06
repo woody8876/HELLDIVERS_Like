@@ -15,40 +15,40 @@ public class UIPlayerStratagemCD : MonoBehaviour
         m_CurrentStratagem = stratagem;
 
         string fileName = string.Format("icon_{0}", m_CurrentStratagem.Info.ID);
-        m_Fill.sprite = LoadIcon(fileName);
+        m_Fill.sprite = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
 
         fileName = string.Format("icon_{0}_gray", m_CurrentStratagem.Info.ID);
-        m_Icon.sprite = LoadIcon(fileName);
+        m_Icon.sprite = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
 
-        stratagem.OnCoolDown += RefreshDisplay;
+        m_CurrentStratagem.OnStartCoolDown += DrawDisplay;
+        m_CurrentStratagem.OnCoolDown += RefreshDisplay;
+        m_CurrentStratagem.OnEndCoolDown += HideDisplay;
+    }
+
+    private void OnDestroy()
+    {
+        if (m_CurrentStratagem != null)
+        {
+            m_CurrentStratagem.OnStartCoolDown -= DrawDisplay;
+            m_CurrentStratagem.OnCoolDown -= RefreshDisplay;
+            m_CurrentStratagem.OnEndCoolDown -= HideDisplay;
+        }
+    }
+
+    public void DrawDisplay()
+    {
+        this.transform.SetAsLastSibling();
+        RefreshDisplay();
+        this.gameObject.SetActive(true);
     }
 
     public void RefreshDisplay()
     {
-        this.gameObject.SetActive(m_CurrentStratagem.IsCooling);
         m_Fill.fillAmount = m_CurrentStratagem.CoolTimer / m_CurrentStratagem.Info.CoolDown;
     }
 
-    private Sprite LoadIcon(string fileName)
+    public void HideDisplay()
     {
-        Sprite iconImg = null;
-        string imgPath = "UI/Resource/Icons/Stratagem";
-        string fullPath = imgPath + "/" + fileName;
-
-        if (AssetManager.m_Instance != null)
-        {
-            iconImg = AssetManager.m_Instance.GetAsset(typeof(Sprite), fileName, imgPath) as Sprite;
-            if (iconImg == null)
-            {
-                iconImg = Resources.Load<Sprite>(fullPath);
-                AssetManager.m_Instance.AddAsset(typeof(Sprite), fileName, imgPath, iconImg);
-            }
-        }
-        else
-        {
-            iconImg = Resources.Load<Sprite>(fullPath);
-        }
-
-        return iconImg;
+        this.gameObject.SetActive(false);
     }
 }

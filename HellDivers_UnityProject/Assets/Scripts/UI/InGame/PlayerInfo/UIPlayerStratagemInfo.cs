@@ -34,35 +34,22 @@ public class UIPlayerStratagemInfo : MonoBehaviour
     {
         m_CurrentStratagem = stratagem;
         m_Title.text = stratagem.Info.Title;
-        m_Icon.sprite = LoadIcon();
+        string iconFile = string.Format("icon_{0}", m_CurrentStratagem.Info.ID);
+        m_Icon.sprite = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, iconFile);
         CreateCodesDisplaye();
         UpdateUses();
 
-        stratagem.OnThrow += CloseUI;
-        stratagem.OnGetReady += UpdateUses;
+        m_CurrentStratagem.OnThrow += CloseUI;
+        m_CurrentStratagem.OnGetReady += UpdateUses;
     }
 
-    private Sprite LoadIcon()
+    private void OnDestroy()
     {
-        Sprite iconImg = null;
-        string imgName = string.Format("icon_{0}", m_CurrentStratagem.Info.ID);
-        string imgPath = "UI/Resource/Icons/Stratagem";
-        string fullPath = imgPath + "/" + imgName;
-
-        if (AssetManager.m_Instance != null)
+        if (m_CurrentStratagem != null)
         {
-            iconImg = AssetManager.m_Instance.GetAsset(typeof(Sprite), imgName, imgPath) as Sprite;
-            if (iconImg == null)
-            {
-                iconImg = Resources.Load<Sprite>(fullPath);
-                AssetManager.m_Instance.AddAsset(typeof(Sprite), imgName, imgPath, iconImg);
-            }
+            m_CurrentStratagem.OnThrow -= CloseUI;
+            m_CurrentStratagem.OnGetReady -= UpdateUses;
         }
-        else
-        {
-            iconImg = Resources.Load<Sprite>(fullPath);
-        }
-        return iconImg;
     }
 
     private void CreateCodesDisplaye()

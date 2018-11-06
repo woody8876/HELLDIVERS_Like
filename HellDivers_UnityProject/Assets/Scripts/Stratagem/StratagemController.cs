@@ -102,35 +102,9 @@ public class StratagemController : MonoBehaviour
             if (m_Stratagems[i].Info.ID == id) return false;
         }
 
-        Stratagem stratagem;
-        GameObject stratagemGo;
-
-        if (ObjectPool.m_Instance != null)
-        {
-            stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-
-            if (stratagemGo != null)
-            {
-                stratagem = stratagemGo.GetComponent<Stratagem>();
-            }
-            else
-            {
-                string name = string.Format("Stratagem{0}", id);
-                stratagemGo = new GameObject(name);
-                stratagem = stratagemGo.AddComponent<Stratagem>();
-                ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
-                DestroyImmediate(stratagemGo.gameObject);
-
-                stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-                stratagem = stratagemGo.GetComponent<Stratagem>();
-            }
-        }
-        else
-        {
-            string name = string.Format("Stratagem{0}", id);
-            stratagemGo = new GameObject(name);
-            stratagem = stratagemGo.AddComponent<Stratagem>();
-        }
+        string name = string.Format("Stratagem{0}", id);
+        GameObject stratagemGo = new GameObject(name);
+        Stratagem stratagem = stratagemGo.AddComponent<Stratagem>();
 
         m_ReadyPos = readyPos;
         m_LaunchPos = launchPos;
@@ -175,10 +149,9 @@ public class StratagemController : MonoBehaviour
     /// <returns></returns>
     public bool RemoveStratagemAt(int index)
     {
-        Stratagem target = null;
         if (index < 0 || index >= m_Stratagems.Count) return false;
 
-        target = m_Stratagems[index];
+        Stratagem target = m_Stratagems[index];
         m_Stratagems.RemoveAt(index);
 
         DestroyImmediate(target.gameObject);
@@ -288,9 +261,14 @@ public class StratagemController : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// Add throw force scale on timer.
-    /// </summary>
+    #endregion Public Function
+
+    #region Private Function
+
+    /*----------------------------
+     * Scale throw force by time *
+     ----------------------------*/
+
     private IEnumerator ThorwForceAddOn()
     {
         m_ScaleForce = 0;
@@ -304,8 +282,6 @@ public class StratagemController : MonoBehaviour
 
         yield break;
     }
-
-    #endregion Public Function
 
     #region Check Input Code
 
@@ -384,4 +360,6 @@ public class StratagemController : MonoBehaviour
     }
 
     #endregion Check Input Code
+
+    #endregion Private Function
 }

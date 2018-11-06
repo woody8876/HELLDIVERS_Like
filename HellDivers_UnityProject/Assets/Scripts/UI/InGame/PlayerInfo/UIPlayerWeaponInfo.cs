@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class UIPlayerWeaponInfo : MonoBehaviour
 {
-    private WeaponInfo m_CurrentWeapon;
+    public WeaponInfo CurrentWeaponInfo { get { return m_CurrentWeaponInfo; } }
+    private WeaponInfo m_CurrentWeaponInfo;
+
     private Animator m_Animator;
     [SerializeField] private Image m_Icon;
     [SerializeField] private Image m_IconFill;
@@ -14,14 +16,13 @@ public class UIPlayerWeaponInfo : MonoBehaviour
 
     public void Initialize(WeaponInfo info)
     {
-        m_CurrentWeapon = info;
-        InitWeaponIcon();
-        UpdateAmmoDisplay();
-    }
+        m_CurrentWeaponInfo = info;
 
-    private void OnEnable()
-    {
-        m_Animator.SetTrigger("Show");
+        string fileName = string.Format("icon_{0}", m_CurrentWeaponInfo.ID);
+        m_Icon.sprite = UIHelper.LoadSprite(UIHelper.WeaponIconFolder, fileName);
+        m_IconFill.sprite = m_Icon.sprite;
+
+        UpdateAmmo();
     }
 
     private void Awake()
@@ -29,45 +30,25 @@ public class UIPlayerWeaponInfo : MonoBehaviour
         m_Animator = this.GetComponent<Animator>();
     }
 
-    private Sprite InitWeaponIcon()
+    private void OnEnable()
     {
-        Sprite iconImg = null;
-        string imgName = string.Format("icon_{0}", m_CurrentWeapon.ID);
-        string imgPath = "UI/Resource/Icons/Weapon";
-        string fullPath = imgPath + "/" + imgName;
-
-        if (AssetManager.m_Instance != null)
-        {
-            iconImg = AssetManager.m_Instance.GetAsset(typeof(Sprite), imgName, imgPath) as Sprite;
-            if (iconImg == null)
-            {
-                iconImg = Resources.Load<Sprite>(fullPath);
-                AssetManager.m_Instance.AddAsset(typeof(Sprite), imgName, imgPath, iconImg);
-            }
-        }
-        else
-        {
-            iconImg = Resources.Load<Sprite>(fullPath);
-        }
-
-        m_Icon.sprite = iconImg;
-        m_IconFill.sprite = iconImg;
-        return iconImg;
+        m_Animator.SetTrigger("Show");
+        m_IconFill.fillAmount = 1.0f;
     }
 
     public void StartReload()
     {
-        float reloadSpeed = 1 / m_CurrentWeapon.ReloadSpeed;
+        float reloadSpeed = 1 / m_CurrentWeaponInfo.ReloadSpeed;
         m_Animator.SetFloat("ReloadTime", reloadSpeed);
         m_Animator.SetTrigger("Reload");
     }
 
-    public void UpdateAmmoDisplay()
+    public void UpdateAmmo()
     {
-        float ammoAmount = (float)m_CurrentWeapon.Ammo / m_CurrentWeapon.Capacity;
+        float ammoAmount = (float)m_CurrentWeaponInfo.Ammo / m_CurrentWeaponInfo.Capacity;
         m_AmmoAmount.fillAmount = Mathf.Clamp01(ammoAmount);
 
-        m_MagAmount.text = string.Format("x{0}", m_CurrentWeapon.Mags);
+        m_MagAmount.text = string.Format("x{0}", m_CurrentWeaponInfo.Mags);
 
         bool bOutOfAmmo = (m_AmmoAmount.fillAmount <= 0.2f);
         m_Animator.SetBool("OutOfAmmo", bOutOfAmmo);
