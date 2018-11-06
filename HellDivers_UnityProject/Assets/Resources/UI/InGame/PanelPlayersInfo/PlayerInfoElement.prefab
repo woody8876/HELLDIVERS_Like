@@ -73,6 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224473104329077598}
   - component: {fileID: 114811339702064832}
+  - component: {fileID: 114582129366647820}
   m_Layer: 5
   m_Name: PlayerInfoElement
   m_TagString: Untagged
@@ -304,6 +305,33 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &114582129366647820
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1247521355279192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f72bd8e589960ad4eaaf2d9b7870c8e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Panel_Title: {fileID: 224549742941755626}
+  m_Panel_StratagemCD: {fileID: 224709834988541396}
+  m_Panel_WeaponAndGrenade: {fileID: 224832585844245388}
+  m_Panel_Weapon: {fileID: 224686587411815378}
+  m_Panel_Grenade: {fileID: 224508497845445824}
+  m_Panel_Stratagem: {fileID: 224344468190806372}
+  m_PlayerTitle: {fileID: 114282057517849620, guid: 3eae0332fdaa94449ae35cd41f14456d,
+    type: 2}
+  m_StratagemCDInfoPrefab: {fileID: 1603791989543668, guid: ffd5f231ab48828419cefb02e63166ed,
+    type: 2}
+  m_WeaponInfoPrefab: {fileID: 1415893666371514, guid: fb7bb944028bacb4d9e2f59faa25c45a,
+    type: 2}
+  m_GrenadeInfoPrefab: {fileID: 1415328216055526, guid: e3fb3b5a8d1557543a94f66724eab8e1,
+    type: 2}
+  m_StratagemInfoPrefab: {fileID: 1603791989543668, guid: ffd5f231ab48828419cefb02e63166ed,
+    type: 2}
 --- !u!114 &114804876643497092
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224443227686349676}
   - component: {fileID: 222275719502020062}
   - component: {fileID: 114781287421597778}
-  - component: {fileID: 114112880311282086}
+  - component: {fileID: 114282057517849620}
   m_Layer: 5
   m_Name: UIPlayerTitle
   m_TagString: Untagged
@@ -134,21 +134,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Player Name
---- !u!114 &114112880311282086
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1038889989377864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bf98e3eafcbc2f41a333beaa0efc29d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PlayerName: {fileID: 114041823486416834}
-  m_PlayerRank: {fileID: 114126938248841074}
-  m_PlayerRankImg: {fileID: 114912092760002282}
-  m_PlayerDeathImg: {fileID: 114921645248445188}
 --- !u!114 &114116021814081518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -201,6 +186,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 25
+--- !u!114 &114282057517849620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1038889989377864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c6ec62d89b99944adda5d8b9fb855d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RankIcon: {fileID: 114912092760002282}
+  m_DeadIcon: {fileID: 114921645248445188}
+  m_RankText: {fileID: 114126938248841074}
+  m_NameText: {fileID: 114041823486416834}
 --- !u!114 &114357700897198758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -374,8 +374,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 224522211751418542}
   - {fileID: 224848699983007848}
+  - {fileID: 224522211751418542}
   - {fileID: 224631250834191874}
   - {fileID: 224608772287845902}
   m_Father: {fileID: 0}
@@ -397,7 +397,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224443227686349676}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -451,7 +451,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224443227686349676}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

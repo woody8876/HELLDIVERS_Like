@@ -89,6 +89,8 @@ public class GameMain : MonoBehaviour
         if (spawnPos == null) spawnPos = this.transform;
         player.Spawn(spawnPos.position);
 
+        UIPanelPlayerInfo.Instance.Init(player);
+
         // Camera start following player
         if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);
         else m_CameraFollowing.AddTarget(player.transform);
