@@ -59,12 +59,13 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     public void Throw()
     {
+        if (!m_bHolding) return;
+        m_iCounter--;
         m_Grenades.transform.position = m_ThrowPos.position;
         m_Grenades.transform.forward = m_ThrowPos.forward;
         m_Grenades.transform.localScale *= 5f;
         m_Grenades.GetComponent<Grenades>().Throw();
         m_bHolding = false;
-        GrenadeCounter--;
         if (OnCount != null) OnCount();
     }
     /// <summary>
@@ -130,10 +131,10 @@ public class GrenadesController : MonoBehaviour
     //Set grenades active
     private void LoadGrenade()
     {
+        m_bHolding = true;
         m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
         m_Grenades.transform.localScale *= 0.2f;
         m_Grenades.SetActive(true);
-        m_bHolding = true;
     }
     //Create new grenade whitch doesn't exist in dictionary
     private void CreateGrenades(int id, int count)
@@ -170,9 +171,9 @@ public class GrenadesController : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        SwitchGrenades();
-        if (Input.GetKey(KeyCode.K)) { Holding(); }
-        if (!Input.GetKey(KeyCode.K) && m_bHolding) { Throw(); }
+        //SwitchGrenades();
+        //if (Input.GetKey(KeyCode.K)) { Holding(); }
+        //if (!Input.GetKey(KeyCode.K) && m_bHolding) { Throw(); }
     }
     #endregion
 

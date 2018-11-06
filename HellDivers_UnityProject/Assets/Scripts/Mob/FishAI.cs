@@ -19,13 +19,13 @@ public class FishAI : Character
     private void OnEnable()
     {
         if (m_FSM == null) return;
-        m_FSM.PerformTransition(eFSMTransition.Go_Chase);
+        m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start()
     {
-        m_MaxHp = 450;
+        m_MaxHp = 300;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
@@ -73,7 +73,7 @@ public class FishAI : Character
         m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_GetHurtState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
-        m_DeadState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
+        m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
