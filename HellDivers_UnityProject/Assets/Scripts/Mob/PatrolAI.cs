@@ -17,18 +17,20 @@ public class PatrolAI : Character{
         m_CurrentHp = m_MaxHp;
     }
     protected override void Start() {
-        m_MaxHp = 1000;
+        m_MaxHp = 300;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
+        m_AIData.m_ID = 3002;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
 
+        #region FSMMap
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
         FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
@@ -45,16 +47,22 @@ public class PatrolAI : Character{
         m_CallArmyState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
         m_CallArmyState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
+        FSMPatrolGetHurtState m_GetHurtState = new FSMPatrolGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
+
+        m_GetHurtState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
         m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_PatrolGetHurt, m_GetHurtState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
         m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_WanderState);
+        m_FSM.AddState(m_GetHurtState);
         m_FSM.AddState(m_CallArmyState);
         m_FSM.AddState(m_FleeState);
         m_FSM.AddState(m_DeadState);
+        #endregion
     }
 
     // Update is called once per frame
@@ -66,27 +74,56 @@ public class PatrolAI : Character{
         }
 
         m_FSM.DoState();
-
-        if (m_bDead)
-        {
-            AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
-            if (info.IsName("Dead"))
-            {
-                if (info.normalizedTime > 0.9f)
-                {
-                    m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
-                    ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
-                    MobManager.m_PatrolCount--;
-                }
-            }
-        }
+        
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
+
+    public override bool TakeDamage(float dmg, Vector3 hitPoint)
+    {
+        if (IsDead) return false;
+
+        CurrentHp -= dmg;
+        if (m_CurrentHp <= 0)
+        {
+            Death();
+            return true;
+        }
+        else
+        {
+            PerformGetHurt();
+        }
+        return true;
+    }
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        return TakeDamage(damager.Damage, hitPoint);
+    }
+
+    public void PerformGetHurt()
+    {
+        if (IsDead) return;
+
+        AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
+        if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
+        {
+            return;
+        }
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_PatrolGetHurt);
+        return;
+    }
+    public void PerformDead()
+    {
+        m_MobAnimator.Animator.ResetTrigger("GetHurt");
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
+    }
+
     public override void Death()
     {
         m_bDead = true;
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
+        PerformDead();
     }
+
+
     private void OnDrawGizmos()
     {
         if (m_AIData == null || m_FSM == null)

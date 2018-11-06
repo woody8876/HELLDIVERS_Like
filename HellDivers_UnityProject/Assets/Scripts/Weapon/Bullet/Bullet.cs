@@ -11,9 +11,10 @@ public class Bullet : MonoBehaviour {
 
     [SerializeField] private eWeaponType m_Type;
     [SerializeField] private int m_ID;
-    
+    [SerializeField] private float m_fSpeed = 100;
+
     //Bullet's speed
-    private float m_fSpeed = 100;
+    private GameObject m_Target;
     private float m_fNextPosDis;
     private float m_fRange;
     private float m_fDamage;
@@ -21,7 +22,6 @@ public class Bullet : MonoBehaviour {
     //Renderer m_bullet;
     //========================================================================
     void Start () {
-        //m_bullet = this.gameObject.GetComponent<Renderer>();
         m_fRange = GameData.Instance.WeaponInfoTable[m_ID].Range;
         m_fDamage = GameData.Instance.WeaponInfoTable[m_ID].Damage;
         m_fNextPosDis = Time.fixedDeltaTime * m_fSpeed;
@@ -38,7 +38,6 @@ public class Bullet : MonoBehaviour {
         }
         else
         {
-            m_Time = 0;
             BulletDeath();
         }
     }
@@ -59,18 +58,38 @@ public class Bullet : MonoBehaviour {
         RaycastHit rh;
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Enemies")))
         {
+            GameObject go = rh.collider.gameObject;
             IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
-            target.TakeDamage(m_fDamage, rh.point);
-            BulletDeath();
+            if (m_Target != go)
+            {
+                target.TakeDamage(m_fDamage, rh.point);
+                m_Target = go;
+            }
+            if (m_ID != 1301)
+            {
+                PlayHitEffect(rh.normal ,rh.point, 10);
+                BulletDeath();
+            }
         }
-        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Terrain")))
+        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Obstcale")))
         {
+            PlayHitEffect(rh.normal ,rh.point, 20);
             BulletDeath();
         }
     }
 
+    private void PlayHitEffect(Vector3 face, Vector3 pos, int id)
+    {
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        go.transform.forward = face;
+        go.transform.position = pos;
+        go.SetActive(true);
+        go.GetComponent<EffectController>().EffectStart();
+    }
+
     private void BulletDeath()
     {
+        m_Time = 0;
         ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
 

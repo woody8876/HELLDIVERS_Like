@@ -12,9 +12,13 @@ public class FSMSystem
     private Dictionary<eFSMTransition, FSMState> m_GlobalMap;
     private eFSMStateID m_currentStateID;
     public eFSMStateID CurrentStateID { get { return m_currentStateID; } }
+    //private ePlayerFSMStateID m_CurrentGlobalStateID;
     private FSMState m_currentState;
+    //private PlayerFSMState m_CurrentGlobalState = null;
+    //private PlayerFSMState m_PreviousState;
     public FSMState CurrentState { get { return m_currentState; } }
     private AIData m_Data;
+
     public FSMSystem(AIData data)
     {
         m_Data = data;
@@ -26,7 +30,7 @@ public class FSMSystem
     {
         m_GlobalMap.Add(t, s);
     }
-
+    
     public void PerformGlobalTransition(eFSMTransition t)
     {
         if(m_GlobalMap.ContainsKey(t))
@@ -49,6 +53,7 @@ public class FSMSystem
         {
             m_states.Add(s);
             m_currentState = s;
+            m_currentState.DoBeforeEnter(m_Data);
             m_currentStateID = s.m_StateID;
             return;
         }

@@ -16,7 +16,8 @@ public class GrenadesController : MonoBehaviour
     #endregion Delegate of EventHolder
 
     #region Public properties
-    public int CurrentID { private set; get; }
+    public int CurrentID { get {return m_iCurrentID; } }
+    public Dictionary<int, int> ActiveGrenades { get { return m_dActiveGrenades; } }
     public int GrenadeCounter
     {
         get { return m_iCounter; }
@@ -35,10 +36,11 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     /// <param name="ids">Grenades' ID</param>
     /// <param name="t">Strat Position</param>
-    public void AddGrenades(List<int> ids, Transform t)
+    public void AddGrenades(List<int> ids, Transform startPos, Transform throwPos)
     {
         foreach (int id in ids) { Equipment(id); }
-        m_StarPos = t; 
+        m_StarPos = startPos;
+        m_ThrowPos = throwPos;
     }
     /// <summary>
     /// Hold grenade for enhance throwing force
@@ -48,6 +50,8 @@ public class GrenadesController : MonoBehaviour
     {
         if (GrenadeCounter <= 0) { return false; }
         if (!m_bHolding) { LoadGrenade(); }
+        m_Grenades.transform.position = m_StarPos.position;
+        m_Grenades.transform.forward = m_StarPos.forward;
         m_Grenades.GetComponent<Grenades>().m_Force += 7 * Time.fixedDeltaTime;
         return true;
     }
@@ -56,9 +60,13 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     public void Throw()
     {
+        if (!m_bHolding) return;
+        m_iCounter--;
+        m_Grenades.transform.position = m_ThrowPos.position;
+        m_Grenades.transform.forward = m_ThrowPos.forward;
+        m_Grenades.transform.localScale *= 5f;
         m_Grenades.GetComponent<Grenades>().Throw();
         m_bHolding = false;
-        GrenadeCounter--;
         if (OnCount != null) OnCount();
     }
     /// <summary>
@@ -67,7 +75,6 @@ public class GrenadesController : MonoBehaviour
     public void SwitchGrenades()
     {
         eSwitch? input = GetESwitch();
-        m_dActiveGrenades[CurrentID] = GrenadeCounter;
         switch (input)
         {
             case eSwitch.UP:
@@ -85,6 +92,7 @@ public class GrenadesController : MonoBehaviour
             default:
                 break;
         }
+        m_dActiveGrenades[CurrentID] = GrenadeCounter;
     }
     /// <summary>
     /// Add the count of grenades with id
@@ -116,7 +124,7 @@ public class GrenadesController : MonoBehaviour
     private void Equipment(int id, int count = 2)
     {
         if (m_dActiveGrenades.ContainsKey(id) == false) { CreateGrenades(id, count); }
-        CurrentID = id;
+        m_iCurrentID = id;
         GrenadeCounter = m_dActiveGrenades[id];
         if (OnCount != null) OnCount();
         if (OnChangeID != null) OnChangeID();
@@ -124,11 +132,10 @@ public class GrenadesController : MonoBehaviour
     //Set grenades active
     private void LoadGrenade()
     {
-        m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
-        m_Grenades.transform.position = m_StarPos.position;
-        m_Grenades.transform.forward = m_StarPos.forward;
-        m_Grenades.SetActive(true);
         m_bHolding = true;
+        m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
+        m_Grenades.transform.localScale *= 0.2f;
+        m_Grenades.SetActive(true);
     }
     //Create new grenade whitch doesn't exist in dictionary
     private void CreateGrenades(int id, int count)
@@ -157,28 +164,28 @@ public class GrenadesController : MonoBehaviour
     }
     #endregion
 
-    #region MonoBehaviors
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-        SwitchGrenades();
-        if (Input.GetKey(KeyCode.B)) { Holding(); }
-        if (!Input.GetKey(KeyCode.B) && m_bHolding) { Throw(); }
-    }
-    #endregion
-
     #region Private field
     private Dictionary<int, int> m_dActiveGrenades = new Dictionary<int, int>();
     private GameObject m_Grenades;
     private Transform m_StarPos;
+    private Transform m_ThrowPos;
     private bool m_bHolding;
+    [SerializeField]
+    private int m_iCurrentID;
     private int m_iCounter;
     private int m_MaxCount;
     private string m_InputVertical = "StratagemVertical";
     private string m_InputHorizontal = "StratagemHorizontal";
     #endregion
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AddGrenadesCount(4002, 2);
+            AddGrenadesCount(4003, 2);
+            AddGrenadesCount(4004, 2);
+            AddGrenadesCount(4005, 2);
+        }
+    }
 }

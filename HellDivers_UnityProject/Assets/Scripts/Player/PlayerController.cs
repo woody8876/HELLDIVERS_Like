@@ -22,11 +22,12 @@ public class PlayerController : MonoBehaviour
 
     public Player m_Player;
     public bool m_FinishAni = false;
-    public string m_MoveMode = "Origin";
+    public string m_MoveMode = "Stop";
     public Animator m_Animator;
     public PlayerAnimationsContorller m_PAC;
     public WeaponController m_WeaponController;
     public StratagemController m_StratagemController;
+    public GrenadesController m_GrenadesController;
     public PlayerFSMSystem m_PlayerFSM;
     public float m_fAnimatorTime;
     public bool bIsDead = false;
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
         m_Player = this.GetComponent<Player>();
         m_WeaponController = this.GetComponent<WeaponController>();
         m_StratagemController = this.GetComponent<StratagemController>();
+        m_GrenadesController = this.GetComponent<GrenadesController>();
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
         m_AimLine = this.GetComponent<AimLine>();
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
         PlayerFSMMeleeAttackState m_MeleeAttackState = new PlayerFSMMeleeAttackState();
         PlayerFSMStratagemState m_StratagemState = new PlayerFSMStratagemState();
         PlayerFSMThrowState m_ThrowState = new PlayerFSMThrowState();
+        PlayerFSMThrowBombState m_ThrowBombState = new PlayerFSMThrowBombState();
         PlayerFSMSwitchWeaponState m_SwitchWeaponState = new PlayerFSMSwitchWeaponState();
         PlayerFSMPickUpState m_PickUpState = new PlayerFSMPickUpState();
 
@@ -75,13 +78,16 @@ public class PlayerController : MonoBehaviour
 
         m_GunState.AddTransition(ePlayerFSMTrans.Go_MeleeAttack, m_MeleeAttackState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Reload, m_RelodaState);
+        m_GunState.AddTransition(ePlayerFSMTrans.Go_ThrowBomb, m_ThrowBombState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_Stratagem, m_StratagemState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_SwitchWeapon, m_SwitchWeaponState);
         m_GunState.AddTransition(ePlayerFSMTrans.Go_PickUp, m_PickUpState);
 
-        m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
-
         m_MeleeAttackState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_ThrowBombState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
+
+        m_RelodaState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
 
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Throw, m_ThrowState);
         m_StratagemState.AddTransition(ePlayerFSMTrans.Go_Gun, m_GunState);
@@ -107,6 +113,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerFSM.AddState(m_StartState);
         m_PlayerFSM.AddState(m_GunState);
         m_PlayerFSM.AddState(m_MeleeAttackState);
+        m_PlayerFSM.AddState(m_ThrowBombState);
         m_PlayerFSM.AddState(m_RelodaState);
         m_PlayerFSM.AddState(m_SwitchWeaponState);
         m_PlayerFSM.AddState(m_StratagemState);
@@ -140,15 +147,18 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Roll"))
         {
-            if (m_MoveMode.Equals("Dead")) return;
+            AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
+            if (m_PAC.Animator.IsInTransition(3) || info.IsName("Roll"))
+            {
+                return;
+            }
 
             PerformPlayerRoll();
+            return;
         }
         #endregion
-
         SelectMotionState();
         m_PlayerFSM.DoState();
-        CheckState();
     }
 
     #endregion MonoBehaviour
@@ -349,17 +359,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void CheckState()
-    {
-        if (!Input.GetButton("Stratagem"))
-        {
-            if(m_PlayerFSM.CurrentStateID == ePlayerFSMStateID.StratagemStateID)
-            {
-                m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
-            }
-        }
-    }
-
     #region Public Function
     public void PerformPlayerVictory()
     {
@@ -386,7 +385,7 @@ public class PlayerController : MonoBehaviour
     public bool PerformPlayerHurt()
     {
         AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(2);
-        if (info.IsName("GetGurt"))
+        if (m_PAC.Animator.IsInTransition(2) || info.IsName("GetGurt"))
         {
             return false;
         }

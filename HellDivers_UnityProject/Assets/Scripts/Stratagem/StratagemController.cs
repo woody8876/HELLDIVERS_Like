@@ -47,7 +47,15 @@ public class StratagemController : MonoBehaviour
     /// Represent of the throw out force scale.
     /// [Range( 0 , MaxScaleForce )]
     /// </summary>
-    public float ScaleThrowForce { get { return m_ScaleForce; } }
+    public float ScaleThrowForce
+    {
+        get { return m_ScaleForce; }
+        private set
+        {
+            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            else m_ScaleForce = value;
+        }
+    }
 
     #endregion Properties
 
@@ -102,9 +110,35 @@ public class StratagemController : MonoBehaviour
             if (m_Stratagems[i].Info.ID == id) return false;
         }
 
-        string name = string.Format("Stratagem{0}", id);
-        GameObject stratagemGo = new GameObject(name);
-        Stratagem stratagem = stratagemGo.AddComponent<Stratagem>();
+        Stratagem stratagem;
+        GameObject stratagemGo;
+
+        //if (ObjectPool.m_Instance != null)
+        //{
+        //    stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+
+        //    if (stratagemGo != null)
+        //    {
+        //        stratagem = stratagemGo.GetComponent<Stratagem>();
+        //    }
+        //    else
+        //    {
+        //        string name = string.Format("Stratagem{0}", id);
+        //        stratagemGo = new GameObject(name);
+        //        stratagem = stratagemGo.AddComponent<Stratagem>();
+        //        ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
+        //        DestroyImmediate(stratagemGo.gameObject);
+
+        //        stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        //        stratagem = stratagemGo.GetComponent<Stratagem>();
+        //    }
+        //}
+        //else
+        {
+            string name = string.Format("Stratagem{0}", id);
+            stratagemGo = new GameObject(name);
+            stratagem = stratagemGo.AddComponent<Stratagem>();
+        }
 
         m_ReadyPos = readyPos;
         m_LaunchPos = launchPos;
@@ -243,7 +277,7 @@ public class StratagemController : MonoBehaviour
         if (IsReady == false) return;
 
         StopAllCoroutines();
-        Vector3 force = m_ThrowForce * m_ScaleForce;
+        Vector3 force = m_ThrowForce * ScaleThrowForce;
         m_CurrentStratagem.Throw(force);
         m_CurrentStratagem = null;
     }
@@ -271,13 +305,12 @@ public class StratagemController : MonoBehaviour
 
     private IEnumerator ThorwForceAddOn()
     {
-        m_ScaleForce = 0;
+        ScaleThrowForce = 0;
 
-        while (m_ScaleForce < m_MaxScaleForce)
+        while (ScaleThrowForce < m_MaxScaleForce)
         {
             yield return new WaitForSeconds(Time.deltaTime);
-            m_ScaleForce += Time.deltaTime;
-            if (m_ScaleForce > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            ScaleThrowForce += Time.deltaTime * 0.1f;
         }
 
         yield break;
