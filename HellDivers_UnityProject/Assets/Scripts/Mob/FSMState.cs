@@ -615,6 +615,7 @@ public class FSMFleeState : FSMState
     public override void DoBeforeEnter(AIData data)
     {
         data.navMeshAgent.enabled = true;
+        data.navMeshAgent.speed *= 2f;
         data.m_AnimationController.SetAnimator(m_StateID, true);
 
         GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
@@ -626,6 +627,7 @@ public class FSMFleeState : FSMState
 
     public override void DoBeforeLeave(AIData data)
     {
+        data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
         ObjectPool.m_Instance.UnLoadObjectToPool(3100 , GO);

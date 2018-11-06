@@ -9,18 +9,22 @@ public class PatrolAI : Character{
     public PlayerController m_PlayerController;
     FSMSystem m_FSM;
     private MobAnimationsController m_MobAnimator;
+    private BoxCollider m_BoxCollider;
 
     // Use this for initialization
     private void OnEnable()
     {
+        if (m_FSM == null) return;
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
+        m_BoxCollider.enabled = true;
     }
     protected override void Start() {
         m_MaxHp = 300;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
+        m_BoxCollider = this.GetComponent<BoxCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_ID = 3002;
@@ -78,27 +82,6 @@ public class PatrolAI : Character{
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
-    public override bool TakeDamage(float dmg, Vector3 hitPoint)
-    {
-        if (IsDead) return false;
-
-        CurrentHp -= dmg;
-        if (m_CurrentHp <= 0)
-        {
-            Death();
-            return true;
-        }
-        else
-        {
-            PerformGetHurt();
-        }
-        return true;
-    }
-    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
-    {
-        return TakeDamage(damager.Damage, hitPoint);
-    }
-
     public void PerformGetHurt()
     {
         if (IsDead) return;
@@ -117,12 +100,33 @@ public class PatrolAI : Character{
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
+    public override bool TakeDamage(float dmg, Vector3 hitPoint)
+    {
+        if (IsDead) return false;
+
+        CurrentHp -= dmg;
+        if (m_CurrentHp <= 0)
+        {
+            m_BoxCollider.enabled = false;
+            Death();
+            return true;
+        }
+        else
+        {
+            PerformGetHurt();
+        }
+        return true;
+    }
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        return TakeDamage(damager.Damage, hitPoint);
+    }
+
     public override void Death()
     {
         m_bDead = true;
         PerformDead();
     }
-
 
     private void OnDrawGizmos()
     {
