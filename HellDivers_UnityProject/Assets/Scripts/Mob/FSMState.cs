@@ -9,12 +9,16 @@ public enum eFSMTransition
     Go_MoveTo,
     Go_Chase,
     Go_Attack,
+    GO_PatrolAttack,
     Go_FishGetHurt,
     Go_PatrolGetHurt,
     GO_WanderIdle,
+    GO_NoPlayerWanderIdle,
     GO_Wander,
+    GO_NoPlayerWander,
     Go_CallArmy,
     GO_Flee,
+    GO_Dodge,
     Go_Dead,
 }
 public enum eFSMStateID
@@ -24,12 +28,16 @@ public enum eFSMStateID
     MoveToStateID,
     ChaseStateID,
     AttackStateID,
+    PatrolAttackStateID,
     FishGetHurtStateID,
     PatrolGetHurtID,
     WanderIdleStateID,
+    NoPlayerWanderIdleStateID,
     WanderStateID,
-    CallArmyState,
+    NoPlayerWanderStateID,
+    CallArmyStateID,
     FleeStateID,
+    DodgeStateID,
     DeadStateID,
 }
 
@@ -140,9 +148,14 @@ public class FSMIdleState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
+        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
+        }
         if (data.m_bIsPlayerDead)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWanderIdle);
         }
     }
 }
@@ -333,6 +346,103 @@ public class FSMAttackState : FSMState
     }
 }
 
+public class FSMPatrolAttackState : FSMState
+{
+    private int AttackCount = 0;
+    private int Count = 0;
+    Vector3 vDir;
+    public FSMPatrolAttackState()
+    {
+        m_StateID = eFSMStateID.PatrolAttackStateID;
+    }
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        AttackCount = 0;
+        Count = 0;
+        m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
+        data.navMeshAgent.enabled = false;
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+
+    }
+
+
+    public override void Do(AIData data)
+    {
+        data.navMeshAgent.enabled = true;
+
+        data.m_vTarget = data.m_PlayerGO.transform.position;
+        vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+
+        if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && Count < 1)
+        {
+            float fRight = Vector3.Dot(vDir.normalized, data.m_Go.transform.right);
+            if (fRight >= 0)
+            {
+                data.m_Go.transform.Rotate(new Vector3(0, 10, 0), Space.Self);
+            }
+            else if (fRight < 0)
+            {
+                data.m_Go.transform.Rotate(new Vector3(0, -10, 0), Space.Self);
+            }
+        }
+        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && Count < 1)
+        {
+            data.m_AnimationController.SetAnimator(m_StateID);
+            Count++;
+        }
+
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 10, true) + SteeringBehaviours.GroupBehavior(data, 10, false)) * 2f * Time.deltaTime;
+        data.m_Go.transform.position += v;
+
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Attack"))
+        {
+            if (info.normalizedTime > 0.27f && AttackCount < 1)
+            {
+                DoDamage(data);
+                AttackCount++;
+            }
+        }
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("Attack"))
+        {
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
+            }
+            return;
+        }
+        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+        {
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+            }
+        }
+        if (data.m_bIsPlayerDead)
+        {
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWanderIdle);
+            }
+        }
+    }
+
+    private void DoDamage(AIData data)
+    {
+        IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
+        target.TakeDamage(10.0f, data.m_Go.transform.position);
+    }
+}
+
 public class FSMFishGetHurtState : FSMState
 {
     public FSMFishGetHurtState()
@@ -411,6 +521,16 @@ public class FSMPatrolGetHurtState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
+                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    return;
+                }
+                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
+                {
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
+                    return;
+                }
                 data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
             }
         }
@@ -505,14 +625,16 @@ public class FSMWanderIdleState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
         }
-        //FishAI
+
         if (data.m_bIsPlayerDead == false)
         {
             AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
             if (info.IsName("WanderIdle"))
             {
                 if (info.normalizedTime > m_AnimatorLeaveTime)
+                {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                }
             }
         }
     }
@@ -557,23 +679,133 @@ public class FSMWanderState : FSMState
     }
 }
 
+public class FSMNoPlayerWanderIdleState : FSMState
+{
+    private float m_fIdleTime;
+    public FSMNoPlayerWanderIdleState()
+    {
+        m_StateID = eFSMStateID.NoPlayerWanderIdleStateID;
+    }
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
+        data.navMeshAgent.enabled = false;
+        data.m_vTarget = new Vector3(0, 0, 0);
+        m_fCurrentTime = 0.0f;
+        m_fIdleTime = Random.Range(1.0f, 3.0f);
+        data.m_AnimationController.SetAnimator(m_StateID, true);
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+        data.m_AnimationController.SetAnimator(m_StateID, false);
+    }
+
+    public override void Do(AIData data)
+    {
+        m_fCurrentTime += Time.deltaTime;
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+
+        if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWander);
+        }
+
+        if (data.m_bIsPlayerDead == false)
+        {
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("WanderIdle2"))
+            {
+                if (info.normalizedTime > m_AnimatorLeaveTime)
+                {
+                    if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                    {
+                        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    }
+                    else
+                    {
+                        data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+public class FSMNoPlayerWanderState : FSMState
+{
+    public FSMNoPlayerWanderState()
+    {
+        m_StateID = eFSMStateID.NoPlayerWanderStateID;
+    }
+    public override void DoBeforeEnter(AIData data)
+    {
+        data.navMeshAgent.enabled = true;
+        data.m_AnimationController.SetAnimator(m_StateID, true);
+    }
+    public override void DoBeforeLeave(AIData data)
+    {
+        data.m_AnimationController.SetAnimator(m_StateID, false);
+    }
+    public override void Do(AIData data)
+    {
+        data.m_vTarget.y = data.m_Go.transform.position.y;
+        SteeringBehaviours.NavMove(data);
+    }
+    public override void CheckCondition(AIData data)
+    {
+        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+
+        if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWanderIdle);
+        }
+
+        if (data.m_bIsPlayerDead == false)
+        {
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("WanderIdle2"))
+            {
+                if (info.normalizedTime > m_AnimatorLeaveTime)
+                {
+                    if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                    {
+                        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    }
+                    else
+                    {
+                        data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
+                    }
+                }
+            }
+        }
+    }
+}
+
 public class FSMCallArmyState : FSMState
 {
     public FSMCallArmyState()
     {
-        m_StateID = eFSMStateID.CallArmyState;
+        m_StateID = eFSMStateID.CallArmyStateID;
     }
 
 
     public override void DoBeforeEnter(AIData data)
     {
-        MobManager.m_Instance.SpawnFish(5);
+        //MobManager.m_Instance.SpawnFish(3);
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-
+        data.m_FSMSystem.DeleteState(eFSMStateID.FleeStateID);
+        data.m_FSMSystem.DeleteState(eFSMStateID.CallArmyStateID);
     }
 
     public override void Do(AIData data)
@@ -592,10 +824,10 @@ public class FSMCallArmyState : FSMState
             {
                 if (Dist < data.m_fPatrolVisionLength)
                 {
-                    data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
                     return;
                 }
-                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
             }
         }
     }
@@ -653,6 +885,48 @@ public class FSMFleeState : FSMState
         if (Dist > data.m_fPatrolVisionLength * 1.5f)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
+        }
+    }
+}
+
+public class FSMDodgeState : FSMState
+{
+    Animator m_Animator;
+    Vector3 vec;
+    GameObject GO;
+    public FSMDodgeState()
+    {
+        m_StateID = eFSMStateID.DodgeStateID;
+    }
+
+    public override void DoBeforeEnter(AIData data)
+    {
+        data.navMeshAgent.enabled = true;
+        data.navMeshAgent.speed *= 2f;
+        data.m_AnimationController.SetAnimator(m_StateID, true);
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+        data.navMeshAgent.speed *= 0.5f;
+        data.m_AnimationController.SetAnimator(m_StateID, false);
+
+    }
+
+    public override void Do(AIData data)
+    {
+        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_PlayerGO.transform.position).normalized;
+        data.m_vTarget.y = data.m_Go.transform.position.y;
+        SteeringBehaviours.NavMove(data);
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+
+        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
         }
     }
 }
