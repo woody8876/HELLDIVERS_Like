@@ -126,6 +126,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
             case ePlayerFSMStateID.StratagemStateID:
                 m_Animator.SetTrigger("ThrowStandby");
                 break;
+            case ePlayerFSMStateID.ThrowBombStateID:
+                m_Animator.SetTrigger("BombReady");
+                break;
             case ePlayerFSMStateID.DeadStateID:
                 m_Animator.SetTrigger("Death");
                 m_Animator.SetTrigger("Reset");
@@ -157,6 +160,9 @@ public class PlayerAnimationsContorller : MonoBehaviour
                 break;
             case ePlayerFSMStateID.ThrowStateID:
                 m_Animator.SetBool("ThrowOut", Bool);
+                break;
+            case ePlayerFSMStateID.ThrowBombStateID:
+                m_Animator.SetBool("ThrowBomb", Bool);
                 break;
         }
     }
