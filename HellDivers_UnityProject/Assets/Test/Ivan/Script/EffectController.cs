@@ -10,6 +10,15 @@ public class EffectController : MonoBehaviour {
     float m_fTime;
     bool m_bFinish;
 
+    private void EffectStart()
+    {
+        m_Animator.SetTrigger("start");
+    }
+    private bool CheckState()
+    {
+        if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("end")) return true;
+        else return false;
+    }
 
     private void UnLoadObject()
     {
@@ -17,12 +26,13 @@ public class EffectController : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         m_Animator = GetComponent<Animator>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+    
+    // Update is called once per frame
+    void Update () {
+        if (CheckState()) { m_bFinish = true; }
 		if (m_bFinish)
         {
             m_bFinish = false;

@@ -94,20 +94,25 @@ public class Weapon : IWeaponBehaviour
     {
         string m_sWeapon = "Bullet_" + weaponInfo.Title;
         string m_sEffect = "Effect_" + weaponInfo.Title;
+        Object HitEffect;
         Object weapon;
         GameObject effect;
+
         if (ResourceManager.m_Instance != null)
         {
+            HitEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitMob", false);
             weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
             effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
         }
         else
         {
             Debug.LogWarning("No ResourceManager.");
+            HitEffect = Resources.Load("WeaponStorage/" + "HitMob");
             weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
             effect = Resources.Load("WeaponStorage/" + m_sEffect) as GameObject;
         }
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
+        ObjectPool.m_Instance.InitGameObjects(HitEffect, activeAmmo, 10);
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID); 
         return effect;
     }

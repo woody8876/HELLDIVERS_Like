@@ -38,7 +38,6 @@ public class Bullet : MonoBehaviour {
         }
         else
         {
-            m_Time = 0;
             BulletDeath();
         }
     }
@@ -61,6 +60,7 @@ public class Bullet : MonoBehaviour {
         {
             IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
             target.TakeDamage(m_fDamage, rh.point);
+            PlayHitEffect(rh.point);
             BulletDeath();
         }
         else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Terrain")))
@@ -69,8 +69,16 @@ public class Bullet : MonoBehaviour {
         }
     }
 
+    private void PlayHitEffect(Vector3 pos)
+    {
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(10);
+        go.transform.position = pos;
+        go.SetActive(true);
+    }
+
     private void BulletDeath()
     {
+        m_Time = 0;
         ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
 
