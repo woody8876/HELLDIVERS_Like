@@ -25,8 +25,8 @@ public class Grenades : MonoBehaviour {
         {
             m_gEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(m_ID + 100);
             m_gEffect.SetActive(true);
-            m_vForward = transform.forward;
         }
+        m_vForward = transform.forward;
         m_bGround = false;
     }
 

@@ -16,7 +16,7 @@ public class GrenadesController : MonoBehaviour
     #endregion Delegate of EventHolder
 
     #region Public properties
-    public int CurrentID { private set; get; }
+    public int CurrentID { get {return m_iCurrentID; } }
     public int GrenadeCounter
     {
         get { return m_iCounter; }
@@ -74,7 +74,6 @@ public class GrenadesController : MonoBehaviour
     public void SwitchGrenades()
     {
         eSwitch? input = GetESwitch();
-        m_dActiveGrenades[CurrentID] = GrenadeCounter;
         switch (input)
         {
             case eSwitch.UP:
@@ -92,6 +91,7 @@ public class GrenadesController : MonoBehaviour
             default:
                 break;
         }
+        m_dActiveGrenades[CurrentID] = GrenadeCounter;
     }
     /// <summary>
     /// Add the count of grenades with id
@@ -123,7 +123,7 @@ public class GrenadesController : MonoBehaviour
     private void Equipment(int id, int count = 2)
     {
         if (m_dActiveGrenades.ContainsKey(id) == false) { CreateGrenades(id, count); }
-        CurrentID = id;
+        m_iCurrentID = id;
         GrenadeCounter = m_dActiveGrenades[id];
         if (OnCount != null) OnCount();
         if (OnChangeID != null) OnChangeID();
@@ -163,29 +163,28 @@ public class GrenadesController : MonoBehaviour
     }
     #endregion
 
-    #region MonoBehaviors
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-        //SwitchGrenades();
-        //if (Input.GetKey(KeyCode.K)) { Holding(); }
-        //if (!Input.GetKey(KeyCode.K) && m_bHolding) { Throw(); }
-    }
-    #endregion
-
     #region Private field
     private Dictionary<int, int> m_dActiveGrenades = new Dictionary<int, int>();
     private GameObject m_Grenades;
     private Transform m_StarPos;
     private Transform m_ThrowPos;
     private bool m_bHolding;
+    [SerializeField]
+    private int m_iCurrentID;
     private int m_iCounter;
     private int m_MaxCount;
     private string m_InputVertical = "StratagemVertical";
     private string m_InputHorizontal = "StratagemHorizontal";
     #endregion
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AddGrenadesCount(4002, 2);
+            AddGrenadesCount(4003, 2);
+            AddGrenadesCount(4004, 2);
+            AddGrenadesCount(4005, 2);
+        }
+    }
 }
