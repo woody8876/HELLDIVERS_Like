@@ -35,10 +35,11 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     /// <param name="ids">Grenades' ID</param>
     /// <param name="t">Strat Position</param>
-    public void AddGrenades(List<int> ids, Transform t)
+    public void AddGrenades(List<int> ids, Transform startPos, Transform throwPos)
     {
         foreach (int id in ids) { Equipment(id); }
-        m_StarPos = t; 
+        m_StarPos = startPos;
+        m_ThrowPos = throwPos;
     }
     /// <summary>
     /// Hold grenade for enhance throwing force
@@ -48,6 +49,8 @@ public class GrenadesController : MonoBehaviour
     {
         if (GrenadeCounter <= 0) { return false; }
         if (!m_bHolding) { LoadGrenade(); }
+        m_Grenades.transform.position = m_StarPos.position;
+        m_Grenades.transform.forward = m_StarPos.forward;
         m_Grenades.GetComponent<Grenades>().m_Force += 7 * Time.fixedDeltaTime;
         return true;
     }
@@ -56,6 +59,9 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     public void Throw()
     {
+        m_Grenades.transform.position = m_ThrowPos.position;
+        m_Grenades.transform.forward = m_ThrowPos.forward;
+        m_Grenades.transform.localScale *= 5f;
         m_Grenades.GetComponent<Grenades>().Throw();
         m_bHolding = false;
         GrenadeCounter--;
@@ -125,8 +131,7 @@ public class GrenadesController : MonoBehaviour
     private void LoadGrenade()
     {
         m_Grenades = ObjectPool.m_Instance.LoadGameObjectFromPool(CurrentID);
-        m_Grenades.transform.position = m_StarPos.position;
-        m_Grenades.transform.forward = m_StarPos.forward;
+        m_Grenades.transform.localScale *= 0.2f;
         m_Grenades.SetActive(true);
         m_bHolding = true;
     }
@@ -166,8 +171,8 @@ public class GrenadesController : MonoBehaviour
     private void FixedUpdate()
     {
         SwitchGrenades();
-        if (Input.GetKey(KeyCode.B)) { Holding(); }
-        if (!Input.GetKey(KeyCode.B) && m_bHolding) { Throw(); }
+        if (Input.GetKey(KeyCode.K)) { Holding(); }
+        if (!Input.GetKey(KeyCode.K) && m_bHolding) { Throw(); }
     }
     #endregion
 
@@ -175,6 +180,7 @@ public class GrenadesController : MonoBehaviour
     private Dictionary<int, int> m_dActiveGrenades = new Dictionary<int, int>();
     private GameObject m_Grenades;
     private Transform m_StarPos;
+    private Transform m_ThrowPos;
     private bool m_bHolding;
     private int m_iCounter;
     private int m_MaxCount;

@@ -36,7 +36,7 @@ public class Bullet_Ray : MonoBehaviour {
             m_animator.SetTrigger("startTrigger");
             m_bTrigger = true;
         }
-        if (!Input.GetButton("Fire1"))
+        if (!Input.GetButton("Fire1") && Input.GetAxis("Fire1")==0)
         {
             m_animator.SetTrigger("endTrigger");
             m_bActive = m_bTrigger = false;
