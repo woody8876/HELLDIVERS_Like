@@ -113,27 +113,27 @@ public class StratagemController : MonoBehaviour
         Stratagem stratagem;
         GameObject stratagemGo;
 
-        if (ObjectPool.m_Instance != null)
-        {
-            stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        //if (ObjectPool.m_Instance != null)
+        //{
+        //    stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
 
-            if (stratagemGo != null)
-            {
-                stratagem = stratagemGo.GetComponent<Stratagem>();
-            }
-            else
-            {
-                string name = string.Format("Stratagem{0}", id);
-                stratagemGo = new GameObject(name);
-                stratagem = stratagemGo.AddComponent<Stratagem>();
-                ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
-                DestroyImmediate(stratagemGo.gameObject);
+        //    if (stratagemGo != null)
+        //    {
+        //        stratagem = stratagemGo.GetComponent<Stratagem>();
+        //    }
+        //    else
+        //    {
+        //        string name = string.Format("Stratagem{0}", id);
+        //        stratagemGo = new GameObject(name);
+        //        stratagem = stratagemGo.AddComponent<Stratagem>();
+        //        ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
+        //        DestroyImmediate(stratagemGo.gameObject);
 
-                stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-                stratagem = stratagemGo.GetComponent<Stratagem>();
-            }
-        }
-        else
+        //        stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        //        stratagem = stratagemGo.GetComponent<Stratagem>();
+        //    }
+        //}
+        //else
         {
             string name = string.Format("Stratagem{0}", id);
             stratagemGo = new GameObject(name);

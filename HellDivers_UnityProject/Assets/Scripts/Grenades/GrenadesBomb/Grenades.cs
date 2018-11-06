@@ -25,8 +25,8 @@ public class Grenades : MonoBehaviour {
         {
             m_gEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(m_ID + 100);
             m_gEffect.SetActive(true);
-            m_vForward = transform.forward;
         }
+        m_vForward = transform.forward;
         m_bGround = false;
     }
 
@@ -60,7 +60,7 @@ public class Grenades : MonoBehaviour {
             m_fTime = m_fForce = 0;
             
             m_gEffect.transform.position = rh.point - .3f * Vector3.up ;
-            DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
+            //DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
             m_bCounting = true;
             return true;
         }

@@ -11,6 +11,7 @@ public enum ePlayerFSMTrans
     Go_Reload,
     Go_Stratagem,
     Go_Throw,
+    Go_ThrowBomb,
     Go_SwitchWeapon,
     Go_PickUp,
     Go_Victory,
@@ -28,6 +29,7 @@ public enum ePlayerFSMStateID
     ReloadStateID,
     StratagemStateID,
     ThrowStateID,
+    ThrowBombStateID,
     SwitchWeaponID,
     PickUpID,
     VictoryID,
@@ -129,6 +131,7 @@ public class PlayerFSMStartState : PlayerFSMState
 public class PlayerFSMGunState : PlayerFSMState
 {
     private bool shoot;
+    private int count = 0;
 
     public PlayerFSMGunState()
     {
@@ -137,6 +140,7 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        count = 0;
     }
 
     public override void DoBeforeLeave(PlayerController data)
@@ -148,12 +152,13 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            if (Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))
+            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && count < 1 )
             {
                 if (data.m_WeaponController.ShootState())
                 {
                     data.m_PAC.SetAnimator(m_StateID);
                     shoot = true;
+                    count++;
                 }
                 else shoot = false;
             }
@@ -161,7 +166,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0)
+            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1"))/* && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0*/)
             {
                 if (data.m_WeaponController.ShootState())
                 {
@@ -175,6 +180,7 @@ public class PlayerFSMGunState : PlayerFSMState
                 shoot = false;
             }
         }
+        if ((Input.GetAxis("Fire1") == 0 && !Input.GetButton("Fire1"))) count = 0;
     }
 
     public override void CheckCondition(PlayerController data)
@@ -186,6 +192,10 @@ public class PlayerFSMGunState : PlayerFSMState
                 data.m_PAC.SetAnimator(m_StateID, false);
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Reload);
             }
+        }
+        else if (Input.GetAxis("Granade") > 0 || Input.GetKey(KeyCode.E))
+        {
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_ThrowBomb);
         }
         else if (Input.GetButton("Stratagem") && shoot == false)
         {
@@ -351,16 +361,15 @@ public class PlayerFSMThrowState : PlayerFSMState
         if (Input.GetAxis("Fire1") < 0 && count < 1)
         {
             bThrow = true;
+            //Start Timer...
             data.m_StratagemController.PrepareThrow();
             count++;
-            //Start Timer...
         }
 
         if ((Input.GetAxis("Fire1") == 0 && bThrow) || Input.GetButton("Fire1"))
         {
             data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);
-            //Get Force...
         }
 
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
@@ -378,6 +387,58 @@ public class PlayerFSMThrowState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
+            if (info.normalizedTime > 0.9f)
+            {
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+            }
+        }
+    }
+}
+
+public class PlayerFSMThrowBombState : PlayerFSMState
+{
+    bool bThrow = true;
+    public PlayerFSMThrowBombState()
+    {
+        m_StateID = ePlayerFSMStateID.ThrowBombStateID;
+    }
+
+    public override void DoBeforeEnter(PlayerController data)
+    {
+
+        bThrow = true;
+        data.m_MoveMode = "Throw";
+        data.m_PAC.SetAnimator(m_StateID);
+        data.m_PAC.SetAnimator(m_StateID, false);
+    }
+
+    public override void DoBeforeLeave(PlayerController data)
+    {
+
+    }
+
+    public override void Do(PlayerController data)
+    {
+        if(bThrow == true) data.m_GrenadesController.Holding();
+            
+
+        if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
+        {
+            data.m_MoveMode = "Throwing";
+            data.m_PAC.SetAnimator(m_StateID, true);
+        }
+    }
+
+    public override void CheckCondition(PlayerController data)
+    {
+        AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
+        if (info.IsName("ThrowOut"))
+        {
+            if (info.normalizedTime > 0.4f && bThrow)
+            {
+                data.m_GrenadesController.Throw();
+                bThrow = false;
+            }
             if (info.normalizedTime > 0.9f)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
