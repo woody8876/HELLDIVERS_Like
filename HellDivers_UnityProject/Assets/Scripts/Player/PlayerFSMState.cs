@@ -219,6 +219,10 @@ public class PlayerFSMGunState : PlayerFSMState
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_MeleeAttack);
         }
+        else if(Input.GetAxis("StratagemVertical") != 0 || Input.GetAxis("StratagemHorizontal") != 0)
+        {
+            data.m_GrenadesController.SwitchGrenades();
+        }
     }
 }
 
