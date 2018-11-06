@@ -11,10 +11,10 @@ public class Bullet : MonoBehaviour {
 
     [SerializeField] private eWeaponType m_Type;
     [SerializeField] private int m_ID;
+    [SerializeField] private float m_fSpeed = 100;
 
     //Bullet's speed
     private GameObject m_Target;
-    private float m_fSpeed = 100;
     private float m_fNextPosDis;
     private float m_fRange;
     private float m_fDamage;

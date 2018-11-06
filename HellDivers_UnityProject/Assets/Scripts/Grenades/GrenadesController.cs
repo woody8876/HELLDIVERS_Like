@@ -17,6 +17,7 @@ public class GrenadesController : MonoBehaviour
 
     #region Public properties
     public int CurrentID { get {return m_iCurrentID; } }
+    public Dictionary<int, int> ActiveGrenades { get { return m_dActiveGrenades; } }
     public int GrenadeCounter
     {
         get { return m_iCounter; }
