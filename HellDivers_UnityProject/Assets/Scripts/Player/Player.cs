@@ -23,6 +23,11 @@ public class Player : Character
     public StratagemController StratagemController { get { return m_StratagemController; } }
 
     /// <summary>
+    /// Player grenade behavior controller.
+    /// </summary>
+    public GrenadesController GrenadesController { get { return m_GrenadesController; } }
+
+    /// <summary>
     /// Current player infos.
     /// </summary>
     public PlayerInfo Info { get { return m_Data; } }

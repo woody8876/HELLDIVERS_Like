@@ -24,6 +24,7 @@ namespace HELLDIVERS.UI.InGame
         private List<UIStratagemCDInfo> m_UIStratgemCDInfos = new List<UIStratagemCDInfo>();
         private List<UIWeaoponInfo> m_UIWeaponInfos = new List<UIWeaoponInfo>();
         private List<UIStratagemInfo> m_UIStratagemInfos = new List<UIStratagemInfo>();
+        private List<UIGrenadeInfo> m_UIGrenadeInfos = new List<UIGrenadeInfo>();
 
         private void Awake()
         {
@@ -64,6 +65,16 @@ namespace HELLDIVERS.UI.InGame
                     UIWeaoponInfo weaoponInfo = Instantiate(m_WeaponInfoPrefab, m_Panel_Weapon).GetComponent<UIWeaoponInfo>();
                     weaoponInfo.Init(CurrentPlayer, weapon.Value.weaponInfo);
                     m_UIWeaponInfos.Add(weaoponInfo);
+                }
+            }
+
+            if (m_GrenadeInfoPrefab != null)
+            {
+                foreach (KeyValuePair<int, int> grenade in CurrentPlayer.GrenadesController.ActiveGrenades)
+                {
+                    UIGrenadeInfo grenadeInfo = Instantiate(m_GrenadeInfoPrefab, m_Panel_Grenade).GetComponent<UIGrenadeInfo>();
+                    grenadeInfo.Init(CurrentPlayer, grenade.Key);
+                    m_UIGrenadeInfos.Add(grenadeInfo);
                 }
             }
         }
