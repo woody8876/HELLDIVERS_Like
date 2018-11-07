@@ -3,35 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPanelPlayerInfo : MonoBehaviour
+namespace HELLDIVERS.UI.InGame
 {
-    public static UIPanelPlayerInfo Instance { get { return m_Instance; } }
-    private static UIPanelPlayerInfo m_Instance;
-
-    private List<Player> m_Players;
-    [SerializeField] private UIPlayerInfoElement m_UIPlayerInfoElement;
-
-    public void Init(Player player)
+    public class UIPanelPlayerInfo : MonoBehaviour
     {
-        m_UIPlayerInfoElement = Instantiate(m_UIPlayerInfoElement, this.transform).GetComponent<UIPlayerInfoElement>();
-        m_UIPlayerInfoElement.Init(player);
-    }
+        public static UIPanelPlayerInfo Instance { get { return m_Instance; } }
+        private static UIPanelPlayerInfo m_Instance;
 
-    private void Awake()
-    {
-        if (m_Instance == null) m_Instance = this;
-        else Destroy(this.gameObject);
+        private List<Player> m_Players;
+        [SerializeField] private UIPlayerInfoElement m_UIPlayerInfoElement;
 
-        m_Players = new List<Player>();
-    }
+        public void Init(Player player)
+        {
+            m_UIPlayerInfoElement = Instantiate(m_UIPlayerInfoElement, this.transform).GetComponent<UIPlayerInfoElement>();
+            m_UIPlayerInfoElement.Init(player);
+        }
 
-    // Use this for initialization
-    private void Start()
-    {
-    }
+        private void Awake()
+        {
+            if (m_Instance == null) m_Instance = this;
+            else Destroy(this.gameObject);
 
-    // Update is called once per frame
-    private void Update()
-    {
+            m_Players = new List<Player>();
+        }
+
+        // Use this for initialization
+        private void Start()
+        {
+        }
+
+        // Update is called once per frame
+        private void Update()
+        {
+        }
     }
 }
