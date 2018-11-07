@@ -239,7 +239,11 @@ public class FSMChaseState : FSMState
 
         if (bAttack)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("Move"))
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
+            }
         }
 
         if (data.m_bIsPlayerDead)
@@ -348,8 +352,16 @@ public class FSMAttackState : FSMState
 
 public class FSMPatrolAttackState : FSMState
 {
-    private int AttackCount = 0;
-    private int Count = 0;
+    int Count = 0;
+    int AttackCount = 0;
+    bool bIsReady = false;
+    bool bFire = false;
+    bool bCompleteFire = false;
+    float FireCoolDownTime = 0.0f;
+    int bulletIndex = 0;
+    List<float> Degree = new List<float>();
+    GameObject[] GO = new GameObject[3];
+    float[] fireDegree = new float[3];
     Vector3 vDir;
     public FSMPatrolAttackState()
     {
@@ -358,22 +370,62 @@ public class FSMPatrolAttackState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        AttackCount = 0;
         Count = 0;
+        AttackCount = 0;
+        m_fCurrentTime = 0;
+        bIsReady = false;
+        bFire = false;
         m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-
+        m_fCurrentTime = 0;
+        bulletIndex = 0;
+        bIsReady = false;
+        bCompleteFire = false;
+        data.m_MobAimLine.CloseAimLine();
     }
-
-
     public override void Do(AIData data)
     {
-        data.navMeshAgent.enabled = true;
-
+        if (bIsReady)
+        {
+            m_fCurrentTime += Time.deltaTime;
+            if (m_fCurrentTime >= 1.0f)
+            {
+                data.m_AnimationController.SetAnimator(m_StateID);
+                Count++;
+                m_fCurrentTime = 0;
+            }
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("Attack"))
+            {
+                if (info.normalizedTime > 0.27f && AttackCount < 1)
+                {
+                    Fire(data);
+                    data.m_MobAimLine.CloseAimLine();
+                    AttackCount++;
+                    bIsReady = false;
+                }
+            }
+            return;
+        }
+        if (bFire)
+        {
+            if (bulletIndex == 3)
+            {
+                bFire = false;
+                bCompleteFire = true;
+            }
+            FireCoolDownTime += Time.deltaTime;
+            if(FireCoolDownTime > 0.2f)
+            {
+                GO[bulletIndex].SetActive(true);
+                bulletIndex++;
+                FireCoolDownTime = 0.0f;
+            }
+        }
         data.m_vTarget = data.m_PlayerGO.transform.position;
         vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
 
@@ -382,30 +434,17 @@ public class FSMPatrolAttackState : FSMState
             float fRight = Vector3.Dot(vDir.normalized, data.m_Go.transform.right);
             if (fRight >= 0)
             {
-                data.m_Go.transform.Rotate(new Vector3(0, 10, 0), Space.Self);
+                data.m_Go.transform.Rotate(new Vector3(0, 5, 0), Space.Self);
             }
             else if (fRight < 0)
             {
-                data.m_Go.transform.Rotate(new Vector3(0, -10, 0), Space.Self);
+                data.m_Go.transform.Rotate(new Vector3(0, -5, 0), Space.Self);
             }
         }
-        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && Count < 1)
+        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 5f && Count < 1)
         {
-            data.m_AnimationController.SetAnimator(m_StateID);
-            Count++;
-        }
-
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 10, true) + SteeringBehaviours.GroupBehavior(data, 10, false)) * 2f * Time.deltaTime;
-        data.m_Go.transform.position += v;
-
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Attack"))
-        {
-            if (info.normalizedTime > 0.27f && AttackCount < 1)
-            {
-                DoDamage(data);
-                AttackCount++;
-            }
+            data.m_MobAimLine.OpenAimLine();
+            bIsReady = true;
         }
     }
 
@@ -414,18 +453,11 @@ public class FSMPatrolAttackState : FSMState
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
+            if (info.normalizedTime > m_AnimatorLeaveTime && bCompleteFire)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
             return;
-        }
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-            }
         }
         if (data.m_bIsPlayerDead)
         {
@@ -436,10 +468,40 @@ public class FSMPatrolAttackState : FSMState
         }
     }
 
-    private void DoDamage(AIData data)
+    private void Fire(AIData data)
     {
-        IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
-        target.TakeDamage(10.0f, data.m_Go.transform.position);
+        Degree.Add(-20);
+        Degree.Add(0);
+        Degree.Add(20);
+        for (int i = 0; i < 3; i++)
+        {
+            if (i == 0)
+            {
+                int random = Random.Range(0, 3);
+                fireDegree[i] = Degree[random];
+                Degree.RemoveAt(random);
+            }
+            if (i == 1)
+            {
+                int random = Random.Range(0, 2);
+                fireDegree[i] = Degree[random];
+                Degree.RemoveAt(random);
+            }
+            if (i == 2)
+            {
+                int random = Random.Range(0, 1);
+                fireDegree[i] = Degree[random];
+                Degree.RemoveAt(random);
+            }
+        }
+        for (int i = 0 ; i < 3 ; i++)
+        {
+            GO[i] = ObjectPool.m_Instance.LoadGameObjectFromPool(3201);
+            GO[i].transform.position = data.m_Go.transform.position + Vector3.up;
+            GO[i].transform.forward = data.m_Go.transform.forward;
+            GO[i].transform.Rotate(new Vector3(0, fireDegree[i], 0));
+        }
+       bFire = true;
     }
 }
 
@@ -521,7 +583,7 @@ public class FSMPatrolGetHurtState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude >= data.m_fPatrolVisionLength)
                 {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
                     return;
@@ -539,9 +601,6 @@ public class FSMPatrolGetHurtState : FSMState
 
 public class FSMDeadState : FSMState
 {
-    Animator m_Animator;
-    GameObject GO;
-
     public FSMDeadState()
     {
         m_StateID = eFSMStateID.DeadStateID;
@@ -572,13 +631,13 @@ public class FSMDeadState : FSMState
             if (info.normalizedTime > 0.9f)
             {
                 ObjectPool.m_Instance.UnLoadObjectToPool(data.m_ID, data.m_Go);
-                if(data.m_ID == 3001)
+                if(data.m_ID == 3100)
                 {
-                    MobManager.m_FishCount--;
+                    MobManager.m_Instance.DecreaseFishCount();
                 }
-                else if (data.m_ID == 3002)
+                else if (data.m_ID == 3200)
                 {
-                    MobManager.m_PatrolCount--;
+                    MobManager.m_Instance.DecreasePatrolCount();
                 }
             }
         }
@@ -790,6 +849,7 @@ public class FSMNoPlayerWanderState : FSMState
 
 public class FSMCallArmyState : FSMState
 {
+    int count = 0;
     public FSMCallArmyState()
     {
         m_StateID = eFSMStateID.CallArmyStateID;
@@ -798,19 +858,26 @@ public class FSMCallArmyState : FSMState
 
     public override void DoBeforeEnter(AIData data)
     {
-        //MobManager.m_Instance.SpawnFish(3);
+        count = 0;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
     public override void DoBeforeLeave(AIData data)
     {
-        data.m_FSMSystem.DeleteState(eFSMStateID.FleeStateID);
-        data.m_FSMSystem.DeleteState(eFSMStateID.CallArmyStateID);
+        
     }
 
     public override void Do(AIData data)
     {
-
+        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (info.IsName("CallArmy") && count < 1)
+        {
+            if (info.normalizedTime > 0.5f)
+            {
+                MobManager.m_Instance.SpawnFish(3, data);
+                count++;
+            }
+        }
     }
 
     public override void CheckCondition(AIData data)
@@ -850,7 +917,7 @@ public class FSMFleeState : FSMState
         data.navMeshAgent.speed *= 2f;
         data.m_AnimationController.SetAnimator(m_StateID, true);
 
-        GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+        GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3210);
         GO.SetActive(true);
         data.m_GOEffectWarning = GO;
         m_Animator = GO.GetComponent<Animator>();
@@ -862,7 +929,7 @@ public class FSMFleeState : FSMState
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
-        ObjectPool.m_Instance.UnLoadObjectToPool(3100 , GO);
+        ObjectPool.m_Instance.UnLoadObjectToPool(3210 , GO);
 
     }
 

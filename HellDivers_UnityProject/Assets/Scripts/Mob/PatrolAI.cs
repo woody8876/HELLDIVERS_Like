@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PatrolAI : Character{
+public class PatrolAI : Character
+{
 
     public AIData m_AIData;
     public PlayerController m_PlayerController;
     FSMSystem m_FSM;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
+    private MobAimLine m_MobAimLine;
 
     // Use this for initialization
     private void OnEnable()
@@ -19,21 +21,24 @@ public class PatrolAI : Character{
         m_CurrentHp = m_MaxHp;
         m_BoxCollider.enabled = true;
     }
-    protected override void Start() {
+    protected override void Start()
+    {
         m_MaxHp = 300;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_BoxCollider = this.GetComponent<BoxCollider>();
+        m_MobAimLine = this.GetComponent<MobAimLine>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID = 3002;
+        m_AIData.m_ID = 3200;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
         m_AIData.m_fAttackRange = 15;
+        m_AIData.m_MobAimLine = m_MobAimLine;
 
         #region FSMMap
 
@@ -50,22 +55,19 @@ public class PatrolAI : Character{
         m_WanderState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
 
         m_FleeState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
-
-        //m_CallArmyState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
-        //m_CallArmyState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
         #endregion
 
         #region Phase2
         FSMChaseState m_Chasestate = new FSMChaseState();
         FSMPatrolAttackState m_PatrolAttackstate = new FSMPatrolAttackState();
         FSMIdleState m_IdleState = new FSMIdleState();
-        FSMDodgeState m_DodgeState= new FSMDodgeState();
+        FSMDodgeState m_DodgeState = new FSMDodgeState();
         FSMNoPlayerWanderIdleState m_FSMNoPlayerWanderIdleState = new FSMNoPlayerWanderIdleState();
         FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
 
         m_CallArmyState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_CallArmyState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
-        
+
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_PatrolAttackstate);
         m_Chasestate.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
 
@@ -94,6 +96,8 @@ public class PatrolAI : Character{
         FSMDeadState m_DeadState = new FSMDeadState();
 
         m_GetHurtState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
+        m_GetHurtState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
         m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_PatrolGetHurt, m_GetHurtState);
@@ -115,7 +119,8 @@ public class PatrolAI : Character{
     }
 
     // Update is called once per frame
-    void Update(){
+    void Update()
+    {
         if (m_AIData.m_PlayerGO == null)
         {
             m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
@@ -128,9 +133,8 @@ public class PatrolAI : Character{
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
         }
-
         m_FSM.DoState();
-        
+
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 

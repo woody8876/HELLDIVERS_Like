@@ -34,7 +34,7 @@ public class FishAI : Character
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID= 3001;
+        m_AIData.m_ID= 3100;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
@@ -82,6 +82,7 @@ public class FishAI : Character
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
         m_FSM.AddState(m_WanderIdleState);
+        m_FSM.AddState(m_IdleState);
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_GetHurtState);

@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class FSMSystem
 {
-
-
     private List<FSMState> m_states;
     private Dictionary<eFSMTransition, FSMState> m_GlobalMap;
     private eFSMStateID m_currentStateID;
@@ -30,7 +28,6 @@ public class FSMSystem
     {
         m_GlobalMap.Add(t, s);
     }
-    
     public void PerformGlobalTransition(eFSMTransition t)
     {
         if(m_GlobalMap.ContainsKey(t))
