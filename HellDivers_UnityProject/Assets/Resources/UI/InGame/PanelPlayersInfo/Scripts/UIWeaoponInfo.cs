@@ -24,12 +24,57 @@ namespace HELLDIVERS.UI.InGame
             m_IconBG.sprite = UIHelper.LoadSprite(UIHelper.WeaponIconFolder, fileName);
             m_IconFill.sprite = m_IconBG.sprite;
 
+            DoSwithStartUI();
+            SubscribePlayerEvent();
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribePlayerEvent();
+        }
+
+        private void SubscribePlayerEvent()
+        {
+            CurrentPlayer.WeaponController.OnSwitch += DoSwithStartUI;
+            CurrentPlayer.WeaponController.OnFire += RefreshInfo;
+            CurrentPlayer.WeaponController.OnReloadEnd += RefreshInfo;
+            CurrentPlayer.WeaponController.OnPickMags += RefreshInfo;
+        }
+
+        private void UnsubscribePlayerEvent()
+        {
+            CurrentPlayer.WeaponController.OnSwitch -= DoSwithStartUI;
+            CurrentPlayer.WeaponController.OnFire -= RefreshInfo;
+            CurrentPlayer.WeaponController.OnReloadEnd -= RefreshInfo;
+            CurrentPlayer.WeaponController.OnPickMags -= RefreshInfo;
+        }
+
+        private void DoSwithStartUI()
+        {
+            if (CurrentPlayer.WeaponController._CurrentWeapon == CurrentWeapon.ID)
+            {
+                StartUI();
+            }
+            else
+            {
+                StopUI();
+            }
+        }
+
+        private void StartUI()
+        {
+            this.gameObject.SetActive(true);
             RefreshInfo();
+        }
+
+        private void StopUI()
+        {
+            this.gameObject.SetActive(false);
         }
 
         private void RefreshInfo()
         {
-            m_IconFill.fillAmount = CurrentWeapon.Ammo / CurrentWeapon.Capacity;
+            m_AmmoFill.fillAmount = CurrentWeapon.Ammo / CurrentWeapon.Capacity;
             m_Mags.text = string.Format("x{0}", CurrentWeapon.Mags);
         }
     }
