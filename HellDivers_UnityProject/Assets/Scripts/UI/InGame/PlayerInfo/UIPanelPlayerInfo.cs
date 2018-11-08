@@ -10,12 +10,13 @@ namespace HELLDIVERS.UI.InGame
         public static UIPanelPlayerInfo Instance { get { return m_Instance; } }
         private static UIPanelPlayerInfo m_Instance;
 
-        private List<Player> m_Players;
         private GameObject m_UIPlayerInfoElementPrefab;
         private Dictionary<Player, UIPlayerInfoElement> m_PlayerInfoUIMap;
 
         public void AddPlayer(Player player)
         {
+            if (m_PlayerInfoUIMap.ContainsKey(player)) return;
+
             UIPlayerInfoElement uiPlayerInfoElement = Instantiate(m_UIPlayerInfoElementPrefab, this.transform).GetComponent<UIPlayerInfoElement>();
             uiPlayerInfoElement.Init(player);
 
@@ -36,7 +37,6 @@ namespace HELLDIVERS.UI.InGame
             else Destroy(this.gameObject);
             m_UIPlayerInfoElementPrefab = ResourceManager.m_Instance.LoadData(typeof(GameObject), "UI/InGame/PanelPlayersInfo", "PlayerInfoElement") as GameObject;
             m_PlayerInfoUIMap = new Dictionary<Player, UIPlayerInfoElement>();
-            m_Players = new List<Player>();
         }
     }
 }

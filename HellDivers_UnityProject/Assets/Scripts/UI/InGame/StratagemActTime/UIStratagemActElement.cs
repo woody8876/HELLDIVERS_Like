@@ -30,16 +30,16 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentStratagem.OnStartActivation += RefreshUI;
+            CurrentStratagem.OnStartActivation += StartUI;
             CurrentStratagem.OnActivation += RefreshUI;
-            CurrentStratagem.OnEndActivation += RefreshUI;
+            CurrentStratagem.OnEndActivation += StopUI;
         }
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentStratagem.OnStartActivation -= RefreshUI;
+            CurrentStratagem.OnStartActivation -= StartUI;
             CurrentStratagem.OnActivation -= RefreshUI;
-            CurrentStratagem.OnEndActivation -= RefreshUI;
+            CurrentStratagem.OnEndActivation -= StopUI;
         }
 
         private void RefreshUI()
@@ -50,14 +50,16 @@ namespace HELLDIVERS.UI.InGame
             m_Time.text = string.Format("{0}:{1}:{2}", minutes, seconds, minisec);
         }
 
-        // Use this for initialization
-        private void Start()
+        private void StartUI()
         {
+            this.gameObject.SetActive(true);
+            this.transform.SetAsLastSibling();
+            RefreshUI();
         }
 
-        // Update is called once per frame
-        private void Update()
+        private void StopUI()
         {
+            this.gameObject.SetActive(false);
         }
     }
 }
