@@ -108,7 +108,16 @@ public class GrenadesController : MonoBehaviour
             if (OnCount != null) OnCount();
         }
     }
+
+    public void ResetGrenades()
+    {
+        List<int> pList = new List<int>();
+        foreach(var i in m_dActiveGrenades) { pList.Add(i.Key); }
+        for (int i = 0; i < pList.Count; i++) { AddGrenadesCount(pList[i], 2); }
+    }
     #endregion
+
+
 
     #region Private method
     //Get switch code 
@@ -182,10 +191,7 @@ public class GrenadesController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            AddGrenadesCount(4002, 2);
-            AddGrenadesCount(4003, 2);
-            AddGrenadesCount(4004, 2);
-            AddGrenadesCount(4005, 2);
+            ResetGrenades();        
         }
     }
 }

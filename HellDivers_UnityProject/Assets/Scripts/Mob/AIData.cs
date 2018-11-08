@@ -32,6 +32,7 @@ public class AIData
     public FSMSystem m_FSMSystem;
 
     public MobAnimationsController m_AnimationController;
+    public MobAimLine m_MobAimLine;
     public GameObject m_GOEffectWarning;
     
 

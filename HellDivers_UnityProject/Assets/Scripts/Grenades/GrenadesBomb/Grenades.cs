@@ -13,7 +13,7 @@ public class Grenades : MonoBehaviour {
     {
         set
         {
-            if (m_fForce > 15) m_fForce = 15;
+            if (m_fForce > 8) m_fForce = 8;
             else m_fForce = value;
         }
         get { return m_fForce; }
@@ -104,7 +104,7 @@ public class Grenades : MonoBehaviour {
     #endregion
 
     #region Private Field
-    protected float m_fForce = 5;
+    protected float m_fForce = 2;
     protected float m_fGravity = -9.8f;
     protected float m_fTime;
     protected float m_fDamageTime;
