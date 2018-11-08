@@ -152,7 +152,7 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && count < 1 )
+            if ((Input.GetAxis("Fire1") < 0 || Input.GetButton("Fire1")) && count < 1)
             {
                 if (data.m_WeaponController.ShootState())
                 {
@@ -162,7 +162,11 @@ public class PlayerFSMGunState : PlayerFSMState
                 }
                 else shoot = false;
             }
-            else shoot = false;
+            else
+            {
+                shoot = false;
+                data.m_WeaponController.m_fSpreadIncrease = 0;
+            }
         }
         else
         {
@@ -218,6 +222,10 @@ public class PlayerFSMGunState : PlayerFSMState
         else if (Input.GetButtonDown("MeleeAttack"))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_MeleeAttack);
+        }
+        else if(Input.GetAxis("StratagemVertical") != 0 || Input.GetAxis("StratagemHorizontal") != 0)
+        {
+            data.m_GrenadesController.SwitchGrenades();
         }
     }
 }
@@ -398,6 +406,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 public class PlayerFSMThrowBombState : PlayerFSMState
 {
     bool bThrow = true;
+    bool bHolding = false;
     public PlayerFSMThrowBombState()
     {
         m_StateID = ePlayerFSMStateID.ThrowBombStateID;
@@ -405,8 +414,8 @@ public class PlayerFSMThrowBombState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
-
         bThrow = true;
+        bHolding = false;
         data.m_MoveMode = "Throw";
         data.m_PAC.SetAnimator(m_StateID);
         data.m_PAC.SetAnimator(m_StateID, false);
@@ -419,8 +428,15 @@ public class PlayerFSMThrowBombState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if(bThrow == true) data.m_GrenadesController.Holding();
-            
+        if (bThrow == true)
+        {
+            bHolding = data.m_GrenadesController.Holding();
+            if (bHolding == false)
+            {
+                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+                return;
+            }
+        }
 
         if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
         {
