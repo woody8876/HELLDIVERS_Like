@@ -497,6 +497,7 @@ public class FSMPatrolAttackState : FSMState
         for (int i = 0 ; i < 3 ; i++)
         {
             GO[i] = ObjectPool.m_Instance.LoadGameObjectFromPool(3201);
+            if (GO[i] == null) continue;
             GO[i].transform.position = data.m_Go.transform.position + Vector3.up;
             GO[i].transform.forward = data.m_Go.transform.forward;
             GO[i].transform.Rotate(new Vector3(0, fireDegree[i], 0));
