@@ -17,6 +17,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private Image m_ImgArrow;
         [SerializeField] private Color m_BrightColor;
         [SerializeField] private Color m_DarkColor;
+        private Animator m_Animator;
         private List<Image> m_ArrowsMap = new List<Image>();
 
         public void Init(Player player, Stratagem stratagem)
@@ -65,6 +66,11 @@ namespace HELLDIVERS.UI.InGame
             m_ImgArrow.gameObject.SetActive(false);
         }
 
+        private void Awake()
+        {
+            m_Animator = this.GetComponent<Animator>();
+        }
+
         private void OnDestroy()
         {
             UnsubscribePlayerEvent();
@@ -76,6 +82,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.StratagemController.OnCheckingCode += DoCheckCodes;
             CurrentPlayer.StratagemController.OnGetReady += DoReady;
             CurrentPlayer.StratagemController.OnStopCheckingCode += StopUI;
+            CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnThrow += StopUI;
         }
 
@@ -85,6 +92,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.StratagemController.OnCheckingCode -= DoCheckCodes;
             CurrentPlayer.StratagemController.OnGetReady -= DoReady;
             CurrentPlayer.StratagemController.OnStopCheckingCode -= StopUI;
+            CurrentPlayer.OnStartDeathNotify -= StopUI;
             CurrentStratagem.OnThrow -= StopUI;
         }
 
@@ -96,6 +104,7 @@ namespace HELLDIVERS.UI.InGame
             m_ImgIcon.color = m_BrightColor;
             RefershUses();
             DoCheckCodes();
+            m_Animator.SetTrigger("Open");
         }
 
         private void StopUI()
