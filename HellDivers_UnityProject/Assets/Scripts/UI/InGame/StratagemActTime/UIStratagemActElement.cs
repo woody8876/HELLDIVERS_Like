@@ -21,6 +21,10 @@ namespace HELLDIVERS.UI.InGame
             m_Icon.sprite = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
         }
 
+        private void RefreshUI()
+        {
+        }
+
         // Use this for initialization
         private void Start()
         {

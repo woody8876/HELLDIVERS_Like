@@ -22,6 +22,14 @@ namespace HELLDIVERS.UI.InGame
             m_PlayerInfoUIMap.Add(player, uiPlayerInfoElement);
         }
 
+        public void RemovePlayer(Player player)
+        {
+            if (m_PlayerInfoUIMap.ContainsKey(player) == false) return;
+
+            Destroy(m_PlayerInfoUIMap[player].gameObject);
+            m_PlayerInfoUIMap.Remove(player);
+        }
+
         private void Awake()
         {
             if (m_Instance == null) m_Instance = this;
