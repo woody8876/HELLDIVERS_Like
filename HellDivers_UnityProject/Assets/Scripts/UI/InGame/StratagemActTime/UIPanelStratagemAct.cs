@@ -20,7 +20,7 @@ namespace HELLDIVERS.UI.InGame
             for (int i = 0; i < player.StratagemController.Stratagems.Count; i++)
             {
                 UIStratagemActElement actElement = Instantiate(m_StratagemActElement, this.transform).GetComponent<UIStratagemActElement>();
-                actElement.Init(player.StratagemController.Stratagems[i]);
+                actElement.Init(player, player.StratagemController.Stratagems[i]);
                 actElement.gameObject.SetActive(false);
                 pList.Add(actElement);
             }

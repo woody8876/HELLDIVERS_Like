@@ -13,8 +13,9 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private Image m_Icon;
         [SerializeField] private Text m_Time;
 
-        public void Init(Stratagem stratagem)
+        public void Init(Player player, Stratagem stratagem)
         {
+            CurrentPlayer = player;
             CurrentStratagem = stratagem;
 
             string fileName = string.Format("icon_{0}", stratagem.Info.ID);
@@ -30,6 +31,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
+            CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnStartActivation += StartUI;
             CurrentStratagem.OnActivation += RefreshUI;
             CurrentStratagem.OnEndActivation += StopUI;
@@ -37,6 +39,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void UnsubscribePlayerEvent()
         {
+            CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnStartActivation -= StartUI;
             CurrentStratagem.OnActivation -= RefreshUI;
             CurrentStratagem.OnEndActivation -= StopUI;
