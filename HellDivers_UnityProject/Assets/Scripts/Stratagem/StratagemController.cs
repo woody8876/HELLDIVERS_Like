@@ -83,8 +83,6 @@ public class StratagemController : MonoBehaviour
     private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
-    private Transform m_ReadyPos;
-    private Transform m_LaunchPos;
 
     // A container use to checking codes.
     private List<Stratagem> m_Open = new List<Stratagem>();
@@ -142,8 +140,6 @@ public class StratagemController : MonoBehaviour
             stratagem = stratagemGo.AddComponent<Stratagem>();
         }
 
-        m_ReadyPos = readyPos;
-        m_LaunchPos = launchPos;
         stratagemGo.SetActive(true);
         stratagem.SetStratagemInfo(id, readyPos, launchPos);
         m_Stratagems.Add(stratagem);
