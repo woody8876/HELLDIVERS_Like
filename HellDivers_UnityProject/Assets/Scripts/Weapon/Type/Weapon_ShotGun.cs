@@ -11,7 +11,7 @@ public class Weapon_ShotGun : Weapon
 {
     protected override int activeAmmo { get { return base.activeAmmo * 10; } }
     public override GameObject WeaponLoader() { return base.WeaponLoader(); }
-
+    
     public override void Shot(Transform t, float fSpreadperShot)
     {
         for (int i = 0; i < 10; i++)
@@ -21,10 +21,11 @@ public class Weapon_ShotGun : Weapon
             {
                 go.transform.position = t.position;
                 go.transform.forward = t.forward;
-                go.transform.Rotate(
-                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
-                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
-                    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread));
+                //go.transform.Rotate(
+                //    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
+                //    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread), 
+                //    Random.Range(-weaponInfo.Min_Spread, weaponInfo.Min_Spread));
+                go.transform.Rotate(0, -weaponInfo.Min_Spread + i*3, 0);
                 go.SetActive(true);
                 weaponInfo.Ammo--;
             }
