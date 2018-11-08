@@ -12,6 +12,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private Image m_SerialIcon;
         [SerializeField] private Text m_NameText;
         [SerializeField] private Image m_Fill;
+        [SerializeField] private Vector2 m_Position;
 
         public void Init(Player player)
         {
@@ -19,6 +20,11 @@ namespace HELLDIVERS.UI.InGame
             m_NameText.text = CurrentPlayer.Info.Username;
 
             SubscribePlayerEvent();
+        }
+
+        private void Update()
+        {
+            if (CurrentPlayer != null) FollowPlayer();
         }
 
         private void OnDestroy()
@@ -44,6 +50,14 @@ namespace HELLDIVERS.UI.InGame
         {
             this.gameObject.SetActive(!CurrentPlayer.IsDead);
             m_Fill.fillAmount = CurrentPlayer.CurrentHpPercent;
+        }
+
+        private void FollowPlayer()
+        {
+            Vector3 pos = Camera.main.WorldToScreenPoint(CurrentPlayer.transform.position);
+            pos.x += m_Position.x;
+            pos.y += m_Position.y;
+            this.transform.position = pos;
         }
     }
 }
