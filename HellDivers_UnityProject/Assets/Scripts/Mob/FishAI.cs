@@ -11,6 +11,7 @@ public class FishAI : Character
     public AIData m_AIData;
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
+    private CapsuleCollider m_CapsuleCollider;
     // Use this for initialization
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class FishAI : Character
         m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
+        m_CapsuleCollider.enabled = true;
     }
     protected override void Start()
     {
@@ -29,9 +31,10 @@ public class FishAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
+        m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID= 3001;
+        m_AIData.m_ID= 3100;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
@@ -79,6 +82,7 @@ public class FishAI : Character
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
         m_FSM.AddState(m_WanderIdleState);
+        m_FSM.AddState(m_IdleState);
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_GetHurtState);
@@ -124,12 +128,6 @@ public class FishAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
-    public override void Death()
-    {
-        m_bDead = true;
-        PerformDead();
-    }
-
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
@@ -137,6 +135,7 @@ public class FishAI : Character
         CurrentHp -= dmg;
         if (m_CurrentHp <= 0)
         {
+            m_CapsuleCollider.enabled = false;
             Death();
             return true;
         }
@@ -149,6 +148,12 @@ public class FishAI : Character
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
         return TakeDamage(damager.Damage, hitPoint);
+    }
+
+    public override void Death()
+    {
+        m_bDead = true;
+        PerformDead();
     }
 
     private void OnDrawGizmos()

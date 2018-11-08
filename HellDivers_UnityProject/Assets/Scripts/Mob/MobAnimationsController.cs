@@ -42,7 +42,10 @@ public class MobAnimationsController : MonoBehaviour {
             case eFSMStateID.AttackStateID:
                 m_Animator.SetTrigger("Attack");
                 break;
-            case eFSMStateID.CallArmyState:
+            case eFSMStateID.PatrolAttackStateID:
+                m_Animator.SetTrigger("Attack");
+                break;
+            case eFSMStateID.CallArmyStateID:
                 m_Animator.SetTrigger("CallArmy");
                 break;
             case eFSMStateID.FishGetHurtStateID:
@@ -63,6 +66,7 @@ public class MobAnimationsController : MonoBehaviour {
         {
             case eFSMStateID.ChaseStateID:
                 m_Animator.SetBool("Chase", Bool);
+                m_Animator.SetBool("Move", Bool);
                 break;
             case eFSMStateID.IdleStateID:
                 m_Animator.SetBool("Idle", Bool);
@@ -73,8 +77,17 @@ public class MobAnimationsController : MonoBehaviour {
             case eFSMStateID.WanderIdleStateID:
                 m_Animator.SetBool("WanderIdle", Bool);
                 break;
+            case eFSMStateID.NoPlayerWanderStateID:
+                m_Animator.SetBool("Wander", Bool);
+                break;
+            case eFSMStateID.NoPlayerWanderIdleStateID:
+                m_Animator.SetBool("WanderIdle", Bool);
+                break;
             case eFSMStateID.FleeStateID:
                 m_Animator.SetBool("Flee", Bool);
+                break;
+            case eFSMStateID.DodgeStateID:
+                m_Animator.SetBool("Move", Bool);
                 break;
         }
     }
