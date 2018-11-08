@@ -11,12 +11,15 @@ namespace HELLDIVERS.UI.InGame
         private static UIPanelPlayerInfo m_Instance;
 
         private List<Player> m_Players;
-        [SerializeField] private UIPlayerInfoElement m_UIPlayerInfoElement;
+        private GameObject m_UIPlayerInfoElementPrefab;
+        private Dictionary<Player, UIPlayerInfoElement> m_PlayerInfoUIMap;
 
-        public void Init(Player player)
+        public void AddPlayer(Player player)
         {
-            m_UIPlayerInfoElement = Instantiate(m_UIPlayerInfoElement, this.transform).GetComponent<UIPlayerInfoElement>();
-            m_UIPlayerInfoElement.Init(player);
+            UIPlayerInfoElement uiPlayerInfoElement = Instantiate(m_UIPlayerInfoElementPrefab, this.transform).GetComponent<UIPlayerInfoElement>();
+            uiPlayerInfoElement.Init(player);
+
+            m_PlayerInfoUIMap.Add(player, uiPlayerInfoElement);
         }
 
         private void Awake()
@@ -24,6 +27,8 @@ namespace HELLDIVERS.UI.InGame
             if (m_Instance == null) m_Instance = this;
             else Destroy(this.gameObject);
 
+            m_UIPlayerInfoElementPrefab = ResourceManager.m_Instance.LoadData(typeof(GameObject), "UI/InGame/PanelPlayersInfo", "PlayerInfoElement") as GameObject;
+            m_PlayerInfoUIMap = new Dictionary<Player, UIPlayerInfoElement>();
             m_Players = new List<Player>();
         }
 

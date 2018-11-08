@@ -71,6 +71,8 @@ public class StratagemController : MonoBehaviour
 
     public event EventHolder OnGetReady;
 
+    public event EventHolder OnThrow;
+
     #endregion Event
 
     #region Private Variable
@@ -280,6 +282,8 @@ public class StratagemController : MonoBehaviour
         Vector3 force = m_ThrowForce * ScaleThrowForce;
         m_CurrentStratagem.Throw(force);
         m_CurrentStratagem = null;
+
+        if (OnThrow != null) OnThrow();
     }
 
     /// <summary>
