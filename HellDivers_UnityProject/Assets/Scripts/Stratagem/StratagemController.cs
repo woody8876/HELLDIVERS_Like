@@ -314,7 +314,7 @@ public class StratagemController : MonoBehaviour
         while (ScaleThrowForce < m_MaxScaleForce)
         {
             yield return new WaitForSeconds(Time.deltaTime);
-            ScaleThrowForce += Time.deltaTime * 0.1f;
+            ScaleThrowForce += Time.deltaTime * 0.5f;
         }
 
         yield break;
