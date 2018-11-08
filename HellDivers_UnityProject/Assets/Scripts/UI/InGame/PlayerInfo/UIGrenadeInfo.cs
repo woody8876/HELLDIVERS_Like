@@ -23,7 +23,7 @@ namespace HELLDIVERS.UI.InGame
             m_Ammo = CurrentPlayer.GrenadesController.ActiveGrenades[CurrentGrenadeID];
 
             string fileName = string.Format("icon_{0}", grenadeID);
-            m_Icon.sprite = UIHelper.LoadSprite(UIHelper.GrenadeIconFolder, fileName);
+            m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.GrenadeIconFolder, fileName);
             m_Icon.gameObject.SetActive(false);
 
             for (int i = 0; i < m_Ammo; i++)

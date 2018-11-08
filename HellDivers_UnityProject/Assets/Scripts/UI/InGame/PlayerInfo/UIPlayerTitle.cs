@@ -21,7 +21,7 @@ namespace HELLDIVERS.UI.InGame
             if (rank > 40) rank = 40;
             else if (rank < 0) rank = 0;
             string fileName = string.Format("icon_rank_{0}", rank.ToString("00"));
-            Sprite loadedSprite = UIHelper.LoadSprite(UIHelper.RankIconFolder, fileName);
+            Sprite loadedSprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
             if (loadedSprite != null) m_RankIcon.sprite = loadedSprite;
 
             RefershInfo();
