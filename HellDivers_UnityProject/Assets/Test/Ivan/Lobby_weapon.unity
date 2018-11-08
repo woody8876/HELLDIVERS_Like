@@ -113,6 +113,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &172056611 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114450528079748336, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+    type: 2}
+  m_PrefabInternal: {fileID: 1506111755}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+--- !u!114 &389059070 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114615247695601262, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+    type: 2}
+  m_PrefabInternal: {fileID: 1506111755}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &448540502
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,6 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfadf019ea19724c93c42f36ccc6627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ID: 1501
+  m_WeaponName: {fileID: 172056611}
+  m_WeaponTexture: {fileID: 389059070}
 --- !u!1 &659291421
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,6 +355,7 @@ GameObject:
   - component: {fileID: 922781024}
   - component: {fileID: 922781023}
   - component: {fileID: 922781022}
+  - component: {fileID: 922781026}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -410,6 +426,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &922781026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 922781021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1345aa17059a543ab19c8772832813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1161264730
 GameObject:
   m_ObjectHideFlags: 0
