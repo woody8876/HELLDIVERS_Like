@@ -53,6 +53,8 @@ public class Player : Character
 
     public event PlayerEventHolder OnStartDeathNotify;
 
+    public event PlayerEventHolder OnDamaged;
+
     #endregion Event
 
     #region Initializer
@@ -153,7 +155,12 @@ public class Player : Character
         bool bHurt = m_Controller.PerformPlayerHurt();
         if (bHurt == false) return false;
 
-        return base.TakeDamage(dmg, hitPoint);
+        if (base.TakeDamage(dmg, hitPoint))
+        {
+            if (OnDamaged != null) OnDamaged();
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

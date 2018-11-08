@@ -26,20 +26,9 @@ namespace HELLDIVERS.UI.InGame
         {
             if (m_Instance == null) m_Instance = this;
             else Destroy(this.gameObject);
-
             m_UIPlayerInfoElementPrefab = ResourceManager.m_Instance.LoadData(typeof(GameObject), "UI/InGame/PanelPlayersInfo", "PlayerInfoElement") as GameObject;
             m_PlayerInfoUIMap = new Dictionary<Player, UIPlayerInfoElement>();
             m_Players = new List<Player>();
-        }
-
-        // Use this for initialization
-        private void Start()
-        {
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
         }
     }
 }
