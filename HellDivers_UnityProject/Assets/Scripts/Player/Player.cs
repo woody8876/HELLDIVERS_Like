@@ -23,6 +23,11 @@ public class Player : Character
     public StratagemController StratagemController { get { return m_StratagemController; } }
 
     /// <summary>
+    /// Player grenade behavior controller.
+    /// </summary>
+    public GrenadesController GrenadesController { get { return m_GrenadesController; } }
+
+    /// <summary>
     /// Current player infos.
     /// </summary>
     public PlayerInfo Info { get { return m_Data; } }
@@ -47,6 +52,8 @@ public class Player : Character
     public event PlayerEventHolder OnStartSpawnNotify;
 
     public event PlayerEventHolder OnStartDeathNotify;
+
+    public event PlayerEventHolder OnDamaged;
 
     #endregion Event
 
@@ -116,7 +123,7 @@ public class Player : Character
         m_WeapoonController.ResetWeaponInfo();
 
         // Reset grenades
-        //......
+        m_GrenadesController.ResetGrenades();
 
         this.gameObject.SetActive(true);
         StartCoroutine(OnSpawn());
@@ -148,7 +155,12 @@ public class Player : Character
         bool bHurt = m_Controller.PerformPlayerHurt();
         if (bHurt == false) return false;
 
-        return base.TakeDamage(dmg, hitPoint);
+        if (base.TakeDamage(dmg, hitPoint))
+        {
+            if (OnDamaged != null) OnDamaged();
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
