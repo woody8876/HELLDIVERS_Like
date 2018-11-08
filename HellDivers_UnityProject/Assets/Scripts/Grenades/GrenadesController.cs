@@ -68,6 +68,7 @@ public class GrenadesController : MonoBehaviour
     {
         if (!m_bHolding) return;
         m_iCounter--;
+        m_dActiveGrenades[CurrentID] = m_iCounter;
         m_Grenades.transform.position = m_ThrowPos.position;
         m_Grenades.transform.forward = m_ThrowPos.forward;
         m_Grenades.transform.localScale *= 5f;
@@ -86,6 +87,7 @@ public class GrenadesController : MonoBehaviour
         switch (input)
         {
             case eSwitch.UP:
+                
                 Equipment(Keys[0]);
                 break;
 
@@ -94,19 +96,19 @@ public class GrenadesController : MonoBehaviour
                 break;
 
             case eSwitch.RIGHT:
-                if (Keys.Length <= 2) { return; }
+                if (Keys.Length < 3) { return; }
                 Equipment(Keys[2]);
                 break;
 
             case eSwitch.DOWN:
-                if (Keys.Length <= 3) { return; }
+                if (Keys.Length < 4) { return; }
                 Equipment(Keys[3]);
                 break;
 
             default:
                 break;
         }
-        m_dActiveGrenades[CurrentID] = GrenadeCounter;
+        //m_dActiveGrenades[CurrentID] = GrenadeCounter;
     }
 
     /// <summary>
@@ -123,16 +125,12 @@ public class GrenadesController : MonoBehaviour
             if (OnCount != null) OnCount();
         }
     }
-
+    
     public void ResetGrenades()
     {
-
-
-            if (pList[i] == CurrentID)
-            {
-                GrenadeCounter = m_dActiveGrenades[pList[i]];
-                if (OnCount != null) OnCount();
-            }
+        for (int i = 0; i < Keys.Length; i++)
+        {
+            m_dActiveGrenades[Keys[i]] = 2;
         }
     }
 
