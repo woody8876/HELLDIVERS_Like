@@ -21,6 +21,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private GameObject m_StratagemInfoPrefab;
 
         private UIPlayerTitle m_UIPlayerTitle;
+        private Animator m_Panel_WeaponAnimator;
         private List<UIStratagemCDInfo> m_UIStratgemCDInfos = new List<UIStratagemCDInfo>();
         private List<UIWeaoponInfo> m_UIWeaponInfos = new List<UIWeaoponInfo>();
         private List<UIStratagemInfo> m_UIStratagemInfos = new List<UIStratagemInfo>();
@@ -31,6 +32,7 @@ namespace HELLDIVERS.UI.InGame
             if (m_Panel_Title == null) m_Panel_Title = this.transform.Find("Panel_Title");
             if (m_Panel_StratagemCD == null) m_Panel_StratagemCD = this.transform.Find("Panel_StratagemsCD");
             if (m_Panel_WeaponAndGrenade == null) m_Panel_WeaponAndGrenade = this.transform.Find("Panel_WeaponsAndGrenade");
+            if (m_Panel_WeaponAnimator == null) m_Panel_WeaponAnimator = m_Panel_WeaponAndGrenade.GetComponent<Animator>();
             if (m_Panel_Weapon == null) m_Panel_Weapon = this.transform.Find("Panel_WeaponsAndGrenade/Weapons");
             if (m_Panel_Grenade == null) m_Panel_Grenade = this.transform.Find("Panel_WeaponsAndGrenade/Grenades");
         }
@@ -77,16 +79,36 @@ namespace HELLDIVERS.UI.InGame
                     m_UIGrenadeInfos.Add(grenadeInfo);
                 }
             }
+
+            SubscribePlayerEvent();
         }
 
-        // Use this for initialization
-        private void Start()
+        private void OnDestroy()
         {
+            UnsubscribePlayerEvent();
         }
 
-        // Update is called once per frame
-        private void Update()
+        private void SubscribePlayerEvent()
         {
+            CurrentPlayer.OnStartSpawnNotify += StartWeaponPanel;
+            CurrentPlayer.OnStartDeathNotify += StopWeaponPanel;
+        }
+
+        private void UnsubscribePlayerEvent()
+        {
+            CurrentPlayer.OnStartSpawnNotify -= StartWeaponPanel;
+            CurrentPlayer.OnStartDeathNotify -= StopWeaponPanel;
+        }
+
+        private void StartWeaponPanel()
+        {
+            m_Panel_WeaponAndGrenade.gameObject.SetActive(true);
+            m_Panel_WeaponAnimator.SetTrigger("Open");
+        }
+
+        private void StopWeaponPanel()
+        {
+            m_Panel_WeaponAndGrenade.gameObject.SetActive(false);
         }
     }
 }

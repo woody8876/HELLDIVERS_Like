@@ -39,7 +39,6 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.OnStartSpawnNotify += RefreshInfo;
             CurrentPlayer.OnStartDeathNotify += StopUI;
-
             CurrentStratagem.OnStartCoolDown += RefreshInfo;
             CurrentStratagem.OnCoolDown += RefreshInfo;
             CurrentStratagem.OnEndCoolDown += RefreshInfo;
@@ -49,7 +48,6 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.OnStartSpawnNotify -= RefreshInfo;
             CurrentPlayer.OnStartDeathNotify -= StopUI;
-
             CurrentStratagem.OnStartCoolDown -= RefreshInfo;
             CurrentStratagem.OnCoolDown -= RefreshInfo;
             CurrentStratagem.OnEndCoolDown -= RefreshInfo;

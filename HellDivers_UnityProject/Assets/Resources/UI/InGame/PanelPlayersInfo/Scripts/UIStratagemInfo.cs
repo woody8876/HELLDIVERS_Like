@@ -94,6 +94,7 @@ namespace HELLDIVERS.UI.InGame
             m_ArrowsGroup.gameObject.SetActive(true);
             m_TextTitle.gameObject.SetActive(false);
             m_ImgIcon.color = m_BrightColor;
+            RefershUses();
             DoCheckCodes();
         }
 
@@ -128,13 +129,18 @@ namespace HELLDIVERS.UI.InGame
             {
                 m_ArrowsGroup.gameObject.SetActive(false);
                 m_TextTitle.gameObject.SetActive(true);
-                int uses = CurrentStratagem.Info.Uses - CurrentStratagem.UsesCount;
-                m_TextUses.text = uses.ToString();
+                RefershUses();
             }
             else
             {
                 StopUI();
             }
+        }
+
+        private void RefershUses()
+        {
+            int uses = CurrentStratagem.Info.Uses - CurrentStratagem.UsesCount;
+            m_TextUses.text = uses.ToString();
         }
     }
 }
