@@ -52,7 +52,7 @@ public class StratagemController : MonoBehaviour
         get { return m_ScaleForce; }
         private set
         {
-            if (value > m_MaxScaleForce) m_ScaleForce = m_MaxScaleForce;
+            if (value > StratagemSystem.MaxScaleThrowForce) m_ScaleForce = StratagemSystem.MaxScaleThrowForce;
             else m_ScaleForce = value;
         }
     }
@@ -79,7 +79,6 @@ public class StratagemController : MonoBehaviour
 
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
     [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
-    [SerializeField] private float m_MaxScaleForce = 2;
     private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
@@ -113,32 +112,9 @@ public class StratagemController : MonoBehaviour
         Stratagem stratagem;
         GameObject stratagemGo;
 
-        //if (ObjectPool.m_Instance != null)
-        //{
-        //    stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-
-        //    if (stratagemGo != null)
-        //    {
-        //        stratagem = stratagemGo.GetComponent<Stratagem>();
-        //    }
-        //    else
-        //    {
-        //        string name = string.Format("Stratagem{0}", id);
-        //        stratagemGo = new GameObject(name);
-        //        stratagem = stratagemGo.AddComponent<Stratagem>();
-        //        ObjectPool.m_Instance.InitGameObjects(stratagemGo, 3, id);
-        //        DestroyImmediate(stratagemGo.gameObject);
-
-        //        stratagemGo = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-        //        stratagem = stratagemGo.GetComponent<Stratagem>();
-        //    }
-        //}
-        //else
-        {
-            string name = string.Format("Stratagem{0}", id);
-            stratagemGo = new GameObject(name);
-            stratagem = stratagemGo.AddComponent<Stratagem>();
-        }
+        string name = string.Format("Stratagem{0}", id);
+        stratagemGo = new GameObject(name);
+        stratagem = stratagemGo.AddComponent<Stratagem>();
 
         stratagemGo.SetActive(true);
         stratagem.SetStratagemInfo(id, readyPos, launchPos);
@@ -307,10 +283,10 @@ public class StratagemController : MonoBehaviour
     {
         ScaleThrowForce = 0;
 
-        while (ScaleThrowForce < m_MaxScaleForce)
+        while (ScaleThrowForce < StratagemSystem.MaxScaleThrowForce)
         {
             yield return new WaitForSeconds(Time.deltaTime);
-            ScaleThrowForce += Time.deltaTime * 0.5f;
+            ScaleThrowForce += Time.deltaTime * StratagemSystem.ScaleThorwForceRate;
         }
 
         yield break;

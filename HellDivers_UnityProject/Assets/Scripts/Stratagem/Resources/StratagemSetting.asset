@@ -13,6 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayFolder: Stratagems
   ResultFolder: StratagemSupplys
+  MaxScaleThrowForce: 1.5
+  ScaleThorwForceRate: 0.5
   DefaultDisplay: {fileID: 1233006164081210, guid: 99568074b64a9354b8391f7eb05a99e0,
     type: 2}
   DefaultResult: {fileID: 1424571975279730, guid: eac9245087756d0459e64986da7c29c7,
