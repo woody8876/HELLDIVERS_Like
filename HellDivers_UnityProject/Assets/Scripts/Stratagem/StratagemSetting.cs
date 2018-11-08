@@ -7,6 +7,8 @@ public class StratagemSetting : ScriptableObject
 {
     public string DisplayFolder = "Stratagems";
     public string ResultFolder = "StratagemSupplys";
+    public float MaxScaleThrowForce;
+    public float ScaleThorwForceRate;
     public GameObject DefaultDisplay;
     public GameObject DefaultResult;
 }

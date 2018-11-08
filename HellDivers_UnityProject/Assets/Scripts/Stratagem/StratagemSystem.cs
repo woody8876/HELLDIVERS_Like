@@ -8,6 +8,8 @@ public static class StratagemSystem
     public static GameObject DefaultDisplay { get { return Setting.DefaultDisplay; } }
     public static string ResultFolder { get { return Setting.ResultFolder; } }
     public static GameObject DefaultResult { get { return Setting.DefaultResult; } }
+    public static float MaxScaleThrowForce { get { return Setting.MaxScaleThrowForce; } }
+    public static float ScaleThorwForceRate { get { return setting.ScaleThorwForceRate; } }
 
     private static StratagemSetting Setting
     {

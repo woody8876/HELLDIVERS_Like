@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapInfo : MonoBehaviour
 {
     public static MapInfo Instance { get; private set; }
+
     public List<Transform> SpawnPos { get { return m_SpawnPos; } }
     public List<Transform> TowerPos { get { return m_TowerPos; } }
     public List<Transform> MobPos { get { return m_MobPos; } }

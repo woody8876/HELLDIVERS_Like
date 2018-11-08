@@ -46,7 +46,6 @@ namespace HELLDIVERS.UI.InGame
             if (Instance == null) Instance = this;
             else Destroy(this.gameObject);
 
-            GameObject stratagemActElementGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "UI/InGame/StratagemActTime", "UIStratagemActElement") as GameObject;
             m_PlayerMap = new Dictionary<Player, List<UIStratagemActElement>>();
         }
 
