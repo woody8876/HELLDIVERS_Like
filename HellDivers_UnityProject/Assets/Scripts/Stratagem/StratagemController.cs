@@ -71,6 +71,8 @@ public class StratagemController : MonoBehaviour
 
     public event EventHolder OnGetReady;
 
+    public event EventHolder OnThrow;
+
     #endregion Event
 
     #region Private Variable
@@ -183,10 +185,9 @@ public class StratagemController : MonoBehaviour
     /// <returns></returns>
     public bool RemoveStratagemAt(int index)
     {
-        Stratagem target = null;
         if (index < 0 || index >= m_Stratagems.Count) return false;
 
-        target = m_Stratagems[index];
+        Stratagem target = m_Stratagems[index];
         m_Stratagems.RemoveAt(index);
 
         DestroyImmediate(target.gameObject);
@@ -281,6 +282,8 @@ public class StratagemController : MonoBehaviour
         Vector3 force = m_ThrowForce * ScaleThrowForce;
         m_CurrentStratagem.Throw(force);
         m_CurrentStratagem = null;
+
+        if (OnThrow != null) OnThrow();
     }
 
     /// <summary>
@@ -296,9 +299,14 @@ public class StratagemController : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// Add throw force scale on timer.
-    /// </summary>
+    #endregion Public Function
+
+    #region Private Function
+
+    /*----------------------------
+     * Scale throw force by time *
+     ----------------------------*/
+
     private IEnumerator ThorwForceAddOn()
     {
         ScaleThrowForce = 0;
@@ -311,8 +319,6 @@ public class StratagemController : MonoBehaviour
 
         yield break;
     }
-
-    #endregion Public Function
 
     #region Check Input Code
 
@@ -391,4 +397,6 @@ public class StratagemController : MonoBehaviour
     }
 
     #endregion Check Input Code
+
+    #endregion Private Function
 }

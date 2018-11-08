@@ -31,6 +31,7 @@ public class WeaponInfo
     public float Spread_Increase_per_shot { private set; get; }
     public float Range { private set; get; }
     public float FireMode { private set; get; }
+    public string Name { private set; get; }
     #endregion
     #region Set Properties
     public void SetID(int id) { ID = id; }
@@ -49,6 +50,7 @@ public class WeaponInfo
     public void SetSpread_Increase_per_shot(float SpreadIPS) { Spread_Increase_per_shot = SpreadIPS; }
     public void SetRange(float range) { Range = range; }
     public void SetFireMode(float mode) { FireMode = mode; }
+    public void SetName(string name) { Name = name; }
     #endregion
 
     public int Ammo

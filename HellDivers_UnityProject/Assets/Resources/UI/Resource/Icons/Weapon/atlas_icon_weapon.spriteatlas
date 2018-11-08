@@ -28,21 +28,36 @@ SpriteAtlas:
       enableTightPacking: 1
     variantMultiplier: 1
     packables:
+    - {fileID: 2800000, guid: e1bb15d554a6bec40996c0c39eabd5b2, type: 3}
     - {fileID: 2800000, guid: e353b649c821d544b84a33fdc4ce24c1, type: 3}
+    - {fileID: 2800000, guid: bd42744b0117cac47a9767eb5dd2899e, type: 3}
     - {fileID: 2800000, guid: 715d4e3947fdaaf40be8f605334f2d4b, type: 3}
-    - {fileID: 2800000, guid: e8b4980a88cc4214eb61a8cdea914593, type: 3}
-    - {fileID: 2800000, guid: 682be28c84dcebc4d88249ede6e43a2b, type: 3}
+    - {fileID: 2800000, guid: 851a127085f97be47b8ac143dee82b40, type: 3}
+    - {fileID: 2800000, guid: cc3f7c2c5e666c0439c7378502c247a7, type: 3}
+    - {fileID: 2800000, guid: ae79c4d5555b4464cb78a0065b335c8d, type: 3}
+    - {fileID: 2800000, guid: 8d54225abbc625a42b9735351ae78863, type: 3}
+    - {fileID: 2800000, guid: e5ca7751e13a79c4ba96e4fabacb0a88, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: 682be28c84dcebc4d88249ede6e43a2b, type: 3}
   - {fileID: 21300000, guid: e353b649c821d544b84a33fdc4ce24c1, type: 3}
   - {fileID: 21300000, guid: 715d4e3947fdaaf40be8f605334f2d4b, type: 3}
-  - {fileID: 21300000, guid: e8b4980a88cc4214eb61a8cdea914593, type: 3}
+  - {fileID: 21300000, guid: ae79c4d5555b4464cb78a0065b335c8d, type: 3}
+  - {fileID: 21300000, guid: bd42744b0117cac47a9767eb5dd2899e, type: 3}
+  - {fileID: 21300000, guid: e5ca7751e13a79c4ba96e4fabacb0a88, type: 3}
+  - {fileID: 21300000, guid: 8d54225abbc625a42b9735351ae78863, type: 3}
+  - {fileID: 21300000, guid: cc3f7c2c5e666c0439c7378502c247a7, type: 3}
+  - {fileID: 21300000, guid: 851a127085f97be47b8ac143dee82b40, type: 3}
+  - {fileID: 21300000, guid: e1bb15d554a6bec40996c0c39eabd5b2, type: 3}
   m_PackedSpriteNamesToIndex:
-  - icon_MG105Stalwart
   - icon_1101
   - icon_1301
-  - icon_P6Gunslinger
+  - icon_1601
+  - icon_1201
+  - icon_1801
+  - icon_1701
+  - icon_1501
+  - icon_1401
+  - icon_1001
   m_Tag: atlas_icon_weapon
   m_IsVariant: 0

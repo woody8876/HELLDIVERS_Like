@@ -54,8 +54,10 @@ public class Stratagem : MonoBehaviour
     public float ActTimer { get { return m_ActivationTimer; } }
 
     /// <summary>
-    ///
+    /// The count down timer of Activatoin. It start when do Land on "terrain".
     /// </summary>
+    public float ActTimeCountDown { get { return Info.Activation - m_ActivationTimer; } }
+
     public bool IsAbandonable { get { return m_IsAbandonable; } set { m_IsAbandonable = value; } }
 
     #endregion Properties
@@ -68,7 +70,17 @@ public class Stratagem : MonoBehaviour
 
     public event StratagemEventHolder OnGetReady;
 
+    public event StratagemEventHolder OnStartCoolDown;
+
     public event StratagemEventHolder OnCoolDown;
+
+    public event StratagemEventHolder OnEndCoolDown;
+
+    public event StratagemEventHolder OnStartActivation;
+
+    public event StratagemEventHolder OnActivation;
+
+    public event StratagemEventHolder OnEndActivation;
 
     public event StratagemEventHolder OnAbanadon;
 
@@ -347,12 +359,16 @@ public class Stratagem : MonoBehaviour
         m_eState = eState.Activating;
 
         m_ActivationTimer = 0.0f;
+        if (OnStartActivation != null) OnStartActivation();
+
         while (m_ActivationTimer < targetTime)
         {
+            if (OnActivation != null) OnActivation();
             yield return new WaitForSeconds(Time.deltaTime);
             m_ActivationTimer += Time.deltaTime;
         }
 
+        if (OnEndActivation != null) OnEndActivation();
         m_Animator.SetTrigger("End");
 
         yield return new WaitUntil(() =>
@@ -380,6 +396,7 @@ public class Stratagem : MonoBehaviour
     private IEnumerator DoCoolDown(float targetTime)
     {
         m_IsCooling = true;
+        if (OnStartCoolDown != null) OnStartCoolDown();
 
         m_CoolTimer = 0.0f;
         while (m_CoolTimer < targetTime)
@@ -389,7 +406,7 @@ public class Stratagem : MonoBehaviour
             m_CoolTimer += Time.deltaTime;
         }
         m_IsCooling = false;
-        if (OnCoolDown != null) OnCoolDown();
+        if (OnEndCoolDown != null) OnEndCoolDown();
         yield break;
     }
 

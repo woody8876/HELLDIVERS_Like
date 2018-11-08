@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HELLDIVERS.UI.InGame;
 
 public class GameMain : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class GameMain : MonoBehaviour
         m_ItemManager.Init();
         m_MobSpawner.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
+        if (UIInGameMain.Instance != null) UIInGameMain.Instance.Init();
     }
 
     // Use this for initialization
@@ -89,10 +91,8 @@ public class GameMain : MonoBehaviour
         if (spawnPos == null) spawnPos = this.transform;
         player.Spawn(spawnPos.position);
 
-        if (UIMain.Instance != null)
-        {
-            UIMain.Instance.AddPlayerInfo(player);
-        }
+        // Create player info UI
+        UIInGameMain.Instance.AddPlayer(player);
 
         // Camera start following player
         if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);
