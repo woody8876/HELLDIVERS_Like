@@ -113,7 +113,7 @@ public class GrenadesController : MonoBehaviour
     {
         List<int> pList = new List<int>();
         foreach(var i in m_dActiveGrenades) { pList.Add(i.Key); }
-        for (int i = 0; i < pList.Count; i++) { AddGrenadesCount(pList[i], 2); }
+        for (int i = 0; i < pList.Count; i++) { m_dActiveGrenades[i] = 2; }
     }
     #endregion
 
