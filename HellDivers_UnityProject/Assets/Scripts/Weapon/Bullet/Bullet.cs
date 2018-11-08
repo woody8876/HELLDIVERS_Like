@@ -89,6 +89,7 @@ public class Bullet : MonoBehaviour {
 
     private void BulletDeath()
     {
+        m_Target = null;
         m_Time = 0;
         ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
