@@ -31,8 +31,8 @@ public class MobManager
 
         m_GoFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GoPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
-        m_GoBullet = Resources.Load("Mobs/MobBullet") as GameObject;
-        m_GoWarning = Resources.Load("Mobs/EnemyAlert") as GameObject;
+        m_GoBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
+        m_GoWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GoFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GoPatrol, 40, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GoBullet, 20, 3201);

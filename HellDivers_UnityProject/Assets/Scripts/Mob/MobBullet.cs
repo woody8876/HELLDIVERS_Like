@@ -5,7 +5,7 @@ using UnityEngine;
 public class MobBullet : MonoBehaviour {
 
     [SerializeField]private float m_Speed = 15.0f;
-    [SerializeField]private float m_LifeTime = 5.0f;
+    [SerializeField]private float m_LifeTime = 3.0f;
     private float m_Timer = 0.0f;
     private float m_NextPosDis;
     // Use this for initialization
