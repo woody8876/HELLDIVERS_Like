@@ -57,7 +57,7 @@ public class GrenadesController : MonoBehaviour
         if (!m_bHolding) { LoadGrenade(); }
         m_Grenades.transform.position = m_StarPos.position;
         m_Grenades.transform.forward = m_StarPos.forward;
-        m_Grenades.GetComponent<Grenades>().m_Force += 7 * Time.fixedDeltaTime;
+        m_Grenades.GetComponent<Grenades>().m_Force += 5 * Time.fixedDeltaTime;
         return true;
     }
 
