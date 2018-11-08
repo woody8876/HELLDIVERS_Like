@@ -75,19 +75,22 @@ public class GrenadesController : MonoBehaviour
     public void SwitchGrenades()
     {
         eSwitch? input = GetESwitch();
+        if (Keys.Length <= 1) { return; }
         switch (input)
         {
             case eSwitch.UP:
-                Equipment(4002);
+                Equipment(Keys[0]);
                 break;
             case eSwitch.LEFT:
-                Equipment(4003);
+                Equipment(Keys[1]);
                 break;
             case eSwitch.RIGHT:
-                Equipment(4004);
+                if (Keys.Length <= 2) { return; }
+                Equipment(Keys[2]);
                 break;
             case eSwitch.DOWN:
-                Equipment(4005);
+                if (Keys.Length <= 3) { return; }
+                Equipment(Keys[3]);
                 break;
             default:
                 break;
@@ -111,9 +114,7 @@ public class GrenadesController : MonoBehaviour
 
     public void ResetGrenades()
     {
-        List<int> pList = new List<int>();
-        foreach(var i in m_dActiveGrenades) { pList.Add(i.Key); }
-        for (int i = 0; i < pList.Count; i++) { m_dActiveGrenades[i] = 2; }
+        for (int i = 0; i < Keys.Length; i++) { m_dActiveGrenades[i] = 2; }
     }
     #endregion
 
@@ -175,6 +176,14 @@ public class GrenadesController : MonoBehaviour
 
     #region Private field
     private Dictionary<int, int> m_dActiveGrenades = new Dictionary<int, int>();
+    private int[] Keys {
+        get
+        {
+            int[] keys = new int[m_dActiveGrenades.Count];
+            m_dActiveGrenades.Keys.CopyTo(keys, 0);
+            return keys;
+        }
+    }
     private GameObject m_Grenades;
     private Transform m_StarPos;
     private Transform m_ThrowPos;

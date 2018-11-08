@@ -46,6 +46,7 @@ public class WeaponInfoLoader {
                 data.SetSpread_Increase_per_shot (float.Parse(weaponInfo[13]));
                 data.SetRange (float.Parse(weaponInfo[14]));
                 data.SetFireMode (float.Parse(weaponInfo[15]));
+                data.SetName(weaponInfo[16]);
                 Info.Add(data.ID, data);
             }
             return true;
