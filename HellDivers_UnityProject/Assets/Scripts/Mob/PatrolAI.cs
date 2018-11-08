@@ -105,15 +105,15 @@ public class PatrolAI : Character
 
         m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_WanderState);
-        m_FSM.AddState(m_GetHurtState);
+        m_FSM.AddState(m_FleeState);
         m_FSM.AddState(m_CallArmyState);
         m_FSM.AddState(m_Chasestate);
         m_FSM.AddState(m_DodgeState);
         m_FSM.AddState(m_PatrolAttackstate);
         m_FSM.AddState(m_IdleState);
-        m_FSM.AddState(m_FleeState);
         m_FSM.AddState(m_FSMNoPlayerWanderIdleState);
         m_FSM.AddState(m_FSMNoPlayerWander);
+        m_FSM.AddState(m_GetHurtState);
         m_FSM.AddState(m_DeadState);
         #endregion
     }

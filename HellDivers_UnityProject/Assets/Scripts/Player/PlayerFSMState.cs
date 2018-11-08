@@ -405,6 +405,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
 public class PlayerFSMThrowBombState : PlayerFSMState
 {
+    int count = 0;
     bool bThrow = true;
     bool bHolding = false;
     public PlayerFSMThrowBombState()
@@ -414,34 +415,41 @@ public class PlayerFSMThrowBombState : PlayerFSMState
 
     public override void DoBeforeEnter(PlayerController data)
     {
+        count = 0;
         bThrow = true;
         bHolding = false;
         data.m_MoveMode = "Throw";
-        data.m_PAC.SetAnimator(m_StateID);
         data.m_PAC.SetAnimator(m_StateID, false);
     }
 
     public override void DoBeforeLeave(PlayerController data)
     {
-
+        
     }
 
     public override void Do(PlayerController data)
     {
         if (bThrow == true)
         {
+            if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
+            {
+                data.m_MoveMode = "Throwing";
+                data.m_PAC.SetAnimator(m_StateID, true);
+                return;
+            }
+
             bHolding = data.m_GrenadesController.Holding();
+
             if (bHolding == false)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
                 return;
             }
-        }
-
-        if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
-        {
-            data.m_MoveMode = "Throwing";
-            data.m_PAC.SetAnimator(m_StateID, true);
+            else if(count < 1)
+            {
+                data.m_PAC.SetAnimator(m_StateID);
+                count++;
+            }
         }
     }
 
@@ -452,13 +460,13 @@ public class PlayerFSMThrowBombState : PlayerFSMState
         {
             if (info.normalizedTime > 0.4f && bThrow)
             {
-                data.m_GrenadesController.Throw();
                 bThrow = false;
+                data.m_GrenadesController.Throw();
             }
-            if (info.normalizedTime > 0.9f)
-            {
-                data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
-            }
+        }
+        if (!info.IsName("ThrowOut") && bThrow == false)
+        {
+            data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }
     }
 }
