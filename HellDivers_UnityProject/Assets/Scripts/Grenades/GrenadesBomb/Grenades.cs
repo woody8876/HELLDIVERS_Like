@@ -13,7 +13,7 @@ public class Grenades : MonoBehaviour {
     {
         set
         {
-            if (m_fForce > 8) m_fForce = 8;
+            if (m_fForce > 12) m_fForce = 12;
             else m_fForce = value;
         }
         get { return m_fForce; }
