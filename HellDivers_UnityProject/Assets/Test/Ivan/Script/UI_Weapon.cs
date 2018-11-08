@@ -13,14 +13,11 @@ public class UI_Weapon : MonoBehaviour {
     Sprite m_Sprite;
 	// Use this for initialization
 	void Start () {
-        m_WeaponInfo = new WeaponInfo();
+        m_WeaponInfo = GameData.Instance.WeaponInfoTable[m_ID];
         m_Sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + m_ID, false);
         m_WeaponName.text = m_WeaponInfo.Name;
+        Debug.Log(m_WeaponInfo.Name);
         m_WeaponTexture.sprite = m_Sprite;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
