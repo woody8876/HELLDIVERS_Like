@@ -19,16 +19,47 @@ namespace HELLDIVERS.UI.InGame
 
             string fileName = string.Format("icon_{0}", stratagem.Info.ID);
             m_Icon.sprite = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
+
+            SubscribePlayerEvent();
         }
 
-        // Use this for initialization
-        private void Start()
+        private void OnDestroy()
         {
+            UnsubscribePlayerEvent();
         }
 
-        // Update is called once per frame
-        private void Update()
+        private void SubscribePlayerEvent()
         {
+            CurrentStratagem.OnStartActivation += StartUI;
+            CurrentStratagem.OnActivation += RefreshUI;
+            CurrentStratagem.OnEndActivation += StopUI;
+        }
+
+        private void UnsubscribePlayerEvent()
+        {
+            CurrentStratagem.OnStartActivation -= StartUI;
+            CurrentStratagem.OnActivation -= RefreshUI;
+            CurrentStratagem.OnEndActivation -= StopUI;
+        }
+
+        private void RefreshUI()
+        {
+            string minutes = Mathf.Floor(CurrentStratagem.ActTimeCountDown / 60).ToString("00");
+            string seconds = (CurrentStratagem.ActTimeCountDown % 60).ToString("00");
+            string minisec = Mathf.Floor((CurrentStratagem.ActTimeCountDown * 100) % 100).ToString("00");
+            m_Time.text = string.Format("{0}:{1}:{2}", minutes, seconds, minisec);
+        }
+
+        private void StartUI()
+        {
+            this.gameObject.SetActive(true);
+            this.transform.SetAsLastSibling();
+            RefreshUI();
+        }
+
+        private void StopUI()
+        {
+            this.gameObject.SetActive(false);
         }
     }
 }

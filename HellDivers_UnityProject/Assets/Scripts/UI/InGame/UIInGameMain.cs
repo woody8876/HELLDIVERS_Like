@@ -10,12 +10,14 @@ namespace HELLDIVERS.UI.InGame
         public static UIInGameMain Instance { get; private set; }
 
         [SerializeField] private UIPanelPlayerInfo m_PanelPlayerInfo;
+        [SerializeField] private UIPanelStratagemAct m_PanelStratagemAct;
         [SerializeField] private UIDynamicHpBar m_DynamicHpBar;
         private Dictionary<Player, UIDynamicHpBar> m_DynamicHpBarMap;
 
         public void Init()
         {
             m_PanelPlayerInfo = Instantiate(m_PanelPlayerInfo, this.transform).GetComponent<UIPanelPlayerInfo>();
+            m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform).GetComponent<UIPanelStratagemAct>();
         }
 
         private void Awake()
@@ -32,6 +34,7 @@ namespace HELLDIVERS.UI.InGame
         public void AddPlayer(Player player)
         {
             m_PanelPlayerInfo.AddPlayer(player);
+            m_PanelStratagemAct.AddPlayer(player);
             AddDynamicHpBar(player);
         }
 
