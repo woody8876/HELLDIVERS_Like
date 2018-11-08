@@ -9,30 +9,44 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1451599465701428}
+  m_RootGameObject: {fileID: 1176862270369400}
   m_IsPrefabParent: 1
---- !u!1 &1451599465701428
+--- !u!1 &1176862270369400
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 224569239459040260}
-  - component: {fileID: 114746552596577930}
+  - component: {fileID: 224608479088313918}
+  - component: {fileID: 114737718892691686}
+  - component: {fileID: 114442095007098512}
   m_Layer: 5
-  m_Name: Panel_StratagemActivation
+  m_Name: Panel_StratagemAct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114746552596577930
+--- !u!114 &114442095007098512
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1451599465701428}
+  m_GameObject: {fileID: 1176862270369400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90decfd2deefa2d409cfae579f00fb45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StratagemActElement: {fileID: 114377133727705684, guid: 843eeebbae071a142b13382d38665b70,
+    type: 2}
+--- !u!114 &114737718892691686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1176862270369400}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -49,12 +63,12 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
---- !u!224 &224569239459040260
+--- !u!224 &224608479088313918
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1451599465701428}
+  m_GameObject: {fileID: 1176862270369400}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}

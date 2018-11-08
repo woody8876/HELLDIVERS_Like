@@ -54,8 +54,10 @@ public class Stratagem : MonoBehaviour
     public float ActTimer { get { return m_ActivationTimer; } }
 
     /// <summary>
-    ///
+    /// The count down timer of Activatoin. It start when do Land on "terrain".
     /// </summary>
+    public float ActTimeCountDown { get { return Info.Activation - m_ActivationTimer; } }
+
     public bool IsAbandonable { get { return m_IsAbandonable; } set { m_IsAbandonable = value; } }
 
     #endregion Properties
