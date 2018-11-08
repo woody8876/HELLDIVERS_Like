@@ -125,7 +125,11 @@ public class PlayerController : MonoBehaviour
 
         #endregion
     }
-
+    private void Update()
+    {
+        
+        
+    }
     private void FixedUpdate()
     {
         #region Input
@@ -143,7 +147,9 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
-            //PerformPlayerRelive();
+            Debug.Log("Total Kill : " + MobManager.m_Instance.TotalKill);
+            Debug.Log("Total Fish Kill : " + MobManager.m_Instance.TotalFishKill);
+            Debug.Log("Total Patrol Kill : " +MobManager.m_Instance.TotalPatrolKill);
         }
         if (Input.GetButtonDown("Roll"))
         {
