@@ -22,9 +22,29 @@ public class ResourceManager
         {
             string sFullPath = sPath + "/" + sName;
             o = Resources.Load(sFullPath);
+            AssetManager.m_Instance.AddAsset(t, sName, sPath, o);
         }
-        AssetManager.m_Instance.AddAsset(t, sName, sPath, o);
         if (bInstatiate) { o = GameObject.Instantiate(o); }
         return o;
+    }
+
+    public Sprite LoadSprite(System.Type t, string sPath, string sName, bool bInstatiate = false)
+    {
+        Sprite sprite = null;
+        string fullPath = sPath + "/" + sName;
+
+        if (AssetManager.m_Instance != null)
+        {
+            sprite = AssetManager.m_Instance.GetAsset(t, sName, sPath) as Sprite;
+            if (sprite == null)
+            {
+                sprite = Resources.Load<Sprite>(fullPath);
+                AssetManager.m_Instance.AddAsset(t, sName, sPath, sprite);
+            }
+            if (bInstatiate) { sprite = GameObject.Instantiate(sprite); }
+        }
+        else { sprite = Resources.Load<Sprite>(fullPath); }
+        return sprite;
+
     }
 }

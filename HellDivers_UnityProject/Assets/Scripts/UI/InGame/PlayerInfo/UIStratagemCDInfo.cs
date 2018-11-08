@@ -20,11 +20,11 @@ namespace HELLDIVERS.UI.InGame
             CurrentStratagem = stratagem;
 
             string fileName = string.Format("icon_{0}", CurrentStratagem.Info.ID);
-            m_FillIcon = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
+            m_FillIcon = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.StratagemIconFolder, fileName);
             m_Fill.sprite = m_FillIcon;
 
             fileName = string.Format("icon_{0}_gray", CurrentStratagem.Info.ID);
-            m_BGIcon = UIHelper.LoadSprite(UIHelper.StratagemIconFolder, fileName);
+            m_BGIcon = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.StratagemIconFolder, fileName);
             m_Background.sprite = m_BGIcon;
 
             SubscribePlayerEvent();
