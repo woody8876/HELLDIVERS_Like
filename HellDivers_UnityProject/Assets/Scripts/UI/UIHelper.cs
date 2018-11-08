@@ -11,6 +11,5 @@ namespace HELLDIVERS.UI
         public static readonly string StratagemIconFolder = "UI/Resource/Icons/Stratagem";
         public static readonly string WeaponIconFolder = "UI/Resource/Icons/Weapon";
         public static readonly string GrenadeIconFolder = "UI/Resource/Icons/Grenade";
-
     }
 }
