@@ -121,7 +121,7 @@ public class Player : Character
         m_WeapoonController.ResetWeaponInfo();
 
         // Reset grenades
-        //......
+        m_GrenadesController.ResetGrenades();
 
         this.gameObject.SetActive(true);
         StartCoroutine(OnSpawn());

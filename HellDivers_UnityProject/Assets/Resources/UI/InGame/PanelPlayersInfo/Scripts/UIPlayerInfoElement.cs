@@ -90,12 +90,18 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
+            CurrentPlayer.WeaponController.OnSwitch += StartWeaponPanel;
+            CurrentPlayer.StratagemController.OnStartCheckingCode += StopWeaponPanel;
+            CurrentPlayer.StratagemController.OnStopCheckingCode += StartWeaponPanel;
             CurrentPlayer.OnStartSpawnNotify += StartWeaponPanel;
             CurrentPlayer.OnStartDeathNotify += StopWeaponPanel;
         }
 
         private void UnsubscribePlayerEvent()
         {
+            CurrentPlayer.WeaponController.OnSwitch -= StartWeaponPanel;
+            CurrentPlayer.StratagemController.OnStartCheckingCode -= StopWeaponPanel;
+            CurrentPlayer.StratagemController.OnStopCheckingCode -= StartWeaponPanel;
             CurrentPlayer.OnStartSpawnNotify -= StartWeaponPanel;
             CurrentPlayer.OnStartDeathNotify -= StopWeaponPanel;
         }
