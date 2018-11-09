@@ -9,8 +9,8 @@ public class UI_Weapon : MonoBehaviour {
     [SerializeField] Text m_WeaponName;
     [SerializeField] Image m_WeaponTexture;
 
-    WeaponInfo m_WeaponInfo;
-    Sprite m_Sprite;
+    public WeaponInfo m_WeaponInfo;
+    public Sprite m_Sprite;
 	// Use this for initialization
 	void Start () {
         m_WeaponInfo = GameData.Instance.WeaponInfoTable[m_ID];
