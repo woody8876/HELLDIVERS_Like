@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Total Patrol Kill : " +MobManager.m_Instance.TotalPatrolKill);
             Debug.Log(m_InputInfo);
         }
-        if (Input.GetButtonDown("Roll"))
+        if (Input.GetButtonDown("Roll") || Input.GetButtonDown(m_InputInfo.Roll))
         {
             AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
             if (m_PAC.Animator.IsInTransition(3) || info.IsName("Roll"))
