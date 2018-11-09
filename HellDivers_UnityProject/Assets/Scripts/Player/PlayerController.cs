@@ -33,11 +33,14 @@ public class PlayerController : MonoBehaviour
     public bool bIsDead = false;
     public bool bIsAlive = true;
 
+    public InputManager m_InputManager = new InputManager();
+    public InputInfo m_InputInfo;
     #region MonoBehaviour
     private void Awake()
     {
-
-    }
+        m_InputManager.Init();
+        m_InputInfo = m_InputManager.PlayerInputInfoTable[1];
+}
     private void OnEnable()
     {
         if (m_PlayerFSM == null) return;
@@ -46,6 +49,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+
         m_PlayerFSM = new PlayerFSMSystem(this);
         m_Player = this.GetComponent<Player>();
         m_WeaponController = this.GetComponent<WeaponController>();
@@ -150,6 +154,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Total Kill : " + MobManager.m_Instance.TotalKill);
             Debug.Log("Total Fish Kill : " + MobManager.m_Instance.TotalFishKill);
             Debug.Log("Total Patrol Kill : " +MobManager.m_Instance.TotalPatrolKill);
+            Debug.Log(m_InputInfo);
         }
         if (Input.GetButtonDown("Roll"))
         {
@@ -305,8 +310,8 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxis(m_InputInfo.Horizontal);
+        float v = Input.GetAxis(m_InputInfo.Vertical);
 
         if (m_Cam != null)
         {
