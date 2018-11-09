@@ -43,6 +43,7 @@ public class PlayerInputLoader {
                 data.SetMeleeAttack(playerInputInfo[12]);
                 data.SetInteractive(playerInputInfo[13]);
                 data.SetRoll(playerInputInfo[14]);
+                data.SetGrenade(playerInputInfo[15]);
                 Info.Add(data.ID, data);
             }
             return true;

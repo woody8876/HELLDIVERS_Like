@@ -19,6 +19,7 @@ public class InputInfo {
     public string MeleeAttack { private set; get; }
     public string Interactive { private set; get; }
     public string Roll { private set; get; }
+    public string Grenade { private set; get; }
     #endregion
     #region Set Properties
     public void SetID(int id) { ID = id; }
@@ -36,5 +37,6 @@ public class InputInfo {
     public void SetMeleeAttack(string meleeAttack) { MeleeAttack = meleeAttack; }
     public void SetInteractive(string interactive) { Interactive = interactive; }
     public void SetRoll(string roll) { Roll = roll; }
+    public void SetGrenade(string grenade) { Grenade = grenade; }
     #endregion
 }
