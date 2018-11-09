@@ -43,19 +43,19 @@ namespace HELLDIVERS.UI.InGame
 
                 switch (CurrentStratagem.Info.Codes[i])
                 {
-                    case StratagemInfo.eCode.Up:
+                    case eCode.Up:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
                         break;
 
-                    case StratagemInfo.eCode.Down:
+                    case eCode.Down:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
                         break;
 
-                    case StratagemInfo.eCode.Left:
+                    case eCode.Left:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 180.0f);
                         break;
 
-                    case StratagemInfo.eCode.Right:
+                    case eCode.Right:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
                         break;
                 }
@@ -78,20 +78,20 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.StratagemController.OnStartCheckingCode += StartUI;
-            CurrentPlayer.StratagemController.OnCheckingCode += DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStart += StartUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking += DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop += StopUI;
             CurrentPlayer.StratagemController.OnGetReady += DoReady;
-            CurrentPlayer.StratagemController.OnStopCheckingCode += StopUI;
             CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnThrow += StopUI;
         }
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.StratagemController.OnStartCheckingCode -= StartUI;
-            CurrentPlayer.StratagemController.OnCheckingCode -= DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStart -= StartUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking -= DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop -= StopUI;
             CurrentPlayer.StratagemController.OnGetReady -= DoReady;
-            CurrentPlayer.StratagemController.OnStopCheckingCode -= StopUI;
             CurrentPlayer.OnStartDeathNotify -= StopUI;
             CurrentStratagem.OnThrow -= StopUI;
         }

@@ -37,11 +37,6 @@ public class StratagemInfo
         Supply, Defensive, Offensive, Special
     }
 
-    public enum eCode
-    {
-        Up, Down, Left, Right
-    }
-
     public StratagemInfo Clone()
     {
         StratagemInfo clone = new StratagemInfo();

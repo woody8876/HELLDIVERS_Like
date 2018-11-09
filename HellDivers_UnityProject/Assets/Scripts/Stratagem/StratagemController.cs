@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CheckCodesMechine))]
 public class StratagemController : MonoBehaviour
 {
-    #region Define Inputs
-
-    private string m_InputVertical = "StratagemVertical";
-    private string m_InputHorizontal = "StratagemHorizontal";
-
-    #endregion Define Inputs
-
     #region Properties
 
     /// <summary>
@@ -21,7 +15,7 @@ public class StratagemController : MonoBehaviour
     /// <summary>
     /// Was the checking codes process has been actived ?
     /// </summary>
-    public bool IsCheckingCode { get { return m_bCheckingCode; } }
+    public bool IsCheckingCode { get { return m_CheckCodesMechine.IsChecking; } }
 
     /// <summary>
     /// Represent of the stratagem is ready.
@@ -34,14 +28,19 @@ public class StratagemController : MonoBehaviour
     public List<Stratagem> Stratagems { get { return m_Stratagems; } }
 
     /// <summary>
+    /// Represent of stratagems check codes behavior mechine.
+    /// </summary>
+    public CheckCodesMechine CheckCodesMechine { get { return m_CheckCodesMechine; } }
+
+    /// <summary>
     /// Represent of stratagems is ready to checking code.
     /// </summary>
-    public List<Stratagem> StratagemsOnCheckingCode { get { return m_Open; } }
+    public List<Stratagem> StratagemsOnCheckingCode { get { return m_InCheckCodeMechine; } }
 
     /// <summary>
     /// Represent of current checking code input step.
     /// </summary>
-    public int InputCodeStep { get { return m_CodeInputStep; } }
+    public int InputCodeStep { get { return m_CheckCodesMechine.Step; } }
 
     /// <summary>
     /// Represent of the throw out force scale.
@@ -63,12 +62,6 @@ public class StratagemController : MonoBehaviour
 
     public delegate void EventHolder();
 
-    public event EventHolder OnStartCheckingCode;
-
-    public event EventHolder OnCheckingCode;
-
-    public event EventHolder OnStopCheckingCode;
-
     public event EventHolder OnGetReady;
 
     public event EventHolder OnThrow;
@@ -82,15 +75,25 @@ public class StratagemController : MonoBehaviour
     private float m_ScaleForce = 1;
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
-
-    // A container use to checking codes.
-    private List<Stratagem> m_Open = new List<Stratagem>();
-
-    private List<Stratagem> m_Close = new List<Stratagem>();
-
-    private int m_CodeInputStep;
+    private CheckCodesMechine m_CheckCodesMechine;
+    private List<Stratagem> m_InCheckCodeMechine = new List<Stratagem>();
 
     #endregion Private Variable
+
+    #region MonoBehaviour
+
+    private void Awake()
+    {
+        m_CheckCodesMechine = this.GetComponent<CheckCodesMechine>();
+        m_CheckCodesMechine.OnGet += GetReady;
+    }
+
+    private void OnDestroy()
+    {
+        m_CheckCodesMechine.OnGet -= GetReady;
+    }
+
+    #endregion MonoBehaviour
 
     #region Public Function
 
@@ -226,10 +229,17 @@ public class StratagemController : MonoBehaviour
     /// <returns>Was there are any stratagems in the contorller ?</returns>
     public bool StartCheckCodes()
     {
-        StopAllCoroutines();
-        if (m_Stratagems.Count <= 0) return false;
-        StartCoroutine(CheckInputCode());
-        if (OnStartCheckingCode != null) OnStartCheckingCode();
+        m_CheckCodesMechine.Clear();
+        m_InCheckCodeMechine.Clear();
+        foreach (Stratagem s in m_Stratagems)
+        {
+            if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
+            {
+                m_CheckCodesMechine.AddCodes(s, s.Info.Codes);
+                m_InCheckCodeMechine.Add(s);
+            }
+        }
+        m_CheckCodesMechine.StartCheckCodes();
         return true;
     }
 
@@ -238,9 +248,20 @@ public class StratagemController : MonoBehaviour
     /// </summary>
     public void StopCheckCodes()
     {
-        StopAllCoroutines();
-        m_bCheckingCode = false;
-        if (OnStopCheckingCode != null) OnStopCheckingCode();
+        m_CheckCodesMechine.StopCheckCodes();
+    }
+
+    /// <summary>
+    /// On check codes mechine get success.
+    /// </summary>
+    private void GetReady()
+    {
+        if (m_CheckCodesMechine.Result == null) return;
+
+        m_CurrentStratagem = m_CheckCodesMechine.Result as Stratagem;
+        m_CurrentStratagem.GetReady();
+
+        if (OnGetReady != null) OnGetReady();
     }
 
     /// <summary>
@@ -291,84 +312,6 @@ public class StratagemController : MonoBehaviour
 
         yield break;
     }
-
-    #region Check Input Code
-
-    /*---------------------------------------------------------
-     * Cllect all stratagem which has input code.             *
-     * Check input with info step by step.                    *
-     * The final result have to all match up info with input. *
-     * Finaly store in the m_CurrentStratagem.                *
-     ---------------------------------------------------------*/
-
-    private IEnumerator CheckInputCode()
-    {
-        m_bCheckingCode = true;
-        m_CodeInputStep = 0;
-        m_Open.Clear();
-        m_Close.Clear();
-
-        foreach (Stratagem s in m_Stratagems)
-        {
-            if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
-                m_Open.Add(s);
-        }
-
-        if (m_Open.Count <= 0) yield break;
-
-        StratagemInfo.eCode? input = null;
-        while (m_Open.Count > 0)
-        {
-            yield return new WaitUntil(() => { return (input = GetInputCode()) == null; });
-            yield return new WaitUntil(() => { return (input = GetInputCode()) != null; });
-            m_CodeInputStep++;
-
-            for (int i = 0; i < m_Open.Count; i++)
-            {
-                int index = m_CodeInputStep - 1;
-                if (m_Open[i].Info.Codes[index] == input)
-                {
-                    if (m_Open[i].Info.Codes.Length == m_CodeInputStep)
-                    {
-                        m_CurrentStratagem = m_Open[i];
-                        m_CurrentStratagem.GetReady();
-                        m_bCheckingCode = false;
-
-                        if (OnGetReady != null) OnGetReady();
-                        yield break;
-                    }
-                    continue;
-                }
-                else
-                {
-                    m_Close.Add(m_Open[i]);
-                }
-            }
-
-            for (int i = 0; i < m_Close.Count; i++)
-            {
-                m_Open.Remove(m_Close[i]);
-            }
-
-            if (OnCheckingCode != null) OnCheckingCode();
-        }
-        m_bCheckingCode = false;
-    }
-
-    /*---------------------------
-     * Define the input result. *
-     ---------------------------*/
-
-    private StratagemInfo.eCode? GetInputCode()
-    {
-        if (Input.GetAxisRaw(m_InputVertical) == 1) { return StratagemInfo.eCode.Up; }
-        else if (Input.GetAxisRaw(m_InputVertical) == -1) { return StratagemInfo.eCode.Down; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) == -1) { return StratagemInfo.eCode.Left; }
-        else if (Input.GetAxisRaw(m_InputHorizontal) == 1) { return StratagemInfo.eCode.Right; }
-        else { return null; }
-    }
-
-    #endregion Check Input Code
 
     #endregion Private Function
 }
