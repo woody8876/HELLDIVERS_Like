@@ -18,6 +18,7 @@ public class MissionTower : MonoBehaviour, IInteractable
     public string ID { get { return m_Id; } }
     public float Radius { get { return m_Radius; } }
     public Vector3 Position { get { return this.transform.position; } }
+    public eCode[] Codes { get { return m_Codes; } }
 
     #endregion Properties
 
