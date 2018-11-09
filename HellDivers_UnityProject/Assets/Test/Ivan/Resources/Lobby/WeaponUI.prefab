@@ -57,7 +57,6 @@ GameObject:
   - component: {fileID: 114103337690514956}
   - component: {fileID: 222929979999609290}
   - component: {fileID: 114498711276772230}
-  - component: {fileID: 114858469844062160}
   m_Layer: 5
   m_Name: WeaponUI
   m_TagString: Untagged
@@ -101,7 +100,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e5ca7751e13a79c4ba96e4fabacb0a88, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -147,29 +146,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114615914934840072}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: PrimaryWeapon
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114498711276772230
@@ -183,10 +160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfadf019ea19724c93c42f36ccc6627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 1101
+  m_ID: 1801
   m_WeaponName: {fileID: 114674452174667548}
   m_WeaponTexture: {fileID: 114028866222703792}
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e5ca7751e13a79c4ba96e4fabacb0a88, type: 3}
 --- !u!114 &114615914934840072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,7 +223,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "A/MG-11 Minigun Turret\r"
+  m_Text: "RL-112 Recoilless Rifle\r"
 --- !u!114 &114794908640105272
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,36 +243,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 0
---- !u!114 &114858469844062160
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1308541118778030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 9
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114498711276772230}
-          m_MethodName: SetWeaponInfo
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UI_WeaponInfo, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  delegates: []
 --- !u!222 &222395644949882250
 CanvasRenderer:
   m_ObjectHideFlags: 1

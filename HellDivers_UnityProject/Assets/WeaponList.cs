@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponList : MonoBehaviour {
     [SerializeField]
-    List<GameObject> m_Weapons;
+//    List<GameObject> m_Weapons;
     int[] Keys
     {
         get
@@ -24,10 +24,12 @@ public class WeaponList : MonoBehaviour {
         for (int i = 0; i < GameData.Instance.WeaponInfoTable.Count; i++)
         {
             Debug.Log(Keys[i]);
+            if (Keys[i] == 1901) { return; }
             GameObject go = Resources.Load("Lobby/WeaponUI") as GameObject;
-            Instantiate(go, this.transform);
+            go = Instantiate(go, this.transform);
             go.GetComponent<UI_Weapon>().m_ID = Keys[i];
             go.GetComponent<UI_Weapon>().SetWeaponUI() ;
+            go.transform.SetAsLastSibling();
         }	
         
     }
