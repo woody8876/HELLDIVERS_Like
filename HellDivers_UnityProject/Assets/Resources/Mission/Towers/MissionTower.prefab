@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4960270525300264}
   - component: {fileID: 33863420690544842}
   - component: {fileID: 23351720524224974}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Disruptor_Up_Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4639027596979916}
   - component: {fileID: 33544190800372442}
   - component: {fileID: 23988234651890742}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Disruptor_Up_Aim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4477740746689002}
-  - component: {fileID: 114182261509547360}
+  - component: {fileID: 114118943266863632}
+  - component: {fileID: 114981283151635986}
   m_Layer: 0
   m_Name: MissionTower
   m_TagString: Untagged
@@ -71,7 +72,7 @@ GameObject:
   - component: {fileID: 4560828951593858}
   - component: {fileID: 33957244101944828}
   - component: {fileID: 23010590516634856}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Disruptor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +89,7 @@ GameObject:
   - component: {fileID: 4743266688766932}
   - component: {fileID: 33518516208839538}
   - component: {fileID: 23898579162651020}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Disruptor_Up_Armor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +106,7 @@ GameObject:
   - component: {fileID: 4056788958486878}
   - component: {fileID: 108086013784383320}
   - component: {fileID: 120164824306864732}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Spotlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +125,7 @@ GameObject:
   - component: {fileID: 23683373988345872}
   - component: {fileID: 136311827692277698}
   - component: {fileID: 95339352254928038}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tower01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +167,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1283527198075924}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 333.11, y: 54.56, z: 652.53}
+  m_LocalPosition: {x: -4.791014, y: 8.041124e-18, z: -3.6213999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4059696263422132}
@@ -486,7 +487,7 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114182261509547360
+--- !u!114 &114118943266863632
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -495,6 +496,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f39830467de6cd1469030c88a6506906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id: MissionTower
+  m_Radius: 4
+  m_CodeLenghtMin: 6
+  m_CodeLenghtMax: 8
+--- !u!114 &114981283151635986
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1283527198075924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96945ca19398223418242edbf25c88d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!120 &120164824306864732

@@ -85,12 +85,12 @@ public class StratagemController : MonoBehaviour
     private void Awake()
     {
         m_CheckCodesMechine = this.GetComponent<CheckCodesMechine>();
-        m_CheckCodesMechine.OnGet += GetReady;
+        m_CheckCodesMechine.OnGetResult += GetReady;
     }
 
     private void OnDestroy()
     {
-        m_CheckCodesMechine.OnGet -= GetReady;
+        m_CheckCodesMechine.OnGetResult -= GetReady;
     }
 
     #endregion MonoBehaviour
