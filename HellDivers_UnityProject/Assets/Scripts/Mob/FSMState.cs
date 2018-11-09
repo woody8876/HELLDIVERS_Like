@@ -325,15 +325,8 @@ public class FSMAttackState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
-            return;
         }
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-            }
-        }
+       
         if (data.m_bIsPlayerDead)
         {
             if (info.normalizedTime > m_AnimatorLeaveTime)

@@ -406,8 +406,10 @@ public class PlayerFSMThrowState : PlayerFSMState
 public class PlayerFSMThrowBombState : PlayerFSMState
 {
     int count = 0;
-    bool bThrow = true;
+    int throwCount = 0;
     bool bHolding = false;
+    bool bThrow = true;
+    bool bFollowing = true;
     public PlayerFSMThrowBombState()
     {
         m_StateID = ePlayerFSMStateID.ThrowBombStateID;
@@ -416,8 +418,10 @@ public class PlayerFSMThrowBombState : PlayerFSMState
     public override void DoBeforeEnter(PlayerController data)
     {
         count = 0;
-        bThrow = true;
+        throwCount = 0;
         bHolding = false;
+        bThrow = true;
+        bFollowing = true;
         data.m_MoveMode = "Throw";
         data.m_PAC.SetAnimator(m_StateID, false);
     }
@@ -429,17 +433,9 @@ public class PlayerFSMThrowBombState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if (bThrow == true)
+        if (bThrow)
         {
-            if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
-            {
-                data.m_MoveMode = "Throwing";
-                data.m_PAC.SetAnimator(m_StateID, true);
-                return;
-            }
-
             bHolding = data.m_GrenadesController.Holding();
-
             if (bHolding == false)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
@@ -451,6 +447,16 @@ public class PlayerFSMThrowBombState : PlayerFSMState
                 count++;
             }
         }
+        if (bFollowing)
+        {
+            data.m_GrenadesController.Following();
+        }
+        if (Input.GetAxis("Granade") == 0 && !Input.GetKey(KeyCode.E))
+        {
+            data.m_MoveMode = "Throwing";
+            data.m_PAC.SetAnimator(m_StateID, true);
+            return;
+        }
     }
 
     public override void CheckCondition(PlayerController data)
@@ -458,9 +464,11 @@ public class PlayerFSMThrowBombState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("ThrowOut"))
         {
-            if (info.normalizedTime > 0.4f && bThrow)
+            bThrow = false;
+            if (info.normalizedTime > 0.4f && throwCount < 1)
             {
-                bThrow = false;
+                throwCount++;
+                bFollowing = false;
                 data.m_GrenadesController.Throw();
             }
         }
