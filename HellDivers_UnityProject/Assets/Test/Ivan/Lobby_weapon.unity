@@ -120,11 +120,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1910463840}
     m_Modifications:
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224779827351611040, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -230,31 +225,6 @@ Prefab:
       propertyPath: m_SecondaryWeapon
       value: 
       objectReference: {fileID: 1111460126}
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 450560309}
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CalculateLayoutInputVertical
-      objectReference: {fileID: 0}
-    - target: {fileID: 114298284308627164, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0e1fa9130f6d3a94fabb603c1e43c7de, type: 2}
   m_IsPrefabParent: 0
@@ -520,6 +490,26 @@ Prefab:
       propertyPath: m_SelectWeapon
       value: 
       objectReference: {fileID: 1407019909}
+    - target: {fileID: 114143404685021366, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+        type: 2}
+      propertyPath: main_Weapon.PrimaryWeapon
+      value: 
+      objectReference: {fileID: 1330565031}
+    - target: {fileID: 114143404685021366, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+        type: 2}
+      propertyPath: main_Weapon.SecondaryWeapon
+      value: 
+      objectReference: {fileID: 1111460126}
+    - target: {fileID: 114143404685021366, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+        type: 2}
+      propertyPath: main_Weapon.m_sPlayerID
+      value: Chen Pang Pang
+      objectReference: {fileID: 0}
+    - target: {fileID: 114143404685021366, guid: f843c0d5583bc6d4d8dec5a6204a5c21,
+        type: 2}
+      propertyPath: main_Weapon.m_iRank
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f843c0d5583bc6d4d8dec5a6204a5c21, type: 2}
   m_IsPrefabParent: 0
@@ -585,12 +575,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &450560309 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114318475990307236, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-    type: 2}
-  m_PrefabInternal: {fileID: 102358711}
-  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &557946156 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1663264796451514, guid: f843c0d5583bc6d4d8dec5a6204a5c21,

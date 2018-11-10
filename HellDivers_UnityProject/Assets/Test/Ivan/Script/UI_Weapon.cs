@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class UI_Weapon : MonoBehaviour {
+public class UI_Weapon : MonoBehaviour{
 
     public int m_ID;
     /// <summary>
@@ -15,14 +16,6 @@ public class UI_Weapon : MonoBehaviour {
     [HideInInspector] public Sprite m_Sprite;
     [SerializeField] Image m_WeaponTexture;
     [SerializeField] Text m_WeaponName;
-
-    Button m_Button;
-
-    // Use this for initialization
-    public void Start()
-    {
-        m_Button = GetComponent<Button>();
-    }
 
     public void SetWeaponUI () {
         m_WeaponInfo = GameData.Instance.WeaponInfoTable[m_ID];
@@ -36,5 +29,4 @@ public class UI_Weapon : MonoBehaviour {
         uI_WeaponInfo.SetWeapon(this);
     }
 
-    
 }

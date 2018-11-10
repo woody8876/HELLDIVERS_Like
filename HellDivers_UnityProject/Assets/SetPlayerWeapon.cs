@@ -4,23 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SetPlayerWeapon : MonoBehaviour {
+    [Header("== UI Setting ==")]
+        [SerializeField] Text m_tPlayerName;
+        [SerializeField] Text m_tRank;
+        [SerializeField] GameObject m_WeaponUI;
+        [SerializeField] GameObject m_SelectWeapon;
+    [Header("== Lobby Weapon UI Data ==")]
+        [SerializeField] int _iWeaponID;
+    public UIMain_Weapon main_Weapon = new UIMain_Weapon();
 
-    [SerializeField] string m_PlayerID;
-    [SerializeField] int m_Rank;
-    [SerializeField] Text m_tPlayerName;
-    [SerializeField] Text m_tRank;
-    [SerializeField] GameObject m_WeaponUI;
-    [SerializeField] GameObject m_SelectWeapon;
-
-    public bool m_bPrimary;
-    public int m_WeaponID;
-
+    public int m_iWeaponID { get { return _iWeaponID; } }
     private string m_path = "Canvas/Info_Interface/";
 
     // Use this for initialization
     void Start () {
-        m_tPlayerName.text = m_PlayerID;
-        m_tRank.text = m_Rank.ToString(); 
+
+        m_tPlayerName.text = main_Weapon.m_sPlayerID;
+        m_tRank.text = main_Weapon.m_iRank.ToString(); 
         InitialWeapon("PlayerMenu/PrimaryWeapon", 1101, true);
         InitialWeapon("PlayerMenu/SecondaryWeapon", 1301, false);
 	}
@@ -32,8 +32,10 @@ public class SetPlayerWeapon : MonoBehaviour {
         uI.m_ID = i;
         uI.SetWeaponUI();
         uI.m_Primary = b;
+        if (b) { main_Weapon.m_iPrimaryWeaponID = i; }
+        else { main_Weapon.m_iSecondaryWeaponID = i; }
         go.GetComponent<Button>().onClick.AddListener(() => SelectWeaponUI(true));
-        go.GetComponent<Button>().onClick.AddListener(() => SelectButton(uI));
+        go.GetComponent<Button>().onClick.AddListener(() => Click(uI));
 
     }
 
@@ -45,10 +47,10 @@ public class SetPlayerWeapon : MonoBehaviour {
         go.SetActive(b);
     }
 
-    private void SelectButton(UI_Weapon ui)
+    private void Click(UI_Weapon ui)
     {
-        m_bPrimary = ui.m_Primary;
-        m_WeaponID = ui.m_ID;
+        main_Weapon.m_bPrimary = ui.m_Primary;
+        _iWeaponID = ui.m_ID; 
+        
     }
-
 }

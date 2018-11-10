@@ -595,7 +595,6 @@ GameObject:
   - component: {fileID: 222981876292588948}
   - component: {fileID: 114291551193642948}
   - component: {fileID: 114031334986580104}
-  - component: {fileID: 114765860329996784}
   m_Layer: 5
   m_Name: Button_Select
   m_TagString: Untagged
@@ -1079,7 +1078,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: AR-19 Liberator
+  m_Text: "P-6 Gunslinger\r"
 --- !u!114 &114155470178584404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1255,7 +1254,18 @@ MonoBehaviour:
   m_VerticalScrollbarSpacing: -20
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114318475990307236}
+        m_MethodName: CalculateLayoutInputVertical
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114318475990307236
@@ -1684,17 +1694,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114765860329996784
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1605654018197096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2ca1da15aa7f74d9d5f580f8de909e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114810441159816824
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1760,13 +1759,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77df5e94f100c9a4e8e4d39ae4a42bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CurrentID: 0
   m_SetPlayer: {fileID: 0}
+  m_Info: {fileID: 114874649004122528}
   m_WeaponUI: {fileID: 1308541118778030, guid: 50b0e2310f376f4459e97b8b4f2bf852, type: 2}
   m_PrimaryWeapon: {fileID: 0}
   m_SecondaryWeapon: {fileID: 0}
   m_LevelUP: {fileID: 114073984425871592}
   m_Select: {fileID: 114031334986580104}
-  m_interfaceID: 0
 --- !u!114 &114843378477976666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1786,7 +1786,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e353b649c821d544b84a33fdc4ce24c1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1bb15d554a6bec40996c0c39eabd5b2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2025,7 +2025,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: FULL - AUTO
+  m_Text: SEMI - AUTO
 --- !u!114 &114961252332257108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2486,7 +2486,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 143.57, y: 0}
+  m_SizeDelta: {x: 0, y: -2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224135272297909002
 RectTransform:
@@ -2558,7 +2558,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 143.57, y: 0}
+  m_SizeDelta: {x: 13.333333, y: -2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224167463955347556
 RectTransform:
@@ -2942,7 +2942,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 143.57, y: 0}
+  m_SizeDelta: {x: 128, y: -2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224743967396273696
 RectTransform:
@@ -3054,7 +3054,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 133.33, y: -2}
+  m_SizeDelta: {x: 13.333333, y: -2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224835174395438836
 RectTransform:
@@ -3112,7 +3112,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 143.57, y: 0}
+  m_SizeDelta: {x: 80, y: -2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224876179638132054
 RectTransform:

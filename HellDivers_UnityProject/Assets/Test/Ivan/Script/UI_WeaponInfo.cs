@@ -19,7 +19,6 @@ public class UI_WeaponInfo : MonoBehaviour {
     public void SetWeapon(UI_Weapon uI_Weapon)
     {
         m_Size.y = -2;
-
         SetCurrentUI(uI_Weapon);
         SetCurrent_FireMode(uI_Weapon);
         SetCurrent_FireRate(uI_Weapon);
