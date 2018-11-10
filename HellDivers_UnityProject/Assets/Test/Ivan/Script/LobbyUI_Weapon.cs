@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UI_Weapon : MonoBehaviour{
+public class LobbyUI_Weapon : MonoBehaviour{
 
     public int m_ID;
     /// <summary>
@@ -23,10 +23,5 @@ public class UI_Weapon : MonoBehaviour{
         m_WeaponName.text = m_WeaponInfo.Name;
         m_WeaponTexture.sprite = m_Sprite;
 	}
-	
-    public void SetWeaponInfo(UI_WeaponInfo uI_WeaponInfo)
-    {
-        uI_WeaponInfo.SetWeapon(this);
-    }
 
 }

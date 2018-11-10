@@ -17,6 +17,7 @@ public class WeaponList : MonoBehaviour {
     [Header("== Button Setting ==")]  
         [SerializeField] Button m_LevelUP;
         [SerializeField] Button m_Select;
+        [SerializeField] RectTransform rect;
     #endregion
 
     List<Button> m_Buttons = new List<Button>();
@@ -27,6 +28,17 @@ public class WeaponList : MonoBehaviour {
             int[] i = new int[GameData.Instance.WeaponInfoTable.Count];
             GameData.Instance.WeaponInfoTable.Keys.CopyTo(i, 0);
             return i;
+        }
+    }
+    int _posY;
+    int posY
+    {
+        get { return _posY; }
+        set
+        {
+            if (value < 0) _posY = 0;
+            else if (value > 852) _posY = 852;
+            else _posY = value;
         }
     }
 
@@ -42,23 +54,26 @@ public class WeaponList : MonoBehaviour {
     }
     private void LateUpdate()
     {
+        Vector3 pos = rect.localPosition ;
+        pos.y = posY;
+        rect.localPosition = Vector3.Lerp(rect.localPosition, pos, 0.05f);
     }
-
     #endregion
-    
+
     #region WeaponUI - Private Method
+    //Set the init highlight button when SelectWeapon is active
     private IEnumerator SelectContinueButton()
     {
         yield return null;
         for (int i = 0; i < m_Buttons.Count; i++)
         {
-            if (m_SetPlayer.m_iWeaponID == m_Buttons[i].gameObject.GetComponent<UI_Weapon>().m_ID)
+            if (m_SetPlayer.m_iWeaponID == m_Buttons[i].gameObject.GetComponent<LobbyUI_Weapon>().m_ID)
             {
                 EventSystem.current.SetSelectedGameObject(m_Buttons[i].gameObject, null);
-                Debug.Log("Find one!!");
             }
         }
     }
+    //Create all the weapons in the dictionary at the first time
     private void CreateWeaponUI()
     {
         for (int i = 0; i < GameData.Instance.WeaponInfoTable.Count; i++)
@@ -66,7 +81,7 @@ public class WeaponList : MonoBehaviour {
             if (Keys[i] == 1901) { return; }
             GameObject go = Instantiate(m_WeaponUI, this.transform);
             go.name = Keys[i].ToString();
-            UI_Weapon uI_Weapon = go.GetComponent<UI_Weapon>();
+            LobbyUI_Weapon uI_Weapon = go.GetComponent<LobbyUI_Weapon>();
             uI_Weapon.m_ID = Keys[i];
             go.GetComponent<Button>();
             uI_Weapon.SetWeaponUI();
@@ -74,16 +89,18 @@ public class WeaponList : MonoBehaviour {
             AddEvent(go, uI_Weapon);
         }
     }
-    private void AddEvent(GameObject go, UI_Weapon uI_Weapon)
+    //Add EventTrigger into each WeaponUI to Update the WeaponAttribute UI
+    private void AddEvent(GameObject go, LobbyUI_Weapon uI_Weapon)
     {
         EventTrigger trigger = go.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.Select;
         entry.callback.AddListener((eventData) => m_Info.SetWeapon(uI_Weapon));
         entry.callback.AddListener((eventData) => SetID(uI_Weapon));
+        entry.callback.AddListener((eventData) => OnValueChange());
         trigger.triggers.Add(entry);
-
     }
+    //Set Navegation of WeaponUI buttons at the first time
     private void SetNav()
     {
         Navigation buttonNav;
@@ -97,47 +114,54 @@ public class WeaponList : MonoBehaviour {
             m_Buttons[i].navigation = buttonNav;
         }
     }
-    private void SetID(UI_Weapon uI_Weapon)
+    //EventTrigger function of each WeaponUI, everytime when WeaponUI was highlighted would change the current ID in this script.
+    private void SetID(LobbyUI_Weapon uI_Weapon)
     {
         m_CurrentID = uI_Weapon.m_ID;
     }
+    //EventTrigger function of each WeaponUI, everytime when WeaponUI was highlighted would change the rect positoin
+    private void OnValueChange()
+    {
+        posY = -150 + 150 * (int)((m_CurrentID - 1000) * 0.01f);
+    }
+    
     #endregion
 
     #region Select Button - Private Method
+    //Check and change the ID and sprite of the weapon in the PlayerMenu 
     private void ClickSelect()
     {
         GameObject go = null;
-        if (m_SetPlayer.main_Weapon.m_bPrimary)
+        if (m_SetPlayer.main_Armoury.m_bPrimary)
         {
-            if (m_CurrentID == m_SetPlayer.main_Weapon.m_iSecondaryWeaponID)
+            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iSecondaryWeaponID)
             {
-                go = m_SetPlayer.main_Weapon.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
-                SetWeaponUI(go, m_SetPlayer.main_Weapon.m_iPrimaryWeaponID, ref m_SetPlayer.main_Weapon.m_iSecondaryWeaponID);
+                go = m_SetPlayer.main_Armoury.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
+                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iPrimaryWeaponID, ref m_SetPlayer.main_Armoury.m_iSecondaryWeaponID);
             }
-            go = m_SetPlayer.main_Weapon.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
-            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Weapon.m_iPrimaryWeaponID);
+            go = m_SetPlayer.main_Armoury.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
+            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Armoury.m_iPrimaryWeaponID);
         }
         else
         {
-            if (m_CurrentID == m_SetPlayer.main_Weapon.m_iPrimaryWeaponID)
+            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iPrimaryWeaponID)
             {
-                go = m_SetPlayer.main_Weapon.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
-                SetWeaponUI(go, m_SetPlayer.main_Weapon.m_iSecondaryWeaponID, ref m_SetPlayer.main_Weapon.m_iPrimaryWeaponID);
+                go = m_SetPlayer.main_Armoury.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
+                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iSecondaryWeaponID, ref m_SetPlayer.main_Armoury.m_iPrimaryWeaponID);
             }
-            go = m_SetPlayer.main_Weapon.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
-            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Weapon.m_iSecondaryWeaponID);
+            go = m_SetPlayer.main_Armoury.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
+            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Armoury.m_iSecondaryWeaponID);
 
         }
         EventSystem.current.SetSelectedGameObject(go, null);
         m_SetPlayer.SelectWeaponUI(false);
 
     }
-
-
+    //Use to set selected weapon to PlayerMenu in this script
     private void SetWeaponUI(GameObject go, int current, ref int target)
     {
-        go.GetComponent<UI_Weapon>().m_ID = current;
-        go.GetComponent<UI_Weapon>().SetWeaponUI();
+        go.GetComponent<LobbyUI_Weapon>().m_ID = current;
+        go.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
         target = current;
     }
     #endregion

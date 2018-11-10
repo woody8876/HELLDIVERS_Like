@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class UIMain_Weapon{
+public class UIMain_Armoury{
 
     public GameObject PrimaryWeapon;
     public GameObject SecondaryWeapon;
-
+    public bool m_bPrimary;
+    [Header("== In Game Data ==")]
     public string m_sPlayerID;
     public int m_iRank;
     public int m_iPrimaryWeaponID;
     public int m_iSecondaryWeaponID;
-    public bool m_bPrimary;
+    public List<int> m_iWeapons;
+    public List<int> m_iStrategems;
 
 }

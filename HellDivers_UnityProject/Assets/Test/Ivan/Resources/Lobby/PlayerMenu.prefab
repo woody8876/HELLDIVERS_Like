@@ -522,14 +522,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a7eb7a505f02754f96b73e032a68564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerID: TGIF
-  m_Rank: 40
   m_tPlayerName: {fileID: 114831495890107448}
   m_tRank: {fileID: 114557880086855178}
   m_WeaponUI: {fileID: 1308541118778030, guid: 50b0e2310f376f4459e97b8b4f2bf852, type: 2}
-  m_SelectWeapon: {fileID: 1543316288133118, guid: 0e1fa9130f6d3a94fabb603c1e43c7de,
-    type: 2}
-  m_bPrimary: 0
+  m_SelectWeapon: {fileID: 0}
+  m_Confirm: {fileID: 114304503960962378}
+  _iWeaponID: 0
+  main_Weapon:
+    PrimaryWeapon: {fileID: 1504024659304972}
+    SecondaryWeapon: {fileID: 1423141297170364}
+    m_sPlayerID: Chen Pang Pang
+    m_iRank: 40
+    m_iPrimaryWeaponID: 0
+    m_iSecondaryWeaponID: 0
+    m_bPrimary: 0
 --- !u!114 &114157972562801546
 MonoBehaviour:
   m_ObjectHideFlags: 1
