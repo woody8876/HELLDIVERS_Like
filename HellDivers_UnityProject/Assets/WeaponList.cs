@@ -1,10 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class WeaponList : MonoBehaviour {
-    [SerializeField]
-//    List<GameObject> m_Weapons;
+
+    public int m_ID;
+    [SerializeField] SetPlayerWeapon m_SetPlayer;
+    [SerializeField] GameObject m_WeaponUI;
+    [SerializeField] GameObject m_PrimaryWeapon;
+    [SerializeField] GameObject m_SecondaryWeapon;
+    [SerializeField] Button m_LevelUP;
+    [SerializeField] Button m_Select;
+    
+
+    List<Button> m_Buttons = new List<Button>();
+    GameObject m_First;
     int[] Keys
     {
         get
@@ -14,38 +26,64 @@ public class WeaponList : MonoBehaviour {
             return i;
         }
     }
-    [SerializeField] bool m_interfaceID;
+
 
     // Use this for initialization
     void Start () {
-	}
+        CreateWeaponUI();
+        SetNav();
+        m_Select.onClick.AddListener(() => ClickSelect());
+    }
     private void OnEnable()
     {
-        for (int i = 0; i < GameData.Instance.WeaponInfoTable.Count; i++)
+        StartCoroutine(SelectContinueButton());
+    }
+    private IEnumerator SelectContinueButton()
+    {
+        yield return null;
+        for (int i = 0; i < m_Buttons.Count; i++)
         {
-            Debug.Log(Keys[i]);
-            if (Keys[i] == 1901) { return; }
-            GameObject go = Resources.Load("Lobby/WeaponUI") as GameObject;
-            go = Instantiate(go, this.transform);
-            go.GetComponent<UI_Weapon>().m_ID = Keys[i];
-            go.GetComponent<UI_Weapon>().SetWeaponUI() ;
-            go.transform.SetAsLastSibling();
-        }	
-        
+            if (m_SetPlayer.m_WeaponID == m_Buttons[i].gameObject.GetComponent<UI_Weapon>().m_ID)
+            {
+                EventSystem.current.SetSelectedGameObject(m_Buttons[i].gameObject, null);
+                Debug.Log("Find one!!");
+            }
+        }
     }
 
     private void CreateWeaponUI()
     {
-
+        for (int i = 0; i < GameData.Instance.WeaponInfoTable.Count; i++)
+        {
+            if (Keys[i] == 1901) { return; }
+            GameObject go = Instantiate(m_WeaponUI, this.transform);
+            go.name = Keys[i].ToString();
+            UI_Weapon uI_Weapon = go.GetComponent<UI_Weapon>();
+            uI_Weapon.m_ID = Keys[i];
+            uI_Weapon.SetWeaponUI();
+            m_Buttons.Add(go.GetComponent<Button>());
+            if (i == 0) m_First = go;
+        }
     }
 
-
-    public void PrimaryWeapon()
+    private void SetNav()
     {
-        m_interfaceID = true;
+        Navigation buttonNav;
+        for (int i = 0; i < m_Buttons.Count; i++)
+        {
+            buttonNav = m_Buttons[i].navigation;
+            buttonNav.mode = Navigation.Mode.Explicit;
+            buttonNav.selectOnUp = (i != 0) ? m_Buttons[i - 1] : m_Buttons[i];
+            buttonNav.selectOnDown = (i != m_Buttons.Count - 1) ? m_Buttons[i + 1] : m_Buttons[i];
+            buttonNav.selectOnRight = m_LevelUP;
+            m_Buttons[i].navigation = buttonNav;
+        }
     }
-    public void SecondaryWeapon()
+
+    public void ClickSelect()
     {
-        m_interfaceID = false;
+        GameObject go = (m_SetPlayer.m_bPrimary) ? m_PrimaryWeapon : m_SecondaryWeapon;
+        EventSystem.current.SetSelectedGameObject(go.GetComponentInChildren<Button>().gameObject, null);
+        m_SetPlayer.SelectWeaponUI(false);
     }
 }
