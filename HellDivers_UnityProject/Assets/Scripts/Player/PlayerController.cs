@@ -372,9 +372,6 @@ public class PlayerController : MonoBehaviour
             if (m_Direction.magnitude > 1) m_Direction.Normalize();
             #endregion
         }
-
-
-
     }
 
     #region Public Function
