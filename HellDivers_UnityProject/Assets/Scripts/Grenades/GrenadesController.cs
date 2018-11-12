@@ -55,10 +55,16 @@ public class GrenadesController : MonoBehaviour
     {
         if (GrenadeCounter <= 0) { return false; }
         if (!m_bHolding) { LoadGrenade(); }
+        m_Grenades.GetComponent<Grenades>().m_Force += 5 * Time.fixedDeltaTime;
+        return true;
+    }
+    /// <summary>
+    /// Grenade's follow
+    /// </summary>
+    public void Following()
+    {
         m_Grenades.transform.position = m_StarPos.position;
         m_Grenades.transform.forward = m_StarPos.forward;
-        m_Grenades.GetComponent<Grenades>().m_Force += 7 * Time.fixedDeltaTime;
-        return true;
     }
 
     /// <summary>

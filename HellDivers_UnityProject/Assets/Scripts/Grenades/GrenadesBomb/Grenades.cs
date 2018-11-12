@@ -13,7 +13,7 @@ public class Grenades : MonoBehaviour {
     {
         set
         {
-            if (m_fForce > 8) m_fForce = 8;
+            if (m_fForce > 12) m_fForce = 12;
             else m_fForce = value;
         }
         get { return m_fForce; }
@@ -45,7 +45,7 @@ public class Grenades : MonoBehaviour {
     }
     protected void Damage(Vector3 pos)
     {
-        var enemies = Physics.OverlapSphere(pos, grenadeInfo.Range, 1<<LayerMask.NameToLayer("Enemies"));
+        var enemies = Physics.OverlapSphere(pos, grenadeInfo.Range, 1<<LayerMask.NameToLayer("Enemies") | 1<< LayerMask.NameToLayer("Player"));
         foreach (var enemy in enemies)
         {
             IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
@@ -72,7 +72,7 @@ public class Grenades : MonoBehaviour {
         if (m_fDamageTime <= Time.fixedDeltaTime) m_gEffect.GetComponent<Animator>().SetTrigger("startTrigger");
         if (m_fDamageTime > grenadeInfo.Timer)
         {
-            m_fForce = 5;
+            m_fForce = 1;
             Damage(this.transform.position);
             m_fDamageTime = 0;
             ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
@@ -104,7 +104,7 @@ public class Grenades : MonoBehaviour {
     #endregion
 
     #region Private Field
-    protected float m_fForce = 2;
+    protected float m_fForce = 1;
     protected float m_fGravity = -9.8f;
     protected float m_fTime;
     protected float m_fDamageTime;
