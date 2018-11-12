@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MissionManager
 {
-    public static int MissionCount { get; private set; }
     public MissionManager Instance { get; private set; }
+    public static int MissionCount { get; private set; }
     private static int m_TowerMissionNum;
     private List<Mission> m_MissionMap;
 

@@ -57,7 +57,7 @@ public class GameMain : MonoBehaviour
     {
         for (int i = 0; i < PlayerManager.Instance.Players.Count; i++)
         {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[1]);
         }
 
         m_PlayerManager.SpawnPlayers();

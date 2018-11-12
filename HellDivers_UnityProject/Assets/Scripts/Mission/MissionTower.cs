@@ -17,6 +17,7 @@ public class MissionTower : Mission, IInteractable
     public Player CurrentPlayer { get; private set; }
     public string ID { get { return m_Id; } }
     public float Radius { get { return m_Radius; } }
+    public float AvaliableRadius { get { return m_AvaliableRadius; } }
     public Vector3 Position { get { return this.transform.position; } }
     public eCode[] Codes { get { return m_Codes; } }
 
@@ -26,6 +27,7 @@ public class MissionTower : Mission, IInteractable
 
     [SerializeField] private string m_Id = "MissionTower";
     [SerializeField] private float m_Radius = 4;
+    [SerializeField] private float m_AvaliableRadius = 15;
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
     [SerializeField] private float m_ActivatingTime = 5;
@@ -57,7 +59,7 @@ public class MissionTower : Mission, IInteractable
         InteractiveItemManager.Instance.AddItem(this);
         m_CodeMechine = this.GetComponent<CheckCodesMechine>();
         m_CodeMechine.OnGetResult += SuccessOnCheckCode;
-        m_CodeMechine.OnStop += StartCheckCodes;
+        m_CodeMechine.OnFaild += StartCheckCodes;
         m_Codes = GenerateCode();
     }
 
@@ -96,6 +98,16 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine.Clear();
         m_CodeMechine.AddCodes(this, m_Codes);
         m_CodeMechine.StartCheckCodes();
+        DoState = CheckCodeState;
+    }
+
+    private void StopCheckCodes()
+    {
+        m_CodeMechine.StopCheckCodes();
+        CurrentPlayer = null;
+        m_CodeMechine.enabled = false;
+        m_Animator.SetTrigger("Stop");
+        DoState = null;
     }
 
     private void SuccessOnCheckCode()
@@ -105,12 +117,30 @@ public class MissionTower : Mission, IInteractable
         DoState = ActivationState;
     }
 
+    /*-----------------------------
+     * It's "Checking Code State" *
+     -----------------------------*/
+
+    private void CheckCodeState()
+    {
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius)
+        {
+            StopCheckCodes();
+        }
+    }
+
     /*-----------------------------------------------------
      * It's "Activation State" timer, count on m_ActTimer *
      -----------------------------------------------------*/
 
     private void ActivationState()
     {
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius)
+        {
+            Debug.LogError("Out");
+            StopCheckCodes();
+        }
+
         if (m_ActTimer < m_ActivatingTime) m_ActTimer += Time.fixedDeltaTime;
         else
         {

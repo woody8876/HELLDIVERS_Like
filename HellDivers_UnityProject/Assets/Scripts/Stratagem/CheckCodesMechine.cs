@@ -55,7 +55,7 @@ public class CheckCodesMechine : MonoBehaviour
     /// <summary>
     /// On the end of check code process.
     /// </summary>
-    public event CheckCodeEventHolder OnStop;
+    public event CheckCodeEventHolder OnFaild;
 
     #endregion Events
 
@@ -147,8 +147,6 @@ public class CheckCodesMechine : MonoBehaviour
         StopAllCoroutines();
         IsChecking = false;
         this.enabled = false;
-
-        if (OnStop != null) OnStop();
     }
 
     #endregion Public Function
@@ -198,7 +196,7 @@ public class CheckCodesMechine : MonoBehaviour
         }
 
         IsChecking = false;
-        if (OnStop != null) OnStop();
+        if (OnFaild != null) OnFaild();
         yield break;
     }
 
