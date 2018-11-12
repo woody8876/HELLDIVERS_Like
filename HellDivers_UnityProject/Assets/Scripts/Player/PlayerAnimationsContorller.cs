@@ -102,8 +102,8 @@ public class PlayerAnimationsContorller : MonoBehaviour
             //}
             m_Animator.SetBool("WalkShoot", true);
             m_Animator.SetFloat("Turn", m_TurnAmount * 0.63f, 0.1f, Time.deltaTime);
-            m_Animator.SetFloat("WalkForward", m_BattleForward/*, 0.1f, Time.deltaTime*/);
-            m_Animator.SetFloat("WalkRight", m_BattleRight/*, 0.1f, Time.deltaTime*/);
+            m_Animator.SetFloat("WalkForward", m_BattleForward, 0.1f, Time.deltaTime);
+            m_Animator.SetFloat("WalkRight", m_BattleRight, 0.1f, Time.deltaTime);
         }
     }
 

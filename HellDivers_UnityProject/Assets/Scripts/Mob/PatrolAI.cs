@@ -6,9 +6,9 @@ using UnityEngine.AI;
 public class PatrolAI : Character
 {
 
+    private FSMSystem m_FSM;
     public AIData m_AIData;
     public PlayerController m_PlayerController;
-    FSMSystem m_FSM;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
     private MobAimLine m_MobAimLine;
@@ -164,6 +164,7 @@ public class PatrolAI : Character
         if (m_CurrentHp <= 0)
         {
             m_BoxCollider.enabled = false;
+            m_MobAimLine.CloseAimLine();
             Death();
             return true;
         }
