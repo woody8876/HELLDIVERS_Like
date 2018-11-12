@@ -13,7 +13,7 @@ public class FadeOut : MonoBehaviour {
         m_bBlack = false;
         color = GetComponent<Image>().color;
     }
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (!m_bBlack)
         {
