@@ -59,7 +59,7 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.WeaponController.OnSwitch += StartWeaponPanel;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart += StopWeaponPanel;
-            CurrentPlayer.StratagemController.CheckCodesMechine.OnFaild += StartWeaponPanel;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop += StartWeaponPanel;
             CurrentPlayer.StratagemController.OnThrow += StartWeaponPanel;
             CurrentPlayer.OnStartSpawnNotify += StartWeaponPanel;
             CurrentPlayer.OnStartDeathNotify += StopWeaponPanel;
@@ -69,7 +69,7 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.WeaponController.OnSwitch -= StartWeaponPanel;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart -= StopWeaponPanel;
-            CurrentPlayer.StratagemController.CheckCodesMechine.OnFaild -= StartWeaponPanel;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop -= StartWeaponPanel;
             CurrentPlayer.StratagemController.OnThrow -= StartWeaponPanel;
             CurrentPlayer.OnStartSpawnNotify -= StartWeaponPanel;
             CurrentPlayer.OnStartDeathNotify -= StopWeaponPanel;

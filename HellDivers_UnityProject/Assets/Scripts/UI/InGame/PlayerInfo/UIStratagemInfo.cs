@@ -80,7 +80,7 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart += StartUI;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking += DoCheckCodes;
-            CurrentPlayer.StratagemController.CheckCodesMechine.OnFaild += StopUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop += StopUI;
             CurrentPlayer.StratagemController.OnGetReady += DoReady;
             CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnThrow += StopUI;
@@ -90,7 +90,7 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart -= StartUI;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking -= DoCheckCodes;
-            CurrentPlayer.StratagemController.CheckCodesMechine.OnFaild -= StopUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop -= StopUI;
             CurrentPlayer.StratagemController.OnGetReady -= DoReady;
             CurrentPlayer.OnStartDeathNotify -= StopUI;
             CurrentStratagem.OnThrow -= StopUI;
