@@ -78,10 +78,7 @@ public class MobManager
     {
         //if (MapInfo.Instance == null) return;
         //if (MapInfo.Instance.MobPos.Count <= 0) return;
-        if (m_GOPlayer == null)
-        {
-            m_GOPlayer = GameObject.FindGameObjectWithTag("Player");
-        }
+
 
         //if (m_FishCount > 10) return;
         //int BestSpawnIndex = 0;
@@ -113,22 +110,24 @@ public class MobManager
         //    m_GoFish.transform.position = MapInfo.Instance.MobPos[BestSpawnIndex].position;
         //    m_FishCount++;
         //}
+        m_GOPlayer = GameObject.FindGameObjectWithTag("Player");
 
         Vector3 spawnTarget = m_GOPlayer.transform.forward;
         NavMeshHit nHit;
         do
         {
+            spawnTarget = m_GOPlayer.transform.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-            spawnTarget *= Random.Range(20f, 25f);
+            spawnTarget *= Random.Range(25f, 35f);
             spawnTarget += m_GOPlayer.transform.position;
         } while (NavMesh.Raycast(m_GOPlayer.transform.position, spawnTarget, out nHit, NavMesh.AllAreas));
-
+      
         for (int i = 0; i < num; i++)
         {
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
             if (m_GOFish == null) return;
-            m_GOFish.SetActive(true);
             m_GOFish.transform.position = spawnTarget;
+            m_GOFish.SetActive(true);
             m_FishCount++;
         }
     }
@@ -139,11 +138,36 @@ public class MobManager
         NavMeshHit nHit;
         do
         {
+            spawnTarget = data.m_Go.transform.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-            spawnTarget *= Random.Range(3f, 10f);
+            spawnTarget *= Random.Range(1f, 2f);
             spawnTarget += data.m_Go.transform.position;
         }while(NavMesh.Raycast(data.m_Go.transform.position, spawnTarget, out nHit, NavMesh.AllAreas));
-       
+
+
+        for (int i = 0; i < num; i++)
+        {
+            m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+            if (m_GOFish == null) return;
+            m_GOFish.transform.position = spawnTarget;
+            m_GOFish.SetActive(true);
+            m_FishCount++;
+        }
+    }
+
+    public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
+    {
+        Vector3 spawnTarget = center.forward;
+        NavMeshHit nHit;
+        do
+        {
+            spawnTarget = center.forward;
+            spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
+            spawnTarget *= Random.Range(minRadius, maxRadius);
+            spawnTarget += center.position;
+        } while (NavMesh.Raycast(center.position, spawnTarget, out nHit, NavMesh.AllAreas));
+
+
         for (int i = 0; i < num; i++)
         {
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);

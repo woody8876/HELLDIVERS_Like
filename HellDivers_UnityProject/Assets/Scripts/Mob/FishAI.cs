@@ -20,10 +20,12 @@ public class FishAI : Character
     private void OnEnable()
     {
         if (m_FSM == null) return;
-        m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
+        m_AIData.m_Go = this.gameObject;
+        Debug.Log(this.gameObject.transform.position);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
+        m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
     {
@@ -109,6 +111,7 @@ public class FishAI : Character
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
         }
+        Debug.Log(m_AIData.m_FSMSystem.CurrentState);
         m_FSM.DoState();
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
@@ -179,7 +182,7 @@ public class FishAI : Character
             Gizmos.color = Color.red;
             Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
-        Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
+        //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
         Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
     }
