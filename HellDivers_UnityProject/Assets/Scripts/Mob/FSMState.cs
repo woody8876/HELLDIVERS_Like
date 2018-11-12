@@ -5,6 +5,7 @@ using UnityEngine;
 public enum eFSMTransition
 {
     NullTransition = 0,
+    Go_Respawn,
     Go_Idle,
     Go_MoveTo,
     Go_Chase,
@@ -24,6 +25,7 @@ public enum eFSMTransition
 public enum eFSMStateID
 {
     NullStateID = 0,
+    RespawnStateID,
     IdleStateID,
     MoveToStateID,
     ChaseStateID,
@@ -100,6 +102,46 @@ public class FSMState
     public virtual void CheckCondition(AIData data)
     {
 
+    }
+}
+
+public class FSMRespawnState : FSMState
+{
+    private float m_fIdleTime;
+    GameObject GO;
+    Animator m_EffectAnimator;
+    public FSMRespawnState()
+    {
+        m_StateID = eFSMStateID.IdleStateID;
+    }
+    public override void DoBeforeEnter(AIData data)
+    {
+        m_fCurrentTime = 0.0f;
+        m_fIdleTime = Random.Range(0.0f, 1.0f);
+        
+        GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3001);
+        GO.SetActive(true);
+        GO.transform.position = data.m_Go.transform.position;
+        m_EffectAnimator = GO.GetComponent<Animator>();
+        m_EffectAnimator.SetTrigger("startTrigger");
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+        ObjectPool.m_Instance.UnLoadObjectToPool(3001, GO);
+    }
+
+    public override void Do(AIData data)
+    {
+        m_fCurrentTime += Time.deltaTime;
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        if (m_fCurrentTime > m_fIdleTime)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
     }
 }
 

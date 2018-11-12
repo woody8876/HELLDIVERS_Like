@@ -20,7 +20,7 @@ public class FishAI : Character
     private void OnEnable()
     {
         if (m_FSM == null) return;
-        m_FSM.PerformTransition(eFSMTransition.GO_WanderIdle);
+        m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
@@ -47,11 +47,14 @@ public class FishAI : Character
             m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
         }
 
+        FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
         FSMIdleState m_IdleState = new FSMIdleState();
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
+
+        m_RespawnState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
 
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
         m_Chasestate.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
@@ -76,11 +79,12 @@ public class FishAI : Character
         m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_GetHurtState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
-        m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_DeadState.AddTransition(eFSMTransition.Go_Respawn, m_RespawnState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
+        m_FSM.AddState(m_RespawnState);
         m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_IdleState);
         m_FSM.AddState(m_Chasestate);
