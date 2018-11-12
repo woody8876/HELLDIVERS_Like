@@ -5,6 +5,7 @@ using UnityEngine;
 public enum eFSMTransition
 {
     NullTransition = 0,
+    Go_Respawn,
     Go_Idle,
     Go_MoveTo,
     Go_Chase,
@@ -24,6 +25,7 @@ public enum eFSMTransition
 public enum eFSMStateID
 {
     NullStateID = 0,
+    RespawnStateID,
     IdleStateID,
     MoveToStateID,
     ChaseStateID,
@@ -103,6 +105,46 @@ public class FSMState
     }
 }
 
+public class FSMRespawnState : FSMState
+{
+    private float m_fIdleTime;
+    GameObject GO;
+    Animator m_EffectAnimator;
+    public FSMRespawnState()
+    {
+        m_StateID = eFSMStateID.IdleStateID;
+    }
+    public override void DoBeforeEnter(AIData data)
+    {
+        m_fCurrentTime = 0.0f;
+        m_fIdleTime = Random.Range(1.0f, 1.5f);
+        
+        GO = ObjectPool.m_Instance.LoadGameObjectFromPool(3001);
+        GO.transform.position = data.m_Go.transform.position;
+        GO.SetActive(true);
+        m_EffectAnimator = GO.GetComponent<Animator>();
+        m_EffectAnimator.SetTrigger("startTrigger");
+    }
+
+    public override void DoBeforeLeave(AIData data)
+    {
+        ObjectPool.m_Instance.UnLoadObjectToPool(3001, GO);
+    }
+
+    public override void Do(AIData data)
+    {
+        m_fCurrentTime += Time.deltaTime;
+    }
+
+    public override void CheckCondition(AIData data)
+    {
+        if (m_fCurrentTime > m_fIdleTime)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+        }
+    }
+}
+
 public class FSMIdleState : FSMState
 {
     private float m_fIdleTim;
@@ -130,18 +172,25 @@ public class FSMIdleState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-        bool bAttack = false;
-        GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
+        //bool bAttack = false;
+        //GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
 
-        if (go != null)
+        //if (go != null)
+        //{
+        //    data.m_TargetObject = go;
+        //    if (bAttack)
+        //    {
+        //        if (m_fCurrentTime > m_fIdleTim)
+        //        {
+        //            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
+        //        }
+        //    }
+        //}
+        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange)
         {
-            data.m_TargetObject = go;
-            if (bAttack)
+            if (m_fCurrentTime > m_fIdleTim)
             {
-                if (m_fCurrentTime > m_fIdleTim)
-                {
-                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
-                }
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
             }
         }
         if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
@@ -310,6 +359,7 @@ public class FSMAttackState : FSMState
         {
             if (info.normalizedTime > 0.27f && AttackCount < 1)
             {
+                if((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange + 0.5f)
                 DoDamage(data);
                 AttackCount++;
             }
@@ -325,15 +375,8 @@ public class FSMAttackState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
-            return;
         }
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-            }
-        }
+       
         if (data.m_bIsPlayerDead)
         {
             if (info.normalizedTime > m_AnimatorLeaveTime)
@@ -532,15 +575,15 @@ public class FSMFishGetHurtState : FSMState
 
     public override void CheckCondition(AIData data)
     {
+        
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("GetHurt"))
         {
-            if (info.normalizedTime > 0.7f)
+            if (info.normalizedTime > 0.95f)
             {
                 Vector3 v = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
                 float fDist = v.magnitude;
-
-                if (fDist < data.m_fAttackRange)
+                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fAttackRange)
                 {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
                 }
@@ -875,7 +918,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                MobManager.m_Instance.SpawnFish(3, data);
+                MobManager.m_Instance.SpawnFish(1, data);
                 count++;
             }
         }
