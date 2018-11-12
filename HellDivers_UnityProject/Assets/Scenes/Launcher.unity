@@ -535,7 +535,6 @@ GameObject:
   - component: {fileID: 342753591}
   - component: {fileID: 342753594}
   - component: {fileID: 342753593}
-  - component: {fileID: 342753592}
   m_Layer: 5
   m_Name: Plot
   m_TagString: Untagged
@@ -556,19 +555,6 @@ Transform:
   m_Father: {fileID: 2083425169}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 38.99, y: 0, z: 0}
---- !u!114 &342753592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 342753590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aa9ce2b91dcc8941921655fc258c1c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PlayerID: {fileID: 524869655}
-  m_Continue: {fileID: 812636831}
 --- !u!102 &342753593
 TextMesh:
   serializedVersion: 3
@@ -1150,7 +1136,6 @@ GameObject:
   m_Component:
   - component: {fileID: 812636832}
   - component: {fileID: 812636833}
-  - component: {fileID: 812636834}
   m_Layer: 5
   m_Name: Continue
   m_TagString: Untagged
@@ -1193,18 +1178,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &812636834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 812636831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87a8ef3f0f926a046bdfc6db17511c04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FadePanel: {fileID: 1493302465}
 --- !u!1 &988420471
 GameObject:
   m_ObjectHideFlags: 0
@@ -2174,8 +2147,9 @@ GameObject:
   - component: {fileID: 2083425169}
   - component: {fileID: 2083425171}
   - component: {fileID: 2083425170}
+  - component: {fileID: 2083425172}
   m_Layer: 5
-  m_Name: Title_Animation
+  m_Name: New Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2236,6 +2210,20 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2083425168}
+--- !u!114 &2083425172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2083425168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa9ce2b91dcc8941921655fc258c1c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Plot: {fileID: 342753590}
+  m_Continue: {fileID: 812636831}
+  m_FadePanel: {fileID: 1493302465}
 --- !u!1 &2086498139
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,13 +10,13 @@ public class Bullet_Ray : MonoBehaviour {
     public bool m_bActive;
     [SerializeField] private eWeaponType m_Type;
     [SerializeField] private int m_ID;
+    [SerializeField] private LineRenderer m_Line;
 
     private float m_fRange;
     private float m_fDamage;
     private float m_Time;
     private Animator m_animator;
     private Vector3 m_vEndPos;
-    private LineRenderer m_Line;
     private bool m_bTrigger;
 
     void Start () {
@@ -24,7 +24,6 @@ public class Bullet_Ray : MonoBehaviour {
         m_fDamage = GameData.Instance.WeaponInfoTable[m_ID].Damage * Time.fixedDeltaTime;
         m_animator = this.GetComponent<Animator>();
         m_animator.SetTrigger("startTrigger");
-        m_Line = this.GetComponentInChildren<Transform>(true).GetComponentInChildren<LineRenderer>();
         Debug.Log(m_Line);
     }
 
