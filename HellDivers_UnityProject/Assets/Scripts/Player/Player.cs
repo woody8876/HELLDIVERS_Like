@@ -32,6 +32,8 @@ public class Player : Character
     /// </summary>
     public PlayerInfo Info { get { return m_Data; } }
 
+    public PlayerParts Parts { get { return m_Parts; } }
+
     #endregion Properties
 
     #region Private Variable
@@ -69,14 +71,14 @@ public class Player : Character
 
         // Setup stratagems
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
-        m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
+        if (m_Data.Stratagems.Count > 0) m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
-        m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+        if (m_Data.Weapons.Count > 0) m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
 
         // Setup grenades
-        m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint);
+        if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint);
     }
 
     #endregion Initializer
@@ -222,7 +224,7 @@ public class Player : Character
 
         GameMain.Instance.CameraFolloing.RemoveTarget(this.transform);
 
-        GameMain.Instance.RespawnPlayer(this);
+        InGamePlayerManager.Instance.RespawnPlayer(this);
         this.gameObject.SetActive(false);
     }
 

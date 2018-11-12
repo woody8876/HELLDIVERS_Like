@@ -19,13 +19,13 @@ public class GameMain : MonoBehaviour
     private AssetManager m_AssetManager = new AssetManager();
     private ResourceManager m_ResourceManager = new ResourceManager();
     private ObjectPool m_ObjectPool = new ObjectPool();
-    private GameData m_GameData = new GameData();
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
+    private MissionManager m_MissionManager = new MissionManager();
+    private InGamePlayerManager m_PlayerManager;
     private List<Player> m_Players = new List<Player>();
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
-    [SerializeField] private float m_RespawnTime = 1;
-    private float m_SpawnRadius = 10;
+    [SerializeField] private uint m_NumberOfTowers = 4;
 
     private void Awake()
     {
@@ -35,70 +35,38 @@ public class GameMain : MonoBehaviour
         m_AssetManager.Init();
         m_ResourceManager.Init();
         m_ObjectPool.Init();
-        m_GameData.Init();
+        UIInGameMain.Instance.Init();
         m_ItemManager.Init();
+        m_MissionManager.Init();
         m_MobSpawner.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
-        if (UIInGameMain.Instance != null) UIInGameMain.Instance.Init();
+        m_PlayerManager = this.gameObject.AddComponent<InGamePlayerManager>();
     }
 
     // Use this for initialization
     private void Start()
     {
-        if (m_PlayerData != null) CreatPlayer(m_PlayerData);
+        m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
+        GameStart();
+        //m_MobSpawner.SpawnPatrol(40);
+        //InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
+    }
 
-        m_MobSpawner.SpawnPatrol(40);
-        InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
+    [ContextMenu("GameStart")]
+    private void GameStart()
+    {
+        for (int i = 0; i < PlayerManager.Instance.Players.Count; i++)
+        {
+            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+        }
+
+        m_PlayerManager.SpawnPlayers();
+        UIInGameMain.Instance.DrawGameUI();
     }
 
     // Update is called once per frame
     private void Update()
     {
-    }
-
-    public void RespawnPlayer(Player player)
-    {
-        StartCoroutine(RespawnProcess(player));
-    }
-
-    private IEnumerator RespawnProcess(Player player)
-    {
-        yield return new WaitForSeconds(m_RespawnTime);
-        LayerMask layerMask = 1 << LayerMask.NameToLayer("Enemies") | 1 << LayerMask.NameToLayer("Obstacle");
-        Vector3 spawnPos = player.transform.position;
-        bool bBlock;
-        do
-        {
-            spawnPos = player.transform.position;
-            float radius = Random.Range(0, m_SpawnRadius);
-            spawnPos += Quaternion.Euler(0.0f, Random.Range(0, 360), 0.0f) * Vector3.forward * radius;
-            bBlock = Physics.CheckSphere(spawnPos, 1.5f, layerMask);
-        } while (bBlock);
-
-        player.Spawn(spawnPos);
-    }
-
-    public GameObject CreatPlayer(PlayerInfo data)
-    {
-        GameObject playerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Characters/Ch00", "ch00") as GameObject;
-        playerGo = GameObject.Instantiate(playerGo);
-        Player player = playerGo.AddComponent<Player>();
-        player.Initialize(data);
-        m_Players.Add(player);
-
-        Transform spawnPos = null;
-        if (MapInfo.Instance != null) spawnPos = MapInfo.Instance.GetRandomSpawnPos();
-        if (spawnPos == null) spawnPos = this.transform;
-        player.Spawn(spawnPos.position);
-
-        // Create player info UI
-        UIInGameMain.Instance.AddPlayer(player);
-
-        // Camera start following player
-        if (m_Players.Count == 1) m_CameraFollowing.FocusOnTarget(player.transform);
-        else m_CameraFollowing.AddTarget(player.transform);
-
-        return playerGo;
     }
 
     private void SpawnMobs()

@@ -85,6 +85,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void DoReload()
         {
+            if (this.gameObject.activeInHierarchy == false) return;
             float speed = 1 / CurrentWeapon.ReloadSpeed;
             m_Animator.SetFloat("ReloadSpeed", speed);
             m_Animator.SetTrigger("Reload");
@@ -92,6 +93,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void RefreshInfo()
         {
+            if (this.gameObject.activeInHierarchy == false) return;
             m_AmmoFill.fillAmount = (float)CurrentWeapon.Ammo / CurrentWeapon.Capacity;
             m_Mags.text = string.Format("x{0}", CurrentWeapon.Mags);
             m_Animator.SetBool("IsOutOfAmmo", IsNearOutOfAmmo);

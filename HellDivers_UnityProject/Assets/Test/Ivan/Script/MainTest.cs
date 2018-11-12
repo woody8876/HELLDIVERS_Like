@@ -11,7 +11,6 @@ public class MainTest : MonoBehaviour
     public static GameMain Instance { get; private set; }
 
     #endregion Properties
-
     private AssetManager m_AssetManager = new AssetManager();
     private ResourceManager m_ResourceManager = new ResourceManager();
     private ObjectPool m_ObjectPool = new ObjectPool();

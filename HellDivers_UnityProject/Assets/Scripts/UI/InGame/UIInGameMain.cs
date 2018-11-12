@@ -31,6 +31,16 @@ namespace HELLDIVERS.UI.InGame
             m_DynamicHpBarMap = new Dictionary<Player, UIDynamicHpBar>();
         }
 
+        public void DrawGameUI()
+        {
+            m_PanelPlayerInfo.gameObject.SetActive(true);
+            m_PanelStratagemAct.gameObject.SetActive(true);
+            foreach (KeyValuePair<Player, UIDynamicHpBar> playerHpBar in m_DynamicHpBarMap)
+            {
+                playerHpBar.Value.gameObject.SetActive(true);
+            }
+        }
+
         public void AddPlayer(Player player)
         {
             m_PanelPlayerInfo.AddPlayer(player);
@@ -45,6 +55,7 @@ namespace HELLDIVERS.UI.InGame
             UIDynamicHpBar hpBar = Instantiate(m_DynamicHpBar, this.transform).GetComponent<UIDynamicHpBar>();
             hpBar.Init(player);
             m_DynamicHpBarMap.Add(player, hpBar);
+            hpBar.gameObject.SetActive(false);
         }
     }
 }

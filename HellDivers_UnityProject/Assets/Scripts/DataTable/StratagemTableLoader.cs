@@ -58,13 +58,13 @@ public static class StratagemDataLoader
         return false;
     }
 
-    private static StratagemInfo.eCode[] _GetCodes(string code)
+    private static eCode[] _GetCodes(string code)
     {
-        StratagemInfo.eCode[] codes = new StratagemInfo.eCode[code.Length];
+        eCode[] codes = new eCode[code.Length];
 
         for (int i = 0; i < code.Length; i++)
         {
-            codes[i] = (StratagemInfo.eCode)Enum.Parse(typeof(StratagemInfo.eCode), code[i].ToString());
+            codes[i] = (eCode)Enum.Parse(typeof(eCode), code[i].ToString());
         }
 
         return codes;
