@@ -10,7 +10,7 @@ using UnityEditor;
 #endif
 
 [RequireComponent(typeof(CheckCodesMechine))]
-public class MissionTower : MonoBehaviour, IInteractable
+public class MissionTower : Mission, IInteractable
 {
     #region Properties
 
@@ -24,29 +24,37 @@ public class MissionTower : MonoBehaviour, IInteractable
 
     #region Private Variable
 
-    [SerializeField] private string m_Id;
-    [SerializeField] private float m_Radius;
+    [SerializeField] private string m_Id = "MissionTower";
+    [SerializeField] private float m_Radius = 4;
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
     [SerializeField] private float m_ActivatingTime = 5;
     private float m_ActTimer;
     private int m_CodeLenght;
+    private GameObject m_TowerGo;
     private Animator m_Animator;
     private eCode[] m_Codes;
     private CheckCodesMechine m_CodeMechine;
-    private TowerDoState DoTiimer;
+    private TowerDoState DoState;
 
     private delegate void TowerDoState();
 
     #endregion Private Variable
+
+    public void StartMission()
+    {
+    }
 
     #region MonoBehaviour
 
     // Use this for initialization
     private void Start()
     {
+        m_TowerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Mission/Towers", "Tower01") as GameObject;
+        m_TowerGo = Instantiate(m_TowerGo, this.transform);
+        m_Animator = m_TowerGo.GetComponentInChildren<Animator>();
+
         InteractiveItemManager.Instance.AddItem(this);
-        m_Animator = this.GetComponentInChildren<Animator>();
         m_CodeMechine = this.GetComponent<CheckCodesMechine>();
         m_CodeMechine.OnGetResult += SuccessOnCheckCode;
         m_CodeMechine.OnStop += StartCheckCodes;
@@ -55,7 +63,7 @@ public class MissionTower : MonoBehaviour, IInteractable
 
     private void FixedUpdate()
     {
-        if (DoTiimer != null) DoTiimer();
+        if (DoState != null) DoState();
     }
 
     private void OnDisable()
@@ -94,18 +102,33 @@ public class MissionTower : MonoBehaviour, IInteractable
     {
         m_Animator.SetTrigger("Start");
         m_ActTimer = 0;
-        DoTiimer = ActTimer;
+        DoState = ActivationState;
     }
 
-    private void ActTimer()
+    /*-----------------------------------------------------
+     * It's "Activation State" timer, count on m_ActTimer *
+     -----------------------------------------------------*/
+
+    private void ActivationState()
     {
         if (m_ActTimer < m_ActivatingTime) m_ActTimer += Time.fixedDeltaTime;
         else
         {
             m_Animator.SetTrigger("Finish");
-            DoTiimer = null;
+            DoState = null;
         }
     }
+
+    private void FinalState()
+    {
+        m_bFinished = true;
+        InteractiveItemManager.Instance.RemoveItem(this);
+        if (OnFinished != null) OnFinished();
+    }
+
+    /*------------------------------------------------------------------------
+     * Create random codes lenth between m_CodeLenghtMin amd m_CodeLenghtMax *
+     ------------------------------------------------------------------------*/
 
     private eCode[] GenerateCode()
     {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI.InGame
 {
-    public class UIDynamicTowerMsg : MonoBehaviour
+    public class UIDynamicMissionMsg : MonoBehaviour
     {
         public MissionTower CurrentTower { get; private set; }
         public string Message { get { return m_textMessage.text; } set { m_textMessage.text = value; } }
