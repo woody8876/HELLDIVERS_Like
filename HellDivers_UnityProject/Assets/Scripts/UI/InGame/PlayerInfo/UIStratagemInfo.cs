@@ -17,6 +17,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private Image m_ImgArrow;
         [SerializeField] private Color m_BrightColor;
         [SerializeField] private Color m_DarkColor;
+        private Animator m_Animator;
         private List<Image> m_ArrowsMap = new List<Image>();
 
         public void Init(Player player, Stratagem stratagem)
@@ -42,19 +43,19 @@ namespace HELLDIVERS.UI.InGame
 
                 switch (CurrentStratagem.Info.Codes[i])
                 {
-                    case StratagemInfo.eCode.Up:
+                    case eCode.Up:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
                         break;
 
-                    case StratagemInfo.eCode.Down:
+                    case eCode.Down:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
                         break;
 
-                    case StratagemInfo.eCode.Left:
+                    case eCode.Left:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 180.0f);
                         break;
 
-                    case StratagemInfo.eCode.Right:
+                    case eCode.Right:
                         arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
                         break;
                 }
@@ -65,6 +66,11 @@ namespace HELLDIVERS.UI.InGame
             m_ImgArrow.gameObject.SetActive(false);
         }
 
+        private void Awake()
+        {
+            m_Animator = this.GetComponent<Animator>();
+        }
+
         private void OnDestroy()
         {
             UnsubscribePlayerEvent();
@@ -72,19 +78,21 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.StratagemController.OnStartCheckingCode += StartUI;
-            CurrentPlayer.StratagemController.OnCheckingCode += DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStart += StartUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking += DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop += StopUI;
             CurrentPlayer.StratagemController.OnGetReady += DoReady;
-            CurrentPlayer.StratagemController.OnStopCheckingCode += StopUI;
+            CurrentPlayer.OnStartDeathNotify += StopUI;
             CurrentStratagem.OnThrow += StopUI;
         }
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.StratagemController.OnStartCheckingCode -= StartUI;
-            CurrentPlayer.StratagemController.OnCheckingCode -= DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStart -= StartUI;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnChecking -= DoCheckCodes;
+            CurrentPlayer.StratagemController.CheckCodesMechine.OnStop -= StopUI;
             CurrentPlayer.StratagemController.OnGetReady -= DoReady;
-            CurrentPlayer.StratagemController.OnStopCheckingCode -= StopUI;
+            CurrentPlayer.OnStartDeathNotify -= StopUI;
             CurrentStratagem.OnThrow -= StopUI;
         }
 
@@ -96,6 +104,7 @@ namespace HELLDIVERS.UI.InGame
             m_ImgIcon.color = m_BrightColor;
             RefershUses();
             DoCheckCodes();
+            m_Animator.SetTrigger("Open");
         }
 
         private void StopUI()

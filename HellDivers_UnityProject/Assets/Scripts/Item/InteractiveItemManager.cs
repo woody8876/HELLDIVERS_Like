@@ -5,18 +5,18 @@ using UnityEngine;
 public class InteractiveItemManager
 {
     public static InteractiveItemManager Instance { get; private set; }
-    private static Dictionary<string, List<InteractiveItem>> m_ItemMap;
+    private static Dictionary<string, List<IInteractable>> m_ItemMap;
 
     public void Init()
     {
         if (Instance == null)
         {
             Instance = this;
-            m_ItemMap = new Dictionary<string, List<InteractiveItem>>();
+            m_ItemMap = new Dictionary<string, List<IInteractable>>();
         }
     }
 
-    public void AddItem(InteractiveItem item)
+    public void AddItem(IInteractable item)
     {
         if (m_ItemMap.ContainsKey(item.ID))
         {
@@ -24,13 +24,13 @@ public class InteractiveItemManager
         }
         else
         {
-            List<InteractiveItem> itemList = new List<InteractiveItem>();
+            List<IInteractable> itemList = new List<IInteractable>();
             itemList.Add(item);
             m_ItemMap.Add(item.ID, itemList);
         }
     }
 
-    public void RemoveItem(InteractiveItem item)
+    public void RemoveItem(IInteractable item)
     {
         if (m_ItemMap.ContainsKey(item.ID))
         {
@@ -40,23 +40,23 @@ public class InteractiveItemManager
 
     public void OnInteractive(Player player)
     {
-        InteractiveItem nearestItem = GetNearestItem(player.transform.position);
+        IInteractable nearestItem = GetNearestItem(player.transform.position);
         if (nearestItem != null) nearestItem.OnInteract(player);
     }
 
-    private InteractiveItem GetNearestItem(Vector3 position)
+    private IInteractable GetNearestItem(Vector3 position)
     {
         if (m_ItemMap.Count <= 0) return null;
 
-        InteractiveItem nearestItem = null;
+        IInteractable nearestItem = null;
         float nearestDist = float.MaxValue;
-        foreach (KeyValuePair<string, List<InteractiveItem>> itemList in m_ItemMap)
+        foreach (KeyValuePair<string, List<IInteractable>> itemList in m_ItemMap)
         {
-            List<InteractiveItem> currentList = itemList.Value;
+            List<IInteractable> currentList = itemList.Value;
             if (currentList.Count <= 0) continue;
             for (int i = 0; i < currentList.Count; i++)
             {
-                InteractiveItem currentItem = currentList[i];
+                IInteractable currentItem = currentList[i];
 
                 float dist = Vector3.Distance(position, currentItem.Position); // Check item interactable radius.
                 if (dist > currentItem.Radius) continue;

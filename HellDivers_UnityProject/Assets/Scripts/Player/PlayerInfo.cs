@@ -12,16 +12,18 @@ public class PlayerInfo
     public List<int> Weapons { get { return weapons; } }
     public List<int> Stratagems { get { return stratagems; } }
     public List<int> Grenades { get { return grenades; } }
+    public int Money { get { return money; } }
 
     #endregion Properties
 
     #region Private Variable
 
-    [SerializeField] private List<int> weapons;
-    [SerializeField] private List<int> stratagems;
-    [SerializeField] private List<int> grenades;
+    [SerializeField] private List<int> weapons = new List<int>();
+    [SerializeField] private List<int> stratagems = new List<int>();
+    [SerializeField] private List<int> grenades = new List<int>();
     [SerializeField] private string username;
     [SerializeField] private int rank;
+    [SerializeField] private int money;
     private int totalMissionFought;
     private int totalMissionWon;
     private int totalDeaths;
@@ -34,7 +36,7 @@ public class PlayerInfo
 
     public bool SetUsername(string name)
     {
-        if (username.Length > 10) return false;
+        if (username != null && username.Length > 50) return false;
 
         username = name;
         return true;
@@ -56,6 +58,11 @@ public class PlayerInfo
         return true;
     }
 
+    public void AddMoney(int money)
+    {
+        this.money += money;
+    }
+
     public PlayerInfo Clone()
     {
         PlayerInfo clone = new PlayerInfo();
@@ -74,6 +81,7 @@ public class PlayerInfo
         other.totalEnemiesKilled = this.totalEnemiesKilled;
         other.weapons = this.weapons;
         other.stratagems = this.stratagems;
+        other.money = this.money;
     }
 
     #endregion Public Function

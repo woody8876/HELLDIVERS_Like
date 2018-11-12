@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractiveItem : MonoBehaviour
+public class InteractiveItem : MonoBehaviour, IInteractable
 {
     public string ID { get { return m_Id; } }
     public string Title { get { return m_Title; } }
