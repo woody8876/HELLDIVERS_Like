@@ -19,6 +19,7 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    [ContextMenu("ToLobby")]
     public void ToLobby()
     {
         SceneManager.LoadScene("Lobby");

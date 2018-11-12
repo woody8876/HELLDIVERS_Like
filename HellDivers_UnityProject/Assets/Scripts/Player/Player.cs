@@ -32,6 +32,8 @@ public class Player : Character
     /// </summary>
     public PlayerInfo Info { get { return m_Data; } }
 
+    public PlayerParts Parts { get { return m_Parts; } }
+
     #endregion Properties
 
     #region Private Variable

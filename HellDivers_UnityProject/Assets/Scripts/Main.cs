@@ -6,8 +6,8 @@ public class Main : MonoBehaviour
 {
     public static Main Instance { get; private set; }
     private SceneController m_SceneController;
-    private PlayerManager m_PlayerManager = new PlayerManager();
     private GameData m_GameData = new GameData();
+    private PlayerManager m_PlayerManager = new PlayerManager();
 
     private void Awake()
     {
