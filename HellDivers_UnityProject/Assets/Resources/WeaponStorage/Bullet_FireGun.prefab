@@ -287,6 +287,7 @@ MonoBehaviour:
   m_bActive: 0
   m_Type: 6
   m_ID: 1601
+  m_Line: {fileID: 120215889848816704}
 --- !u!120 &120215889848816704
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -14002,7 +14003,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -14043,7 +14044,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 1
       minScalar: 1
       maxCurve:

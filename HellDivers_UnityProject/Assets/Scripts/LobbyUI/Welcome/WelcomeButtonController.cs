@@ -40,8 +40,7 @@ public class WelcomeButtonController : MonoBehaviour {
     private void SetContinue()
     {
         AddEvent(m_Continue);
-        //
-        m_Continue.onClick.AddListener(()=> StartCoroutine(ChangePanel()));
+        m_Continue.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
     }
     private void SetExit()
     {
@@ -61,8 +60,8 @@ public class WelcomeButtonController : MonoBehaviour {
     IEnumerator ChangeScene()
     {
         CloseButton();
-        yield return new WaitForSeconds(.3f);
-        SceneManager.LoadScene(1);
+        yield return new WaitForSeconds(1.5f);
+        SceneController.Instance.ToLobby();
     }
 
       

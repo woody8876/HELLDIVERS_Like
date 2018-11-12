@@ -25,7 +25,7 @@ public class FadeOut : MonoBehaviour {
         {
             color.a = Mathf.Lerp(color.a, 0, 0.01f);
             GetComponent<Image>().color = color;
-            if (GetComponent<Image>().color.a == 0) gameObject.SetActive(false);
+            if (GetComponent<Image>().color.a < 0.2f) gameObject.SetActive(false);
         }
     }
 

@@ -11,50 +11,56 @@ public class SetPlayerWeapon : MonoBehaviour {
         [SerializeField] GameObject m_WeaponUI;
         [SerializeField] GameObject m_Stratagemes;
         [SerializeField] GameObject m_SelectWeapon;
+        public GameObject PrimaryWeapon;
+        public GameObject SecondaryWeapon;
         [SerializeField] Button m_Confirm;
     [Header("== Lobby Weapon UI Data ==")]
         [SerializeField] int _iWeaponID;
         
 
     #region Field
-    public UIMain_Armoury main_Armoury = new UIMain_Armoury();
     public int m_iWeaponID { get { return _iWeaponID; } }
+    public bool m_bPrimary;
     private string m_path = "Canvas/ARMOURY/Info_Interface/";
     #endregion
 
     void Start () {
 
-        m_tPlayerName.text = main_Armoury.m_sPlayerID;
-        m_tRank.text = main_Armoury.m_iRank.ToString(); 
-        InitialWeapon("PlayerMenu/PrimaryWeapon", 1101, true);
-        InitialWeapon("PlayerMenu/SecondaryWeapon", 1301, false);
-        InitialStratagems("PlayerMenu/Stratagems/", 2001);
-        InitialStratagems("PlayerMenu/Stratagems/", 2002);
-        InitialStratagems("PlayerMenu/Stratagems/", 2003);
-        InitialStratagems("PlayerMenu/Stratagems/", 2002, true);
-	}
-    private void InitialWeapon(string s, int i, bool b)
+        m_Confirm.onClick.AddListener(() => Confirm());
+        SetPlayer(0);
+
+    }
+
+    private void SetPlayer(int player)
+    {
+        m_tPlayerName.text = PlayerManager.Instance.Players[player].Username;
+        m_tRank.text = "1";
+        InitialWeapon("PlayerMenu/PrimaryWeapon", player, 0, true);
+        InitialWeapon("PlayerMenu/SecondaryWeapon", player, 1, false);
+        InitialStratagems("PlayerMenu/Stratagems/", player, 0);
+        InitialStratagems("PlayerMenu/Stratagems/", player, 1);
+
+    }
+
+    private void InitialWeapon(string s, int player, int i, bool b)
     {
         GameObject go = Instantiate(m_WeaponUI, GameObject.Find(m_path + s).transform) as GameObject;
         LobbyUI_Weapon uI = go.GetComponent<LobbyUI_Weapon>();
-        uI.m_ID = i;
+        uI.m_ID = PlayerManager.Instance.Players[player].Weapons[i];
         uI.SetWeaponUI();
         uI.m_Primary = b;
-        //if (b) { main_Armoury.m_iPrimaryWeaponID = i; }
-        //else { main_Armoury.m_iSecondaryWeaponID = i; }
-        main_Armoury.m_iWeapons.Add(i);
         go.GetComponent<Button>().onClick.AddListener(() => SelectWeaponUI(true));
         go.GetComponent<Button>().onClick.AddListener(() => Click(uI));
 
     }
-    private void InitialStratagems(string s, int i, bool b = false)
+    private void InitialStratagems(string s, int player, int i, bool b = false)
     {
         GameObject go = Instantiate(m_Stratagemes, GameObject.Find(m_path + s).transform) as GameObject;
-        go.name = main_Armoury.m_iStrategems.Count.ToString();
         LobbyUI_Stratagems uI = go.GetComponent<LobbyUI_Stratagems>();
-        uI.m_ID = i;
-        main_Armoury.m_iStrategems.Add(i);
-        uI.SetStratagemUI(b);
+        go.name = PlayerManager.Instance.Players[player].Stratagems[i].ToString();
+        uI.m_ID = PlayerManager.Instance.Players[player].Stratagems[i];
+        //main_Armoury.m_iStrategems.Add(i);
+         uI.SetStratagemUI(b);
        
     }
     #region Weapon Click Event
@@ -67,7 +73,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     }
     private void Click(LobbyUI_Weapon ui)
     {
-        main_Armoury.m_bPrimary = ui.m_Primary;
+        m_bPrimary = ui.m_Primary;
         _iWeaponID = ui.m_ID; 
         
     }
@@ -75,6 +81,10 @@ public class SetPlayerWeapon : MonoBehaviour {
 
 
     #region Confirm Click Event
+    private void Confirm()
+    {
+        SceneController.Instance.ToGameScene();
+    }
     #endregion
 
 }
