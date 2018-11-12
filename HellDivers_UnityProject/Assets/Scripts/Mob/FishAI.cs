@@ -111,7 +111,6 @@ public class FishAI : Character
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
         }
-        Debug.Log(m_AIData.m_FSMSystem.CurrentState);
         m_FSM.DoState();
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
