@@ -40,8 +40,9 @@ public class SetPlayerWeapon : MonoBehaviour {
         uI.m_ID = i;
         uI.SetWeaponUI();
         uI.m_Primary = b;
-        if (b) { main_Armoury.m_iPrimaryWeaponID = i; }
-        else { main_Armoury.m_iSecondaryWeaponID = i; }
+        //if (b) { main_Armoury.m_iPrimaryWeaponID = i; }
+        //else { main_Armoury.m_iSecondaryWeaponID = i; }
+        main_Armoury.m_iWeapons.Add(i);
         go.GetComponent<Button>().onClick.AddListener(() => SelectWeaponUI(true));
         go.GetComponent<Button>().onClick.AddListener(() => Click(uI));
 
@@ -59,7 +60,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     #region Weapon Click Event
     public void SelectWeaponUI(bool b)
     {
-        string s = "Select_Weapon";
+        string s = "Select_Weapon_SinglePlayer";
         GameObject go = GameObject.Find(m_path + s)?? GameObject.Find(m_path + s + "(Clone)");
         if (!go) { go = Instantiate(m_SelectWeapon, GameObject.Find(m_path).transform) as GameObject; }
         go.SetActive(b);

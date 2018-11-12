@@ -10,7 +10,7 @@ public class PlotController : MonoBehaviour {
     [SerializeField] GameObject m_Continue;
 	// Use this for initialization
 	void Start () {
-		
+        Debug.Log("Panel Controller start.");
 	}
 	
 	// Update is called once per frame

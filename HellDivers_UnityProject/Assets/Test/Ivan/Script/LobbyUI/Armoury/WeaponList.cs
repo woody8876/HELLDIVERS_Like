@@ -132,26 +132,31 @@ public class WeaponList : MonoBehaviour {
     private void ClickSelect()
     {
         GameObject go = null;
+        int i = 0;
         if (m_SetPlayer.main_Armoury.m_bPrimary)
         {
-            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iSecondaryWeaponID)
+            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iWeapons[1])
             {
                 go = m_SetPlayer.main_Armoury.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
-                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iPrimaryWeaponID, ref m_SetPlayer.main_Armoury.m_iSecondaryWeaponID);
+                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iWeapons[0], ref i);
+                m_SetPlayer.main_Armoury.m_iWeapons[1] = i;
             }
             go = m_SetPlayer.main_Armoury.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
-            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Armoury.m_iPrimaryWeaponID);
+            SetWeaponUI(go, m_CurrentID, ref i);
+            m_SetPlayer.main_Armoury.m_iWeapons[0] = i;
         }
         else
         {
-            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iPrimaryWeaponID)
+            if (m_CurrentID == m_SetPlayer.main_Armoury.m_iWeapons[0])
             {
                 go = m_SetPlayer.main_Armoury.PrimaryWeapon.GetComponentInChildren<Button>().gameObject;
-                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iSecondaryWeaponID, ref m_SetPlayer.main_Armoury.m_iPrimaryWeaponID);
+                SetWeaponUI(go, m_SetPlayer.main_Armoury.m_iWeapons[1], ref i);
+                m_SetPlayer.main_Armoury.m_iWeapons[0] = i;
+
             }
             go = m_SetPlayer.main_Armoury.SecondaryWeapon.GetComponentInChildren<Button>().gameObject;
-            SetWeaponUI(go, m_CurrentID, ref m_SetPlayer.main_Armoury.m_iSecondaryWeaponID);
-
+            SetWeaponUI(go, m_CurrentID, ref i);
+            m_SetPlayer.main_Armoury.m_iWeapons[1] = i;
         }
         EventSystem.current.SetSelectedGameObject(go, null);
         m_SetPlayer.SelectWeaponUI(false);

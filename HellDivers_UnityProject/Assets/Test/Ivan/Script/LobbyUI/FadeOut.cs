@@ -7,8 +7,9 @@ public class FadeOut : MonoBehaviour {
 
     bool m_bBlack;
     Color color;
-    private void OnEnable()
+    private void OnEnable()        
     {
+        Debug.Log("Fade Panel OnEnable.");
         m_bBlack = false;
         color = GetComponent<Image>().color;
     }

@@ -11,8 +11,6 @@ public class UIMain_Armoury{
     [Header("== In Game Data ==")]
     public string m_sPlayerID;
     public int m_iRank;
-    public int m_iPrimaryWeaponID;
-    public int m_iSecondaryWeaponID;
     public List<int> m_iWeapons;
     public List<int> m_iStrategems;
 
