@@ -34,22 +34,25 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify += RefreshUI;
+            CurrentPlayer.OnSpawnBegin += RefreshUI;
+            CurrentPlayer.OnSpawnFinish += RefreshUI;
             CurrentPlayer.OnDamaged += RefreshUI;
-            CurrentPlayer.OnStartDeathNotify += RefreshUI;
+            CurrentPlayer.OnDeathBegin += RefreshUI;
         }
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify -= RefreshUI;
+            CurrentPlayer.OnSpawnBegin -= RefreshUI;
+            CurrentPlayer.OnSpawnFinish -= RefreshUI;
             CurrentPlayer.OnDamaged -= RefreshUI;
-            CurrentPlayer.OnStartDeathNotify -= RefreshUI;
+            CurrentPlayer.OnDeathBegin -= RefreshUI;
         }
 
         private void RefreshUI()
         {
             this.gameObject.SetActive(!CurrentPlayer.IsDead);
             m_Fill.fillAmount = CurrentPlayer.CurrentHpPercent;
+            m_Fill.enabled = (m_Fill.fillAmount < 1);
         }
 
         private void FollowPlayer()

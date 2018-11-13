@@ -42,7 +42,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify += RefreshInfo;
+            CurrentPlayer.OnSpawnBegin += RefreshInfo;
             CurrentPlayer.WeaponController.OnSwitch += DoSwithStartUI;
             CurrentPlayer.WeaponController.OnFire += RefreshInfo;
             CurrentPlayer.WeaponController.OnReload += DoReload;
@@ -52,7 +52,7 @@ namespace HELLDIVERS.UI.InGame
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify -= RefreshInfo;
+            CurrentPlayer.OnSpawnBegin -= RefreshInfo;
             CurrentPlayer.WeaponController.OnSwitch -= DoSwithStartUI;
             CurrentPlayer.WeaponController.OnFire -= RefreshInfo;
             CurrentPlayer.WeaponController.OnReload -= DoReload;
