@@ -26,7 +26,7 @@ public interface IWeaponBehaviour
     WeaponInfo weaponInfo { get; }
     void Init(int weaponType);
     void WeaponLoader();
-    void Shot(Transform t, float spread);
+    void Shot(Transform t, float spread, Player player);
     void Reload();
 }
 

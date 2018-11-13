@@ -15,11 +15,11 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     /// <param name="WeaponsID">weapon's ID</param>
     /// <param name="pos">weapon's position</param>
-    public void AddMultiWeapons(List<int> WeaponsID, Transform pos)
+    public void AddMultiWeapons(List<int> WeaponsID, Transform pos, Player player)
     {
         for (int i = 0; i < WeaponsID.Count; i++)
         {
-            AddWeapon(WeaponsID[i], pos);
+            AddWeapon(WeaponsID[i], pos, player);
         }
     }
     /// <summary>
@@ -27,7 +27,7 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     /// <param name="weaponID">weapon's ID</param>
     /// <param name="pos">weapon's position</param>
-    public void AddWeapon(int weaponID, Transform pos)
+    public void AddWeapon(int weaponID, Transform pos, Player player)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
         if (!m_dActiveWeapon.ContainsKey(weaponID))
@@ -39,6 +39,7 @@ public class WeaponController : MonoBehaviour
             m_GOEffect.transform.localPosition = Vector3.zero;
             m_dActiveEffect.Add(weaponID, m_GOEffect);
             _CurrentWeapon = weaponID;
+            m_player = player;
             m_tGunPos = pos;
         }
         SetWeaponInfo(weaponID);
@@ -118,7 +119,7 @@ public class WeaponController : MonoBehaviour
     {
         m_currentWeaponEffect.SetActive(true);
         yield return new WaitForSeconds(0.2f);
-        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos, m_fSpreadIncrease);
+        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos, m_fSpreadIncrease, m_player);
         if (OnFire != null) OnFire();
         yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
@@ -203,6 +204,7 @@ public class WeaponController : MonoBehaviour
 
     #region Private member
     private WeaponFactory m_weaponFactory = new WeaponFactory();
+    private Player m_player;
     private GameObject m_GOEffect;
     private Transform m_tGunPos;
     private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();

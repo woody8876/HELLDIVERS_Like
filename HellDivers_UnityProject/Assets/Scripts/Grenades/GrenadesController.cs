@@ -5,34 +5,6 @@ using UnityEngine;
 public class GrenadesController : MonoBehaviour
 {
     public enum eSwitch { UP, LEFT, DOWN, RIGHT }
-
-    #region Delegate of EventHolder
-
-    public delegate void EventHolder();
-
-    public EventHolder OnCount;
-    public EventHolder OnChangeID;
-
-    #endregion Delegate of EventHolder
-
-    #region Public properties
-
-    public int CurrentID { get { return m_iCurrentID; } }
-    public Dictionary<int, int> ActiveGrenades { get { return m_dActiveGrenades; } }
-
-    public int GrenadeCounter
-    {
-        get { return m_iCounter; }
-        set
-        {
-            if (value > m_MaxCount) m_iCounter = m_MaxCount;
-            else if (m_iCounter < 0) m_iCounter = 0;
-            else m_iCounter = value;
-        }
-    }
-
-    #endregion Public properties
-
     #region Public Method
 
     /// <summary>
@@ -127,7 +99,7 @@ public class GrenadesController : MonoBehaviour
         m_dActiveGrenades[id] += count;
         if (id == CurrentID)
         {
-            GrenadeCounter = m_dActiveGrenades[id];
+            m_iCounter = m_dActiveGrenades[id];
             if (OnCount != null) OnCount();
         }
     }
@@ -138,6 +110,7 @@ public class GrenadesController : MonoBehaviour
         {
             m_dActiveGrenades[Keys[i]] = 2;
         }
+        m_iCounter = m_dActiveGrenades[m_iCurrentID];
     }
 
     #endregion Public Method
@@ -159,7 +132,7 @@ public class GrenadesController : MonoBehaviour
     {
         if (m_dActiveGrenades.ContainsKey(id) == false) { CreateGrenades(id, count); }
         m_iCurrentID = id;
-        GrenadeCounter = m_dActiveGrenades[id];
+        m_iCounter = m_dActiveGrenades[id];
         if (OnCount != null) OnCount();
         if (OnChangeID != null) OnChangeID();
     }
@@ -200,6 +173,34 @@ public class GrenadesController : MonoBehaviour
     }
 
     #endregion Private method
+
+    #region Delegate of EventHolder
+
+    public delegate void EventHolder();
+
+    public EventHolder OnCount;
+    public EventHolder OnChangeID;
+
+    #endregion Delegate of EventHolder
+
+    #region Public properties
+
+    public int CurrentID { get { return m_iCurrentID; } }
+    public Dictionary<int, int> ActiveGrenades { get { return m_dActiveGrenades; } }
+
+    public int GrenadeCounter
+    {
+        get { return m_iCounter; }
+        set
+        {
+            if (value > m_MaxCount) m_iCounter = m_MaxCount;
+            else if (m_iCounter < 0) m_iCounter = 0;
+            else m_iCounter = value;
+        }
+    }
+
+    #endregion Public properties
+
 
     #region Private field
 

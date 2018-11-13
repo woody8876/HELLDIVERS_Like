@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon_LMGs : Weapon
 {
-    public override void Shot(Transform t, float fSpreadperShot)
+    public override void Shot(Transform t, float fSpreadperShot, Player player)
     {
         float fCurSpread = weaponInfo.Min_Spread + fSpreadperShot;
         if (fCurSpread > weaponInfo.Max_Spread) fCurSpread = weaponInfo.Max_Spread;
@@ -14,6 +14,7 @@ public class Weapon_LMGs : Weapon
             go.transform.position = t.position;
             go.transform.forward = t.forward;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
+            go.GetComponent<Bullet>().m_BulletPlayer = player;
             go.SetActive(true);
             weaponInfo.Ammo--;
         }

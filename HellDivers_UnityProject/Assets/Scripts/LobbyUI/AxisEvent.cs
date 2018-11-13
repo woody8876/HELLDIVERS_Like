@@ -53,5 +53,5 @@ public class AxisEvent : MonoBehaviour {
     private AxisEventData currentAxis;
     private GameObject currentButton;
     private float timer;
-    private float timeBetweenInputs;
+    private float timeBetweenInputs = 0.15f;
 }

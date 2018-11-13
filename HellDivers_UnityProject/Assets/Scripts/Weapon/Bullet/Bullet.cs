@@ -98,7 +98,8 @@ public class Bullet : MonoBehaviour {
         ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
     #endregion
-
+    [HideInInspector]
+    public Player m_BulletPlayer;
     #region Private Field
     private GameObject m_Target;
     private float m_fNextPosDis;
