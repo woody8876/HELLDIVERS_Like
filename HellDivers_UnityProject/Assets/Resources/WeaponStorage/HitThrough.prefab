@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4388267999422934}
   - component: {fileID: 95024649328056508}
+  - component: {fileID: 114424622972247104}
   m_Layer: 0
   m_Name: HitThrough
   m_TagString: Untagged
@@ -210,6 +211,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114424622972247104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1021494189329278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e836f388327674dbe1be21a66d8144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 30
 --- !u!198 &198106474261830946
 ParticleSystem:
   m_ObjectHideFlags: 1
