@@ -6,11 +6,11 @@ public class EffectController : MonoBehaviour {
 
     [SerializeField] int m_ID;
 
-    #region Private Field
-    private void EffectStart()
+    public void EffectStart()
     {
         m_Animator.SetTrigger("startTrigger");
     }
+    #region Private Method
     private bool CheckState()
     {
         m_StateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);

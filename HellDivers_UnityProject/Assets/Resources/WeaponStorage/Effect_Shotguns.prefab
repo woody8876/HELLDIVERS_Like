@@ -120,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4655957456375628}
   - component: {fileID: 95907013338902732}
+  - component: {fileID: 114627213092463636}
   m_Layer: 0
   m_Name: Effect_Shotguns
   m_TagString: Untagged
@@ -323,6 +324,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114627213092463636
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1674919720377302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e836f388327674dbe1be21a66d8144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 13011
 --- !u!198 &198584312659559176
 ParticleSystem:
   m_ObjectHideFlags: 1

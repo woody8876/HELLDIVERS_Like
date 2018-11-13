@@ -69,6 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4860939074277510}
   - component: {fileID: 95477021633891768}
+  - component: {fileID: 114370831083302350}
   m_Layer: 0
   m_Name: Effect_FireGun
   m_TagString: Untagged
@@ -294,7 +295,7 @@ Animator:
   m_GameObject: {fileID: 1666406382651100}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e6161bcef504f4942a17668b35f92fb0, type: 2}
+  m_Controller: {fileID: 9100000, guid: ddc36d20730452245b3a7df6f3b57bc0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -302,6 +303,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114370831083302350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1666406382651100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e836f388327674dbe1be21a66d8144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 16011
 --- !u!198 &198136678139410436
 ParticleSystem:
   m_ObjectHideFlags: 1
