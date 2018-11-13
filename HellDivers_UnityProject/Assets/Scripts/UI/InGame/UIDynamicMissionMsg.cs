@@ -81,7 +81,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentTower.CodeMechine.OnGetResult += ToActivatingState;
             CurrentTower.OnActivating += RefreshTimer;
             CurrentTower.OnStop += ToIdle;
-            CurrentTower.OnFinished += DoDestory;
+            CurrentTower.OnActive += DoDestory;
         }
 
         private void UnsubscribeEvent()
@@ -91,7 +91,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentTower.CodeMechine.OnGetResult -= ToActivatingState;
             CurrentTower.OnActivating -= RefreshTimer;
             CurrentTower.OnStop -= ToIdle;
-            CurrentTower.OnFinished -= DoDestory;
+            CurrentTower.OnActive -= DoDestory;
         }
 
         private void ToIdle()

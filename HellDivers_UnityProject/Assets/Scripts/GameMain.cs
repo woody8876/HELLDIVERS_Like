@@ -25,7 +25,7 @@ public class GameMain : MonoBehaviour
     private List<Player> m_Players = new List<Player>();
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
-    [SerializeField] private uint m_NumberOfTowers = 4;
+    [SerializeField] private uint m_NumberOfTowers = 1;
 
     private void Awake()
     {
@@ -67,6 +67,12 @@ public class GameMain : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    [ContextMenu("GameEnd")]
+    public void GameEnd()
+    {
+        SceneController.Instance.ToLobby();
     }
 
     private void SpawnMobs()

@@ -46,7 +46,7 @@ public class MissionTower : Mission, IInteractable
     [SerializeField] private float m_MobSpawnTime = 30;
     [SerializeField] private float m_MinRadius = 20;
     [SerializeField] private float m_MaxRadius = 25;
-    [SerializeField] private int m_MobNum;
+    [SerializeField] private int m_MobNum = 5;
     private float m_ActTimer;
     private float m_MobTimer;
     private int m_CodeLenght;
@@ -63,6 +63,8 @@ public class MissionTower : Mission, IInteractable
     public event TowerEventHolder OnActivating;
 
     public event TowerEventHolder OnStop;
+
+    public event TowerEventHolder OnActive;
 
     #endregion Private Variable
 
@@ -187,9 +189,26 @@ public class MissionTower : Mission, IInteractable
             m_Animator.SetTrigger("Finish");
             m_bFinished = true;
             InteractiveItemManager.Instance.RemoveItem(this);
-            if (OnFinished != null) OnFinished();
+            if (OnActive != null) OnActive();
+            StartCoroutine(MissionFinish());
             DoState = null;
         }
+    }
+
+    private IEnumerator MissionFinish()
+    {
+        yield return new WaitUntil(CheckFinish);
+
+        if (OnFinished != null) OnFinished(this);
+        yield break;
+    }
+
+    private bool CheckFinish()
+    {
+        if (m_Animator.IsInTransition(0)) return false;
+        AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Finish") && stateInfo.normalizedTime >= 1) return true;
+        else return false;
     }
 
     /*------------------------------------------------------------------------
