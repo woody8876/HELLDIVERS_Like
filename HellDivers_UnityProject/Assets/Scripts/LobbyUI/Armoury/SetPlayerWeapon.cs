@@ -27,7 +27,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     void Start () {
 
         m_Confirm.onClick.AddListener(() => Confirm());
-        SetPlayer(0);
+        SetPlayer(1);
 
     }
 

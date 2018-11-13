@@ -45,7 +45,7 @@ public class Bullet : MonoBehaviour {
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Enemies")))
         {
             GameObject go = rh.collider.gameObject;
-            IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
+            IDamageable target = go.GetComponent<IDamageable>();
             if (m_Target != go)
             {
                 target.TakeDamage(m_fDamage, rh.point);
@@ -63,8 +63,8 @@ public class Bullet : MonoBehaviour {
         }
         else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
         {
-            GameObject go = rh.collider.gameObject;
-            IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
+            GameObject go = rh.collider.transform.parent.gameObject;
+            IDamageable target = go.GetComponent<IDamageable>();
             if (m_Target != go)
             {
                 target.TakeDamage(m_fDamage, rh.point);

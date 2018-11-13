@@ -12,7 +12,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private UIPanelPlayerInfo m_PanelPlayerInfo;
         [SerializeField] private UIPanelStratagemAct m_PanelStratagemAct;
         [SerializeField] private UIDynamicHpBar m_DynamicHpBar;
-        [SerializeField] private UIDynamicMissionMsg m_DynamicMissionMsg;
+        [SerializeField]private UIDynamicMissionMsg m_DynamicMissionMsg;
         private Dictionary<Player, UIDynamicHpBar> m_DynamicHpBarMap;
 
         public void Init()

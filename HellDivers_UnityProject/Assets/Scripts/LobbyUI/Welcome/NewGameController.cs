@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class NewGameController : MonoBehaviour {
 
     float m_time = 0;
-    float m_Speed = 1;
+    float m_Speed = 1.5f;
     bool m_bstart = false;
     [SerializeField] GameObject m_Plot;
     [SerializeField] GameObject m_Continue;
@@ -26,9 +26,13 @@ public class NewGameController : MonoBehaviour {
     void FixedUpdate() {
         if (m_time < 2.5f) m_time += Time.fixedDeltaTime;
         else { m_bstart = true; }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            m_Plot.transform.position = Vector3.Lerp(m_Plot.transform.position, m_Plot.transform.position + m_Plot.transform.up * m_Speed * 800, 1f);
+        }
         if (m_bstart && transform.position.y <400)
         {
-            if (Input.GetButton("Submit")) { m_Speed = 2.5f; }
+            if (Input.GetButton("Submit")) { m_Speed = 3.5f; }
             else { m_Speed = 1; }
             m_Plot.transform.position = Vector3.Lerp(m_Plot.transform.position, m_Plot.transform.position + m_Plot.transform.up * m_Speed, 0.7f);
         }
