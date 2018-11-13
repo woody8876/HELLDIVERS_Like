@@ -34,13 +34,13 @@ public class PlayerController : MonoBehaviour
     public bool bIsAlive = true;
 
     public int m_ControllerIndex;
-    public string m_JoyName;
+    //public string m_JoyName;
     public InputManager m_InputManager = new InputManager();
     public InputInfo m_InputInfo;
     #region MonoBehaviour
     private void Awake()
     {
-        m_ControllerIndex = 1;
+        m_ControllerIndex = 2;
         m_InputManager.Init();
         m_InputInfo = m_InputManager.PlayerInputInfoTable[m_ControllerIndex];
     }

@@ -153,6 +153,7 @@ public class PatrolAI : Character
     public void PerformDead()
     {
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
+        m_MobAimLine.CloseAimLine();
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
@@ -164,7 +165,6 @@ public class PatrolAI : Character
         if (m_CurrentHp <= 0)
         {
             m_BoxCollider.enabled = false;
-            m_MobAimLine.CloseAimLine();
             Death();
             return true;
         }

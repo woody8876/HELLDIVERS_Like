@@ -42,17 +42,6 @@ public class Bullet : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        //m_bullet.enabled = false;
-
-        if (other.transform.tag == "Player")
-        {
-            IDamageable target = other.transform.GetComponent<IDamageable>();
-            target.TakeDamage(GameData.Instance.WeaponInfoTable[m_ID].Damage, other.transform.position);
-        }
-    }
-
     private void Detect()
     {
         RaycastHit rh;
@@ -65,7 +54,11 @@ public class Bullet : MonoBehaviour {
                 target.TakeDamage(m_fDamage, rh.point);
                 m_Target = go;
             }
-            if (m_ID != 1301)
+            if (m_ID == 1301 || m_ID == 1501)
+            {
+                PlayHitEffect(rh.normal, rh.point, 30);
+            }
+            else
             {
                 PlayHitEffect(rh.normal ,rh.point, 10);
                 BulletDeath();

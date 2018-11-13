@@ -21,7 +21,8 @@ public class AimLine : MonoBehaviour
 
         m_LineRender = m_GoLineRender.GetComponent<LineRenderer>();
         m_LineRender.useWorldSpace = false;
-        SetAimLineInfo(true);
+        //SetAimLineInfo(true);
+        m_LineRender.positionCount = 4;
         m_PlayerParts = GetComponent<PlayerParts>();
         m_LaunchPoint = m_PlayerParts.LaunchPoint;
         m_Enitter = m_LaunchPoint;
@@ -61,10 +62,14 @@ public class AimLine : MonoBehaviour
         else if (m_LineRender.positionCount == straightPosCount)
         {
             Vector3 vPosition0 = m_Enitter.transform.localPosition;
-            Vector3 vPosition1 = (GetLastPosition() + m_Enitter.transform.localPosition) * 0.2f;
+            Vector3 vPosition1 = m_Enitter.transform.localPosition + (GetLastPosition() - m_Enitter.transform.localPosition) * 0.2f;
+            vPosition1.x = m_Enitter.localPosition.x;
             vPosition1.y = m_Enitter.localPosition.y;
-            Vector3 vPosition2 = (GetLastPosition() + m_Enitter.transform.localPosition) * 0.8f;
+            if (vPosition1.z < m_Enitter.localPosition.z) vPosition1.z = m_Enitter.localPosition.z;
+            Vector3 vPosition2 = m_Enitter.transform.localPosition + (GetLastPosition() - m_Enitter.transform.localPosition) * 0.8f;
+            vPosition2.x = m_Enitter.localPosition.x;
             vPosition2.y = m_Enitter.localPosition.y;
+            if (vPosition2.z < m_Enitter.localPosition.z) vPosition2.z = m_Enitter.localPosition.z;
             Vector3 vPosition3 = GetLastPosition();
 
             m_LineRender.SetPosition(0, vPosition0);
@@ -117,9 +122,14 @@ public class AimLine : MonoBehaviour
             if (Physics.Raycast(this.transform.position, this.transform.forward, out rh, 50f, 1 << LayerMask.NameToLayer("Enemies")))
             {
                 float fDis = (rh.point - this.transform.position).magnitude;
-                return new Vector3(0, m_Enitter.localPosition.y, fDis);
+                return new Vector3(m_Enitter.localPosition.x, m_Enitter.localPosition.y, fDis);
             }
-            return new Vector3(0, m_Enitter.localPosition.y, 50);
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out rh, 50f, 1 << LayerMask.NameToLayer("Obstcale")))
+            {
+                float fDis = (rh.point - this.transform.position).magnitude;
+                return new Vector3(m_Enitter.localPosition.x, m_Enitter.localPosition.y, fDis);
+            }
+            return new Vector3(m_Enitter.localPosition.x, m_Enitter.localPosition.y, 50);
         }
 
         else if (m_LineRender.positionCount == spinePosCount)

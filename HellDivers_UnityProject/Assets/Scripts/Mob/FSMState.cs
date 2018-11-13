@@ -918,7 +918,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                MobManager.m_Instance.SpawnFish(1, data);
+                MobManager.m_Instance.SpawnFish(10, data.m_Go.transform, 10 ,20);
                 count++;
             }
         }
