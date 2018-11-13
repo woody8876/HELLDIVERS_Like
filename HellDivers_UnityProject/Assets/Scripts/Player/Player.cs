@@ -51,9 +51,11 @@ public class Player : Character
 
     public delegate void PlayerEventHolder();
 
-    public event PlayerEventHolder OnStartSpawnNotify;
+    public event PlayerEventHolder OnSpawnBegin;
 
-    public event PlayerEventHolder OnStartDeathNotify;
+    public event PlayerEventHolder OnSpawnFinish;
+
+    public event PlayerEventHolder OnDeathBegin;
 
     public event PlayerEventHolder OnDamaged;
 
@@ -130,7 +132,7 @@ public class Player : Character
         this.gameObject.SetActive(true);
         StartCoroutine(OnSpawn());
 
-        if (OnStartSpawnNotify != null) OnStartSpawnNotify();
+        if (OnSpawnBegin != null) OnSpawnBegin();
     }
 
     /// <summary>
@@ -178,7 +180,7 @@ public class Player : Character
         // Reset stragem
         m_StratagemController.Reset();
 
-        if (OnStartDeathNotify != null) OnStartDeathNotify();
+        if (OnDeathBegin != null) OnDeathBegin();
     }
 
     /// <summary>
@@ -208,6 +210,8 @@ public class Player : Character
 
         GameMain.Instance.CameraFolloing.AddTarget(this.transform);
         m_bDead = false;
+
+        if (OnSpawnFinish != null) OnSpawnFinish();
     }
 
     /*------------------------------------------------------

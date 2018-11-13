@@ -12,10 +12,16 @@ public class PlayerManager
     {
         if (Instance == null) Instance = this;
         m_PlayerMap = new Dictionary<int, PlayerInfo>();
-        CreatePlayer();
+        CreatePlayerOne();
     }
 
-    public void CreatePlayer()
+    public void CreatePlayerOne()
+    {
+        PlayerInfo playerInfo = CreatPlayerInfo();
+        m_PlayerMap.Add(1, playerInfo);
+    }
+
+    public PlayerInfo CreatPlayerInfo()
     {
         PlayerInfo playerInfo = new PlayerInfo();
         playerInfo.SetUsername("TestPlayer");
@@ -23,14 +29,18 @@ public class PlayerManager
         playerInfo.AddWeapon(1301);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);
-        m_PlayerMap.Add(0, playerInfo);
+        return playerInfo;
     }
 
-    public void LoadPlayer()
+    public void LoadPlayerInfo()
     {
     }
 
-    public void SavePlayer()
+    public void SavePlayerInfo()
     {
+        foreach (KeyValuePair<int, PlayerInfo> player in Players)
+        {
+            PlayerInfo currentInfo = player.Value;
+        }
     }
 }

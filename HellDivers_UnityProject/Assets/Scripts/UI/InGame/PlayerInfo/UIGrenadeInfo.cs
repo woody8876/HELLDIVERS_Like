@@ -45,14 +45,14 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify += RefreshInfo;
+            CurrentPlayer.OnSpawnBegin += RefreshInfo;
             CurrentPlayer.GrenadesController.OnCount += RefreshInfo;
             CurrentPlayer.GrenadesController.OnChangeID += DoSwitchStartUI;
         }
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify -= RefreshInfo;
+            CurrentPlayer.OnSpawnBegin -= RefreshInfo;
             CurrentPlayer.GrenadesController.OnCount -= RefreshInfo;
             CurrentPlayer.GrenadesController.OnChangeID -= DoSwitchStartUI;
         }

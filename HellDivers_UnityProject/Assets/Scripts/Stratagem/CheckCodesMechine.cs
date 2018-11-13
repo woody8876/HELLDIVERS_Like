@@ -57,6 +57,11 @@ public class CheckCodesMechine : MonoBehaviour
     /// </summary>
     public event CheckCodeEventHolder OnStop;
 
+    /// <summary>
+    /// On the failed in check code process.
+    /// </summary>
+    public event CheckCodeEventHolder OnFaild;
+
     #endregion Events
 
     #region Input Define
@@ -198,7 +203,7 @@ public class CheckCodesMechine : MonoBehaviour
         }
 
         IsChecking = false;
-        if (OnStop != null) OnStop();
+        if (OnFaild != null) OnFaild();
         yield break;
     }
 

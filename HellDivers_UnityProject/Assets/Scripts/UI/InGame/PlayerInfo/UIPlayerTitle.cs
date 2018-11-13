@@ -35,14 +35,14 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify += OnAliveView;
-            CurrentPlayer.OnStartDeathNotify += OnDeathView;
+            CurrentPlayer.OnSpawnBegin += OnAliveView;
+            CurrentPlayer.OnDeathBegin += OnDeathView;
         }
 
         private void UnsubcribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify -= OnAliveView;
-            CurrentPlayer.OnStartDeathNotify -= OnDeathView;
+            CurrentPlayer.OnSpawnBegin -= OnAliveView;
+            CurrentPlayer.OnDeathBegin -= OnDeathView;
         }
 
         private void OnAliveView()

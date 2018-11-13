@@ -61,8 +61,8 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart += StopWeaponPanel;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStop += StartWeaponPanel;
             CurrentPlayer.StratagemController.OnThrow += StartWeaponPanel;
-            CurrentPlayer.OnStartSpawnNotify += StartWeaponPanel;
-            CurrentPlayer.OnStartDeathNotify += StopWeaponPanel;
+            CurrentPlayer.OnSpawnBegin += StartWeaponPanel;
+            CurrentPlayer.OnDeathBegin += StopWeaponPanel;
         }
 
         private void UnsubscribePlayerEvent()
@@ -71,8 +71,8 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStart -= StopWeaponPanel;
             CurrentPlayer.StratagemController.CheckCodesMechine.OnStop -= StartWeaponPanel;
             CurrentPlayer.StratagemController.OnThrow -= StartWeaponPanel;
-            CurrentPlayer.OnStartSpawnNotify -= StartWeaponPanel;
-            CurrentPlayer.OnStartDeathNotify -= StopWeaponPanel;
+            CurrentPlayer.OnSpawnBegin -= StartWeaponPanel;
+            CurrentPlayer.OnDeathBegin -= StopWeaponPanel;
         }
 
         private void StartWeaponPanel()
