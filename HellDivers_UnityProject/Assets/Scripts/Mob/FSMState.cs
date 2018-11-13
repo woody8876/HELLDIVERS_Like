@@ -899,7 +899,6 @@ public class FSMCallArmyState : FSMState
         m_StateID = eFSMStateID.CallArmyStateID;
     }
 
-
     public override void DoBeforeEnter(AIData data)
     {
         count = 0;
@@ -918,7 +917,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                MobManager.m_Instance.SpawnFish(10, data.m_Go.transform, 10 ,20);
+                MobManager.m_Instance.SpawnFish(10, data.m_Go.transform, 2 ,5);
                 count++;
             }
         }

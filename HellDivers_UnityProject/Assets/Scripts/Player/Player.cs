@@ -13,6 +13,16 @@ public class Player : Character
     #region Properties
 
     /// <summary>
+    /// Repersent of player serial number.
+    /// </summary>
+    public int SerialNumber { get { return m_SerialNumber; } }
+
+    /// <summary>
+    /// Current player infos.
+    /// </summary>
+    public PlayerInfo Info { get { return m_Data; } }
+
+    /// <summary>
     /// Player weapon behavior controller.
     /// </summary>
     public WeaponController WeaponController { get { return m_WeapoonController; } }
@@ -28,16 +38,15 @@ public class Player : Character
     public GrenadesController GrenadesController { get { return m_GrenadesController; } }
 
     /// <summary>
-    /// Current player infos.
+    /// Repersent of player body's transform.
     /// </summary>
-    public PlayerInfo Info { get { return m_Data; } }
-
     public PlayerParts Parts { get { return m_Parts; } }
 
     #endregion Properties
 
     #region Private Variable
 
+    private int m_SerialNumber;
     private PlayerInfo m_Data;
     private PlayerParts m_Parts;
     private PlayerController m_Controller;
@@ -69,9 +78,11 @@ public class Player : Character
     /// Initialize by player info to setup player's weapons and stratagems.
     /// </summary>
     /// <param name="data"></param>
-    public void Initialize(PlayerInfo data)
+    public void Initialize(PlayerInfo data, int serialNum = 1)
     {
         data.CopyTo(m_Data);
+
+        m_Controller.SetJoyNumber(serialNum);
 
         // Setup stratagems
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
@@ -79,7 +90,7 @@ public class Player : Character
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
-        if (m_Data.Weapons.Count > 0) m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint);
+        if (m_Data.Weapons.Count > 0) m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint, this);
 
         // Setup grenades
         if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint);
@@ -124,6 +135,9 @@ public class Player : Character
         m_CurrentHp = m_MaxHp;
 
         this.transform.position = spawnPos;
+
+        // Reset stratagem
+        m_StratagemController.Reset();
 
         // Reset weapons
         m_WeapoonController.ResetWeaponInfo();

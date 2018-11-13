@@ -6,6 +6,12 @@ public class AmmoPackage : InteractiveItem
 {
     public int WeaponID { get { return m_WeaponID; } }
     [SerializeField] private int m_WeaponID;
+    private Animator m_Animator;
+
+    private void Start()
+    {
+        m_Animator = this.GetComponent<Animator>();
+    }
 
     public void Initialize(int weaponId)
     {
@@ -25,6 +31,22 @@ public class AmmoPackage : InteractiveItem
         }
         if (bFillUp == false) return;
 
+        m_Animator.SetTrigger("Open");
+        StartCoroutine(DoDestory());
+    }
+
+    private IEnumerator DoDestory()
+    {
+        yield return new WaitUntil(CheckEndAnimation);
         Destroy(this.gameObject);
+        yield break;
+    }
+
+    private bool CheckEndAnimation()
+    {
+        if (m_Animator.IsInTransition(0)) return false;
+        AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Open") && stateInfo.normalizedTime >= 1) return true;
+        return false;
     }
 }

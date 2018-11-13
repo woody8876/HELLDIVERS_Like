@@ -152,7 +152,7 @@ public class PlayerFSMGunState : PlayerFSMState
     {
         if (GameData.Instance.WeaponInfoTable[data.m_WeaponController._CurrentWeapon].FireMode == 0)
         {
-            if ((Input.GetAxis(data.m_InputInfo.Fire) < 0 || Input.GetButton("Fire1")) && count < 1)
+            if ((Input.GetButton("Fire1") || Input.GetAxis(data.InputSetting.Fire) < 0) && count < 1)
             {
                 if (data.m_WeaponController.ShootState())
                 {
@@ -170,7 +170,7 @@ public class PlayerFSMGunState : PlayerFSMState
         }
         else
         {
-            if ((Input.GetAxis(data.m_InputInfo.Fire) < 0 || Input.GetButton("Fire1"))/* && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0*/)
+            if ((Input.GetButton("Fire1") || Input.GetAxis(data.InputSetting.Fire) < 0)/* && data.m_WeaponController.CurrentWeaponInfo.Ammo > 0*/)
             {
                 if (data.m_WeaponController.ShootState())
                 {
@@ -184,12 +184,12 @@ public class PlayerFSMGunState : PlayerFSMState
                 shoot = false;
             }
         }
-        if ((Input.GetAxis(data.m_InputInfo.Fire) == 0 && !Input.GetButton("Fire1"))) count = 0;
+        if ((!Input.GetButton("Fire1")) && Input.GetAxis(data.InputSetting.Fire) == 0) count = 0;
     }
 
     public override void CheckCondition(PlayerController data)
     {
-        if (Input.GetButton("Reload") || Input.GetButton(data.m_InputInfo.Reload))
+        if (Input.GetButton("Reload") || Input.GetKey(data.InputSetting.Reload))
         {
             if (data.m_WeaponController.ReloadState())
             {
@@ -197,33 +197,33 @@ public class PlayerFSMGunState : PlayerFSMState
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Reload);
             }
         }
-        else if (Input.GetButton("Grenade") || Input.GetAxis(data.m_InputInfo.Grenade) > 0)
+        else if (Input.GetButton("Grenade") || Input.GetAxis(data.InputSetting.Grenade) > 0)
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_ThrowBomb);
         }
-        else if ((Input.GetButton("Stratagem") || Input.GetButtonDown(data.m_InputInfo.Stratagem)) && shoot == false)
+        else if ((Input.GetButton("Stratagem") || Input.GetKeyDown(data.InputSetting.Stratagem)) && shoot == false)
         {
             if (data.m_StratagemController.Stratagems.Count > 0)
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Stratagem);
             }
         }
-        else if (Input.GetButtonDown("WeaponSwitch") || Input.GetButtonDown(data.m_InputInfo.WeaponSwitch))
+        else if (Input.GetButtonDown("WeaponSwitch") || Input.GetKeyDown(data.InputSetting.WeaponSwitch))
         {
             if (data.m_WeaponController.SwitchWeaponState())
             {
                 data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_SwitchWeapon);
             }
         }
-        else if (Input.GetButtonDown("Interactive") || Input.GetButtonDown(data.m_InputInfo.Interactive))
+        else if (Input.GetButtonDown("Interactive") || Input.GetKeyDown(data.InputSetting.Interactive))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_PickUp);
         }
-        else if (Input.GetButtonDown("MeleeAttack") || Input.GetButtonDown(data.m_InputInfo.MeleeAttack))
+        else if (Input.GetButtonDown("MeleeAttack") || Input.GetKeyDown(data.InputSetting.MeleeAttack))
         {
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_MeleeAttack);
         }
-        else if(Input.GetAxis(data.m_InputInfo.StratagemVertical) != 0 || Input.GetAxis(data.m_InputInfo.StratagemHorizontal) != 0)
+        else if(Input.GetAxis(data.InputSetting.StratagemVertical) != 0 || Input.GetAxis(data.InputSetting.StratagemHorizontal) != 0)
         {
             data.m_GrenadesController.SwitchGrenades();
         }
@@ -334,7 +334,7 @@ public class PlayerFSMStratagemState : PlayerFSMState
             data.m_PAC.SetAnimator(m_StateID);
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Throw);
         }
-        else if (!Input.GetButton("Stratagem") && !Input.GetButton(data.m_InputInfo.Stratagem))
+        else if (!Input.GetButton("Stratagem") && !Input.GetKey(data.InputSetting.Stratagem))
         {
             data.m_StratagemController.StopCheckCodes();
             data.m_PAC.SetAnimator(m_StateID, false);
@@ -366,7 +366,7 @@ public class PlayerFSMThrowState : PlayerFSMState
 
     public override void Do(PlayerController data)
     {
-        if ((Input.GetButtonDown("Fire1") || Input.GetAxis(data.m_InputInfo.Fire) < 0 )&& count < 1)
+        if ((Input.GetButtonDown("Fire1") || Input.GetAxis(data.InputSetting.Fire) < 0 )&& count < 1)
         {
             bThrow = true;
             //Start Timer...
@@ -374,7 +374,7 @@ public class PlayerFSMThrowState : PlayerFSMState
             count++;
         }
 
-        if ((Input.GetAxis(data.m_InputInfo.Fire) == 0 && !Input.GetButton("Fire1")) && bThrow)
+        if ((!Input.GetButton("Fire1") && Input.GetAxis(data.InputSetting.Fire) == 0) && bThrow)
         {
             data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);
@@ -451,7 +451,7 @@ public class PlayerFSMThrowBombState : PlayerFSMState
         {
             data.m_GrenadesController.Following();
         }
-        if (!Input.GetButton("Grenade") && Input.GetAxis(data.m_InputInfo.Grenade) == 0)
+        if (!Input.GetButton("Grenade") && Input.GetAxis(data.InputSetting.Grenade) == 0)
         {
             data.m_MoveMode = "Throwing";
             data.m_PAC.SetAnimator(m_StateID, true);

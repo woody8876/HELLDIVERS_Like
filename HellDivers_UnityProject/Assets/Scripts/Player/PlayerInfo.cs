@@ -81,6 +81,7 @@ public class PlayerInfo
         other.totalEnemiesKilled = this.totalEnemiesKilled;
         other.weapons = this.weapons;
         other.stratagems = this.stratagems;
+        other.grenades = this.grenades;
         other.money = this.money;
     }
 

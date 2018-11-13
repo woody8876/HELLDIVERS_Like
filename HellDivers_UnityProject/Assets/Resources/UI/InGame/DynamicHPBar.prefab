@@ -93,7 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerialIcon: {fileID: 114477319816711132}
   m_NameText: {fileID: 114333603044790168}
-  m_Fill: {fileID: 114543181973413664}
+  m_BarBg: {fileID: 114189375135156876}
+  m_BarFill: {fileID: 114543181973413664}
   m_Position: {x: 0, y: -50}
 --- !u!114 &114189375135156876
 MonoBehaviour:
