@@ -13,7 +13,7 @@ public class Main : MonoBehaviour
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(this);
+        else Destroy(this.gameObject);
 
         DontDestroyOnLoad(this.gameObject);
         m_GameData.Init();
