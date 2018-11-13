@@ -63,9 +63,10 @@ public class Bullet : MonoBehaviour {
             if (m_Target != go)
             {
                 target.TakeDamage(m_fDamage, rh.point);
+                PlayHitEffect(rh.normal, rh.point, 30);
                 m_Target = go;
             }
-            if (m_ID != 1301)
+            if (m_ID != 1301 || m_ID != 1501)
             {
                 PlayHitEffect(rh.normal ,rh.point, 10);
                 BulletDeath();

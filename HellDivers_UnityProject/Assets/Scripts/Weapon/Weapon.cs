@@ -98,6 +98,7 @@ public class Weapon : IWeaponBehaviour
         string m_sEffect = "Effect_" + weaponInfo.Title;
         Object HitMobEffect;
         Object HitObsEffect;
+        Object HitThrough;
         Object weapon;
         GameObject effect;
 
@@ -105,6 +106,7 @@ public class Weapon : IWeaponBehaviour
         {
             HitMobEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitMob", false);
             HitObsEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitObs", false);
+            HitThrough = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitThrough", false);
             weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
             effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
         }
@@ -113,12 +115,14 @@ public class Weapon : IWeaponBehaviour
             Debug.LogWarning("No ResourceManager.");
             HitMobEffect = Resources.Load("WeaponStorage/" + "HitMob");
             HitObsEffect = Resources.Load("WeaponStorage/" + "HitObs");
+            HitThrough = Resources.Load("WeaponStorage/" + "HitThrough");
             weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
             effect = Resources.Load("WeaponStorage/" + m_sEffect) as GameObject;
         }
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
         ObjectPool.m_Instance.InitGameObjects(HitMobEffect, activeAmmo, 10);
         ObjectPool.m_Instance.InitGameObjects(HitObsEffect, activeAmmo, 20);
+        ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo, 30);
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID); 
         return effect;
     }
