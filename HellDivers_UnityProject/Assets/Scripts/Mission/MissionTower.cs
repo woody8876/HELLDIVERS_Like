@@ -164,7 +164,6 @@ public class MissionTower : Mission, IInteractable
     {
         if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius || CurrentPlayer.IsDead)
         {
-            Debug.LogError("Out");
             StopCheckCodes();
         }
 
