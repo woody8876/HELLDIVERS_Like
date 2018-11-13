@@ -42,8 +42,13 @@ public class MissionTower : Mission, IInteractable
     [SerializeField] private float m_AvaliableRadius = 15;
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
-    [SerializeField] private float m_ActivatingTime = 5;
+    [SerializeField] private float m_ActivatingTime = 180;
+    [SerializeField] private float m_MobSpawnTime = 30;
+    [SerializeField] private float m_MinRadius = 20;
+    [SerializeField] private float m_MaxRadius = 25;
+    [SerializeField] private int m_MobNum;
     private float m_ActTimer;
+    private float m_MobTimer;
     private int m_CodeLenght;
     private GameObject m_TowerGo;
     private Animator m_Animator;
@@ -69,6 +74,7 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine.OnGetResult += SuccessOnCheckCode;
         m_CodeMechine.OnFaild += StartCheckCodes;
         m_Codes = GenerateCode();
+        m_MobTimer = m_MobSpawnTime;
     }
 
     // Use this for initialization
@@ -124,6 +130,7 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine.StopCheckCodes();
         CurrentPlayer = null;
         m_Animator.SetTrigger("Stop");
+        m_MobTimer = m_MobSpawnTime;
         DoState = null;
         if (OnStop != null) OnStop();
     }
@@ -153,7 +160,7 @@ public class MissionTower : Mission, IInteractable
 
     private void ActivationState()
     {
-        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius)
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius || CurrentPlayer.IsDead)
         {
             Debug.LogError("Out");
             StopCheckCodes();
@@ -162,6 +169,17 @@ public class MissionTower : Mission, IInteractable
         if (m_ActTimer < m_ActivatingTime)
         {
             m_ActTimer += Time.fixedDeltaTime;
+
+            if (m_MobTimer < m_MobSpawnTime)
+            {
+                m_MobTimer += Time.fixedDeltaTime;
+            }
+            else
+            {
+                MobManager.m_Instance.SpawnFish(m_MobNum, this.transform, m_MinRadius, m_MaxRadius);
+                m_MobTimer = 0;
+            }
+
             if (OnActivating != null) OnActivating();
         }
         else
