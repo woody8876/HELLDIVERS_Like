@@ -6,6 +6,7 @@ public class Main : MonoBehaviour
 {
     public static Main Instance { get; private set; }
     private SceneController m_SceneController;
+    private InputrManager m_InputManager = new InputrManager();
     private GameData m_GameData = new GameData();
     private PlayerManager m_PlayerManager = new PlayerManager();
 
@@ -18,11 +19,13 @@ public class Main : MonoBehaviour
         m_GameData.Init();
         m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_PlayerManager.Init();
+        m_InputManager.Init();
     }
 
     // Use this for initialization
     private void Start()
     {
+
     }
 
     // Update is called once per frame

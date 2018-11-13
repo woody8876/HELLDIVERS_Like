@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     #endregion Private Variable
 
     public Player m_Player;
+    public ControllerSetting InputSetting { get { return m_InputSetting; } }
+    private ControllerSetting m_InputSetting;
     public bool m_FinishAni = false;
     public string m_MoveMode = "Stop";
     public Animator m_Animator;
@@ -33,16 +35,11 @@ public class PlayerController : MonoBehaviour
     public bool bIsDead = false;
     public bool bIsAlive = true;
 
-    public int m_ControllerIndex;
-    //public string m_JoyName;
-    public InputManager m_InputManager = new InputManager();
-    public InputInfo m_InputInfo;
+    
     #region MonoBehaviour
     private void Awake()
     {
-        m_ControllerIndex = 2;
-        m_InputManager.Init();
-        m_InputInfo = m_InputManager.PlayerInputInfoTable[m_ControllerIndex];
+
     }
     private void OnEnable()
     {
@@ -52,7 +49,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-
+        //m_InputSetting = InputMM.Instance.InputSettingMap[2];
         m_PlayerFSM = new PlayerFSMSystem(this);
         m_Player = this.GetComponent<Player>();
         m_WeaponController = this.GetComponent<WeaponController>();
@@ -156,9 +153,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Total Kill : " + MobManager.m_Instance.TotalKill);
             Debug.Log("Total Fish Kill : " + MobManager.m_Instance.TotalFishKill);
             Debug.Log("Total Patrol Kill : " + MobManager.m_Instance.TotalPatrolKill);
-            Debug.Log(m_InputInfo);
         }
-        if (Input.GetButtonDown("Roll") || Input.GetButtonDown(m_InputInfo.Roll))
+        if (Input.GetButtonDown("Roll") || Input.GetKeyDown(m_InputSetting.Roll))
         {
             AnimatorStateInfo info = m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
             if (m_PAC.Animator.IsInTransition(3) || info.IsName("Roll"))
@@ -221,7 +217,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        if (Input.GetButton("Run") || Input.GetButton(m_InputInfo.Run)) bRun = true;
+        if (Input.GetButton("Run") || Input.GetKey(m_InputSetting.Run)) bRun = true;
         else bRun = false;
 
         #region Key & Mouse
@@ -233,7 +229,7 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region Joystick
-        else if (Input.GetAxis(m_InputInfo.DirectionHorizontal) != 0 || Input.GetAxis(m_InputInfo.DirectionVertical) != 0)
+        else if (Input.GetAxis(m_InputSetting.DirectionHorizontal) != 0 || Input.GetAxis(m_InputSetting.DirectionVertical) != 0)
         {
             FaceDirection();
             m_AimLine.OpenAimLine();
@@ -252,7 +248,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        if (Input.GetButton("Run") || Input.GetButton(m_InputInfo.Run)) bRun = true;
+        if (Input.GetButton("Run") || Input.GetKey(m_InputSetting.Run)) bRun = true;
         else bRun = false;
 
         #region Key & Mouse
@@ -264,7 +260,7 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         #region Joystick
-        else if (Input.GetAxis(m_InputInfo.DirectionHorizontal) != 0 || Input.GetAxis(m_InputInfo.DirectionVertical) != 0)
+        else if (Input.GetAxis(m_InputSetting.DirectionHorizontal) != 0 || Input.GetAxis(m_InputSetting.DirectionVertical) != 0)
         {
             FaceDirection();
             bInBattle = true;
@@ -288,7 +284,7 @@ public class PlayerController : MonoBehaviour
 
         #region Joystick
 
-        else if (Input.GetAxis(m_InputInfo.DirectionHorizontal) != 0 || Input.GetAxis(m_InputInfo.DirectionVertical) != 0)
+        else if (Input.GetAxis(m_InputSetting.DirectionHorizontal) != 0 || Input.GetAxis(m_InputSetting.DirectionVertical) != 0)
         {
             FaceDirection();
             bInBattle = true;
@@ -312,9 +308,9 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float h = Input.GetAxis(m_InputInfo.Horizontal);
-        float v = Input.GetAxis(m_InputInfo.Vertical);
-        if(Input.GetAxis(m_InputInfo.Horizontal) == 0 && Input.GetAxis(m_InputInfo.Vertical) == 0)
+        float h = Input.GetAxis(m_InputSetting.Horizontal);
+        float v = Input.GetAxis(m_InputSetting.Vertical);
+        if(Input.GetAxis(m_InputSetting.Horizontal) == 0 && Input.GetAxis(m_InputSetting.Vertical) == 0)
         {
             h = Input.GetAxis("Horizontal");
             v = Input.GetAxis("Vertical");
@@ -354,11 +350,11 @@ public class PlayerController : MonoBehaviour
         if (m_Direction.magnitude < 0.1f) return;
         if (m_Direction.magnitude > 1) m_Direction.Normalize();
 
-        if (Input.GetAxis(m_InputInfo.DirectionHorizontal) != 0 || Input.GetAxis(m_InputInfo.DirectionVertical) != 0)
+        if (Input.GetAxis(m_InputSetting.DirectionHorizontal) != 0 || Input.GetAxis(m_InputSetting.DirectionVertical) != 0)
         {
             #region Joystick
-            float h = Input.GetAxis(m_InputInfo.DirectionHorizontal);
-            float v = Input.GetAxis(m_InputInfo.DirectionVertical);
+            float h = Input.GetAxis(m_InputSetting.DirectionHorizontal);
+            float v = Input.GetAxis(m_InputSetting.DirectionVertical);
             if (m_Cam != null)
             {
                 m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
@@ -407,11 +403,11 @@ public class PlayerController : MonoBehaviour
         m_PAC.Animator.SetTrigger("GetHurt");
         return true;
     }
+
+    
     public void SetJoyNumber(int num)
     {
-        m_ControllerIndex = num;
-        m_InputManager.Init();
-        m_InputInfo = m_InputManager.PlayerInputInfoTable[m_ControllerIndex];
+        m_InputSetting = InputrManager.Instance.InputSettingMap[num];
     }
     #endregion
 
