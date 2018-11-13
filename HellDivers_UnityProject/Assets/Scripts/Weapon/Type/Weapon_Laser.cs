@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon_Laser : Weapon
 {
-    public override void Shot(Transform t, float fSpreadperShot)
+    public override void Shot(Transform t, float fSpreadperShot, Player player)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID) ?? GameObject.Find("Bullet/Bullet_Laser(Clone)");
 
@@ -16,6 +16,7 @@ public class Weapon_Laser : Weapon
             go.transform.forward = t.forward;
             go.GetComponent<Bullet_Ray>().StartPos = t;
             go.GetComponent<Bullet_Ray>().m_bActive = true;
+            go.GetComponent<Bullet_Ray>().m_BulletPlayer = player;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             weaponInfo.Ammo--;

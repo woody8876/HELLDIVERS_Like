@@ -27,7 +27,7 @@ public class Turret_Test : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        m_weaponController.AddWeapon(1101, GunPos);
+       // m_weaponController.AddWeapon(1101, GunPos, );
 	}
 	
 	// Update is called once per frame

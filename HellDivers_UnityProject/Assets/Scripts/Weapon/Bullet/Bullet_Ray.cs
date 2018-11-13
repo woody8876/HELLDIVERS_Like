@@ -8,6 +8,9 @@ public class Bullet_Ray : MonoBehaviour {
     public Transform StartPos;
     [HideInInspector]
     public bool m_bActive;
+    [HideInInspector]
+    public Player m_BulletPlayer;
+
     [SerializeField] private eWeaponType m_Type;
     [SerializeField] private int m_ID;
     [SerializeField] private LineRenderer m_Line;
@@ -15,6 +18,8 @@ public class Bullet_Ray : MonoBehaviour {
     private float m_fRange;
     private float m_fDamage;
     private float m_Time;
+    private WeaponController m_WeaponController;
+    private Player m_Player;
     private Animator m_animator;
     private Vector3 m_vEndPos;
     private bool m_bTrigger;
@@ -62,6 +67,12 @@ public class Bullet_Ray : MonoBehaviour {
     {
         RaycastHit rh;
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_fRange, 1 << LayerMask.NameToLayer("Enemies")))
+        {
+            IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
+            target.TakeDamage(m_fDamage, rh.point);
+            SetLength(rh.distance);
+        }
+        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fRange, 1 << LayerMask.NameToLayer("Battle")))
         {
             IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
             target.TakeDamage(m_fDamage, rh.point);
