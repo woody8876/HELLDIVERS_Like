@@ -37,6 +37,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.OnSpawnBegin += RefreshUI;
             CurrentPlayer.OnSpawnFinish += RefreshUI;
             CurrentPlayer.OnDamaged += RefreshUI;
+            CurrentPlayer.OnTakeHealth += RefreshUI;
             CurrentPlayer.OnDeathBegin += RefreshUI;
         }
 
@@ -45,6 +46,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer.OnSpawnBegin -= RefreshUI;
             CurrentPlayer.OnSpawnFinish -= RefreshUI;
             CurrentPlayer.OnDamaged -= RefreshUI;
+            CurrentPlayer.OnTakeHealth -= RefreshUI;
             CurrentPlayer.OnDeathBegin -= RefreshUI;
         }
 
