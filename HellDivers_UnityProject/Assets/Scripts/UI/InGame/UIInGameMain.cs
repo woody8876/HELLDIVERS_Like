@@ -12,6 +12,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private UIPanelPlayerInfo m_PanelPlayerInfo;
         [SerializeField] private UIPanelStratagemAct m_PanelStratagemAct;
         [SerializeField] private UIDynamicHpBar m_DynamicHpBar;
+        [SerializeField] private UIDynamicMissionMsg m_DynamicMissionMsg;
         private Dictionary<Player, UIDynamicHpBar> m_DynamicHpBarMap;
 
         public void Init()
@@ -56,6 +57,12 @@ namespace HELLDIVERS.UI.InGame
             hpBar.Init(player);
             m_DynamicHpBarMap.Add(player, hpBar);
             hpBar.gameObject.SetActive(false);
+        }
+
+        public void AddDynamicMissionMsg(MissionTower mission)
+        {
+            UIDynamicMissionMsg missionMsg = Instantiate(m_DynamicMissionMsg, this.transform).GetComponent<UIDynamicMissionMsg>();
+            missionMsg.Init(mission);
         }
     }
 }

@@ -53,9 +53,23 @@ public class MissionTower : Mission, IInteractable
 
     private delegate void TowerDoState();
 
+    public delegate void TowerEventHolder();
+
+    public event TowerEventHolder OnActivating;
+
+    public event TowerEventHolder OnStop;
+
     #endregion Private Variable
 
     #region MonoBehaviour
+
+    private void Awake()
+    {
+        m_CodeMechine = this.GetComponent<CheckCodesMechine>();
+        m_CodeMechine.OnGetResult += SuccessOnCheckCode;
+        m_CodeMechine.OnFaild += StartCheckCodes;
+        m_Codes = GenerateCode();
+    }
 
     // Use this for initialization
     private void Start()
@@ -65,10 +79,6 @@ public class MissionTower : Mission, IInteractable
         m_Animator = m_TowerGo.GetComponentInChildren<Animator>();
 
         InteractiveItemManager.Instance.AddItem(this);
-        m_CodeMechine = this.GetComponent<CheckCodesMechine>();
-        m_CodeMechine.OnGetResult += SuccessOnCheckCode;
-        m_CodeMechine.OnFaild += StartCheckCodes;
-        m_Codes = GenerateCode();
     }
 
     private void FixedUpdate()
@@ -115,6 +125,7 @@ public class MissionTower : Mission, IInteractable
         CurrentPlayer = null;
         m_Animator.SetTrigger("Stop");
         DoState = null;
+        if (OnStop != null) OnStop();
     }
 
     private void SuccessOnCheckCode()
@@ -148,7 +159,11 @@ public class MissionTower : Mission, IInteractable
             StopCheckCodes();
         }
 
-        if (m_ActTimer < m_ActivatingTime) m_ActTimer += Time.fixedDeltaTime;
+        if (m_ActTimer < m_ActivatingTime)
+        {
+            m_ActTimer += Time.fixedDeltaTime;
+            if (OnActivating != null) OnActivating();
+        }
         else
         {
             m_Animator.SetTrigger("Finish");

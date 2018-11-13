@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HELLDIVERS.UI.InGame;
 
 public class MissionManager
 {
@@ -41,8 +42,11 @@ public class MissionManager
         GameObject tower = new GameObject("MissionTower");
         tower.transform.parent = pos;
         tower.transform.position = pos.position;
-        Mission mission = tower.AddComponent<MissionTower>();
+        MissionTower mission = tower.AddComponent<MissionTower>();
         m_MissionMap.Add(mission);
+
+        UIInGameMain.Instance.AddDynamicMissionMsg(mission);
+
         MissionCount++;
     }
 }
