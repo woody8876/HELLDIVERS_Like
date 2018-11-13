@@ -175,8 +175,8 @@ public class MobManager
 
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
             if (m_GOFish == null) return;
-            m_GOFish.SetActive(true);
             m_GOFish.transform.position = spawnTarget;
+            m_GOFish.SetActive(true);
             m_FishCount++;
         }
     }
