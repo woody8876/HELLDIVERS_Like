@@ -12,6 +12,9 @@ public class FishAI : Character
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
+    private GameObject[] m_PlayerGO;
+    private float m_MinDis = 100000f;
+    private float Timer = 0.0f;
     // Use this for initialization
     private void Awake()
     {
@@ -21,10 +24,10 @@ public class FishAI : Character
     {
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
-        Debug.Log(this.gameObject.transform.position);
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
+        m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
@@ -99,15 +102,36 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_AIData.m_PlayerGO == null)
+        if (m_PlayerGO == null)
         {
-            m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-            if (m_AIData.m_PlayerGO != null)
-            {
-                m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-            }
+            m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
+            return;
         }
-        else if (m_AIData.m_PlayerGO != null)
+        Timer += Time.deltaTime;
+        if(Timer > 2.0f)
+        {
+            foreach (GameObject go in m_PlayerGO)
+            {
+                float Dis = (go.transform.position - this.transform.position).magnitude;
+                if (Dis < m_MinDis)
+                {
+                    m_MinDis = Dis;
+                    m_AIData.m_PlayerGO = go;
+                }
+            }
+            Timer = 0.0f;
+            m_MinDis = 10000f;
+        }
+        
+        //if (m_AIData.m_PlayerGO == null)
+        //{
+        //    m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+        //    if (m_AIData.m_PlayerGO != null)
+        //    {
+        //        m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
+        //    }
+        //}
+        if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
         }
