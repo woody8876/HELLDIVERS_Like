@@ -82,6 +82,8 @@ public class Player : Character
     {
         data.CopyTo(m_Data);
 
+        m_Controller.SetJoyNumber(serialNum);
+
         // Setup stratagems
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
         if (m_Data.Stratagems.Count > 0) m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
