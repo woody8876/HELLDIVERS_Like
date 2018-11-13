@@ -5,9 +5,7 @@ using UnityEngine;
 public class AmmoPackage : InteractiveItem
 {
     public int WeaponID { get { return m_WeaponID; } }
-    public int Ammo { get { return m_Ammo; } }
     [SerializeField] private int m_WeaponID;
-    [SerializeField] private int m_Ammo;
 
     public void Initialize(int weaponId)
     {
@@ -17,8 +15,14 @@ public class AmmoPackage : InteractiveItem
     public override void OnInteract(Player player)
     {
         m_WeaponID = player.WeaponController._CurrentWeapon;
-
-        bool bFillUp = player.WeaponController.AddMags(WeaponID, Ammo);
+        int[] ids = player.WeaponController.ActivedWeaponID;
+        bool bFillUp = false;
+        for (int i = 0; i < ids.Length; i++)
+        {
+            int currentWeaponId = player.WeaponController.ActivedWeaponID[i];
+            int num = Mathf.RoundToInt(player.WeaponController.ActiveWeapon[currentWeaponId].weaponInfo.Start_Mags);
+            bFillUp = player.WeaponController.AddMags(currentWeaponId, num);
+        }
         if (bFillUp == false) return;
 
         Destroy(this.gameObject);

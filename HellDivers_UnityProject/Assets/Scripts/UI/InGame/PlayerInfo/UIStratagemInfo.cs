@@ -119,7 +119,7 @@ namespace HELLDIVERS.UI.InGame
                 img.color = m_DarkColor;
             }
 
-            if (CurrentPlayer.StratagemController.StratagemsOnCheckingCode.Contains(CurrentStratagem))
+            if (CurrentPlayer.StratagemController.CheckCodesMechine.CheckCodeMap.ContainsKey(CurrentStratagem))
             {
                 for (int i = 0; i < CurrentPlayer.StratagemController.InputCodeStep; i++)
                 {

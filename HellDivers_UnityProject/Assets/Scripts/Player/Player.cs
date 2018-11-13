@@ -59,6 +59,8 @@ public class Player : Character
 
     public event PlayerEventHolder OnDamaged;
 
+    public event PlayerEventHolder OnTakeHealth;
+
     #endregion Event
 
     #region Initializer
@@ -145,6 +147,8 @@ public class Player : Character
         if (IsDead || m_CurrentHp >= m_MaxHp) return false;
 
         CurrentHp += heal;
+
+        if (OnTakeHealth != null) OnTakeHealth();
         return true;
     }
 

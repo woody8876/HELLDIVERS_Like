@@ -33,11 +33,6 @@ public class StratagemController : MonoBehaviour
     public CheckCodesMechine CheckCodesMechine { get { return m_CheckCodesMechine; } }
 
     /// <summary>
-    /// Represent of stratagems is ready to checking code.
-    /// </summary>
-    public List<Stratagem> StratagemsOnCheckingCode { get { return m_InCheckCodeMechine; } }
-
-    /// <summary>
     /// Represent of current checking code input step.
     /// </summary>
     public int InputCodeStep { get { return m_CheckCodesMechine.Step; } }
@@ -76,7 +71,6 @@ public class StratagemController : MonoBehaviour
     private bool m_bCheckingCode;
     private Stratagem m_CurrentStratagem;
     private CheckCodesMechine m_CheckCodesMechine;
-    private List<Stratagem> m_InCheckCodeMechine = new List<Stratagem>();
 
     #endregion Private Variable
 
@@ -230,13 +224,11 @@ public class StratagemController : MonoBehaviour
     public bool StartCheckCodes()
     {
         m_CheckCodesMechine.Clear();
-        m_InCheckCodeMechine.Clear();
         foreach (Stratagem s in m_Stratagems)
         {
             if (s.State == Stratagem.eState.Idle && !s.IsCooling && !s.IsOutOfUses)
             {
                 m_CheckCodesMechine.AddCodes(s, s.Info.Codes);
-                m_InCheckCodeMechine.Add(s);
             }
         }
         m_CheckCodesMechine.StartCheckCodes();
