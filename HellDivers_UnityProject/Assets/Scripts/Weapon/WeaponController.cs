@@ -15,11 +15,11 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     /// <param name="WeaponsID">weapon's ID</param>
     /// <param name="pos">weapon's position</param>
-    public void AddMultiWeapons(List<int> WeaponsID, Transform pos)
+    public void AddMultiWeapons(List<int> WeaponsID, Transform pos, Player player)
     {
         for (int i = 0; i < WeaponsID.Count; i++)
         {
-            AddWeapon(WeaponsID[i], pos);
+            AddWeapon(WeaponsID[i], pos, player);
         }
     }
     /// <summary>
@@ -27,18 +27,19 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     /// <param name="weaponID">weapon's ID</param>
     /// <param name="pos">weapon's position</param>
-    public void AddWeapon(int weaponID, Transform pos)
+    public void AddWeapon(int weaponID, Transform pos, Player player)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(weaponID) == false) { return; }
         if (!m_dActiveWeapon.ContainsKey(weaponID))
         {
             m_dActiveWeapon.Add(weaponID, m_weaponFactory.CreateWeapon(weaponID));
-            m_GOEffect = m_dActiveWeapon[weaponID].WeaponLoader();
+            m_dActiveWeapon[weaponID].WeaponLoader();
+            m_GOEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponID * 10 + 1);
             m_GOEffect.transform.parent = pos;
             m_GOEffect.transform.localPosition = Vector3.zero;
-            m_AnimEffect = m_GOEffect.GetComponent<Animator>();
-            m_dActiveEffect.Add(weaponID, m_AnimEffect);
+            m_dActiveEffect.Add(weaponID, m_GOEffect);
             _CurrentWeapon = weaponID;
+            m_player = player;
             m_tGunPos = pos;
         }
         SetWeaponInfo(weaponID);
@@ -46,7 +47,10 @@ public class WeaponController : MonoBehaviour
     /// <summary>
     /// Reset active weapons' ammo and mags to origine
     /// </summary>
-    public void ResetWeaponInfo() { for (int i = 0; i < ActivedWeaponID.Length; i++) { SetWeaponInfo(ActivedWeaponID[i]); } }
+    public void ResetWeaponInfo() { for (int i = 0; i < ActivedWeaponID.Length; i++)
+        {
+            SetWeaponInfo(ActivedWeaponID[i]); }
+    }
     /// <summary>
     /// Reset the designate weapon to origine
     /// </summary>
@@ -113,15 +117,15 @@ public class WeaponController : MonoBehaviour
     //Weapon's cooling after shooting, it's time decide by shooting rate
     private IEnumerator WaitCooling()
     {
-        m_currentWeaponEffect.SetTrigger("startTrigger");
+        m_currentWeaponEffect.SetActive(true);
         yield return new WaitForSeconds(0.2f);
-        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos, m_fSpreadIncrease);
+        m_dActiveWeapon[_CurrentWeapon].Shot(m_tGunPos, m_fSpreadIncrease, m_player);
         if (OnFire != null) OnFire();
         yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
         m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
-        if (_CurrentWeapon == 1401|| _CurrentWeapon == 1601|| _CurrentWeapon == 1701)
-             m_currentWeaponEffect.SetTrigger("endTrigger");
+        if (_CurrentWeapon == 1601|| _CurrentWeapon == 1701)
+            m_currentWeaponEffect.GetComponent<Animator>().SetTrigger("endTrigger");
         yield break;
     }
     /// <summary>
@@ -200,12 +204,12 @@ public class WeaponController : MonoBehaviour
 
     #region Private member
     private WeaponFactory m_weaponFactory = new WeaponFactory();
+    private Player m_player;
     private GameObject m_GOEffect;
-    private Animator m_AnimEffect;
     private Transform m_tGunPos;
     private Dictionary<int, IWeaponBehaviour> m_dActiveWeapon = new Dictionary<int, IWeaponBehaviour>();
-    private Dictionary<int, Animator> m_dActiveEffect = new Dictionary<int, Animator>();
-    private Animator m_currentWeaponEffect { get { return m_dActiveEffect[_CurrentWeapon]; } }
+    private Dictionary<int, GameObject> m_dActiveEffect = new Dictionary<int, GameObject>();
+    private GameObject m_currentWeaponEffect { get { return m_dActiveEffect[_CurrentWeapon]; } }
     private bool m_bReloading;
     #endregion Private member
 }

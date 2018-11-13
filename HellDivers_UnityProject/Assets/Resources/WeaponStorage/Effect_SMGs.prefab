@@ -103,6 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4449160879672552}
   - component: {fileID: 95655777573507704}
+  - component: {fileID: 114947372955636774}
   m_Layer: 0
   m_Name: Effect_SMGs
   m_TagString: Untagged
@@ -241,6 +242,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114947372955636774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453531475890648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e836f388327674dbe1be21a66d8144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 14011
 --- !u!198 &198170832831443638
 ParticleSystem:
   m_ObjectHideFlags: 1

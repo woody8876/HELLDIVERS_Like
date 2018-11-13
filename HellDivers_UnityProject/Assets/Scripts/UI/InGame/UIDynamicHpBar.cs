@@ -11,7 +11,8 @@ namespace HELLDIVERS.UI.InGame
 
         [SerializeField] private Image m_SerialIcon;
         [SerializeField] private Text m_NameText;
-        [SerializeField] private Image m_Fill;
+        [SerializeField] private Image m_BarBg;
+        [SerializeField] private Image m_BarFill;
         [SerializeField] private Vector2 m_Position;
 
         public void Init(Player player)
@@ -53,8 +54,9 @@ namespace HELLDIVERS.UI.InGame
         private void RefreshUI()
         {
             this.gameObject.SetActive(!CurrentPlayer.IsDead);
-            m_Fill.fillAmount = CurrentPlayer.CurrentHpPercent;
-            m_Fill.enabled = (m_Fill.fillAmount < 1);
+            m_BarFill.fillAmount = CurrentPlayer.CurrentHpPercent;
+            m_BarFill.enabled = (m_BarFill.fillAmount < 1);
+            m_BarBg.enabled = (m_BarFill.fillAmount < 1);
         }
 
         private void FollowPlayer()
