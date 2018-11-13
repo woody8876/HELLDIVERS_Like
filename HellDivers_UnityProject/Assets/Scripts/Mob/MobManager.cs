@@ -110,6 +110,9 @@ public class MobManager
         //    m_GoFish.transform.position = MapInfo.Instance.MobPos[BestSpawnIndex].position;
         //    m_FishCount++;
         //}
+
+        if (m_FishCount > 5) return;
+
         m_GOPlayer = GameObject.FindGameObjectWithTag("Player");
 
         Vector3 spawnTarget = m_GOPlayer.transform.forward;
