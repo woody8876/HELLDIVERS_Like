@@ -57,6 +57,9 @@ public class CheckCodesMechine : MonoBehaviour
     /// </summary>
     public event CheckCodeEventHolder OnStop;
 
+    /// <summary>
+    /// On the failed in check code process.
+    /// </summary>
     public event CheckCodeEventHolder OnFaild;
 
     #endregion Events

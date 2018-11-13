@@ -18,7 +18,19 @@ public class MissionTower : Mission, IInteractable
     public string ID { get { return m_Id; } }
     public float Radius { get { return m_Radius; } }
     public float AvaliableRadius { get { return m_AvaliableRadius; } }
+    public float ActiveTimer { get { return m_ActTimer; } }
+
+    public float ActTimeCountDown
+    {
+        get
+        {
+            float result = (m_ActivatingTime < m_ActTimer) ? 0 : m_ActivatingTime - m_ActTimer;
+            return result;
+        }
+    }
+
     public Vector3 Position { get { return this.transform.position; } }
+    public CheckCodesMechine CodeMechine { get { return m_CodeMechine; } }
     public eCode[] Codes { get { return m_Codes; } }
 
     #endregion Properties
@@ -42,10 +54,6 @@ public class MissionTower : Mission, IInteractable
     private delegate void TowerDoState();
 
     #endregion Private Variable
-
-    public void StartMission()
-    {
-    }
 
     #region MonoBehaviour
 
@@ -105,7 +113,6 @@ public class MissionTower : Mission, IInteractable
     {
         m_CodeMechine.StopCheckCodes();
         CurrentPlayer = null;
-        m_CodeMechine.enabled = false;
         m_Animator.SetTrigger("Stop");
         DoState = null;
     }
@@ -145,15 +152,11 @@ public class MissionTower : Mission, IInteractable
         else
         {
             m_Animator.SetTrigger("Finish");
+            m_bFinished = true;
+            InteractiveItemManager.Instance.RemoveItem(this);
+            if (OnFinished != null) OnFinished();
             DoState = null;
         }
-    }
-
-    private void FinalState()
-    {
-        m_bFinished = true;
-        InteractiveItemManager.Instance.RemoveItem(this);
-        if (OnFinished != null) OnFinished();
     }
 
     /*------------------------------------------------------------------------

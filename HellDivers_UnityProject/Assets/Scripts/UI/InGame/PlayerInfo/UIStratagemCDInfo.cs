@@ -37,8 +37,8 @@ namespace HELLDIVERS.UI.InGame
 
         private void SubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify += RefreshInfo;
-            CurrentPlayer.OnStartDeathNotify += StopUI;
+            CurrentPlayer.OnSpawnBegin += RefreshInfo;
+            CurrentPlayer.OnDeathBegin += StopUI;
             CurrentStratagem.OnStartCoolDown += RefreshInfo;
             CurrentStratagem.OnCoolDown += RefreshInfo;
             CurrentStratagem.OnEndCoolDown += RefreshInfo;
@@ -46,8 +46,8 @@ namespace HELLDIVERS.UI.InGame
 
         private void UnsubscribePlayerEvent()
         {
-            CurrentPlayer.OnStartSpawnNotify -= RefreshInfo;
-            CurrentPlayer.OnStartDeathNotify -= StopUI;
+            CurrentPlayer.OnSpawnBegin -= RefreshInfo;
+            CurrentPlayer.OnDeathBegin -= StopUI;
             CurrentStratagem.OnStartCoolDown -= RefreshInfo;
             CurrentStratagem.OnCoolDown -= RefreshInfo;
             CurrentStratagem.OnEndCoolDown -= RefreshInfo;
