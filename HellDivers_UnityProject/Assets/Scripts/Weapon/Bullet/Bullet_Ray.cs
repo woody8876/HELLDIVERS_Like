@@ -67,6 +67,12 @@ public class Bullet_Ray : MonoBehaviour {
             target.TakeDamage(m_fDamage, rh.point);
             SetLength(rh.distance);
         }
+        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fRange, 1 << LayerMask.NameToLayer("Battle")))
+        {
+            IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
+            target.TakeDamage(m_fDamage, rh.point);
+            SetLength(rh.distance);
+        }
         else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fRange, 1 << LayerMask.NameToLayer("Terrain")))
         {
             SetLength(rh.distance);

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class WelcomeButtonController : MonoBehaviour {
 
+    #region SerializeField
     [SerializeField] Button m_Start;
     [SerializeField] Button m_Continue;
     [SerializeField] Button m_Exit;
@@ -15,16 +16,19 @@ public class WelcomeButtonController : MonoBehaviour {
     [SerializeField] GameObject m_Menu;
     [SerializeField] GameObject m_FadePanel;
     [SerializeField] GameObject m_Animantion;
+    #endregion
 
+    #region Mono Behaviors
     private void Start()
     {
-     //   SetSelectGO(m_Press.GetComponentInChildren<Button>());
         SetPress();
         SetStart();
         SetContinue();
         SetExit();
     }
+    #endregion
 
+    #region Set Button event
     private void SetPress()
     {
         Button btn = m_Press.GetComponentInChildren<Button>();
@@ -63,8 +67,10 @@ public class WelcomeButtonController : MonoBehaviour {
         yield return new WaitForSeconds(1.5f);
         SceneController.Instance.ToLobby();
     }
+    #endregion
 
-      
+    #region Method
+    //Disable button control 
     private void CloseButton()
     {
         m_FadePanel.SetActive(true);
@@ -88,20 +94,16 @@ public class WelcomeButtonController : MonoBehaviour {
         pos.y = go.transform.position.y;
         m_Circle.transform.position = pos;
     }
-
+    //Change active panel
     private void Change(GameObject pre, GameObject next)
     {
         pre.SetActive(false);
         next.SetActive(true);
     }
+    //Set next highlight button
     private void SetSelectGO(Button next)
     {
         EventSystem.current.SetSelectedGameObject(next.gameObject, null);
     }
-    private void AlphaChange(GameObject go)
-    {
-        Color color = go.GetComponent<Image>().color;
-        color.a = Mathf.Lerp(color.a, 1, 0.03f);
-        go.GetComponent<Image>().color = color;
-    }
+    #endregion
 }

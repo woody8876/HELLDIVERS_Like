@@ -23,9 +23,9 @@ public enum eWeaponType { FirstOne = -1,
 
 public interface IWeaponBehaviour
 {
-    GameObject WeaponLoader();
     WeaponInfo weaponInfo { get; }
     void Init(int weaponType);
+    void WeaponLoader();
     void Shot(Transform t, float spread);
     void Reload();
 }
@@ -37,6 +37,7 @@ public class WeaponFactory {
     {
         int iType = GameData.Instance.WeaponInfoTable[weaponID].Type;
         IWeaponBehaviour weaponBehaviour;
+
         switch ((eWeaponType)iType)
         {
             case eWeaponType.Sidearms:
@@ -74,11 +75,7 @@ public class WeaponFactory {
                 break;
         }
 
-        #region WeaponBehaviour 
         weaponBehaviour.Init(weaponID);
-//        weaponBehaviour.Shot(Vector3.zero, Vector3.forward, 0f);
-//        weaponBehaviour.Reload();
-        #endregion
 
         return weaponBehaviour;
     }

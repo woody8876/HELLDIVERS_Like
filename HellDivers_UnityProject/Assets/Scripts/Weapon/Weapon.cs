@@ -10,10 +10,6 @@ using UnityEngine;
 
 public class WeaponInfo
 {
-    private float _FireRate;
-    private int m_Ammo;
-    private int m_Mags;
-
     #region Properties
     public int ID { private set; get; }
     public int Type { private set; get; }
@@ -33,6 +29,7 @@ public class WeaponInfo
     public float FireMode { private set; get; }
     public string Name { private set; get; }
     #endregion
+
     #region Set Properties
     public void SetID(int id) { ID = id; }
     public void SetType(int type) { Type = type; }
@@ -53,6 +50,7 @@ public class WeaponInfo
     public void SetName(string name) { Name = name; }
     #endregion
 
+    #region Properties
     public int Ammo
     {
         get { return m_Ammo; }
@@ -81,6 +79,13 @@ public class WeaponInfo
             return reloadTime;
         }
     }
+    #endregion
+
+    #region Private field
+    private float _FireRate;
+    private int m_Ammo;
+    private int m_Mags;
+    #endregion
 }
 
 [System.Serializable]
@@ -92,7 +97,7 @@ public class Weapon : IWeaponBehaviour
     #region Behaviours
     public virtual WeaponInfo weaponInfo { get { return _weaponInfo; } }
     public virtual void Init(int weaponID) { _weaponInfo = GameData.Instance.WeaponInfoTable[(int)weaponID]; }
-    public virtual GameObject WeaponLoader()
+    public virtual void WeaponLoader()
     {
         string m_sWeapon = "Bullet_" + weaponInfo.Title;
         string m_sEffect = "Effect_" + weaponInfo.Title;
@@ -100,7 +105,7 @@ public class Weapon : IWeaponBehaviour
         Object HitObsEffect;
         Object HitThrough;
         Object weapon;
-        GameObject effect;
+        Object effect;
 
         if (ResourceManager.m_Instance != null)
         {
@@ -108,7 +113,7 @@ public class Weapon : IWeaponBehaviour
             HitObsEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitObs", false);
             HitThrough = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitThrough", false);
             weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
-            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, true) as GameObject;
+            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, false);
         }
         else
         {
@@ -117,14 +122,14 @@ public class Weapon : IWeaponBehaviour
             HitObsEffect = Resources.Load("WeaponStorage/" + "HitObs");
             HitThrough = Resources.Load("WeaponStorage/" + "HitThrough");
             weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
-            effect = Resources.Load("WeaponStorage/" + m_sEffect) as GameObject;
+            effect = Resources.Load("WeaponStorage/" + m_sEffect);
         }
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
         ObjectPool.m_Instance.InitGameObjects(HitMobEffect, activeAmmo, 10);
         ObjectPool.m_Instance.InitGameObjects(HitObsEffect, activeAmmo, 20);
         ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo, 30);
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID); 
-        return effect;
+        ObjectPool.m_Instance.InitGameObjects(effect, activeAmmo, _weaponInfo.ID * 10 + 1); 
     }
     public virtual void Shot(Transform t, float spread) { }
     public virtual void Reload() { }

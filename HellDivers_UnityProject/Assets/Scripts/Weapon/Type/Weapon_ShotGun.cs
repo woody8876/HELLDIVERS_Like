@@ -10,7 +10,7 @@ using UnityEngine;
 public class Weapon_ShotGun : Weapon
 {
     protected override int activeAmmo { get { return base.activeAmmo * 20; } }
-    public override GameObject WeaponLoader() { return base.WeaponLoader(); }
+    public override void WeaponLoader() {  base.WeaponLoader(); }
     
     public override void Shot(Transform t, float fSpreadperShot)
     {
