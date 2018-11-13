@@ -13,6 +13,16 @@ public class Player : Character
     #region Properties
 
     /// <summary>
+    /// Repersent of player serial number.
+    /// </summary>
+    public int SerialNumber { get { return m_SerialNumber; } }
+
+    /// <summary>
+    /// Current player infos.
+    /// </summary>
+    public PlayerInfo Info { get { return m_Data; } }
+
+    /// <summary>
     /// Player weapon behavior controller.
     /// </summary>
     public WeaponController WeaponController { get { return m_WeapoonController; } }
@@ -28,16 +38,15 @@ public class Player : Character
     public GrenadesController GrenadesController { get { return m_GrenadesController; } }
 
     /// <summary>
-    /// Current player infos.
+    /// Repersent of player body's transform.
     /// </summary>
-    public PlayerInfo Info { get { return m_Data; } }
-
     public PlayerParts Parts { get { return m_Parts; } }
 
     #endregion Properties
 
     #region Private Variable
 
+    private int m_SerialNumber;
     private PlayerInfo m_Data;
     private PlayerParts m_Parts;
     private PlayerController m_Controller;
@@ -69,7 +78,7 @@ public class Player : Character
     /// Initialize by player info to setup player's weapons and stratagems.
     /// </summary>
     /// <param name="data"></param>
-    public void Initialize(PlayerInfo data)
+    public void Initialize(PlayerInfo data, int serialNum = 1)
     {
         data.CopyTo(m_Data);
 
@@ -124,6 +133,9 @@ public class Player : Character
         m_CurrentHp = m_MaxHp;
 
         this.transform.position = spawnPos;
+
+        // Reset stratagem
+        m_StratagemController.Reset();
 
         // Reset weapons
         m_WeapoonController.ResetWeaponInfo();

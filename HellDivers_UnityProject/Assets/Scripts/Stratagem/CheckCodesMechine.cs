@@ -62,6 +62,16 @@ public class CheckCodesMechine : MonoBehaviour
     /// </summary>
     public event CheckCodeEventHolder OnFaild;
 
+    /// <summary>
+    /// Input vertical , get Up, Down.
+    /// </summary>
+    public string InputVertical { get { return m_InputVertical; } set { m_InputVertical = value; } }
+
+    /// <summary>
+    /// Input horizontal , get Left, Right.
+    /// </summary>
+    public string InputHorizontal { get { return m_InputHorizontal; } set { m_InputHorizontal = value; } }
+
     #endregion Events
 
     #region Input Define

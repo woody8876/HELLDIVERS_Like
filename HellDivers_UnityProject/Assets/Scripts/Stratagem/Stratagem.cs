@@ -58,8 +58,6 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public float ActTimeCountDown { get { return Info.Activation - m_ActivationTimer; } }
 
-    public bool IsAbandonable { get { return m_IsAbandonable; } set { m_IsAbandonable = value; } }
-
     #endregion Properties
 
     #region Events
@@ -101,7 +99,6 @@ public class Stratagem : MonoBehaviour
     private bool m_IsCooling;
     private float m_CoolTimer;
     private float m_ActivationTimer;
-    private bool m_IsAbandonable;
 
     #endregion Private Variable
 
@@ -378,12 +375,6 @@ public class Stratagem : MonoBehaviour
         });
 
         LoadResult();  // Load stratagem result from object pool.
-
-        if (IsAbandonable)
-        {
-            if (OnAbanadon != null) OnAbanadon();
-            else Destroy(this.gameObject);
-        }
 
         m_eState = eState.Idle;
         yield break;
