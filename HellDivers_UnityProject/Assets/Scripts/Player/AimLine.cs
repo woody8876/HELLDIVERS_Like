@@ -119,6 +119,11 @@ public class AimLine : MonoBehaviour
                 float fDis = (rh.point - this.transform.position).magnitude;
                 return new Vector3(0, m_Enitter.localPosition.y, fDis);
             }
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out rh, 50f, 1 << LayerMask.NameToLayer("Obstcale")))
+            {
+                float fDis = (rh.point - this.transform.position).magnitude;
+                return new Vector3(0, m_Enitter.localPosition.y, fDis);
+            }
             return new Vector3(0, m_Enitter.localPosition.y, 50);
         }
 

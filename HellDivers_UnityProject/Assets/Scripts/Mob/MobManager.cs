@@ -162,17 +162,17 @@ public class MobManager
     {
         Vector3 spawnTarget = center.forward;
         NavMeshHit nHit;
-        do
-        {
-            spawnTarget = center.forward;
-            spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-            spawnTarget *= Random.Range(minRadius, maxRadius);
-            spawnTarget += center.position;
-        } while (NavMesh.Raycast(center.position, spawnTarget, out nHit, NavMesh.AllAreas));
-
 
         for (int i = 0; i < num; i++)
         {
+            do
+            {
+                spawnTarget = center.forward;
+                spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
+                spawnTarget *= Random.Range(minRadius, maxRadius);
+                spawnTarget += center.position;
+            } while (NavMesh.Raycast(center.position, spawnTarget, out nHit, NavMesh.AllAreas));
+
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
             if (m_GOFish == null) return;
             m_GOFish.SetActive(true);
