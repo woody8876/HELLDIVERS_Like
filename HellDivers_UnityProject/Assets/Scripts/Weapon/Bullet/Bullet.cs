@@ -42,29 +42,45 @@ public class Bullet : MonoBehaviour {
     private void Detect()
     {
         RaycastHit rh;
-        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Enemies")))
+        GameObject go = null;
+        IDamageable target = null;
+        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
         {
-            GameObject go = rh.collider.gameObject;
-            IDamageable target = go.GetComponent<IDamageable>();
-            if (m_Target != go)
+            if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis * 5, 1 << LayerMask.NameToLayer("Enemies")))
             {
-                target.TakeDamage(m_fDamage, rh.point);
-                m_Target = go;
-            }
-            if (m_ID == 1301 || m_ID == 1501)
-            {
-                PlayHitEffect(rh.normal, rh.point, 30);
+                go = rh.collider.gameObject;
+                target = go.GetComponent<IDamageable>();
+                if (m_Target != go)
+                {
+                    target.TakeDamage(m_fDamage, rh.point);
+                    m_Target = go;
+                }
+                if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh.normal, rh.point, 30); }
+                else
+                {
+                    PlayHitEffect(rh.normal, rh.point, 10);
+                    BulletDeath();
+                }
             }
             else
             {
-                PlayHitEffect(rh.normal ,rh.point, 10);
-                BulletDeath();
+                go = rh.collider.transform.parent.gameObject;
+                target = go.GetComponent<IDamageable>();
+                if (m_Target != go)
+                {
+                    target.TakeDamage(m_fDamage, rh.point);
+                    m_Target = go;
+                }
+                if (m_ID != 1301 && m_ID != 1501)
+                {
+                    BulletDeath();
+                }
             }
         }
         else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
         {
-            GameObject go = rh.collider.transform.parent.gameObject;
-            IDamageable target = go.GetComponent<IDamageable>();
+            go = rh.collider.gameObject;
+            target = go.GetComponent<IDamageable>();
             if (m_Target != go)
             {
                 target.TakeDamage(m_fDamage, rh.point);

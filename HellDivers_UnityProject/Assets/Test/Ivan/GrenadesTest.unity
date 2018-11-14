@@ -1427,7 +1427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1251849021
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1970,6 +1970,7 @@ GameObject:
   - component: {fileID: 1819636509}
   - component: {fileID: 1819636508}
   - component: {fileID: 1819636507}
+  - component: {fileID: 1819636512}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -2056,6 +2057,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1819636512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1819636506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1521d88c8fbae3a49b2767be2fe8bab2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grenadesController: {fileID: 1819636507}
 --- !u!1001 &1905741060
 Prefab:
   m_ObjectHideFlags: 0
