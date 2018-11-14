@@ -11,7 +11,11 @@ public class PatrolAI : Character
     public PlayerController m_PlayerController;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
+    private BoxCollider m_DamageCollider;
     private MobAimLine m_MobAimLine;
+    private GameObject[] m_PlayerGO;
+    private float m_MinDis = 10000000f;
+    private float Timer = 0.0f;
 
     // Use this for initialization
     private void OnEnable()
@@ -20,6 +24,7 @@ public class PatrolAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_BoxCollider.enabled = true;
+        m_DamageCollider.enabled = true;
     }
     protected override void Start()
     {
@@ -28,6 +33,7 @@ public class PatrolAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_BoxCollider = this.GetComponent<BoxCollider>();
+        m_DamageCollider = GetComponentInChildren<BoxCollider>();
         m_MobAimLine = this.GetComponent<MobAimLine>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
@@ -165,6 +171,7 @@ public class PatrolAI : Character
         if (m_CurrentHp <= 0)
         {
             m_BoxCollider.enabled = false;
+            m_DamageCollider.enabled = false;
             Death();
             return true;
         }
