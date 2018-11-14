@@ -32,7 +32,7 @@ public class FishAI : Character
     }
     protected override void Start()
     {
-        m_MaxHp = 3000;
+        m_MaxHp = 150;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
