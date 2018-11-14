@@ -31,7 +31,15 @@ public class Stratagem : MonoBehaviour
     /// <summary>
     /// Is the stratagem has any uses ?
     /// </summary>
-    public bool IsOutOfUses { get { return (m_UsesCount >= Info.Uses); } }
+    public bool IsOutOfUses
+    {
+        get
+        {
+            if (Info.Uses == -1) return false;
+            else if (m_UsesCount >= Info.Uses) return true;
+            else return false;
+        }
+    }
 
     /// <summary>
     /// Represention the number of how many times has been used.
@@ -151,14 +159,14 @@ public class Stratagem : MonoBehaviour
             }
             else
             {
-                result = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.ResultFolder, newInfo.ResultID) as GameObject;
+                result = ResourceManager.m_Instance.LoadData(typeof(GameObject), StratagemSystem.ResultFolder, newInfo.ResultID.ToString()) as GameObject;
             }
 
             if (result == null) result = StratagemSystem.DefaultResult;
             m_Result = result;
 
             int count = (newInfo.Uses == -1) ? 10 : newInfo.Uses;
-            ObjectPool.m_Instance.InitGameObjects(result, count, newInfo.ID);
+            ObjectPool.m_Instance.InitGameObjects(result, count, newInfo.ResultID);
         }
 
         m_LaunchPos = launchPos;
@@ -233,7 +241,7 @@ public class Stratagem : MonoBehaviour
     /// </summary>
     public void GetReady()
     {
-        if (m_UsesCount >= Info.Uses && Info.Uses >= 0) return;
+        if (IsOutOfUses) return;
         if (IsCooling || State != eState.Idle) return;
 
         this.transform.parent = m_ReadyPos;
@@ -415,7 +423,7 @@ public class Stratagem : MonoBehaviour
         }
         else
         {
-            result = ObjectPool.m_Instance.LoadGameObjectFromPool(m_Info.ID);
+            result = ObjectPool.m_Instance.LoadGameObjectFromPool(m_Info.ResultID);
         }
 
         if (result != null)

@@ -29,6 +29,7 @@ namespace HELLDIVERS.UI.InGame
             m_ImgIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.StratagemIconFolder, fileName);
 
             m_TextTitle.text = stratagem.Info.Title;
+            if (stratagem.Info.Uses == -1) m_TextUses.gameObject.SetActive(false);
             m_TextUses.text = stratagem.Info.Uses.ToString();
 
             CreateArrows();

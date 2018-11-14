@@ -12,6 +12,14 @@ public class HealPackage : InteractiveItem
         bool bHeal = player.TakeHealth(Heal);
         if (bHeal == false) return;
 
-        Destroy(this.gameObject);
+        if (ObjectPool.m_Instance != null)
+        {
+            int type = int.Parse(ID);
+            ObjectPool.m_Instance.UnLoadObjectToPool(type, this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
