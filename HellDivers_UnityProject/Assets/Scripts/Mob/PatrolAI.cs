@@ -160,22 +160,11 @@ public class PatrolAI : Character
             }
         }
         m_MinDis = 10000f;
-        //if (m_AIData.m_PlayerGO == null)
-        //{
-        //    m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        //    if (m_AIData.m_PlayerGO != null)
-        //    {
-        //        m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        //    }
-        //}
         if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
             m_FSM.DoState();
         }
-       
-
-        if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
     public void PerformGetHurt()

@@ -49,11 +49,6 @@ public class FishAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
-        //m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        //if (m_AIData.m_PlayerGO != null)
-        //{
-        //    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        //}
 
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
@@ -139,22 +134,11 @@ public class FishAI : Character
             Timer = 0.0f;
             m_MinDis = 10000f;
         }
-        
-        //if (m_AIData.m_PlayerGO == null)
-        //{
-        //    m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        //    if (m_AIData.m_PlayerGO != null)
-        //    {
-        //        m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        //    }
-        //}
         if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
             m_FSM.DoState();
         }
-
-      
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
@@ -162,7 +146,6 @@ public class FishAI : Character
     public void PerformGetHurt()
     {
         if (IsDead) return;
-
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
         if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
         {
@@ -180,7 +163,6 @@ public class FishAI : Character
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
-
         CurrentHp -= dmg;
         if (m_CurrentHp <= 0)
         {

@@ -8,7 +8,7 @@ public class Radar : MonoBehaviour {
     List<GameObject> radarObjects;
     public GameObject radarPrefab;
     List<GameObject> borderObjects;
-    public float SwicthDistance = 10f;
+    public float SwicthDistance = 100f;
     public Transform helpTransform;
     // Use this for initialization
     void Start () {
