@@ -49,6 +49,7 @@ public class GameMain : MonoBehaviour
 
         m_MobSpawner.SpawnPatrol(40);
         InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
+
     }
 
     [ContextMenu("GameStart")]

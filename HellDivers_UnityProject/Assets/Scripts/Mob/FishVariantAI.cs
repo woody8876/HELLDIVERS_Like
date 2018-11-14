@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(MobAnimationsController))]
-public class FishAI : Character
+public class FishVariantAI : Character
 {
 
     FSMSystem m_FSM;
@@ -32,19 +32,19 @@ public class FishAI : Character
     }
     protected override void Start()
     {
-        m_MaxHp = 150;
+        m_MaxHp = 3000;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID= 3100;
+        m_AIData.m_ID= 3300;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
-        m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
+        m_AIData.navMeshAgent.speed = Random.Range(10.5f, 15.0f);
         m_AIData.navMeshAgent.enabled = false;
         m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
         if (m_AIData.m_PlayerGO != null)
