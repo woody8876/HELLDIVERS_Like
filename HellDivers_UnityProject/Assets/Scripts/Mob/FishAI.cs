@@ -12,6 +12,7 @@ public class FishAI : Character
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
+    private CapsuleCollider m_DamageColloder;
     private GameObject[] m_PlayerGO;
     private float m_MinDis = 100000f;
     private float Timer = 0.0f;
@@ -27,6 +28,7 @@ public class FishAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
+        m_DamageColloder.enabled = true;
         m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
@@ -37,6 +39,7 @@ public class FishAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
+        m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_ID= 3100;
@@ -166,6 +169,7 @@ public class FishAI : Character
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
+            m_DamageColloder.enabled = false;
             Death();
             return true;
         }
