@@ -27321,13 +27321,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cca8a694dec4c4cbf874321d735dc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerData:
+  m_PlayerData1:
     weapons: 4d04000015050000
-    stratagems: d1070000d2070000
+    stratagems: d0070000d1070000d2070000
     grenades: a10f0000a20f0000a30f0000a40f0000
-    username: TestUser
+    username: Player 1
     rank: 40
-    money: 0
+    money: 1
+  m_PlayerData2:
+    weapons: 4d04000015050000
+    stratagems: d0070000d1070000d2070000
+    grenades: a10f0000a20f0000a30f0000a40f0000
+    username: Player 2
+    rank: 40
+    money: 1
   m_NumberOfTowers: 1
 --- !u!4 &858686616
 Transform:
