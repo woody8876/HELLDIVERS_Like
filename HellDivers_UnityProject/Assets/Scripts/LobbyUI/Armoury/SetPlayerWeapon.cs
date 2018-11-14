@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SetPlayerWeapon : MonoBehaviour {
 
@@ -16,27 +17,27 @@ public class SetPlayerWeapon : MonoBehaviour {
         [SerializeField] Button m_Confirm;
     [Header("== Lobby Weapon UI Data ==")]
         [SerializeField] int _iWeaponID;
-        
+
 
     #region Field
+    public int PlayerID;
     public int m_iWeaponID { get { return _iWeaponID; } }
     public bool m_bPrimary;
-    private string m_path = "Canvas/ARMOURY/Info_Interface/";
+    private string m_path = "Canvas/ARMOURY/Player";
     #endregion
-
     void Start () {
-
+        m_path += PlayerID +"/";
         m_Confirm.onClick.AddListener(() => Confirm());
-        SetPlayer(1);
-
+        SetPlayer(PlayerID);
+        EventSystem.current.SetSelectedGameObject(m_Confirm.gameObject); 
     }
 
     private void SetPlayer(int player)
     {
         m_tPlayerName.text = PlayerManager.Instance.Players[player].Username;
         m_tRank.text = "1";
-        InitialWeapon("PlayerMenu/PrimaryWeapon", player, 0, true);
-        InitialWeapon("PlayerMenu/SecondaryWeapon", player, 1, false);
+        InitialWeapon("PlayerMenu/PrimaryWeapon", player, 1, true);
+        InitialWeapon("PlayerMenu/SecondaryWeapon", player, 0, false);
         InitialStratagems("PlayerMenu/Stratagems/", player, 0);
         InitialStratagems("PlayerMenu/Stratagems/", player, 1);
 
@@ -68,7 +69,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         string s = "Select_Weapon_SinglePlayer";
         GameObject go = GameObject.Find(m_path + s)?? GameObject.Find(m_path + s + "(Clone)");
-        if (!go) { go = Instantiate(m_SelectWeapon, GameObject.Find(m_path).transform) as GameObject; }
+        if (!go) { go = Instantiate(m_SelectWeapon, this.transform.parent) as GameObject; }
         go.SetActive(b);
     }
     private void Click(LobbyUI_Weapon ui)
