@@ -49,7 +49,7 @@ public class GameMain : MonoBehaviour
         m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
         GameStart();
         //m_MobSpawner.SpawnPatrol(40);
-        //InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
+        InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
     }
 
     [ContextMenu("GameStart")]
