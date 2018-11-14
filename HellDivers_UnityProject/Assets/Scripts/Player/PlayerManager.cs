@@ -27,8 +27,13 @@ public class PlayerManager
         playerInfo.SetUsername("TestPlayer");
         playerInfo.AddWeapon(1101);
         playerInfo.AddWeapon(1301);
+        playerInfo.AddStratagem(2000);
         playerInfo.AddStratagem(2001);
-        playerInfo.AddStratagem(2002);
+        //playerInfo.AddStratagem(2002);
+        playerInfo.Grenades.Add(4001);
+        playerInfo.Grenades.Add(4002);
+        playerInfo.Grenades.Add(4003);
+        playerInfo.Grenades.Add(4004);
         return playerInfo;
     }
 

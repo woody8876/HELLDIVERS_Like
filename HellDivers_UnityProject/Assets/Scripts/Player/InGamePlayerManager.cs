@@ -6,11 +6,12 @@ using HELLDIVERS.UI.InGame;
 public class InGamePlayerManager : MonoBehaviour
 {
     public static InGamePlayerManager Instance { get; private set; }
+    public List<Player> Players { get { return m_Players; } }
     public float SpawnRadius { get { return m_SpawnRadius; } set { m_SpawnRadius = (value < 0) ? 0 : value; } }
     public float RespawnTime { get { return m_RespawnTime; } set { m_RespawnTime = (value < 0) ? 0 : value; } }
     [SerializeField] private float m_SpawnRadius = 10.0f;
     [SerializeField] private float m_RespawnTime = 5.0f;
-
+    private List<Player> m_Players;
     private Dictionary<Player, PlayerStates> m_PlayerMap;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class InGamePlayerManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(this);
 
+        m_Players = new List<Player>();
         m_PlayerMap = new Dictionary<Player, PlayerStates>();
     }
 
@@ -29,6 +31,7 @@ public class InGamePlayerManager : MonoBehaviour
         player.Initialize(playerInfo);
         PlayerStates states = new PlayerStates(player);
         m_PlayerMap.Add(player, states);
+        m_Players.Add(player);
         playerGo.SetActive(false);
 
         // Create player info UI
@@ -61,6 +64,7 @@ public class InGamePlayerManager : MonoBehaviour
 
     public void RespawnPlayer(Player player)
     {
+        if (m_Players.Count >= 2) return;
         StartCoroutine(RespawnProcess(player));
     }
 
@@ -86,7 +90,7 @@ public class InGamePlayerManager : MonoBehaviour
         m_PlayerMap[player].TimesOfDeath++;
     }
 
-    private class PlayerStates
+    public class PlayerStates
     {
         public PlayerStates(Player player)
         {

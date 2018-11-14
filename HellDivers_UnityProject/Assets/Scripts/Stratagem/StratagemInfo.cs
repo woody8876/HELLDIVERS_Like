@@ -17,7 +17,7 @@ public class StratagemInfo
     public float CoolDown { get { return cooldown; } }
     public float Activation { get { return activation; } }
     public string DisplayID { get { return displayId; } }
-    public string ResultID { get { return resultId; } }
+    public int ResultID { get { return resultId; } }
 
     #endregion Properties
 
@@ -30,7 +30,7 @@ public class StratagemInfo
     [SerializeField] private float cooldown;
     [SerializeField] private float activation;
     [SerializeField] private string displayId;
-    [SerializeField] private string resultId;
+    [SerializeField] private int resultId;
 
     public enum eType
     {
