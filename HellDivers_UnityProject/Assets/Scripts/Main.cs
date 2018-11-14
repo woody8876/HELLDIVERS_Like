@@ -25,7 +25,6 @@ public class Main : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-
     }
 
     // Update is called once per frame

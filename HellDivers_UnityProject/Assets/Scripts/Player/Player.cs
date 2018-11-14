@@ -82,6 +82,7 @@ public class Player : Character
     {
         data.CopyTo(m_Data);
 
+        m_SerialNumber = serialNum;
         m_Controller.SetJoyNumber(serialNum);
 
         // Setup stratagems

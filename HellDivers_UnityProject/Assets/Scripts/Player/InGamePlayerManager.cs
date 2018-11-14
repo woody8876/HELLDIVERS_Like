@@ -23,12 +23,12 @@ public class InGamePlayerManager : MonoBehaviour
         m_PlayerMap = new Dictionary<Player, PlayerStates>();
     }
 
-    public void CreatePlayer(PlayerInfo playerInfo)
+    public void CreatePlayer(PlayerInfo playerInfo, int num = 1)
     {
         GameObject playerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Characters/Ch00", "ch00") as GameObject;
         playerGo = GameObject.Instantiate(playerGo);
         Player player = playerGo.AddComponent<Player>();
-        player.Initialize(playerInfo);
+        player.Initialize(playerInfo, num);
         PlayerStates states = new PlayerStates(player);
         m_PlayerMap.Add(player, states);
         m_Players.Add(player);

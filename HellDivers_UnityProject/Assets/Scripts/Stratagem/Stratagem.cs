@@ -88,8 +88,6 @@ public class Stratagem : MonoBehaviour
 
     public event StratagemEventHolder OnEndActivation;
 
-    public event StratagemEventHolder OnAbanadon;
-
     #endregion Events
 
     #region Private Variable
