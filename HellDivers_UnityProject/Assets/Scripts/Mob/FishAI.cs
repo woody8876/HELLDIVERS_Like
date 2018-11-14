@@ -49,11 +49,11 @@ public class FishAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
-        m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        if (m_AIData.m_PlayerGO != null)
-        {
-            m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        }
+        //m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
+        //if (m_AIData.m_PlayerGO != null)
+        //{
+        //    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
+        //}
 
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
@@ -108,11 +108,6 @@ public class FishAI : Character
         if (m_PlayerGO == null)
         {
             m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
-            return;
-        }
-        Timer += Time.deltaTime;
-        if(Timer > 2.0f)
-        {
             foreach (GameObject go in m_PlayerGO)
             {
                 float Dis = (go.transform.position - this.transform.position).magnitude;
@@ -120,6 +115,25 @@ public class FishAI : Character
                 {
                     m_MinDis = Dis;
                     m_AIData.m_PlayerGO = go;
+                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
+                }
+            }
+            return;
+        }
+        Timer += Time.deltaTime;
+        if(Timer > 2.0f)
+        {
+            foreach (GameObject go in m_PlayerGO)
+            {
+                PlayerController PC = go.GetComponent<PlayerController>();
+                if (PC.bIsDead) continue;
+
+                float Dis = (go.transform.position - this.transform.position).magnitude;
+                if (Dis < m_MinDis)
+                {
+                    m_MinDis = Dis;
+                    m_AIData.m_PlayerGO = go;
+                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
                 }
             }
             Timer = 0.0f;
@@ -137,8 +151,10 @@ public class FishAI : Character
         if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
+            m_FSM.DoState();
         }
-        m_FSM.DoState();
+
+      
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
