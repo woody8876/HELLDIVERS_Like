@@ -80,6 +80,6 @@ public class GameMain : MonoBehaviour
 
     private void SpawnMobs()
     {
-        m_MobSpawner.SpawnFish(5);
+        m_MobSpawner.SpawnFish(1);
     }
 }
