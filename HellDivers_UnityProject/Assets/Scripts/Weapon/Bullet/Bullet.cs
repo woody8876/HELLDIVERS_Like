@@ -77,7 +77,7 @@ public class Bullet : MonoBehaviour {
                 }
             }
         }
-        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
+        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Player")))
         {
             go = rh.collider.gameObject;
             target = go.GetComponent<IDamageable>();

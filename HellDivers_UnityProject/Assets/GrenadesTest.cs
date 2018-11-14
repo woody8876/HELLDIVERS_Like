@@ -6,7 +6,7 @@ public class GrenadesTest : MonoBehaviour {
     [SerializeField] GrenadesController grenadesController;
     bool bHolding;
 
-    List<int> grenades = new List<int>() { 4001, 4002, 4004, 4005 };
+    List<int> grenades = new List<int>() { 4001, 4002, 4003, 4004 };
 	// Use this for initialization
 	void Start () {
         grenadesController.AddGrenades(grenades, transform, transform);
