@@ -221,11 +221,16 @@ public class CameraFollowing : MonoBehaviour
         if (m_Targets.Count > 1)
         {
             m_Destination.Set(0, 0, 0);
+            float maxZ = float.MinValue;
+            float minZ = float.MaxValue;
             foreach (Transform target in m_Targets)
             {
                 m_Destination += target.position;
+                if (target.position.z > maxZ) maxZ = target.position.z;
+                if (target.position.z < minZ) minZ = target.position.z;
             }
             m_Destination /= m_Targets.Count;
+            m_Destination.z -= (maxZ - minZ) * 0.17f;
         }
         else
         {
