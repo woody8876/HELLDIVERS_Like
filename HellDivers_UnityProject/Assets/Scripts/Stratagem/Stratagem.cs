@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR
-
-using UnityEditor;
-
-#endif
-
 [RequireComponent(typeof(Rigidbody))]
 public class Stratagem : MonoBehaviour
 {
@@ -87,8 +81,6 @@ public class Stratagem : MonoBehaviour
     public event StratagemEventHolder OnActivation;
 
     public event StratagemEventHolder OnEndActivation;
-
-    public event StratagemEventHolder OnAbanadon;
 
     #endregion Events
 
@@ -435,101 +427,4 @@ public class Stratagem : MonoBehaviour
     }
 
     #endregion Finite State Machine
-
-#if UNITY_EDITOR
-
-    #region Debug Draw
-
-    public bool ShowDebugInfo;
-
-    private void OnDrawGizmos()
-    {
-        if (ShowDebugInfo)
-        {
-            if (State == eState.ThrowOut) Gizmos.DrawWireSphere(this.transform.position, m_Radius);
-
-            if (State == eState.Activating)
-            {
-                string actMessage = string.Format("{0} Act : {1}", Info.Title, m_ActivationTimer);
-                style.normal.textColor = Color.red;
-                Handles.Label(this.transform.position, actMessage, style);
-            }
-
-            if (IsCooling)
-            {
-                string coolMessage = string.Format("{0} CD : {1}", Info.Title, m_CoolTimer);
-                style.normal.textColor = Color.black;
-                Handles.Label(m_LaunchPos.position, coolMessage, style);
-            }
-        }
-    }
-
-    private void OnGUI()
-    {
-        if (ShowDebugInfo)
-        {
-            string Message;
-            Rect rect = new Rect(10, 10, 100, 20);
-
-            switch (State)
-            {
-                case eState.Idle:
-                    {
-                        if (m_UsesCount >= Info.Uses)
-                        {
-                            Message = string.Format("{0} /{1} out of uses", this.name, Info.Title);
-                            style.normal.textColor = Color.red;
-                            GUI.Label(rect, Message, style);
-                        }
-                        else
-                        {
-                            Message = string.Format("{0} /{1} Idle", this.name, Info.Title);
-                            style.normal.textColor = Color.gray;
-                            GUI.Label(rect, Message, style);
-                        }
-                        break;
-                    }
-
-                case eState.ThrowOut:
-                    {
-                        Message = string.Format("{0} /{1} throw out", this.name, Info.Title);
-                        style.normal.textColor = Color.gray;
-                        GUI.Label(rect, Message, style);
-                        break;
-                    }
-
-                case eState.Ready:
-                    {
-                        Message = string.Format("{0} /{1} ready", this.name, Info.Title);
-                        style.normal.textColor = Color.gray;
-                        GUI.Label(rect, Message, style);
-                        break;
-                    }
-
-                case eState.Activating:
-                    {
-                        Message = string.Format("{0} /{1} Act : {2} / {3}", this.name, Info.Title, m_ActivationTimer, Info.Activation);
-                        style.normal.textColor = Color.red;
-                        GUI.Label(rect, Message, style);
-                        break;
-                    }
-                default:
-                    break;
-            }
-
-            if (IsCooling)
-            {
-                Message = string.Format("{0} /{1} CD : {2} / {3}", this.name, Info.Title, m_CoolTimer, Info.CoolDown);
-                style.normal.textColor = Color.black;
-                rect.y *= 3;
-                GUI.Label(rect, Message, style);
-            }
-        }
-    }
-
-    private GUIStyle style = new GUIStyle();
-
-    #endregion Debug Draw
-
-#endif
 }

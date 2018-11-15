@@ -23,6 +23,16 @@ public class Player : Character
     public PlayerInfo Info { get { return m_Data; } }
 
     /// <summary>
+    /// Repersent of player records in game.
+    /// </summary>
+    public PlayerRecord Record { get { return m_Record; } }
+
+    /// <summary>
+    /// Repersent of player input settings.
+    /// </summary>
+    public ControllerSetting InputSettting { get { return m_ControllerSetting; } }
+
+    /// <summary>
     /// Player weapon behavior controller.
     /// </summary>
     public WeaponController WeaponController { get { return m_WeapoonController; } }
@@ -48,7 +58,9 @@ public class Player : Character
 
     private int m_SerialNumber;
     private PlayerInfo m_Data;
+    private PlayerRecord m_Record;
     private PlayerParts m_Parts;
+    private ControllerSetting m_ControllerSetting;
     private PlayerController m_Controller;
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
@@ -60,11 +72,15 @@ public class Player : Character
 
     public delegate void PlayerEventHolder();
 
+    public delegate void PlayerStatusCollect(Player player);
+
     public event PlayerEventHolder OnSpawnBegin;
 
     public event PlayerEventHolder OnSpawnFinish;
 
     public event PlayerEventHolder OnDeathBegin;
+
+    public event PlayerStatusCollect OnDeathBeginCollect;
 
     public event PlayerEventHolder OnDamaged;
 
@@ -81,10 +97,15 @@ public class Player : Character
     public void Initialize(PlayerInfo data, int serialNum = 1)
     {
         data.CopyTo(m_Data);
+        m_SerialNumber = serialNum;
+        m_Record = new PlayerRecord();
 
+        m_ControllerSetting = InputManager.Instance.InputSettingMap[serialNum];
         m_Controller.SetJoyNumber(serialNum);
 
         // Setup stratagems
+        m_StratagemController.CheckCodesMechine.InputVertical = m_ControllerSetting.StratagemVertical;
+        m_StratagemController.CheckCodesMechine.InputHorizontal = m_ControllerSetting.StratagemHorizontal;
         if (m_StratagemController.Stratagems.Count > 0) m_StratagemController.Clear();
         if (m_Data.Stratagems.Count > 0) m_StratagemController.AddStratagems(m_Data.Stratagems, m_Parts.RightHand, m_Parts.LaunchPoint);
 
@@ -193,12 +214,14 @@ public class Player : Character
     {
         if (IsDead) return;
         m_bDead = true;
+        m_Record.TimesOfDeath++;
         StartCoroutine(DoDeath());
 
         // Reset stragem
         m_StratagemController.Reset();
 
         if (OnDeathBegin != null) OnDeathBegin();
+        if (OnDeathBeginCollect != null) OnDeathBeginCollect(this);
     }
 
     /// <summary>

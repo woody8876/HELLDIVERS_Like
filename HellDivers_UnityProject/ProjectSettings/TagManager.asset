@@ -9,6 +9,8 @@ TagManager:
   - Terrain
   - MobSpawnPoint
   - Fish
+  - Target
+  - Friendly
   layers:
   - Default
   - TransparentFX
@@ -38,8 +40,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Invisible
+  - Radar
   - MiniMap
   - 
   m_SortingLayers:

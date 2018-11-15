@@ -12,10 +12,10 @@ public class PlayerManager
     {
         if (Instance == null) Instance = this;
         m_PlayerMap = new Dictionary<int, PlayerInfo>();
-        CreatePlayerOne();
+        CreatePlayer();
     }
 
-    public void CreatePlayerOne()
+    public void CreatePlayer()
     {
         PlayerInfo playerInfo = CreatPlayerInfo();
         m_PlayerMap.Add(1, playerInfo);
@@ -29,7 +29,7 @@ public class PlayerManager
         playerInfo.AddWeapon(1301);
         playerInfo.AddStratagem(2000);
         playerInfo.AddStratagem(2001);
-        //playerInfo.AddStratagem(2002);
+        playerInfo.AddStratagem(2002);
         playerInfo.Grenades.Add(4001);
         playerInfo.Grenades.Add(4002);
         playerInfo.Grenades.Add(4003);

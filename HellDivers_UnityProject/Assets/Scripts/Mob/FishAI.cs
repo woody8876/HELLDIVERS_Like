@@ -12,6 +12,7 @@ public class FishAI : Character
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
+    private CapsuleCollider m_DamageColloder;
     private GameObject[] m_PlayerGO;
     private float m_MinDis = 100000f;
     private float Timer = 0.0f;
@@ -27,16 +28,18 @@ public class FishAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
+        m_DamageColloder.enabled = true;
         m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
     {
-        m_MaxHp = 300;
+        m_MaxHp = 150;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
+        m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
         m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_ID= 3100;
@@ -46,11 +49,6 @@ public class FishAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
-        m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        if (m_AIData.m_PlayerGO != null)
-        {
-            m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        }
 
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
@@ -105,11 +103,6 @@ public class FishAI : Character
         if (m_PlayerGO == null)
         {
             m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
-            return;
-        }
-        Timer += Time.deltaTime;
-        if(Timer > 2.0f)
-        {
             foreach (GameObject go in m_PlayerGO)
             {
                 float Dis = (go.transform.position - this.transform.position).magnitude;
@@ -117,25 +110,35 @@ public class FishAI : Character
                 {
                     m_MinDis = Dis;
                     m_AIData.m_PlayerGO = go;
+                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
+                }
+            }
+            return;
+        }
+        Timer += Time.deltaTime;
+        if(Timer > 2.0f)
+        {
+            foreach (GameObject go in m_PlayerGO)
+            {
+                PlayerController PC = go.GetComponent<PlayerController>();
+                if (PC.bIsDead) continue;
+
+                float Dis = (go.transform.position - this.transform.position).magnitude;
+                if (Dis < m_MinDis)
+                {
+                    m_MinDis = Dis;
+                    m_AIData.m_PlayerGO = go;
+                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
                 }
             }
             Timer = 0.0f;
             m_MinDis = 10000f;
         }
-        
-        //if (m_AIData.m_PlayerGO == null)
-        //{
-        //    m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        //    if (m_AIData.m_PlayerGO != null)
-        //    {
-        //        m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        //    }
-        //}
         if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
+            m_FSM.DoState();
         }
-        m_FSM.DoState();
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
@@ -143,7 +146,6 @@ public class FishAI : Character
     public void PerformGetHurt()
     {
         if (IsDead) return;
-
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
         if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
         {
@@ -161,11 +163,11 @@ public class FishAI : Character
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
-
         CurrentHp -= dmg;
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
+            m_DamageColloder.enabled = false;
             Death();
             return true;
         }

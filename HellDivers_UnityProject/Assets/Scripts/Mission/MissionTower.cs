@@ -112,6 +112,8 @@ public class MissionTower : Mission, IInteractable
     {
         if (CurrentPlayer != null) return;
         CurrentPlayer = player;
+        m_CodeMechine.InputHorizontal = player.InputSettting.StratagemHorizontal;
+        m_CodeMechine.InputVertical = player.InputSettting.StratagemVertical;
         StartCheckCodes();
     }
 
@@ -188,6 +190,13 @@ public class MissionTower : Mission, IInteractable
             m_Animator.SetTrigger("Finish");
             m_bFinished = true;
             InteractiveItemManager.Instance.RemoveItem(this);
+
+            List<Player> pList = InGamePlayerManager.Instance.Players;
+            for (int i = 0; i < pList.Count; i++)
+            {
+                pList[i].Record.NumOfMission++;
+            }
+
             if (OnActive != null) OnActive();
             StartCoroutine(MissionFinish());
             DoState = null;

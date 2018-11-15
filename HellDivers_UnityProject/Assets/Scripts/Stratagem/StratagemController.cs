@@ -8,11 +8,6 @@ public class StratagemController : MonoBehaviour
     #region Properties
 
     /// <summary>
-    /// Who is controlling this stratagem controller.
-    /// </summary>
-    public Player CurrentPlayer { get { return m_CurrentPlayer; } }
-
-    /// <summary>
     /// Was any stratagem has been ready ?
     /// </summary>
     public bool IsReady { get { return m_CurrentStratagem != false; } }
@@ -70,7 +65,6 @@ public class StratagemController : MonoBehaviour
 
     #region Private Variable
 
-    private Player m_CurrentPlayer;
     [SerializeField] private List<Stratagem> m_Stratagems = new List<Stratagem>();
     [SerializeField] private Vector3 m_ThrowForce = new Vector3(0.0f, 300.0f, 500.0f);
     private float m_ScaleForce = 1;
