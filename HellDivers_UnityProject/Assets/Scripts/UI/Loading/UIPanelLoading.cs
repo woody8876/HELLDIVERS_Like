@@ -15,6 +15,10 @@ public class UIPanelLoading : MonoBehaviour
     {
     }
 
+    public void FadeIn()
+    {
+    }
+
     // Update is called once per frame
     private void Update()
     {
