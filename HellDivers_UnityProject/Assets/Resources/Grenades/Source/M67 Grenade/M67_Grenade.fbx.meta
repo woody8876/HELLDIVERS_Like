@@ -11,10 +11,30 @@ labels:
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
+    100000: Lever
+    100002: //RootNode
+    100004: M67_Grenade
+    100006: Pin
+    400000: Lever
+    400002: //RootNode
+    400004: M67_Grenade
+    400006: Pin
+    2300000: Lever
+    2300002: M67_Grenade
+    2300004: Pin
+    3300000: Lever
+    3300002: M67_Grenade
+    3300004: Pin
     4300000: M67_Grenade
     4300002: Lever
     4300004: Pin
-  externalObjects: {}
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M67_Material
+    second: {fileID: 2100000, guid: 72e0486c9cd26dc40b6fc2679b03eb37, type: 2}
   materials:
     importMaterials: 1
     materialName: 3

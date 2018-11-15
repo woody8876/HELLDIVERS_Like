@@ -13,12 +13,45 @@ labels:
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: polySurface1
+    100004: Strap2
+    100006: Strap3
+    100008: Timer
+    100010: Wires
+    400000: //RootNode
+    400002: polySurface1
+    400004: Strap2
+    400006: Strap3
+    400008: Timer
+    400010: Wires
+    2300000: polySurface1
+    2300002: Strap2
+    2300004: Strap3
+    2300006: Timer
+    2300008: Wires
+    3300000: polySurface1
+    3300002: Strap2
+    3300004: Strap3
+    3300006: Timer
+    3300008: Wires
     4300000: Timer
     4300002: Strap2
     4300004: Wires
     4300006: Strap3
     4300008: polySurface1
-  externalObjects: {}
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dynamite_material
+    second: {fileID: 2100000, guid: cf5e5cd8bc3457b448397c97ed48fbcd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Timer_Wire_Tape_Material
+    second: {fileID: 2100000, guid: 008cbdbefbc80b940a9f0331692eed18, type: 2}
   materials:
     importMaterials: 1
     materialName: 3

@@ -10,10 +10,40 @@ labels:
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
+    100000: Lever
+    100002: Pin
+    100004: Pineapple
+    100006: //RootNode
+    400000: Lever
+    400002: Pin
+    400004: Pineapple
+    400006: //RootNode
+    2300000: Lever
+    2300002: Pin
+    2300004: Pineapple
+    3300000: Lever
+    3300002: Pin
+    3300004: Pineapple
     4300000: Lever
     4300002: Pin
     4300004: Pineapple
-  externalObjects: {}
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LeverMat
+    second: {fileID: 2100000, guid: 855f4ff035cdf05499648ecb832ab25b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PinMat
+    second: {fileID: 2100000, guid: f6c3d9504be62164ab2f00edcf34c0a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PineappleMat
+    second: {fileID: 2100000, guid: bf7c1705d9483e145accb303ee90636e, type: 2}
   materials:
     importMaterials: 1
     materialName: 3
