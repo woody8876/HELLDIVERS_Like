@@ -93,7 +93,7 @@ public class Bullet : MonoBehaviour
             target = go.GetComponent<IDamageable>();
             if (m_Target != go)
             {
-                target.TakeDamage(m_fDamage, rh.point);
+                target.TakeDamage(m_fDamage *.3f, rh.point);
                 m_Target = go;
             }
             if (m_ID != 1301 && m_ID != 1501)

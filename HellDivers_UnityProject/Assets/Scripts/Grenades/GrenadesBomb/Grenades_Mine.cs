@@ -17,7 +17,7 @@ public class Grenades_Mine : Grenades {
                 this.GetComponent<MeshRenderer>().enabled = false;
                 this.GetComponentInChildren<Animator>().SetTrigger("startTrigger");
             }
-            if (Physics.SphereCast(transform.position - Vector3.up, 2, Vector3.up, out rh, 100, 1 << LayerMask.NameToLayer("Enemies")) || m_fDamageTime > grenadeInfo.Timer)
+            if (Physics.SphereCast(transform.position - Vector3.up, 2, Vector3.up, out rh, 100, 1 << LayerMask.NameToLayer("Enemies")| 1 << LayerMask.NameToLayer("Player")) || m_fDamageTime > grenadeInfo.Timer)
             {
                 Debug.Log(rh.point);
                 this.GetComponentInChildren<Animator>().SetTrigger("endTrigger");
@@ -32,6 +32,7 @@ public class Grenades_Mine : Grenades {
             m_fDamageTime = 0;
             m_fForce = 10;
             ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
+           // DrawTools.GO.SetActive(false);
             m_bCounting = false;
             bEnd = false;        
         }
