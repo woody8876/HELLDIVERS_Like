@@ -55,12 +55,13 @@ public class Grenades : MonoBehaviour {
     protected virtual bool GroundCheck()
     {
         RaycastHit rh;
-        if (Physics.Raycast(transform.position, -transform.up, out rh, .5f, 1 << LayerMask.NameToLayer("Terrain")))
+        if (Physics.Raycast(transform.position, -transform.up, out rh, .3f, 1 << LayerMask.NameToLayer("Terrain")))
         {
             m_fTime = m_fForce = 0;
             
-            m_gEffect.transform.position = rh.point - .3f * Vector3.up ;
+            m_gEffect.transform.position = rh.point + Vector3.down *.5f;
             //DrawTools.DrawCircleSolid(this.transform, this.transform.position, grenadeInfo.Range);
+            //DrawTools.GO.SetActive(true);
             m_bCounting = true;
             return true;
         }
@@ -77,6 +78,7 @@ public class Grenades : MonoBehaviour {
             m_fDamageTime = 0;
             ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
             m_bCounting = false;
+            //DrawTools.GO.SetActive(false);
         }
     }
     #endregion

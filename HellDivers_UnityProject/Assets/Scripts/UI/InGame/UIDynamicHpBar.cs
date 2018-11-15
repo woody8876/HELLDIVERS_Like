@@ -19,7 +19,8 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer = player;
             m_NameText.text = CurrentPlayer.Info.Username;
-
+            m_BarBg.enabled = false;
+            m_BarFill.enabled = false;
             SubscribePlayerEvent();
         }
 

@@ -6,9 +6,9 @@ public enum EGrenades
 {
     NORMAL,
     LIGHTING,
-    PUMPKIN,
     MINE,
-    TIMEBOMB
+    TIMEBOMB,
+    PUMPKIN
 }
 
 public class GrenadeInfo {

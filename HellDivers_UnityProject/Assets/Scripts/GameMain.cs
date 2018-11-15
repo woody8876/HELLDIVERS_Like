@@ -11,7 +11,6 @@ public class GameMain : MonoBehaviour
     #region Properties
 
     public static GameMain Instance { get; private set; }
-    public List<Player> Players { get { return m_Players; } }
     public CameraFollowing CameraFolloing { get { return m_CameraFollowing; } }
 
     #endregion Properties
@@ -22,7 +21,6 @@ public class GameMain : MonoBehaviour
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private MissionManager m_MissionManager = new MissionManager();
     private InGamePlayerManager m_PlayerManager;
-    private List<Player> m_Players = new List<Player>();
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
     [SerializeField] private uint m_NumberOfTowers = 1;
@@ -48,8 +46,10 @@ public class GameMain : MonoBehaviour
     {
         m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
         GameStart();
-        //m_MobSpawner.SpawnPatrol(40);
-        InvokeRepeating("SpawnMobs", 0.0f, 3.0f);
+
+        m_MobSpawner.SpawnPatrol(40);
+        InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
+
     }
 
     [ContextMenu("GameStart")]
@@ -60,8 +60,8 @@ public class GameMain : MonoBehaviour
         //    m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[1]);
         //}
 
-        m_PlayerManager.CreatePlayer(m_PlayerData1);
-        m_PlayerManager.CreatePlayer(m_PlayerData2);
+        m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
+        m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
@@ -80,6 +80,6 @@ public class GameMain : MonoBehaviour
 
     private void SpawnMobs()
     {
-        m_MobSpawner.SpawnFish(1);
+        m_MobSpawner.SpawnFish(4);
     }
 }
