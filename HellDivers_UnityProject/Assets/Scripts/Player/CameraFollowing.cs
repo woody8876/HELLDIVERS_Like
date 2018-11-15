@@ -11,6 +11,12 @@ using UnityEditor;
 [RequireComponent(typeof(Camera))]
 public class CameraFollowing : MonoBehaviour
 {
+    [Header("== Border ==")]
+    [SerializeField] BoxCollider m_box1;
+    [SerializeField] BoxCollider m_box2;
+    [SerializeField] BoxCollider m_box3;
+    [SerializeField] BoxCollider m_box4;
+
     #region Define Inputs
 
     private string m_InputAim = "Fire2";
@@ -98,6 +104,7 @@ public class CameraFollowing : MonoBehaviour
         m_Cam.transform.rotation = Quaternion.Euler(m_CamRotX, 0, 0);
         m_Cam.fieldOfView = 60.0f;
         m_CurrentLerp = m_CamLerp;
+        StartCoroutine(CreateBorder());
     }
 
     // Update is called once per frame
@@ -133,6 +140,81 @@ public class CameraFollowing : MonoBehaviour
     #endregion MonoBehaviour
 
     #region Private Function
+    private IEnumerator CreateBorder()
+    {
+        yield return new WaitForSeconds(2);
+        DefineBorder( ref m_box1, 1, 0, 2);
+        DefineBorder( ref m_box2, 3, 4, 2);
+        DefineBorder( ref m_box3, 5, 6, 4);
+        DefineBorder( ref m_box4, 7, 6, 0);
+    }
+
+    private void DefineBorder( ref BoxCollider b, int i, int small, int big)
+    {
+        Vector3 pos = Vector3.zero;
+        Vector3 Leftpos = Vector3.zero;
+        Vector3 Rightpos = Vector3.zero;
+        if (RayCast(transform, ref pos, i) && RayCast(transform, ref Leftpos, small) && RayCast(transform, ref Rightpos, big))
+        {
+            if (i == 1)
+            {
+                pos += Vector3.back * 2;
+            }
+            Vector3 vec = Rightpos - Leftpos;
+            float wide = vec.magnitude;
+            float thick = .5f;
+            float height = 20;
+            b.transform.position = pos;
+            b.transform.right = vec;
+            pos.Set(wide, height, thick);
+            Debug.Log(pos);
+            b.size = pos;
+        }
+    }
+
+    private bool RayCast(Transform t, ref Vector3 pos, int i)
+    {
+        RaycastHit rh;
+        if (Physics.Raycast(t.position, VectorRotate(t, i), out rh, 500f, 1 << LayerMask.NameToLayer("Terrain")))
+        {
+            pos = rh.point;
+            return true;
+        }
+        return false;
+    }
+
+    private Vector3 VectorRotate(Transform t, int i)
+    {
+        Vector3 target = Vector3.zero;
+        switch (i)
+        {
+            case 0:
+                target = t.forward + t.up / Mathf.Sqrt(3) - t.right;
+                break;
+            case 1:
+                target = t.forward + t.up / Mathf.Sqrt(3);
+                break;
+            case 2:
+                target = t.forward + t.up / Mathf.Sqrt(3) + t.right;
+                break;
+            case 3:
+                target = t.forward + t.right;
+                break;
+            case 4:
+                target = t.forward - t.up / Mathf.Sqrt(3) + t.right;
+                break;
+            case 5:
+                target = t.forward - t.up / Mathf.Sqrt(3);
+                break;
+            case 6:
+                target = t.forward - t.up / Mathf.Sqrt(3) - t.right;
+                break;
+            case 7:
+                target = t.forward - t.right;
+                break;
+        }
+        return target;
+    }
 
     private void UpdateDestination()
     {
