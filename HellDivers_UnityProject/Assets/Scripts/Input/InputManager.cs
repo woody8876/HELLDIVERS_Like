@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputrManager
+public class InputManager
 {
-    public static InputrManager Instance { get { return m_Instance; } }
-    private static InputrManager m_Instance;
+    public static InputManager Instance { get { return m_Instance; } }
+    private static InputManager m_Instance;
     public Dictionary<int, ControllerSetting> InputSettingMap { get { return m_InputSettingMap; } }
     private Dictionary<int, ControllerSetting> m_InputSettingMap;
 

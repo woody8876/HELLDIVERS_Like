@@ -617,7 +617,7 @@ public class FSMPatrolGetHurtState : FSMState
 
     public override void Do(AIData data)
     {
-
+        data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
     public override void CheckCondition(AIData data)
@@ -664,7 +664,7 @@ public class FSMDeadState : FSMState
 
     public override void Do(AIData data)
     {
-
+        data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
     public override void CheckCondition(AIData data)

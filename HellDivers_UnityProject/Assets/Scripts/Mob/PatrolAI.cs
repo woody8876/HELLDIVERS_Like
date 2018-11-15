@@ -127,21 +127,44 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_AIData.m_PlayerGO == null)
+        if (m_PlayerGO == null)
         {
-            m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-            if (m_AIData.m_PlayerGO != null)
+            m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject go in m_PlayerGO)
             {
+                float Dis = (go.transform.position - this.transform.position).magnitude;
+                if (Dis < m_MinDis)
+                {
+                    m_MinDis = Dis;
+                    m_AIData.m_PlayerGO = go;
+                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
+                }
+            }
+            return;
+        }
+        foreach (GameObject go in m_PlayerGO)
+        {
+            PlayerController PC = go.GetComponent<PlayerController>();
+            if (PC.bIsDead)
+            {
+                Debug.Log("Continue");
+                continue;
+            } 
+
+            float Dis = (go.transform.position - this.transform.position).magnitude;
+            if (Dis < m_MinDis)
+            {
+                m_MinDis = Dis;
+                m_AIData.m_PlayerGO = go;
                 m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
             }
         }
-        else if (m_AIData.m_PlayerGO != null)
+        m_MinDis = 10000f;
+        if (m_AIData.m_PlayerGO != null)
         {
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
+            m_FSM.DoState();
         }
-        m_FSM.DoState();
-
-        if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
     public void PerformGetHurt()
