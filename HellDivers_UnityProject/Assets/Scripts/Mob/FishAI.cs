@@ -14,12 +14,12 @@ public class FishAI : Character
     private CapsuleCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageColloder;
     private GameObject[] m_PlayerGO;
+    public GameObject m_RadarPoint;
     private float m_MinDis = 100000f;
     private float Timer = 0.0f;
     // Use this for initialization
     private void Awake()
     {
-
     }
     private void OnEnable()
     {
@@ -34,22 +34,22 @@ public class FishAI : Character
     }
     protected override void Start()
     {
-        m_MaxHp = 150;
+        m_AIData = new AIData();
+        //m_AIData = MobData.Instance.AIDataTable[3100];
+        Init(3100);
+        m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
         m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
-        m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID= 3100;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
-
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
@@ -100,6 +100,7 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
+        m_RadarPoint.transform.position = this.transform.position;
         if (m_PlayerGO == null)
         {
             m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
@@ -134,8 +135,10 @@ public class FishAI : Character
             Timer = 0.0f;
             m_MinDis = 10000f;
         }
+
         if (m_AIData.m_PlayerGO != null)
         {
+            Debug.Log("Dostate");
             m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
             m_FSM.DoState();
         }
@@ -154,6 +157,7 @@ public class FishAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
         return;
     }
+
     public void PerformDead()
     {
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
@@ -177,6 +181,7 @@ public class FishAI : Character
         }
         return true;
     }
+
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
         return TakeDamage(damager.Damage, hitPoint);
@@ -185,7 +190,22 @@ public class FishAI : Character
     public override void Death()
     {
         m_bDead = true;
+        ObjectPool.m_Instance.UnLoadObjectToPool(3002, m_RadarPoint);
         PerformDead();
+    }
+
+    private void Init(int i)
+    {
+        m_AIData.m_ID = MobData.Instance.AIDataTable[i].m_ID;
+        m_AIData.m_fHp = MobData.Instance.AIDataTable[i].m_fHp;
+        m_AIData.m_fProbeLength = MobData.Instance.AIDataTable[i].m_fProbeLength;
+        m_AIData.m_fSight = MobData.Instance.AIDataTable[i].m_fSight;
+        m_AIData.m_fRadius = MobData.Instance.AIDataTable[i].m_fRadius;
+        m_AIData.m_fPatrolVisionLength = MobData.Instance.AIDataTable[i].m_fPatrolVisionLength;
+        m_AIData.m_fAttackRange = MobData.Instance.AIDataTable[i].m_fAttackRange;
+        m_AIData.m_fAttackDamage = MobData.Instance.AIDataTable[i].m_fAttackDamage;
+        m_AIData.m_Money = MobData.Instance.AIDataTable[i].m_Money;
+        m_AIData.m_Exp = MobData.Instance.AIDataTable[i].m_Exp;
     }
 
     private void OnDrawGizmos()

@@ -674,7 +674,7 @@ public class FSMDeadState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                ObjectPool.m_Instance.UnLoadObjectToPool(data.m_ID, data.m_Go);
+                MobManager.m_Instance.MobDead(data.m_ID, data);
                 if(data.m_ID == 3100)
                 {
                     MobManager.m_Instance.DecreaseFishCount();

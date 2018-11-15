@@ -7,43 +7,50 @@ using UnityEngine.AI;
 public class AIData
 {
     public int m_ID;
-    public float m_fRadius = 1;
-    public float m_fProbeLength = 10;
-    public float m_fPatrolVisionLength = 7;
+    public float m_fHp;
+    public float m_fProbeLength;
+    public float m_fPatrolVisionLength;
+    public float m_fAttackRange;
+    public float m_fAttackDamage;
+    public float m_fRadius;
     public float m_Speed;
     public float m_fMaxSpeed;
     public float m_fMaxRot;
-    public GameObject m_Go;
-    public GameObject m_PlayerGO;
+    public float m_fAttackTime;
+    public float m_fSight;
+    public float m_Money;
+    public float m_Exp;
     public bool m_bIsPlayerDead;
 
-    [HideInInspector] public float m_fRot;
-    [HideInInspector] public float m_fTempTurnForce;
-    [HideInInspector] public float m_fMoveForce;
-    [HideInInspector] public bool m_bCol;
-    [HideInInspector] public bool m_bMove;
+    public float m_fRot;
+    public float m_fTempTurnForce;
+    public float m_fMoveForce;
+    public bool m_bCol;
+    public bool m_bMove;
     public NavMeshAgent navMeshAgent;
-    
+    public GameObject m_Go;
+    public GameObject m_PlayerGO;
     public GameObject m_TargetObject;
-    [HideInInspector]
+    public GameObject m_RadarPoint;
+    public GameObject m_GOEffectWarning;
     public Vector3 m_vTarget;
-
-    [HideInInspector]
     public FSMSystem m_FSMSystem;
-
     public MobAnimationsController m_AnimationController;
     public MobAimLine m_MobAimLine;
-    public GameObject m_GOEffectWarning;
-    
 
-    #region Attack attribute
-    [HideInInspector]
-    public float m_fAttackTime;
-    public float m_fHp;
-    public float m_fAttack;
-    public float m_fSight = 6;
-    public float m_fAttackRange = 3;
-    #endregion
+    public void SetID(int id) { m_ID = id; }
+    public void SetHP(float hp) { m_fHp = hp; }
+    public void SetProbeLength(float probeLength) { m_fProbeLength = probeLength; }
+    public void SetSight(float sight) { m_fSight = sight; }
+    public void SetRadius(float radius) { m_fRadius = radius; }
+    public void SetVisionLength(float visionLength) { m_fPatrolVisionLength = visionLength; }
+    public void SetAttackRange(float attakRange) { m_fAttackRange = attakRange; }
+    public void SetAttackDamage(float attackDamage) { m_fAttackDamage= attackDamage; }
+    public void SetMoney(float money) { m_Money = money; }
+    public void SetExp(float exp) { m_Exp = exp; }
+
+
+
 
     public class AIFunction
     {

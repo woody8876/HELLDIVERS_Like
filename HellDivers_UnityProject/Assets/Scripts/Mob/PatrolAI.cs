@@ -28,22 +28,21 @@ public class PatrolAI : Character
     }
     protected override void Start()
     {
-        m_MaxHp = 300;
+        m_AIData = new AIData();
+        Init();
+        m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_BoxCollider = this.GetComponent<BoxCollider>();
         m_DamageCollider = GetComponentInChildren<BoxCollider>();
         m_MobAimLine = this.GetComponent<MobAimLine>();
-        m_AIData = new AIData();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID = 3200;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
-        m_AIData.m_fAttackRange = 15;
         m_AIData.m_MobAimLine = m_MobAimLine;
 
         #region FSMMap
@@ -213,6 +212,20 @@ public class PatrolAI : Character
     {
         m_bDead = true;
         PerformDead();
+    }
+
+    private void Init()
+    {
+        m_AIData.m_ID = MobData.Instance.AIDataTable[3200].m_ID;
+        m_AIData.m_fHp = MobData.Instance.AIDataTable[3200].m_fHp;
+        m_AIData.m_fProbeLength = MobData.Instance.AIDataTable[3200].m_fProbeLength;
+        m_AIData.m_fSight = MobData.Instance.AIDataTable[3200].m_fSight;
+        m_AIData.m_fRadius = MobData.Instance.AIDataTable[3200].m_fRadius;
+        m_AIData.m_fPatrolVisionLength = MobData.Instance.AIDataTable[3200].m_fPatrolVisionLength;
+        m_AIData.m_fAttackRange = MobData.Instance.AIDataTable[3200].m_fAttackRange;
+        m_AIData.m_fAttackDamage = MobData.Instance.AIDataTable[3200].m_fAttackDamage;
+        m_AIData.m_Money = MobData.Instance.AIDataTable[3200].m_Money;
+        m_AIData.m_Exp = MobData.Instance.AIDataTable[3200].m_Exp;
     }
 
     private void OnDrawGizmos()
