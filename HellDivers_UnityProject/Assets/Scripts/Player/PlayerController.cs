@@ -407,7 +407,7 @@ public class PlayerController : MonoBehaviour
     
     public void SetJoyNumber(int num)
     {
-        m_InputSetting = InputrManager.Instance.InputSettingMap[num];
+        m_InputSetting = InputManager.Instance.InputSettingMap[num];
     }
     #endregion
 

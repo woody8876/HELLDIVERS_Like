@@ -5,14 +5,17 @@ using UnityEngine;
 public class Radar : MonoBehaviour {
 
     public GameObject[] trackedObjects;
-    List<GameObject> radarObjects;
     public GameObject radarPrefab;
+    List<GameObject> radarObjects;
     List<GameObject> borderObjects;
     public float SwicthDistance = 100f;
+    public Transform Center;
     public Transform helpTransform;
     // Use this for initialization
     void Start () {
         CreateRadarObjects();
+        //radarObjects = new List<GameObject>();
+        //borderObjects = new List<GameObject>();
     }
 	
 	// Update is called once per frame
@@ -22,7 +25,7 @@ public class Radar : MonoBehaviour {
             if(Vector3.Distance(radarObjects[i].transform.position, this.transform.position) > SwicthDistance)
             {
                 helpTransform.LookAt(radarObjects[i].transform);
-                borderObjects[i].transform.position = transform.position + SwicthDistance * helpTransform.forward;
+                borderObjects[i].transform.position = this.transform.position + SwicthDistance * helpTransform.forward;
                 radarObjects[i].layer = LayerMask.NameToLayer("Invisible");
                 borderObjects[i].layer = LayerMask.NameToLayer("Radar");
             }
@@ -34,7 +37,7 @@ public class Radar : MonoBehaviour {
         }
 	}
 
-    void CreateRadarObjects()
+    public void CreateRadarObjects( )
     {
         radarObjects = new List<GameObject>();
         borderObjects = new List<GameObject>();
