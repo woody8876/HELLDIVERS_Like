@@ -12,7 +12,20 @@ public class InGamePlayerManager : MonoBehaviour
     [SerializeField] private float m_SpawnRadius = 10.0f;
     [SerializeField] private float m_RespawnTime = 5.0f;
     private List<Player> m_Players;
-    private Dictionary<Player, PlayerStates> m_PlayerMap;
+    private Dictionary<Player, PlayerInfo> m_PlayerMap;
+
+    public class PlayerStates
+    {
+        public PlayerStates(PlayerInfo info, Player player)
+        {
+            this.playerInfo = info;
+            this.player = player;
+        }
+
+        public PlayerInfo playerInfo;
+        public Player player;
+        public int timesOfDeath;
+    }
 
     private void Awake()
     {
@@ -20,7 +33,7 @@ public class InGamePlayerManager : MonoBehaviour
         else Destroy(this);
 
         m_Players = new List<Player>();
-        m_PlayerMap = new Dictionary<Player, PlayerStates>();
+        m_PlayerMap = new Dictionary<Player, PlayerInfo>();
     }
 
     public void CreatePlayer(PlayerInfo playerInfo, int num = 1)
@@ -29,8 +42,7 @@ public class InGamePlayerManager : MonoBehaviour
         playerGo = GameObject.Instantiate(playerGo);
         Player player = playerGo.AddComponent<Player>();
         player.Initialize(playerInfo, num);
-        PlayerStates states = new PlayerStates(player);
-        m_PlayerMap.Add(player, states);
+        m_PlayerMap.Add(player, playerInfo);
         m_Players.Add(player);
         playerGo.SetActive(false);
 
@@ -46,7 +58,7 @@ public class InGamePlayerManager : MonoBehaviour
         int indexSpawnPos = Random.Range(0, MapInfo.Instance.SpawnPos.Count - 1);
         Transform spawnPos = MapInfo.Instance.SpawnPos[indexSpawnPos];
 
-        foreach (KeyValuePair<Player, PlayerStates> player in m_PlayerMap)
+        foreach (KeyValuePair<Player, PlayerInfo> player in m_PlayerMap)
         {
             player.Key.transform.position = spawnPos.position;
             player.Key.gameObject.SetActive(true);
@@ -83,21 +95,5 @@ public class InGamePlayerManager : MonoBehaviour
         } while (bBlock);
 
         player.Spawn(spawnPos);
-    }
-
-    private void PlayerDeathCount(Player player)
-    {
-        m_PlayerMap[player].TimesOfDeath++;
-    }
-
-    public class PlayerStates
-    {
-        public PlayerStates(Player player)
-        {
-            m_Player = player;
-        }
-
-        public Player m_Player;
-        public int TimesOfDeath;
     }
 }

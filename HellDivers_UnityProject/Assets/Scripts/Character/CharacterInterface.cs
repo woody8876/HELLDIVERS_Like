@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public interface IDamager
 {
+    /// <summary>
+    /// Repersent of the damager.
+    /// </summary>
+    Player Damager { get; }
+
     /// <summary>
     /// Get damage point.
     /// </summary>
