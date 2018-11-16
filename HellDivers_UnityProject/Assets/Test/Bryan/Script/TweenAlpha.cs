@@ -5,35 +5,69 @@ using UnityEngine.UI;
 
 public class TweenAlpha : MonoBehaviour
 {
-    [SerializeField] private Image m_Image;
-    private float m_stratAlpha;
-    private float m_targetAlpha;
+    public Image m_Image;
+    public float m_StratAlpha = 0;
+    public float m_TargetAlpha = 1;
+    public float m_DeadZone = 0.01f;
+    public float m_Lerp = 0.025f;
 
-    public void StartFadeIn()
+    private float m_CurrentAlpha;
+    private float m_origin;
+    private float m_target;
+
+    [ContextMenu("Play Forward")]
+    public void PlayForward()
     {
+        Play(m_StratAlpha, m_TargetAlpha);
     }
 
-    public void StartFadeOut()
+    [ContextMenu("Play Backward")]
+    public void PlayeBackward()
     {
+        Play(m_TargetAlpha, m_StratAlpha);
     }
 
-    private void DoFade(float origin, float target)
+    public void Play(float start, float end)
     {
-        float alpha = Mathf.Lerp(origin, target, Time.deltaTime);
+        m_CurrentAlpha = start;
+        m_origin = start;
+        m_target = end;
+        this.enabled = true;
     }
 
     private void Awake()
     {
         if (m_Image == null) m_Image = this.GetComponent<Image>();
-    }
-
-    // Use this for initialization
-    private void Start()
-    {
+        this.enabled = false;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        DoFade();
+    }
+
+    private void DoFade()
+    {
+        m_CurrentAlpha = Mathf.Lerp(m_CurrentAlpha, m_target, m_Lerp);
+        SetAlpha(m_CurrentAlpha);
+
+        if (m_origin > m_target && m_CurrentAlpha <= m_target + m_DeadZone)
+        {
+            SetAlpha(m_target);
+            this.enabled = false;
+        }
+        else if (m_origin < m_target && m_CurrentAlpha >= m_target - m_DeadZone)
+        {
+            SetAlpha(m_target);
+            this.enabled = false;
+        }
+    }
+
+    private void SetAlpha(float alpha)
+    {
+        Color currentColor = m_Image.color;
+        currentColor.a = alpha;
+        m_Image.color = currentColor;
     }
 }
