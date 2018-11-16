@@ -37,6 +37,8 @@ public class AIData
     public FSMSystem m_FSMSystem;
     public MobAnimationsController m_AnimationController;
     public MobAimLine m_MobAimLine;
+    public Player m_Player;
+
 
     public void SetID(int id) { m_ID = id; }
     public void SetHP(float hp) { m_fHp = hp; }
@@ -48,15 +50,26 @@ public class AIData
     public void SetAttackDamage(float attackDamage) { m_fAttackDamage= attackDamage; }
     public void SetMoney(float money) { m_Money = money; }
     public void SetExp(float exp) { m_Exp = exp; }
-
-
-
+    
+    public void CopyTo(AIData other)
+    {
+        other.m_ID = this.m_ID;
+        other.m_fHp = this.m_fHp;
+        other.m_fProbeLength = this.m_fProbeLength;
+        other.m_fSight = this.m_fSight;
+        other.m_fRadius = this.m_fRadius;
+        other.m_fPatrolVisionLength = this.m_fPatrolVisionLength;
+        other.m_fAttackRange = this.m_fAttackRange;
+        other.m_fAttackDamage = this.m_fAttackDamage;
+        other.m_Money = this.m_Money;
+        other.m_Exp = this.m_Exp;
+    }
 
     public class AIFunction
     {
         public static GameObject CheckEnemyInSight(AIData data, ref bool bAttack)
         {
-            GameObject go = data.m_PlayerGO;
+            GameObject go = data.m_Player.gameObject;
             Vector3 v = go.transform.position - data.m_Go.transform.position;
             float fDist = v.magnitude;
             if (fDist < data.m_fAttackRange)
@@ -88,6 +101,28 @@ public class AIData
                 return true;
             }
             return false;
+        }
+
+        public static void SearchPlayer(AIData data)
+        {
+            data.m_Player = null;
+            List<Player> pList = InGamePlayerManager.Instance.Players;
+            if (pList != null && pList.Count > 0)
+            {
+                float minDist = float.MaxValue;
+                for (int i = 0; i < pList.Count; i++)
+                {
+                    float sqrDist = (pList[i].transform.position - data.m_Go.transform.position).sqrMagnitude;
+                    if (pList[i].IsDead) continue;
+
+                    if (sqrDist < minDist)
+                    {
+                        minDist = sqrDist;
+                        data.m_Player = pList[i];
+                    }
+                }
+            }
+            return;
         }
     }
 }

@@ -16,7 +16,7 @@ public class FishAI : Character
     private GameObject[] m_PlayerGO;
     public GameObject m_RadarPoint;
     private float m_MinDis = 100000f;
-    private float Timer = 0.0f;
+    private float Timer = 2.0f;
     // Use this for initialization
     private void Awake()
     {
@@ -35,8 +35,8 @@ public class FishAI : Character
     protected override void Start()
     {
         m_AIData = new AIData();
-        //m_AIData = MobData.Instance.AIDataTable[3100];
-        Init(3100);
+        MobData.Instance.AIDataTable[3100].CopyTo(m_AIData);
+
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -101,47 +101,44 @@ public class FishAI : Character
     void Update()
     {
         m_RadarPoint.transform.position = this.transform.position;
-        if (m_PlayerGO == null)
-        {
-            m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject go in m_PlayerGO)
-            {
-                float Dis = (go.transform.position - this.transform.position).magnitude;
-                if (Dis < m_MinDis)
-                {
-                    m_MinDis = Dis;
-                    m_AIData.m_PlayerGO = go;
-                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-                }
-            }
-            return;
-        }
+        
         Timer += Time.deltaTime;
-        if(Timer > 2.0f)
-        {
-            foreach (GameObject go in m_PlayerGO)
-            {
-                PlayerController PC = go.GetComponent<PlayerController>();
-                if (PC.bIsDead) continue;
 
-                float Dis = (go.transform.position - this.transform.position).magnitude;
-                if (Dis < m_MinDis)
-                {
-                    m_MinDis = Dis;
-                    m_AIData.m_PlayerGO = go;
-                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-                }
-            }
+        if (Timer > 2.0f)
+        {
+            AIData.AIFunction.SearchPlayer(m_AIData);
             Timer = 0.0f;
-            m_MinDis = 10000f;
+            return;
+            //Player nearestPlayer = null;
+            //List<Player> pList = InGamePlayerManager.Instance.Players;
+            //if (pList != null && pList.Count > 0)
+            //{
+            //    float minDist = float.MaxValue;
+            //    for (int i = 0; i < pList.Count; i++)
+            //    {
+            //        float sqrDist = (pList[i].transform.position - this.transform.position).sqrMagnitude;
+            //        if (sqrDist < minDist && !pList[i].IsDead)
+            //        {
+            //            minDist = sqrDist;
+            //            nearestPlayer = pList[i];
+            //        }
+            //    }
+            //}
+            //if (nearestPlayer != null)
+            //{
+            //    m_AIData.m_PlayerGO = nearestPlayer.gameObject;
+            //    m_AIData.m_bIsPlayerDead = nearestPlayer.IsDead;
+            //    Timer = 0.0f;
+            //}
+            //return;
         }
+        m_FSM.DoState();
 
-        if (m_AIData.m_PlayerGO != null)
-        {
-            Debug.Log("Dostate");
-            m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
-            m_FSM.DoState();
-        }
+        //if (m_AIData.m_PlayerGO != null)
+        //{
+        //    m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
+        //    m_FSM.DoState();
+        //}
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
@@ -192,20 +189,6 @@ public class FishAI : Character
         m_bDead = true;
         ObjectPool.m_Instance.UnLoadObjectToPool(3002, m_RadarPoint);
         PerformDead();
-    }
-
-    private void Init(int i)
-    {
-        m_AIData.m_ID = MobData.Instance.AIDataTable[i].m_ID;
-        m_AIData.m_fHp = MobData.Instance.AIDataTable[i].m_fHp;
-        m_AIData.m_fProbeLength = MobData.Instance.AIDataTable[i].m_fProbeLength;
-        m_AIData.m_fSight = MobData.Instance.AIDataTable[i].m_fSight;
-        m_AIData.m_fRadius = MobData.Instance.AIDataTable[i].m_fRadius;
-        m_AIData.m_fPatrolVisionLength = MobData.Instance.AIDataTable[i].m_fPatrolVisionLength;
-        m_AIData.m_fAttackRange = MobData.Instance.AIDataTable[i].m_fAttackRange;
-        m_AIData.m_fAttackDamage = MobData.Instance.AIDataTable[i].m_fAttackDamage;
-        m_AIData.m_Money = MobData.Instance.AIDataTable[i].m_Money;
-        m_AIData.m_Exp = MobData.Instance.AIDataTable[i].m_Exp;
     }
 
     private void OnDrawGizmos()

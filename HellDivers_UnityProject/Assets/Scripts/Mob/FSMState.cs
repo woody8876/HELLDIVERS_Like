@@ -186,25 +186,26 @@ public class FSMIdleState : FSMState
         //        }
         //    }
         //}
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange)
+        if (data.m_Player.IsDead || data.m_Player == null)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWanderIdle);
+            return;
+        }
+        if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange)
         {
             if (m_fCurrentTime > m_fIdleTim)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
             }
         }
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+        if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
-        if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
+        if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
-        }
-        if (data.m_bIsPlayerDead)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_NoPlayerWanderIdle);
         }
     }
 }
@@ -230,7 +231,7 @@ public class FSMMoveToState : FSMState
     public override void Do(AIData data)
     {
         data.navMeshAgent.enabled = true;
-        data.m_vTarget = data.m_PlayerGO.transform.position;
+        data.m_vTarget = data.m_Player.transform.position;
         SteeringBehaviours.NavMove(data);
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
@@ -275,7 +276,7 @@ public class FSMChaseState : FSMState
     public override void Do(AIData data)
     {
         data.navMeshAgent.enabled = true;
-        data.m_vTarget = data.m_PlayerGO.transform.position;
+        data.m_vTarget = data.m_Player.transform.position;
         SteeringBehaviours.NavMove(data);
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
@@ -283,8 +284,14 @@ public class FSMChaseState : FSMState
 
     public override void CheckCondition(AIData data)
     {
+        if (data.m_Player == null || data.m_Player.IsDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            return;
+        }
+
         bool bAttack = false;
-        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_PlayerGO, ref bAttack);
+        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
 
         if (bAttack)
         {
@@ -293,11 +300,6 @@ public class FSMChaseState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
             }
-        }
-
-        if (data.m_bIsPlayerDead)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
         }
     }
 }
@@ -330,8 +332,8 @@ public class FSMAttackState : FSMState
     {
         data.navMeshAgent.enabled = true;
 
-        data.m_vTarget = data.m_PlayerGO.transform.position;
-        vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+        data.m_vTarget = data.m_Player.transform.position;
+        vDir = data.m_Player.transform.position - data.m_Go.transform.position;
 
         if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && Count < 1)
         {
@@ -359,7 +361,7 @@ public class FSMAttackState : FSMState
         {
             if (info.normalizedTime > 0.27f && AttackCount < 1)
             {
-                if((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange + 0.5f)
+                if((data.m_Player.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange + 0.5f)
                 DoDamage(data);
                 AttackCount++;
             }
@@ -369,6 +371,14 @@ public class FSMAttackState : FSMState
     public override void CheckCondition(AIData data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (data.m_Player == null || data.m_Player.IsDead)
+        {
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            }
+            return;
+        }
         if (info.IsName("Attack"))
         {
             if (info.normalizedTime > m_AnimatorLeaveTime)
@@ -377,19 +387,11 @@ public class FSMAttackState : FSMState
             }
         }
        
-        if (data.m_bIsPlayerDead)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
-            }
-        }
     }
 
     private void DoDamage(AIData data)
     {
-        IDamageable target = data.m_PlayerGO.transform.GetComponent<IDamageable>();
-        target.TakeDamage(10.0f, data.m_Go.transform.position);
+        data.m_Player.TakeDamage(10.0f, data.m_Go.transform.position);
     }
 }
 
@@ -469,8 +471,8 @@ public class FSMPatrolAttackState : FSMState
                 FireCoolDownTime = 0.0f;
             }
         }
-        data.m_vTarget = data.m_PlayerGO.transform.position;
-        vDir = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+        data.m_vTarget = data.m_Player.transform.position;
+        vDir = data.m_Player.transform.position - data.m_Go.transform.position;
 
         if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && Count < 1)
         {
@@ -581,9 +583,9 @@ public class FSMFishGetHurtState : FSMState
         {
             if (info.normalizedTime > 0.95f)
             {
-                Vector3 v = data.m_PlayerGO.transform.position - data.m_Go.transform.position;
+                Vector3 v = data.m_Player.transform.position - data.m_Go.transform.position;
                 float fDist = v.magnitude;
-                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fAttackRange)
+                if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude < data.m_fAttackRange)
                 {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
                 }
@@ -627,12 +629,12 @@ public class FSMPatrolGetHurtState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude >= data.m_fPatrolVisionLength)
+                if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude >= data.m_fPatrolVisionLength)
                 {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
                     return;
                 }
-                if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
+                if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
                 {
                     data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Dodge);
                     return;
@@ -722,25 +724,28 @@ public class FSMWanderIdleState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
-
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Wander);
         }
-        if (Dist < data.m_fPatrolVisionLength)
+        if(data.m_Player != null)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
-        }
+            float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (data.m_bIsPlayerDead == false)
-        {
-            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-            if (info.IsName("WanderIdle"))
+            if (Dist < data.m_fPatrolVisionLength)
             {
-                if (info.normalizedTime > m_AnimatorLeaveTime)
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
+            }
+
+            if (data.m_bIsPlayerDead == false)
+            {
+                AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+                if (info.IsName("WanderIdle"))
                 {
-                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    if (info.normalizedTime > m_AnimatorLeaveTime)
+                    {
+                        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    }
                 }
             }
         }
@@ -769,16 +774,20 @@ public class FSMWanderState : FSMState
     }
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
-
-        if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
+        if (data.m_Player == null || data.m_Player.IsDead)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.GO_WanderIdle);
+            }
+            return;
         }
-        if (data.m_bIsPlayerDead == false)
+        if (data.m_Player.IsDead == false)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
         }
+
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
         if (Dist < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.GO_Flee);
@@ -816,7 +825,7 @@ public class FSMNoPlayerWanderIdleState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
@@ -830,7 +839,7 @@ public class FSMNoPlayerWanderIdleState : FSMState
             {
                 if (info.normalizedTime > m_AnimatorLeaveTime)
                 {
-                    if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                    if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
                     {
                         data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
                     }
@@ -867,7 +876,7 @@ public class FSMNoPlayerWanderState : FSMState
     }
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
         {
@@ -881,7 +890,7 @@ public class FSMNoPlayerWanderState : FSMState
             {
                 if (info.normalizedTime > m_AnimatorLeaveTime)
                 {
-                    if ((data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
+                    if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange)
                     {
                         data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
                     }
@@ -929,7 +938,7 @@ public class FSMCallArmyState : FSMState
 
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("CallArmy"))
@@ -987,14 +996,14 @@ public class FSMFleeState : FSMState
         vec.y += 0.5f;
         GO.transform.position = vec;
 
-        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_PlayerGO.transform.position).normalized;
+        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_Player.transform.position).normalized;
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);
     }
 
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (Dist > data.m_fPatrolVisionLength * 1.5f)
         {
@@ -1029,14 +1038,14 @@ public class FSMDodgeState : FSMState
 
     public override void Do(AIData data)
     {
-        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_PlayerGO.transform.position).normalized;
+        data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_Player.transform.position).normalized;
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);
     }
 
     public override void CheckCondition(AIData data)
     {
-        float Dist = (data.m_PlayerGO.transform.position - data.m_Go.transform.position).magnitude;
+        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (Dist > data.m_fPatrolVisionLength * 1.5f)
         {

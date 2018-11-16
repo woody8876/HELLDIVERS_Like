@@ -29,7 +29,8 @@ public class PatrolAI : Character
     protected override void Start()
     {
         m_AIData = new AIData();
-        Init();
+        MobData.Instance.AIDataTable[3200].CopyTo(m_AIData);
+
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -126,44 +127,9 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_PlayerGO == null)
-        {
-            m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject go in m_PlayerGO)
-            {
-                float Dis = (go.transform.position - this.transform.position).magnitude;
-                if (Dis < m_MinDis)
-                {
-                    m_MinDis = Dis;
-                    m_AIData.m_PlayerGO = go;
-                    m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-                }
-            }
-            return;
-        }
-        foreach (GameObject go in m_PlayerGO)
-        {
-            PlayerController PC = go.GetComponent<PlayerController>();
-            if (PC.bIsDead)
-            {
-                Debug.Log("Continue");
-                continue;
-            } 
+        AIData.AIFunction.SearchPlayer(m_AIData);
 
-            float Dis = (go.transform.position - this.transform.position).magnitude;
-            if (Dis < m_MinDis)
-            {
-                m_MinDis = Dis;
-                m_AIData.m_PlayerGO = go;
-                m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-            }
-        }
-        m_MinDis = 10000f;
-        if (m_AIData.m_PlayerGO != null)
-        {
-            m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
-            m_FSM.DoState();
-        }
+        m_FSM.DoState();
     }
 
     public void PerformGetHurt()

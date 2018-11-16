@@ -14,7 +14,7 @@ public class Radar : MonoBehaviour {
     public Transform helpTransform;
     // Use this for initialization
     void Start () {
-        CreateRadarObjects();
+        //CreateRadarObjects();
         //radarObjects = new List<GameObject>();
         //borderObjects = new List<GameObject>();
     }
@@ -32,33 +32,33 @@ public class Radar : MonoBehaviour {
         Center /= m_GOPlayers.Length;
         this.transform.position = Center + Vector3.up * 10f;
 
-        for (int i = 0; i < radarObjects.Count; i++)
-        {
-            if(Vector3.Distance(radarObjects[i].transform.position, Center) > SwicthDistance)
-            {
-                //helpTransform.LookAt(radarObjects[i].transform);
-                //borderObjects[i].transform.position = this.transform.position + SwicthDistance * helpTransform.forward;
-                radarObjects[i].layer = LayerMask.NameToLayer("Invisible");
-                //borderObjects[i].layer = LayerMask.NameToLayer("Radar");
-            }
-            else
-            {
-                radarObjects[i].layer = LayerMask.NameToLayer("Radar");
-                //borderObjects[i].layer = LayerMask.NameToLayer("Invisible");
-            }
-        }
+        //for (int i = 0; i < radarObjects.Count; i++)
+        //{
+        //    if(Vector3.Distance(radarObjects[i].transform.position, Center) > SwicthDistance)
+        //    {
+        //        //helpTransform.LookAt(radarObjects[i].transform);
+        //        //borderObjects[i].transform.position = this.transform.position + SwicthDistance * helpTransform.forward;
+        //        radarObjects[i].layer = LayerMask.NameToLayer("Invisible");
+        //        //borderObjects[i].layer = LayerMask.NameToLayer("Radar");
+        //    }
+        //    else
+        //    {
+        //        radarObjects[i].layer = LayerMask.NameToLayer("Radar");
+        //        //borderObjects[i].layer = LayerMask.NameToLayer("Invisible");
+        //    }
+        //}
 	}
 
-    public void CreateRadarObjects( )
-    {
-        radarObjects = new List<GameObject>();
-        borderObjects = new List<GameObject>();
-        foreach (GameObject o in trackedObjects)
-        {
-            GameObject goRadar = Instantiate(radarPrefab, o.transform.position, Quaternion.identity) as GameObject;
-            radarObjects.Add(goRadar);
-            //GameObject goBorder = Instantiate(radarPrefab, o.transform.position, Quaternion.identity) as GameObject;
-            //borderObjects.Add(goBorder);
-        }
-    }
+    //public void CreateRadarObjects( )
+    //{
+    //    radarObjects = new List<GameObject>();
+    //    borderObjects = new List<GameObject>();
+    //    foreach (GameObject o in trackedObjects)
+    //    {
+    //        GameObject goRadar = Instantiate(radarPrefab, o.transform.position, Quaternion.identity) as GameObject;
+    //        radarObjects.Add(goRadar);
+    //        //GameObject goBorder = Instantiate(radarPrefab, o.transform.position, Quaternion.identity) as GameObject;
+    //        //borderObjects.Add(goBorder);
+    //    }
+    //}
 }

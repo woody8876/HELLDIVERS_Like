@@ -107,7 +107,7 @@ public class MobManager
 
     public void SpawnFish(int num)
     {
-        if (m_FishCount > 5) return;
+        if (m_FishCount > 30) return;
 
         m_GOPlayer = GameObject.FindGameObjectWithTag("Player");
 
