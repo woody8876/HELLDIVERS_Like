@@ -101,7 +101,7 @@ public class FishAI : Character
     void Update()
     {
         m_RadarPoint.transform.position = this.transform.position;
-        
+
         Timer += Time.deltaTime;
 
         if (Timer > 2.0f)
@@ -109,36 +109,8 @@ public class FishAI : Character
             AIData.AIFunction.SearchPlayer(m_AIData);
             Timer = 0.0f;
             return;
-            //Player nearestPlayer = null;
-            //List<Player> pList = InGamePlayerManager.Instance.Players;
-            //if (pList != null && pList.Count > 0)
-            //{
-            //    float minDist = float.MaxValue;
-            //    for (int i = 0; i < pList.Count; i++)
-            //    {
-            //        float sqrDist = (pList[i].transform.position - this.transform.position).sqrMagnitude;
-            //        if (sqrDist < minDist && !pList[i].IsDead)
-            //        {
-            //            minDist = sqrDist;
-            //            nearestPlayer = pList[i];
-            //        }
-            //    }
-            //}
-            //if (nearestPlayer != null)
-            //{
-            //    m_AIData.m_PlayerGO = nearestPlayer.gameObject;
-            //    m_AIData.m_bIsPlayerDead = nearestPlayer.IsDead;
-            //    Timer = 0.0f;
-            //}
-            //return;
         }
         m_FSM.DoState();
-
-        //if (m_AIData.m_PlayerGO != null)
-        //{
-        //    m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
-        //    m_FSM.DoState();
-        //}
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }

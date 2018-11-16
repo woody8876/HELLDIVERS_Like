@@ -25,6 +25,7 @@ public class MobManager
     private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
     private GameObject m_GOMobPoint;
+    private Player m_Player;
 
     public void Init()
     {
@@ -109,18 +110,25 @@ public class MobManager
     {
         if (m_FishCount > 30) return;
 
-        m_GOPlayer = GameObject.FindGameObjectWithTag("Player");
+        List<Player> pList = InGamePlayerManager.Instance.Players;
+        Vector3 Center = new Vector3();
+        Center.Set(0, 0, 0);
+        for (int i = 0; i < pList.Count; i++)
+        {
+            Center += pList[i].transform.position;
+        }
+        Center /= pList.Count;
 
-        Vector3 spawnTarget = m_GOPlayer.transform.forward;
+        Vector3 spawnTarget = new Vector3();
         NavMeshHit nHit;
         do
         {
-            spawnTarget = m_GOPlayer.transform.forward;
+            spawnTarget = Vector3.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
             spawnTarget *= Random.Range(25f, 35f);
-            spawnTarget += m_GOPlayer.transform.position;
-        } while (NavMesh.Raycast(m_GOPlayer.transform.position, spawnTarget, out nHit, NavMesh.AllAreas));
-      
+            spawnTarget += Center;
+        } while (NavMesh.Raycast(Center, spawnTarget, out nHit, NavMesh.AllAreas));
+
         for (int i = 0; i < num; i++)
         {
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
@@ -131,7 +139,8 @@ public class MobManager
             m_GOFish.SetActive(true);
             FishAI fishAI = m_GOFish.GetComponent<FishAI>();
             fishAI.m_RadarPoint = m_GOMobPoint;
-            
+
+            UIPanelRadar.Instance.AddPointPrefab(m_GOFish);
 
             m_FishCount++;
         }

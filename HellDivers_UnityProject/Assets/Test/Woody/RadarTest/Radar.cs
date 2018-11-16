@@ -22,14 +22,14 @@ public class Radar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        m_GOPlayers = GameObject.FindGameObjectsWithTag("Player");
-
+        List<Player> pList = InGamePlayerManager.Instance.Players;
+        if (pList == null) return;
         Center.Set(0, 0, 0);
-        for (int i = 0; i < m_GOPlayers.Length; i++)
+        for (int i = 0; i < pList.Count; i++)
         {
-            Center += m_GOPlayers[i].transform.position;
+            Center += pList[i].transform.position;
         }
-        Center /= m_GOPlayers.Length;
+        Center /= pList.Count;
         this.transform.position = Center + Vector3.up * 10f;
 
         //for (int i = 0; i < radarObjects.Count; i++)
