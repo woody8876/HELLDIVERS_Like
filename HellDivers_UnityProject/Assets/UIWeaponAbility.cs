@@ -16,7 +16,7 @@ public class UIWeaponAbility : MonoBehaviour {
     [SerializeField] Text m_FireMode;
 
 
-    public void SetAbility(string name, int currentWidth, int nextWidth)
+    public void SetAbility(string name, float currentWidth, float nextWidth)
     {
         m_Ability.SetActive(true);
         m_WeaponName.text = name;

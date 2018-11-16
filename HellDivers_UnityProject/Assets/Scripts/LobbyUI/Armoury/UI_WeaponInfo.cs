@@ -9,61 +9,113 @@ public class UI_WeaponInfo : MonoBehaviour {
     [Header("== Set Current UI ==")]
     [SerializeField] Text m_WeaponName;
     [SerializeField] Image m_IWeaponTexture;
-
-    [SerializeField] Text m_FireMode;
+    [SerializeField] GameObject m_WeaponAbilities;
+    [SerializeField] GameObject m_WeaponAbility;
     [Header("== Set LevelUP UI ==")]
 
     #endregion
 
+    public Dictionary<int, List<int>> weapons = new Dictionary<int, List<int>>();
     int m_iType;
     int m_iCurrentID;
-    Vector2 m_Size = new Vector2();
-    Dictionary<int, List<int>> weapons = new Dictionary<int, List<int>>();
-
-    public void SetWeapon(LobbyUI_Weapon uI_Weapon)
-    {
-        m_Size.y = -2;
-        //SetCurrentUI(uI_Weapon);
-        //SetCurrent_FireMode(uI_Weapon);
-        //SetCurrent_FireRate(uI_Weapon);
-        //SetCurrent_Power(uI_Weapon);
-        //SetCurrent_Magazine(uI_Weapon);
-        //SetCurrent_Range(uI_Weapon);
-        //SetCurrent_Stability(uI_Weapon);
-    }
+    UIWeaponAbility m_Power;
+    UIWeaponAbility m_Magazine;
+    UIWeaponAbility m_FireRate;
+    UIWeaponAbility m_Range;
+    UIWeaponAbility m_Stability;
+    UIWeaponAbility m_FireMode;
 
 
-    #region Private method
-    private void GetCurrentID(LobbyUI_Weapon uI_Weapon)
+    public void SetWeapon()
     {
-        m_iType = uI_Weapon.m_WeaponInfo.Type;
-        m_iCurrentID = uI_Weapon.m_WeaponInfo.ID;
+        float cur;
+        float next;
+        float max;
+        string mode;
+        Get_Power(out cur, out next, out max);
+        m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_FireRate(out cur, out next, out max);
+        m_Magazine.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_Stability(out cur, out next, out max);
+        m_FireRate.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_Magazine(out cur, out next, out max);
+        m_Range.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_Range(out cur, out next, out max);
+        m_Stability.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_FireMode(out mode);
+        m_FireMode.SetWord(m_FireMode.name, mode);
     }
 
-    private void SetCurrentUI()
+    #region Get Value Method
+    private void Get_Power(out float cur, out float next, out float max)
     {
+        List<int> pList = weapons[m_iType];
+        int MaxLevel = pList[pList.Count - 1];
+        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].Damage;
+        if (m_iCurrentID != MaxLevel)
+        {
+            max = GameData.Instance.WeaponInfoTable[MaxLevel].Damage;
+            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Damage;
+        }else { max = next = cur; }
+    }
+    private void Get_FireRate(out float cur, out float next, out float max)
+    {
+        List<int> pList = weapons[m_iType];
+        int MaxLevel = pList[pList.Count - 1];
+        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].FirePerMinute;
+        if (m_iCurrentID != MaxLevel)
+        {
+            max = GameData.Instance.WeaponInfoTable[MaxLevel].FirePerMinute;
+            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].FirePerMinute;
+        } else { max = next = cur; }
+    }
+    private void Get_Stability(out float cur, out float next, out float max)
+    {
+        List<int> pList = weapons[m_iType];
+        int MaxLevel = pList[pList.Count - 1];
+        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].Max_Spread;
+        if (m_iCurrentID != MaxLevel)
+        {
+            max = GameData.Instance.WeaponInfoTable[MaxLevel].Max_Spread;
+            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Max_Spread;
+        }
+        else { max = next = cur; }
 
     }
-    private void SetCurrent_Power()
+    private void Get_Magazine(out float cur, out float next, out float max)
     {
+        List<int> pList = weapons[m_iType];
+        int MaxLevel = pList[pList.Count - 1];
+        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].Max_Mags;
+        if (m_iCurrentID != MaxLevel)
+        {
+            max = GameData.Instance.WeaponInfoTable[MaxLevel].Max_Mags;
+            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Max_Mags;
+        }
+        else { max = next = cur; }
+
     }
-    private void SetCurrent_FireRate()
+    private void Get_Range(out float cur, out float next, out float max)
     {
+        List<int> pList = weapons[m_iType];
+        int MaxLevel = pList[pList.Count - 1];
+        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].Range;
+        if (m_iCurrentID != MaxLevel)
+        {
+            max = GameData.Instance.WeaponInfoTable[MaxLevel].Range;
+            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Range;
+        }
+        else { max = next = cur; }
+
     }
-    private void SetCurrent_Stability()
+    private void Get_FireMode(out string mode)
     {
-    }
-    private void SetCurrent_Magazine()
-    {
-    }
-    private void SetCurrent_Range()
-    {
-    }
-    private void SetCurrent_FireMode(LobbyUI_Weapon uI_Weapon)
-    {
-        m_FireMode.text = (uI_Weapon.m_WeaponInfo.FireMode == 0) ? "SEMI - AUTO" : "FULL - AUTO";
+        float i = GameData.Instance.WeaponInfoTable[m_iCurrentID].FireMode;
+        mode = (i == 0) ? "SEMI - AUTO" : "FULL - AUTO";
     }
     #endregion
+
+    #region Create Method
     private void CreateDictionary()
     {
         foreach (var item in GameData.Instance.WeaponInfoTable)
@@ -80,11 +132,31 @@ public class UI_WeaponInfo : MonoBehaviour {
             }
         }
     }
-
-
+    private void CreateObject(UIWeaponAbility ability, string name)
+    {
+        ability = Instantiate(m_WeaponAbility, m_WeaponAbilities.transform).GetComponent<UIWeaponAbility>();
+        ability.name = name;        
+    }
+    private void GetCurrentID(LobbyUI_Weapon uI_Weapon)
+    {
+        m_iType = uI_Weapon.m_WeaponInfo.Type;
+        m_iCurrentID = uI_Weapon.m_WeaponInfo.ID;
+    }
+    private float GetLength(float target, float max)
+    {
+        float length = (target / max) * 200;
+        return length;
+    }
+    #endregion Create Method
 
     private void Start()
     {
         CreateDictionary();
+        CreateObject(m_Power, "Power");
+        CreateObject(m_Magazine, "Magazine");
+        CreateObject(m_FireRate, "FireRate");
+        CreateObject(m_Range, "Range");
+        CreateObject(m_Stability, "Stability");
+        CreateObject(m_FireMode, "FireMode");
     }
 }

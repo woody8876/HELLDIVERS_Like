@@ -13,7 +13,7 @@ public class WeaponList : MonoBehaviour {
         [SerializeField] SetPlayerWeapon m_SetPlayer;
     [Header("== GameObject Setting ==")]  
         [SerializeField] GameObject m_WeaponUI;
-        [SerializeField] UI_WeaponInfo m_Info;
+        [SerializeField] GameObject m_WeaponInfo;
     [Header("== Button Setting ==")]  
         [SerializeField] Button m_LevelUP;
         [SerializeField] Button m_Select;
@@ -21,13 +21,13 @@ public class WeaponList : MonoBehaviour {
     #endregion
 
     List<Button> m_Buttons = new List<Button>();
-   
+    UI_WeaponInfo m_Info;
     int[] Keys
     {
         get
         {
-            int[] i = new int[GameData.Instance.WeaponInfoTable.Count];
-            GameData.Instance.WeaponInfoTable.Keys.CopyTo(i, 0);
+            int[] i = new int[m_Info.weapons.Count];
+            m_Info.weapons.Keys.CopyTo(i, 0);
             return i;
         }
     }
@@ -45,6 +45,7 @@ public class WeaponList : MonoBehaviour {
 
     #region Monobehaviors
     void Start () {
+        m_Info = m_WeaponInfo.GetComponent<UI_WeaponInfo>();
         CreateWeaponUI();
         SetNav();
         m_Select.onClick.AddListener(() => ClickSelect(m_SetPlayer.PlayerID));
@@ -79,7 +80,7 @@ public class WeaponList : MonoBehaviour {
     {
         for (int i = 0; i < GameData.Instance.WeaponInfoTable.Count; i++)
         {
-            if (Keys[i] == 1901) { return; }
+            if (Keys[i] == 9 || Keys[i] == 8) { return; }
             GameObject go = Instantiate(m_WeaponUI, this.transform);
             go.name = Keys[i].ToString();
             LobbyUI_Weapon uI_Weapon = go.GetComponent<LobbyUI_Weapon>();
@@ -96,7 +97,7 @@ public class WeaponList : MonoBehaviour {
         EventTrigger trigger = go.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventData) => m_Info.SetWeapon(uI_Weapon));
+        entry.callback.AddListener((eventData) => m_Info.SetWeapon());
         entry.callback.AddListener((eventData) => SetID(uI_Weapon));
         entry.callback.AddListener((eventData) => OnValueChange());
         trigger.triggers.Add(entry);
