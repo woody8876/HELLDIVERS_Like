@@ -13,7 +13,7 @@ public class PatrolAI : Character
     private BoxCollider m_BoxCollider;
     private BoxCollider m_DamageCollider;
     private MobAimLine m_MobAimLine;
-    private GameObject[] m_PlayerGO;
+    //private GameObject[] m_PlayerGO;
     private float m_MinDis = 10000000f;
     private float Timer = 0.0f;
 

@@ -13,8 +13,7 @@ public class FishAI : Character
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageColloder;
-    private GameObject[] m_PlayerGO;
-    public GameObject m_RadarPoint;
+    //private GameObject[] m_PlayerGO;
     private float m_MinDis = 100000f;
     private float Timer = 2.0f;
     // Use this for initialization
@@ -100,8 +99,6 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
-        m_RadarPoint.transform.position = this.transform.position;
-
         Timer += Time.deltaTime;
 
         if (Timer > 2.0f)
@@ -159,7 +156,6 @@ public class FishAI : Character
     public override void Death()
     {
         m_bDead = true;
-        ObjectPool.m_Instance.UnLoadObjectToPool(3002, m_RadarPoint);
         PerformDead();
     }
 

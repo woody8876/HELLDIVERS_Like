@@ -12,13 +12,13 @@ public class FishVariantAI : Character
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
-    private GameObject[] m_PlayerGO;
+    private CapsuleCollider m_DamageColloder;
+    //private GameObject[] m_PlayerGO;
     private float m_MinDis = 100000f;
-    private float Timer = 0.0f;
+    private float Timer = 2.0f;
     // Use this for initialization
     private void Awake()
     {
-
     }
     private void OnEnable()
     {
@@ -27,31 +27,28 @@ public class FishVariantAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
+        m_DamageColloder.enabled = true;
         m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
     {
-        m_MaxHp = 3000;
+        m_AIData = new AIData();
+        MobData.Instance.AIDataTable[3300].CopyTo(m_AIData);
+
+        m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
-        m_AIData = new AIData();
+        m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
-        m_AIData.m_ID= 3300;
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
-        m_AIData.navMeshAgent.speed = Random.Range(10.5f, 15.0f);
+        m_AIData.navMeshAgent.speed = Random.Range(14.5f, 15.0f);
         m_AIData.navMeshAgent.enabled = false;
-        m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        if (m_AIData.m_PlayerGO != null)
-        {
-            m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        }
-
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
@@ -102,38 +99,13 @@ public class FishVariantAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_PlayerGO == null)
-        {
-            m_PlayerGO = GameObject.FindGameObjectsWithTag("Player");
-            return;
-        }
         Timer += Time.deltaTime;
-        if(Timer > 2.0f)
+
+        if (Timer > 2.0f)
         {
-            foreach (GameObject go in m_PlayerGO)
-            {
-                float Dis = (go.transform.position - this.transform.position).magnitude;
-                if (Dis < m_MinDis)
-                {
-                    m_MinDis = Dis;
-                    m_AIData.m_PlayerGO = go;
-                }
-            }
+            AIData.AIFunction.SearchPlayer(m_AIData);
             Timer = 0.0f;
-            m_MinDis = 10000f;
-        }
-        
-        //if (m_AIData.m_PlayerGO == null)
-        //{
-        //    m_AIData.m_PlayerGO = GameObject.FindGameObjectWithTag("Player");
-        //    if (m_AIData.m_PlayerGO != null)
-        //    {
-        //        m_PlayerController = m_AIData.m_PlayerGO.GetComponent<PlayerController>();
-        //    }
-        //}
-        if (m_AIData.m_PlayerGO != null)
-        {
-            m_AIData.m_bIsPlayerDead = m_PlayerController.bIsDead;
+            return;
         }
         m_FSM.DoState();
 
@@ -143,7 +115,6 @@ public class FishVariantAI : Character
     public void PerformGetHurt()
     {
         if (IsDead) return;
-
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
         if (m_MobAnimator.Animator.IsInTransition(0) || info.IsName("GetHurt"))
         {
@@ -152,6 +123,7 @@ public class FishVariantAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
         return;
     }
+
     public void PerformDead()
     {
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
@@ -161,11 +133,11 @@ public class FishVariantAI : Character
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
-
         CurrentHp -= dmg;
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
+            m_DamageColloder.enabled = false;
             Death();
             return true;
         }
@@ -175,6 +147,7 @@ public class FishVariantAI : Character
         }
         return true;
     }
+
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
         return TakeDamage(damager.Damage, hitPoint);
@@ -205,7 +178,6 @@ public class FishVariantAI : Character
             Gizmos.color = Color.red;
             Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
-        //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
         Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
     }

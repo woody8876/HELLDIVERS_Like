@@ -676,19 +676,8 @@ public class FSMDeadState : FSMState
         {
             if (info.normalizedTime > 0.9f)
             {
-                MobManager.m_Instance.MobDead(data.m_ID, data);
-                if(data.m_ID == 3100)
-                {
-                    MobManager.m_Instance.DecreaseFishCount();
-                }
-                else if (data.m_ID == 3200)
-                {
-                    MobManager.m_Instance.DecreasePatrolCount();
-                }
-                else if (data.m_ID == 3300)
-                {
-                    MobManager.m_Instance.DecreasePatrolCount();
-                }
+                MobManager.m_Instance.UnloadMob(data.m_ID, data);
+                MobManager.m_Instance.DecreaseMobCount(data.m_ID);
             }
         }
     }

@@ -27,7 +27,6 @@ public class UIRadarPoint : MonoBehaviour
         FindRadarCenter();
 
         m_Dir = m_CurrentTarget.transform.position - m_Center;
-        Debug.Log(m_Dir.magnitude);
         m_Pos = this.transform.localPosition;
         m_Pos.x = m_Dir.x * (UIPanelRadar.Instance.RectWidth * 0.5f) / UIPanelRadar.Instance.RadarRadius;
         m_Pos.y = m_Dir.z * (UIPanelRadar.Instance.RectHeight * 0.5f) / UIPanelRadar.Instance.RadarRadius;
