@@ -93,7 +93,6 @@ namespace HELLDIVERS.UI.InGame
 
         private void RefreshInfo()
         {
-            if (this.gameObject.activeInHierarchy == false) return;
             m_AmmoFill.fillAmount = (float)CurrentWeapon.Ammo / CurrentWeapon.Capacity;
             m_Mags.text = string.Format("x{0}", CurrentWeapon.Mags);
             m_Animator.SetBool("IsOutOfAmmo", IsNearOutOfAmmo);

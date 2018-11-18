@@ -16,12 +16,46 @@ public class SceneController : MonoBehaviour
     [ContextMenu("ToGame")]
     public void ToGameScene()
     {
-        SceneManager.LoadScene("Game");
+        StartCoroutine(LoadScene("Game"));
     }
 
     [ContextMenu("ToLobby")]
     public void ToLobby()
     {
         SceneManager.LoadScene("Lobby");
+    }
+
+    private IEnumerator LoadScene(string scene)
+    {
+        AsyncOperation asyncLoading = SceneManager.LoadSceneAsync(scene);
+        if (asyncLoading == null) yield break;
+
+        asyncLoading.allowSceneActivation = false;
+        UIPanelLoading loadingScreen = MainUI.Instance.LoadingPanel;
+        float progress = 0;
+        loadingScreen.SetLoadingBarProcess(progress);
+        loadingScreen.FadeIn();
+        yield return new WaitForSeconds(1.0f);
+
+        while (progress <= 0.9f)
+        {
+            progress += 0.01f;
+            loadingScreen.SetLoadingBarProcess(progress);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        while (true)
+        {
+            if (asyncLoading.isDone || asyncLoading.progress > 0.89999f) break;
+            yield return 0;
+        }
+        asyncLoading.allowSceneActivation = true;
+
+        loadingScreen.SetLoadingBarProcess(1);
+        yield return new WaitForSeconds(1.0f);
+
+        loadingScreen.FadeOut();
+
+        yield break;
     }
 }

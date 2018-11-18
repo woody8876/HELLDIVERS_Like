@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class MainUI : MonoBehaviour
 {
+    public static MainUI Instance { get; private set; }
+    public UIPanelLoading LoadingPanel { get { return m_PanelLoading; } }
+    [SerializeField] private UIPanelLoading m_PanelLoading;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(this.gameObject);
+        DontDestroyOnLoad(this);
+    }
+
     // Use this for initialization
     private void Start()
     {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        m_PanelLoading = Instantiate(m_PanelLoading, this.transform);
+        m_PanelLoading.gameObject.SetActive(false);
+        DontDestroyOnLoad(m_PanelLoading);
     }
 }
