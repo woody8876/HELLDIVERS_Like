@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(MobAnimationsController))]
-public class FishVariantAI : Character
+public class TankAI : Character
 {
-
     FSMSystem m_FSM;
     public AIData m_AIData;
     private MobAnimationsController m_MobAnimator;
@@ -16,7 +14,9 @@ public class FishVariantAI : Character
     //private GameObject[] m_PlayerGO;
     private float m_MinDis = 100000f;
     private float Timer = 2.0f;
-    // Use this for initialization
+
+    public eFSMStateID m_CurrentState;
+
     private void Awake()
     {
     }
@@ -34,7 +34,7 @@ public class FishVariantAI : Character
     protected override void Start()
     {
         m_AIData = new AIData();
-        MobData.Instance.AIDataTable[3300].CopyTo(m_AIData);
+        MobData.Instance.AIDataTable[3400].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
@@ -47,58 +47,65 @@ public class FishVariantAI : Character
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
-        m_AIData.navMeshAgent.speed = Random.Range(14.5f, 15.0f);
+        m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
+
         FSMRespawnState m_RespawnState = new FSMRespawnState();
-        FSMChaseState m_Chasestate = new FSMChaseState();
+        FSMChaseToRemoteAttackState m_ChaseToRemoteAttackState = new FSMChaseToRemoteAttackState();
+        FSMChaseState m_ChaseState = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
+        FSMRemoteAttackState m_RemoteAttackstate = new FSMRemoteAttackState();
         FSMIdleState m_IdleState = new FSMIdleState();
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
 
-        m_RespawnState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_RespawnState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
-        m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_Chasestate.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_ChaseToRemoteAttackState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
+        m_ChaseToRemoteAttackState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+
+        m_RemoteAttackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
+
+        m_IdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
+        m_IdleState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
+        m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_ChaseState);
+        m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        m_IdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+
+        m_ChaseState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        m_ChaseState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
-        m_Attackstate.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_Attackstate.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
 
-        m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_IdleState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
-
-        m_WanderIdleState.AddTransition(eFSMTransition.GO_Wander, m_WanderState);
-        m_WanderIdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-
-        m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
-        m_WanderState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-
-        FSMFishGetHurtState m_GetHurtState = new FSMFishGetHurtState();
+        FSMTankGetHurtState m_GetHurtState = new FSMTankGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
 
-        m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_GetHurtState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
 
         m_DeadState.AddTransition(eFSMTransition.Go_Respawn, m_RespawnState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
 
+
         m_FSM.AddState(m_RespawnState);
-        m_FSM.AddState(m_WanderIdleState);
-        m_FSM.AddState(m_IdleState);
-        m_FSM.AddState(m_Chasestate);
+        m_FSM.AddState(m_ChaseToRemoteAttackState);
+        m_FSM.AddState(m_ChaseState);
         m_FSM.AddState(m_Attackstate);
+        m_FSM.AddState(m_RemoteAttackstate);
+        m_FSM.AddState(m_IdleState);
+        m_FSM.AddState(m_WanderIdleState);
+        m_FSM.AddState(m_WanderState);
         m_FSM.AddState(m_GetHurtState);
         m_FSM.AddState(m_DeadState);
-        m_FSM.AddState(m_WanderState);
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update () {
         Timer += Time.deltaTime;
 
         if (Timer > 2.0f)
@@ -107,6 +114,7 @@ public class FishVariantAI : Character
             Timer = 0.0f;
             return;
         }
+        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         m_FSM.DoState();
 
         if (Input.GetKeyDown(KeyCode.U)) Death();
@@ -159,26 +167,4 @@ public class FishVariantAI : Character
         PerformDead();
     }
 
-    private void OnDrawGizmos()
-    {
-        if (m_AIData == null || m_FSM == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(this.transform.position, this.transform.position + this.transform.forward * 2.0f);
-
-        if (m_FSM.CurrentStateID == eFSMStateID.ChaseStateID)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
-        }
-        else if (m_FSM.CurrentStateID == eFSMStateID.AttackStateID)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
-        }
-
-        Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
-    }
 }

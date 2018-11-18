@@ -17,6 +17,8 @@ public class PatrolAI : Character
     private float m_MinDis = 10000000f;
     private float Timer = 0.0f;
 
+    public eFSMStateID m_CurrentState;
+
     // Use this for initialization
     private void OnEnable()
     {
@@ -54,11 +56,11 @@ public class PatrolAI : Character
         FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
         FSMFleeState m_FleeState = new FSMFleeState();
 
-        m_WanderIdleState.AddTransition(eFSMTransition.GO_Wander, m_WanderState);
-        m_WanderIdleState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_Flee, m_FleeState);
 
-        m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
-        m_WanderState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
+        m_WanderState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+        m_WanderState.AddTransition(eFSMTransition.Go_Flee, m_FleeState);
 
         m_FleeState.AddTransition(eFSMTransition.Go_CallArmy, m_CallArmyState);
         #endregion
@@ -72,39 +74,39 @@ public class PatrolAI : Character
         FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
 
         m_CallArmyState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_CallArmyState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
+        m_CallArmyState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
 
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_PatrolAttackstate);
-        m_Chasestate.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
+        m_Chasestate.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
 
         m_DodgeState.AddTransition(eFSMTransition.Go_Attack, m_PatrolAttackstate);
-        m_DodgeState.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
+        m_DodgeState.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
 
         m_PatrolAttackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
         m_PatrolAttackstate.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_PatrolAttackstate.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
+        m_PatrolAttackstate.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
 
         m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_IdleState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
+        m_IdleState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_PatrolAttackstate);
-        m_IdleState.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
+        m_IdleState.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
 
-        m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.GO_NoPlayerWander, m_FSMNoPlayerWander);
+        m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_NoPlayerWander, m_FSMNoPlayerWander);
         m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
+        m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
 
-        m_FSMNoPlayerWander.AddTransition(eFSMTransition.GO_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
+        m_FSMNoPlayerWander.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
         m_FSMNoPlayerWander.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_FSMNoPlayerWander.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
+        m_FSMNoPlayerWander.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
         #endregion
 
         FSMPatrolGetHurtState m_GetHurtState = new FSMPatrolGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
 
-        m_GetHurtState.AddTransition(eFSMTransition.GO_Flee, m_FleeState);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_Flee, m_FleeState);
         m_GetHurtState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_GetHurtState.AddTransition(eFSMTransition.GO_Dodge, m_DodgeState);
-        m_DeadState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_GetHurtState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
+        m_DeadState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_PatrolGetHurt, m_GetHurtState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
@@ -128,7 +130,7 @@ public class PatrolAI : Character
     void Update()
     {
         AIData.AIFunction.SearchPlayer(m_AIData);
-
+        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         m_FSM.DoState();
     }
 

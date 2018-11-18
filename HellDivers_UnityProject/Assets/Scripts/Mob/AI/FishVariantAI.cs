@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(MobAnimationsController))]
-public class FishAI : Character
+public class FishVariantAI : Character
 {
 
     FSMSystem m_FSM;
@@ -34,7 +34,7 @@ public class FishAI : Character
     protected override void Start()
     {
         m_AIData = new AIData();
-        MobData.Instance.AIDataTable[3100].CopyTo(m_AIData);
+        MobData.Instance.AIDataTable[3300].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
@@ -47,7 +47,7 @@ public class FishAI : Character
         m_AIData.m_FSMSystem = m_FSM;
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
-        m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
+        m_AIData.navMeshAgent.speed = Random.Range(14.5f, 15.0f);
         m_AIData.navMeshAgent.enabled = false;
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseState m_Chasestate = new FSMChaseState();
@@ -56,23 +56,23 @@ public class FishAI : Character
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
 
-        m_RespawnState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_RespawnState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_Chasestate.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_Chasestate.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
         m_Attackstate.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_Attackstate.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_Attackstate.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_IdleState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_IdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
-        m_WanderIdleState.AddTransition(eFSMTransition.GO_Wander, m_WanderState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
-        m_WanderState.AddTransition(eFSMTransition.GO_WanderIdle, m_WanderIdleState);
+        m_WanderState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
         m_WanderState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
 
         FSMFishGetHurtState m_GetHurtState = new FSMFishGetHurtState();
@@ -178,7 +178,6 @@ public class FishAI : Character
             Gizmos.color = Color.red;
             Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
         }
-        //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
         Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
     }
