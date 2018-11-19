@@ -7,21 +7,21 @@ using UnityEngine.EventSystems;
 public class LobbyUI_Weapon : MonoBehaviour{
 
     public int m_ID;
+    public int Type { get { return GameData.Instance.WeaponInfoTable[m_ID].Type; } }
     /// <summary>
     /// if true than this weaponUI is primary weapon;
     /// </summary>
     public bool m_Primary;
 
-    [HideInInspector] public WeaponInfo m_WeaponInfo = new WeaponInfo();
-    [HideInInspector] public Sprite m_Sprite = new Sprite();
+//    [HideInInspector] public WeaponInfo m_WeaponInfo = new WeaponInfo();
     [SerializeField] Image m_WeaponTexture;
     [SerializeField] Text m_WeaponName;
 
     public void SetWeaponUI () {
-        GameData.Instance.WeaponInfoTable[m_ID].CopyTo(m_WeaponInfo);
-        m_Sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + m_ID, false);
-        m_WeaponName.text = m_WeaponInfo.Name;
-        m_WeaponTexture.sprite = m_Sprite;
+        WeaponInfo info = GameData.Instance.WeaponInfoTable[m_ID];
+        Sprite sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + info.Image, false);
+        m_WeaponName.text = info.Name;
+        m_WeaponTexture.sprite = sprite;
 	}
 
 }

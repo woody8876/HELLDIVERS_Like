@@ -27,6 +27,8 @@ public class PlayerManager
         playerInfo.SetUsername("TestPlayer");
         playerInfo.AddWeapon(1101);
         playerInfo.AddWeapon(1301);
+        playerInfo.UnlockWeapon(1101);
+        playerInfo.UnlockWeapon(1301);
         playerInfo.AddStratagem(2000);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);

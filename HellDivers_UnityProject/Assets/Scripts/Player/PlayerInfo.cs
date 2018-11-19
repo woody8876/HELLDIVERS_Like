@@ -12,12 +12,14 @@ public class PlayerInfo
     public List<int> Weapons { get { return weapons; } }
     public List<int> Stratagems { get { return stratagems; } }
     public List<int> Grenades { get { return grenades; } }
+    public List<int> UnLockWeapons { get { return unlockweapons; } }
     public int Money { get { return money; } }
 
     #endregion Properties
 
     #region Private Variable
 
+    [SerializeField] private List<int> unlockweapons = new List<int>();
     [SerializeField] private List<int> weapons = new List<int>();
     [SerializeField] private List<int> stratagems = new List<int>();
     [SerializeField] private List<int> grenades = new List<int>();
@@ -40,6 +42,26 @@ public class PlayerInfo
 
         username = name;
         return true;
+    }
+
+    public bool UnlockWeapon(int id)
+    {
+        foreach (var item in unlockweapons) { if (id == item)  return false; }
+        unlockweapons.Add(id);
+        return true;
+    }
+
+    public bool LevelUpWeapon(ref int id)
+    {
+        for (int i = 0; i < unlockweapons.Count; i++)
+        {
+            if(unlockweapons[i] == id)
+            {
+                id += 1;
+                unlockweapons[i] = id;
+            }
+        }
+        return false;
     }
 
     public bool AddWeapon(int id)

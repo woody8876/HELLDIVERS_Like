@@ -4,47 +4,52 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_WeaponInfo : MonoBehaviour {
-    
-    #region SerializeField
-    [Header("== Set Current UI ==")]
-    [SerializeField] Text m_WeaponName;
-    [SerializeField] Image m_IWeaponTexture;
-    [SerializeField] GameObject m_WeaponAbilities;
-    [SerializeField] GameObject m_WeaponAbility;
-    [Header("== Set LevelUP UI ==")]
-
-    #endregion
 
     public Dictionary<int, List<int>> weapons = new Dictionary<int, List<int>>();
-    int m_iType;
-    int m_iCurrentID;
+    private int m_iType;
+    private int m_iCurrentID;
+    public void SetWeapon(int type, int id)
+    {
+        float cur;
+        float next;
+        float max;
+        string mode;
+        m_iType = type;
+        m_iCurrentID = id;
+        SetUI(id);
+        Get_Power(out cur, out next, out max);
+        m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
+        Get_FireRate(out cur, out next, out max);
+        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max));
+        Get_Stability(out cur, out next, out max);
+        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max));
+        Get_Magazine(out cur, out next, out max);
+        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max));
+        Get_Range(out cur, out next, out max);
+        m_Stability.SetAbility(m_Stability.name, GetLength(cur, max), GetLength(next, max));
+        Get_FireMode(out mode);
+        m_FireMode.SetWord(m_FireMode.name, mode);
+    }
+    
+    private void Awake()
+    {
+        CreateDictionary();
+        CreateObject(ref m_Power, "Power");
+        CreateObject(ref m_Magazine, "Magazine");
+        CreateObject(ref m_FireRate, "FireRate");
+        CreateObject(ref m_Range, "Range");
+        CreateObject(ref m_Stability, "Stability");
+        CreateObject(ref m_FireMode, "FireMode");
+    }
+
+    #region UIWeaponAbility Field
     UIWeaponAbility m_Power;
     UIWeaponAbility m_Magazine;
     UIWeaponAbility m_FireRate;
     UIWeaponAbility m_Range;
     UIWeaponAbility m_Stability;
     UIWeaponAbility m_FireMode;
-
-
-    public void SetWeapon()
-    {
-        float cur;
-        float next;
-        float max;
-        string mode;
-        Get_Power(out cur, out next, out max);
-        m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_FireRate(out cur, out next, out max);
-        m_Magazine.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_Stability(out cur, out next, out max);
-        m_FireRate.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_Magazine(out cur, out next, out max);
-        m_Range.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_Range(out cur, out next, out max);
-        m_Stability.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_FireMode(out mode);
-        m_FireMode.SetWord(m_FireMode.name, mode);
-    }
+    #endregion
 
     #region Get Value Method
     private void Get_Power(out float cur, out float next, out float max)
@@ -132,16 +137,26 @@ public class UI_WeaponInfo : MonoBehaviour {
             }
         }
     }
-    private void CreateObject(UIWeaponAbility ability, string name)
+
+    private void CreateObject(ref UIWeaponAbility ability, string name)
     {
         ability = Instantiate(m_WeaponAbility, m_WeaponAbilities.transform).GetComponent<UIWeaponAbility>();
         ability.name = name;        
     }
+
+    private void SetUI(int id)
+    {
+        WeaponInfo info = GameData.Instance.WeaponInfoTable[id];
+        m_WeaponName.text = info.Name;
+        m_IWeaponTexture.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + info.Image, false);
+    }
+
     private void GetCurrentID(LobbyUI_Weapon uI_Weapon)
     {
-        m_iType = uI_Weapon.m_WeaponInfo.Type;
-        m_iCurrentID = uI_Weapon.m_WeaponInfo.ID;
+        m_iType = uI_Weapon.Type;
+        m_iCurrentID = uI_Weapon.m_ID;
     }
+
     private float GetLength(float target, float max)
     {
         float length = (target / max) * 200;
@@ -149,14 +164,11 @@ public class UI_WeaponInfo : MonoBehaviour {
     }
     #endregion Create Method
 
-    private void Start()
-    {
-        CreateDictionary();
-        CreateObject(m_Power, "Power");
-        CreateObject(m_Magazine, "Magazine");
-        CreateObject(m_FireRate, "FireRate");
-        CreateObject(m_Range, "Range");
-        CreateObject(m_Stability, "Stability");
-        CreateObject(m_FireMode, "FireMode");
-    }
+    #region SerializeField
+    [Header("== Set Current UI ==")]
+    [SerializeField] Text m_WeaponName;
+    [SerializeField] Image m_IWeaponTexture;
+    [SerializeField] GameObject m_WeaponAbilities;
+    [SerializeField] GameObject m_WeaponAbility;
+    # endregion SerializeField
 }

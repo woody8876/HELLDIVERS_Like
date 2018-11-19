@@ -69,7 +69,7 @@ public class WeaponList : MonoBehaviour {
         yield return null;
         for (int i = 0; i < m_Buttons.Count; i++)
         {
-            if (m_SetPlayer.m_iWeaponID == m_Buttons[i].gameObject.GetComponent<LobbyUI_Weapon>().m_ID)
+            //if (m_SetPlayer.CurWeaponID == m_Buttons[i].gameObject.GetComponent<LobbyUI_Weapon>().m_ID)
             {
                 EventSystem.current.SetSelectedGameObject(m_Buttons[i].gameObject, null);
             }
@@ -82,9 +82,11 @@ public class WeaponList : MonoBehaviour {
         {
             if (Keys[i] == 9 || Keys[i] == 8) { return; }
             GameObject go = Instantiate(m_WeaponUI, this.transform);
-            go.name = Keys[i].ToString();
+            //go.name = Keys[i].ToString();
+            int id = m_Info.weapons[Keys[i]][0];
+            go.name = GameData.Instance.WeaponInfoTable[id].Name;
             LobbyUI_Weapon uI_Weapon = go.GetComponent<LobbyUI_Weapon>();
-            uI_Weapon.m_ID = Keys[i];
+            uI_Weapon.m_ID = id;
             go.GetComponent<Button>();
             uI_Weapon.SetWeaponUI();
             m_Buttons.Add(go.GetComponent<Button>());
@@ -97,7 +99,7 @@ public class WeaponList : MonoBehaviour {
         EventTrigger trigger = go.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventData) => m_Info.SetWeapon());
+        //entry.callback.AddListener((eventData) => m_Info.SetWeapon());
         entry.callback.AddListener((eventData) => SetID(uI_Weapon));
         entry.callback.AddListener((eventData) => OnValueChange());
         trigger.triggers.Add(entry);
