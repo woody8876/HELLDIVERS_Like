@@ -21,6 +21,8 @@ public class Bullet : MonoBehaviour
 
     #region Mnonbehaviors
 
+    public void SetID(int i) { m_ID = i; }
+
     private void Start()
     {
         m_fRange = GameData.Instance.WeaponInfoTable[m_ID].Range;

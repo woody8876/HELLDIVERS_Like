@@ -6,22 +6,26 @@ using UnityEngine.EventSystems;
 
 public class LobbyUI_Weapon : MonoBehaviour{
 
-    public int m_ID;
-    /// <summary>
-    /// if true than this weaponUI is primary weapon;
-    /// </summary>
-    public bool m_Primary;
-
-    [HideInInspector] public WeaponInfo m_WeaponInfo;
-    [HideInInspector] public Sprite m_Sprite;
+    [Header("== Set UI ==")]
     [SerializeField] Image m_WeaponTexture;
     [SerializeField] Text m_WeaponName;
+    [Header("== Private Field ==")]
+    [SerializeField] int m_ID;
+    [SerializeField] bool m_Primary;
+
+    public int ID { get { return m_ID; } }
+    public int Type { get { return GameData.Instance.WeaponInfoTable[m_ID].Type; } }
+    public bool Primary { get { return m_Primary; } }
+
 
     public void SetWeaponUI () {
-        m_WeaponInfo = GameData.Instance.WeaponInfoTable[m_ID];
-        m_Sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + m_ID, false);
-        m_WeaponName.text = m_WeaponInfo.Name;
-        m_WeaponTexture.sprite = m_Sprite;
+        WeaponInfo info = GameData.Instance.WeaponInfoTable[m_ID];
+        Sprite sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + info.Image, false);
+        m_WeaponName.text = info.Name;
+        m_WeaponTexture.sprite = sprite;
 	}
 
+    public void SetID(int i) { m_ID = i; }
+
+    public void SetPrimary(bool b) { m_Primary = b; }
 }

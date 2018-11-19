@@ -6,6 +6,7 @@ public class EffectController : MonoBehaviour {
 
     [SerializeField] int m_ID;
 
+    public void SetID(int i) { m_ID = i; }
     public void EffectStart()
     {
         m_Animator.SetTrigger("startTrigger");

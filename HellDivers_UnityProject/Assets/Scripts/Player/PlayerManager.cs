@@ -12,13 +12,13 @@ public class PlayerManager
     {
         if (Instance == null) Instance = this;
         m_PlayerMap = new Dictionary<int, PlayerInfo>();
-        CreatePlayer();
+        CreatePlayer(1);
     }
 
-    public void CreatePlayer()
+    public void CreatePlayer(int i)
     {
         PlayerInfo playerInfo = CreatPlayerInfo();
-        m_PlayerMap.Add(1, playerInfo);
+        m_PlayerMap.Add(i, playerInfo);
     }
 
     public PlayerInfo CreatPlayerInfo()
@@ -27,6 +27,10 @@ public class PlayerManager
         playerInfo.SetUsername("TestPlayer");
         playerInfo.AddWeapon(1101);
         playerInfo.AddWeapon(1301);
+        playerInfo.UnlockWeapon(1001);
+        playerInfo.UnlockWeapon(1101);
+        playerInfo.UnlockWeapon(1301);
+        playerInfo.UnlockWeapon(1401);
         playerInfo.AddStratagem(2000);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);
@@ -37,6 +41,11 @@ public class PlayerManager
         return playerInfo;
     }
 
+    public void RefreshEquipment(int player, List<int> newEquipWeapon)
+    {
+        m_PlayerMap[player].RefreshEquipWeapon(newEquipWeapon);
+    }
+        
     public void LoadPlayerInfo()
     {
     }

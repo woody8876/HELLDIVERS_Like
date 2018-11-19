@@ -14,7 +14,6 @@ public class MainTest : MonoBehaviour
     private AssetManager m_AssetManager = new AssetManager();
     private ResourceManager m_ResourceManager = new ResourceManager();
     private ObjectPool m_ObjectPool = new ObjectPool();
-    private GameData m_GameData = new GameData();
 
 
     private void Awake()
@@ -22,7 +21,6 @@ public class MainTest : MonoBehaviour
         m_AssetManager.Init();
         m_ResourceManager.Init();
         m_ObjectPool.Init();
-        m_GameData.Init();
 
     }
 

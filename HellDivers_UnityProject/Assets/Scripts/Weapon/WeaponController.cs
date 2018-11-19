@@ -34,9 +34,7 @@ public class WeaponController : MonoBehaviour
         {
             m_dActiveWeapon.Add(weaponID, m_weaponFactory.CreateWeapon(weaponID));
             m_dActiveWeapon[weaponID].WeaponLoader();
-            m_GOEffect = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponID * 10 + 1);
-            m_GOEffect.transform.parent = pos;
-            m_GOEffect.transform.localPosition = Vector3.zero;
+            SetFireEffect(ref m_GOEffect, weaponID, pos);
             m_dActiveEffect.Add(weaponID, m_GOEffect);
             _CurrentWeapon = weaponID;
             m_player = player;
@@ -100,6 +98,14 @@ public class WeaponController : MonoBehaviour
         return true;
     }
     #endregion SetWeapon
+
+    private void SetFireEffect(ref GameObject go ,int i, Transform t)
+    {
+        go = ObjectPool.m_Instance.LoadGameObjectFromPool(i * 10 + 1);
+        go.GetComponent<EffectController>().SetID(i * 10 + 1);
+        go.transform.parent = t;
+        go.transform.localPosition = Vector3.zero;
+    }
 
     #region WeaponBehaviours
     /// <summary>
