@@ -26,6 +26,7 @@ public class UIWeaponDisplay : MonoBehaviour {
     public UI_WeaponInfo Info { get { return m_Info; } }
     public UIWeaponList WeaponList { get { return m_WeaponList; } }
     public GameObject SelectButton { get { return m_Button.Select; } }
+    public GameObject LevelUpButton { get { return m_Button.LevelUp; } }
 
     #region Private Field
     #endregion

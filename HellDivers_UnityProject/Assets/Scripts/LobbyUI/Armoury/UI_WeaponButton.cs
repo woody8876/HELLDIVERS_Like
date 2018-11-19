@@ -19,7 +19,7 @@ public class UI_WeaponButton : MonoBehaviour {
         m_LevelUp.onClick.AddListener(() => ClickLevelUp(weaponDisplay.SetPlayer.PlayerID));
         SetNav(m_LevelUp, m_Select, false);
         SetNav(m_Select, m_LevelUp, true);
-
+        SelectEvent();
     }
 
     // Update is called once per frame
@@ -37,6 +37,20 @@ public class UI_WeaponButton : MonoBehaviour {
         a.navigation = buttonNav;
     }
 
+    private void SelectEvent()
+    {
+        EventTrigger trigger = Select.AddComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.Select;
+        entry.callback.AddListener((eventdata) => m_LevelUp.interactable = CheckLevelUp());
+        trigger.triggers.Add(entry);
+    }
+
+    private bool CheckLevelUp()
+    {
+        return true;
+    }
+
     private void ClickLevelUp(int player)
     {
         int type = GameData.Instance.WeaponInfoTable[weaponDisplay.CurWeaponID].Type;
@@ -45,6 +59,7 @@ public class UI_WeaponButton : MonoBehaviour {
         {
             int i = weaponDisplay.CurWeaponID;
             PlayerManager.Instance.Players[player].LevelUpWeapon(ref i);
+            weaponDisplay.SetCurID(i);
             weaponDisplay.WeaponList.LevelUp(i);
             weaponDisplay.Info.SetID(i);
             weaponDisplay.Info.SetType(type);

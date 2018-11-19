@@ -44,13 +44,14 @@ public class UIWeaponList : MonoBehaviour {
     private IEnumerator ChangeWeapon()
     {
         yield return null;
-            for (int i = 0; i < m_weapons.Count; i++)
+        for (int i = 0; i < m_weapons.Count; i++)
+        {
+            if (Determine() == m_weapons[i].gameObject.name)
             {
-                if ( Determine() == m_weapons[i].gameObject.name)
-                {
-                    EventSystem.current.SetSelectedGameObject(m_weapons[i].gameObject, null);
-                }
+                EventSystem.current.SetSelectedGameObject(m_weapons[i].gameObject);
+                yield break;
             }
+        }
     }
 
     public void LevelUp(int id)
@@ -61,6 +62,7 @@ public class UIWeaponList : MonoBehaviour {
             {
                 m_weapons[i].gameObject.name = id.ToString();
                 weaponDisplay.SetWeaponUI(m_weapons[i].gameObject, id);
+                return;
             }
         }
     }
@@ -76,7 +78,7 @@ public class UIWeaponList : MonoBehaviour {
             btn = go.GetComponent<Button>();
             int id = unlockWeapons[i];
             go.name = id.ToString();
-            btn.onClick.AddListener(() => OnClickEvent(weaponDisplay.SelectButton, id));
+            btn.onClick.AddListener(() => OnClickEvent(go.name ,weaponDisplay.SelectButton));
             weaponDisplay.SetWeaponUI(go, id);
             OnSelectEvent(go);
             m_weapons.Add(btn);
@@ -134,9 +136,9 @@ public class UIWeaponList : MonoBehaviour {
         trigger.triggers.Add(entry);
     }
 
-    private void OnClickEvent(GameObject next, int i) 
+    private void OnClickEvent(string s, GameObject next) 
     {
-        weaponDisplay.SetCurID(i);
+        weaponDisplay.SetCurID(weaponDisplay.Info.ID);
         EventSystem.current.SetSelectedGameObject(next);
     }
 

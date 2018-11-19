@@ -9,6 +9,7 @@ public class UI_WeaponInfo : MonoBehaviour {
     [SerializeField] int m_iType;
     [SerializeField] int m_iCurrentID;
 
+    public int ID { get { return m_iCurrentID; } }
     public void SetID(int id) { m_iCurrentID = id; }
     public void SetType(int type) { m_iType = type; }
 
