@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class SeekTest : MonoBehaviour {
 
-    public AIData m_Data;
+    public MobInfo m_Data;
     FSMSystem m_FSM;
     public GameObject m_Target;
     // Use this for initialization

@@ -51,7 +51,7 @@ public class MobAnimationsController : MonoBehaviour {
             case eFSMStateID.FishGetHurtStateID:
                 m_Animator.SetTrigger("GetHurt");
                 break;
-            case eFSMStateID.PatrolGetHurtID:
+            case eFSMStateID.PatrolGetHurtStateID:
                 m_Animator.SetTrigger("GetHurt");
                 break;
             case eFSMStateID.DeadStateID:
