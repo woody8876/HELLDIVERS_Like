@@ -6,12 +6,12 @@ using UnityEngine.AI;
 
 public class SteeringBehaviours
 {
-    static public void NavMove(AIData data)
+    static public void NavMove(MobInfo data)
     {
         data.navMeshAgent.SetDestination(data.m_vTarget);
     }
 
-    static public void Move(AIData data)
+    static public void Move(MobInfo data)
     {
         if (data.m_bMove == false) { return; }
         Transform t = data.m_Go.transform;
@@ -39,7 +39,7 @@ public class SteeringBehaviours
 
     }
 
-    static public bool CheckCollision(AIData data)
+    static public bool CheckCollision(MobInfo data)
     {
         List<Obstacle> m_AvoidTargets = AIMain.m_Instance.GetObstacles();
         if (m_AvoidTargets == null)
@@ -87,7 +87,7 @@ public class SteeringBehaviours
         return false;
     }
 
-    static public bool CollisionAvoided(AIData data)
+    static public bool CollisionAvoided(MobInfo data)
     {
         Vector3 curPos = data.m_Go.transform.position;
         Vector3 tarDir = data.m_vTarget - curPos;
@@ -109,7 +109,7 @@ public class SteeringBehaviours
         return false;
     }
     
-    static public bool Seek(AIData data)
+    static public bool Seek(MobInfo data)
     {
         Vector3 curPos = data.m_Go.transform.position;
         Vector3 vForward = data.m_Go.transform.forward;
@@ -146,7 +146,7 @@ public class SteeringBehaviours
         return true;
     }
 
-    static public Vector3 GroupBehavior(AIData data, float radius, bool Seperate)
+    static public Vector3 GroupBehavior(MobInfo data, float radius, bool Seperate)
     {
         //if (!data.m_bMove) { return Vector3.zero; }
         Vector3 MoverPos = data.m_Go.transform.position;
@@ -166,7 +166,7 @@ public class SteeringBehaviours
         return m_vForward;
     }
     
-    static public bool CreatRandomTarget(AIData data)
+    static public bool CreatRandomTarget(MobInfo data)
     {
         Vector3 nextTarget = data.m_Go.transform.forward;
         nextTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * nextTarget;

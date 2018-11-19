@@ -13,16 +13,14 @@ public class MiniMapCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (m_GOs == null)
+        m_GOs = GameObject.FindGameObjectsWithTag("Player");
+
+        m_Center.Set(0, 0, 0);
+        for (int i = 0; i < m_GOs.Length; i++)
         {
-            m_GOs = GameObject.FindGameObjectsWithTag("Player");
-            for (int i = 0; i < m_GOs.Length; i++)
-            {
-                m_Center += m_GOs[i].transform.position;
-            }
-            m_Center /= m_GOs.Length;
+            m_Center += m_GOs[i].transform.position;
         }
-        this.transform.position = m_Center + Vector3.up * 100f;
-        Debug.Log(this.transform.position);
+        m_Center /= m_GOs.Length;
+        this.transform.position = m_Center + Vector3.up *10f;
     }
 }
