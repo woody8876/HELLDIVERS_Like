@@ -12,13 +12,13 @@ public class PlayerManager
     {
         if (Instance == null) Instance = this;
         m_PlayerMap = new Dictionary<int, PlayerInfo>();
-        CreatePlayer();
+        CreatePlayer(1);
     }
 
-    public void CreatePlayer()
+    public void CreatePlayer(int i)
     {
         PlayerInfo playerInfo = CreatPlayerInfo();
-        m_PlayerMap.Add(1, playerInfo);
+        m_PlayerMap.Add(i, playerInfo);
     }
 
     public PlayerInfo CreatPlayerInfo()

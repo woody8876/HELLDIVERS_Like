@@ -55,13 +55,13 @@ public class GameMain : MonoBehaviour
     [ContextMenu("GameStart")]
     private void GameStart()
     {
-        for (int i = 0; i < PlayerManager.Instance.Players.Count; i++)
-        {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[1]);
-        }
+        //for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
+        //{
+        //    m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+        //}
 
-        //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
-        //m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
+        m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
+        m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
