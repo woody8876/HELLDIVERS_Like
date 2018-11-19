@@ -6,17 +6,19 @@ using UnityEngine.UI;
 public class UI_WeaponInfo : MonoBehaviour {
 
     public Dictionary<int, List<int>> weapons = new Dictionary<int, List<int>>();
-    private int m_iType;
-    private int m_iCurrentID;
-    public void SetWeapon(int type, int id)
+    [SerializeField] int m_iType;
+    [SerializeField] int m_iCurrentID;
+
+    public void SetID(int id) { m_iCurrentID = id; }
+    public void SetType(int type) { m_iType = type; }
+
+    public void SetWeapon()
     {
         float cur;
         float next;
         float max;
         string mode;
-        m_iType = type;
-        m_iCurrentID = id;
-        SetUI(id);
+        SetUI(m_iCurrentID);
         Get_Power(out cur, out next, out max);
         m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
         Get_FireRate(out cur, out next, out max);
@@ -154,7 +156,7 @@ public class UI_WeaponInfo : MonoBehaviour {
     private void GetCurrentID(LobbyUI_Weapon uI_Weapon)
     {
         m_iType = uI_Weapon.Type;
-        m_iCurrentID = uI_Weapon.m_ID;
+        m_iCurrentID = uI_Weapon.ID;
     }
 
     private float GetLength(float target, float max)

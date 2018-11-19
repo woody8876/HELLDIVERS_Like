@@ -6,16 +6,17 @@ using UnityEngine.EventSystems;
 
 public class LobbyUI_Weapon : MonoBehaviour{
 
-    public int m_ID;
-    public int Type { get { return GameData.Instance.WeaponInfoTable[m_ID].Type; } }
-    /// <summary>
-    /// if true than this weaponUI is primary weapon;
-    /// </summary>
-    public bool m_Primary;
-
-//    [HideInInspector] public WeaponInfo m_WeaponInfo = new WeaponInfo();
+    [Header("== Set UI ==")]
     [SerializeField] Image m_WeaponTexture;
     [SerializeField] Text m_WeaponName;
+    [Header("== Private Field ==")]
+    [SerializeField] int m_ID;
+    [SerializeField] bool m_Primary;
+
+    public int ID { get { return m_ID; } }
+    public int Type { get { return GameData.Instance.WeaponInfoTable[m_ID].Type; } }
+    public bool Primary { get { return m_Primary; } }
+
 
     public void SetWeaponUI () {
         WeaponInfo info = GameData.Instance.WeaponInfoTable[m_ID];
@@ -24,4 +25,7 @@ public class LobbyUI_Weapon : MonoBehaviour{
         m_WeaponTexture.sprite = sprite;
 	}
 
+    public void SetID(int i) { m_ID = i; }
+
+    public void SetPrimary(bool b) { m_Primary = b; }
 }

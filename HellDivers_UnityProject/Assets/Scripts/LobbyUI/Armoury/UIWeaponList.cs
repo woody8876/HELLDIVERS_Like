@@ -22,11 +22,10 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
     int _posY;
-    int m_curID;
     // Use this for initialization
     void Start()
     {
-        CreateWeaponUI();
+        CreateWeaponUI(weaponDisplay.SetPlayer.PlayerID);
         SetButtonNav();
     }
     private void OnEnable()
@@ -47,49 +46,65 @@ public class UIWeaponList : MonoBehaviour {
         yield return null;
             for (int i = 0; i < m_weapons.Count; i++)
             {
-                if (weaponDisplay.SetPlayer.PriWeaponID.ToString() == m_weapons[i].gameObject.name)
+                if ( Determine() == m_weapons[i].gameObject.name)
                 {
                     EventSystem.current.SetSelectedGameObject(m_weapons[i].gameObject, null);
                 }
             }
     }
 
-    private void CreateWeaponUI()
+    public void LevelUp(int id)
+    {
+        for (int i = 0; i < m_weapons.Count; i++)
+        {
+            if ((id-1).ToString() == m_weapons[i].gameObject.name)
+            {
+                m_weapons[i].gameObject.name = id.ToString();
+                weaponDisplay.SetWeaponUI(m_weapons[i].gameObject, id);
+            }
+        }
+    }
+
+    private void CreateWeaponUI(int player)
     {
         GameObject go;
         Button btn;
-        List<int> unlockWeapons = PlayerManager.Instance.Players[1].UnLockWeapons;
+        List<int> unlockWeapons = PlayerManager.Instance.Players[player].UnLockWeapons;
         for (int i = 0; i < unlockWeapons.Count; i++)
         {
             go = Instantiate(m_WeaponUI, m_Content.transform);
             btn = go.GetComponent<Button>();
             int id = unlockWeapons[i];
             go.name = id.ToString();
-            btn.onClick.AddListener(() => EventSystem.current.SetSelectedGameObject(weaponDisplay.SelectButton));
-            SetWeaponUI(go, id, ref m_curID);
-            AddEvent(go, id);
+            btn.onClick.AddListener(() => OnClickEvent(weaponDisplay.SelectButton, id));
+            weaponDisplay.SetWeaponUI(go, id);
+            OnSelectEvent(go);
             m_weapons.Add(btn);
         }
     }
 
-    private void AddEvent(GameObject go, int i)
+    private string Determine()
     {
-        int type = GameData.Instance.WeaponInfoTable[i].Type;
-        EventTrigger trigger = go.AddComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        //entry.eventID = EventTriggerType.;
-        entry.callback.AddListener((eventData) => m_curID = i);
-        entry.callback.AddListener((eventData) => weaponDisplay.Info.SetWeapon(type, i));
-        entry.callback.AddListener((eventData) => OnValueChange(i));
-        trigger.triggers.Add(entry);
+        if (weaponDisplay.SetPlayer.m_bPrimary) return weaponDisplay.SetPlayer.PriWeaponID.ToString();
+        else return weaponDisplay.SetPlayer.SecWeaponID.ToString();
     }
 
-    private void OnValueChange(int i)
+    #region Set Button
+
+    private void SetInfo(GameObject go)
     {
+        int i = int.Parse(go.name);
+        weaponDisplay.Info.SetID(i);
+        weaponDisplay.Info.SetType(GameData.Instance.WeaponInfoTable[i].Type);
+        weaponDisplay.Info.SetWeapon();
+    }
+
+    private void OnValueChange(GameObject go)
+    {
+        
         for (int j = 0; j < m_weapons.Count; j++)
         {
-            if (m_weapons[j].name == i.ToString())
+            if (m_weapons[j].name == go.name)
             {
                 posY = -150 + 150 * j;
             }
@@ -109,12 +124,21 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
 
-
-    private void SetWeaponUI(GameObject go, int current, ref int target)
+    private void OnSelectEvent(GameObject go)
     {
-        go.GetComponent<LobbyUI_Weapon>().m_ID = current;
-        go.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
-        target = current;
+        EventTrigger trigger = go.AddComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.Select;
+        entry.callback.AddListener((eventData) => SetInfo(go));
+        entry.callback.AddListener((eventData) => OnValueChange(go));
+        trigger.triggers.Add(entry);
     }
 
+    private void OnClickEvent(GameObject next, int i) 
+    {
+        weaponDisplay.SetCurID(i);
+        EventSystem.current.SetSelectedGameObject(next);
+    }
+
+    #endregion
 }

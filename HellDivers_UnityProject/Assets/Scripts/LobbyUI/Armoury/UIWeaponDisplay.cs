@@ -17,11 +17,11 @@ public class UIWeaponDisplay : MonoBehaviour {
     [SerializeField] UIWeaponList m_WeaponList;
     [SerializeField] UI_WeaponButton m_Button;
     [Header("== Private Field ==")]
-    [SerializeField] int CurWeaponID;
+    [SerializeField] int _curWeaponID;
     [SerializeField] int Coin;
     #endregion
 
-    public int curWeaponID { get { return CurWeaponID; } }
+    public int CurWeaponID { get { return _curWeaponID; } }
     public SetPlayerWeapon SetPlayer { get { return m_SetPlayer; } }
     public UI_WeaponInfo Info { get { return m_Info; } }
     public UIWeaponList WeaponList { get { return m_WeaponList; } }
@@ -30,11 +30,17 @@ public class UIWeaponDisplay : MonoBehaviour {
     #region Private Field
     #endregion
 
-    #region MonoBehaviors
-    #endregion
 
     #region Support Method
-    public void ChangeCurID(int i) { CurWeaponID = i; }
+    public void SetCurID(int i) { _curWeaponID = i; }
+
+    public void SetWeaponUI(GameObject go, int current, bool setCurID = true)
+    {
+        go.GetComponent<LobbyUI_Weapon>().SetID(current);
+        go.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
+        if (setCurID) _curWeaponID = current;
+    }
+
 
     private void CheckCoin()
     {

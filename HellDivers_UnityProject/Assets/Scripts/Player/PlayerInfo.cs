@@ -64,6 +64,13 @@ public class PlayerInfo
         return false;
     }
 
+    public bool RefreshEquipWeapon(List<int> pList)
+    {
+        if (weapons.Count < 1) { return false; }
+        weapons = pList;
+        return true;
+    }
+
     public bool AddWeapon(int id)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(id) == false) return false;
