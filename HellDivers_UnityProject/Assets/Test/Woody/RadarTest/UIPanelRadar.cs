@@ -5,17 +5,24 @@ using UnityEngine.UI;
 
 public class UIPanelRadar : MonoBehaviour {
 
+    public delegate void UIEventHolder();
+    public event UIEventHolder UpdatePoint;
+
     public static UIPanelRadar Instance { get; private set; }
     public float RectWidth { get { return m_RectWidth; } }
     public float RectHeight { get { return m_RectHeight; } }
     public float RadarRadius { get { return m_RadarRadius; } }
+    public Color Color { get { return m_Color; } }
+    public float Timer { get { return m_Timer; } }
     [SerializeField] private UIRadarPoint m_PointPrefab;
     private RectTransform m_RectTransform;
     private float m_RectWidth;
     private float m_RectHeight;
     private Image m_Image;
     private Color m_Color;
-    private List<UIRadarPoint> pointList;
+    private float m_Timer;
+    private List<GameObject> pointList;
+
     [SerializeField] private float m_RadarRadius = 40.0f;
 
 
@@ -23,7 +30,6 @@ public class UIPanelRadar : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
         if (Instance == null) Instance = this;
         //else Destroy(this.gameObject);
         m_RectTransform = this.GetComponent<RectTransform>();
@@ -35,13 +41,31 @@ public class UIPanelRadar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        Blink();
+        CountTimer();
+    }
+
+    public void AddPointPrefab(GameObject target, eRadarPointType type)
+    {
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3002);
+        go.SetActive(true);
+        UIRadarPoint p = go.GetComponent<UIRadarPoint>();
+        p.Init(target, type);
+        p.transform.parent = this.transform;
+    }
+    public void DeletePointPrefab(GameObject target)
+    {
+    }
+
+    private void Blink()
+    {
         if (bAdd)
         {
             m_Color.g += Time.deltaTime * 0.2f;
             m_Image.color = m_Color;
             if (m_Color.g > 0.2) bAdd = false;
         }
-        else if(bAdd == false)
+        else if (bAdd == false)
         {
             m_Color.g -= Time.deltaTime * 0.2f;
             m_Image.color = m_Color;
@@ -49,10 +73,13 @@ public class UIPanelRadar : MonoBehaviour {
         }
     }
 
-    public void AddPointPrefab(GameObject target)
+    private void CountTimer()
     {
-        UIRadarPoint p = GameObject.Instantiate(m_PointPrefab,this.transform);
-        p.Init(target);
-        pointList.Add(p);
+        m_Timer += Time.deltaTime;
+        if (m_Timer >= 2.0f && m_Color.g > 0.2f)
+        {
+            UpdatePoint();
+            m_Timer = 0.0f;
+        }
     }
 }

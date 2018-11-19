@@ -8,15 +8,20 @@ public class FishAI : Character
 {
     FSMSystem m_FSM;
     public AIData m_AIData;
+    public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageColloder;
-    //private GameObject[] m_PlayerGO;
-    private float m_MinDis = 100000f;
     private float Timer = 2.0f;
 
-    public eFSMStateID m_CurrentState;
+    #region Events
+
+    public delegate void MobEventHolder();
+    public event MobEventHolder OnSpawn;
+    public event MobEventHolder OnDeath;
+
+    #endregion
 
     // Use this for initialization
     private void Awake()
@@ -30,8 +35,8 @@ public class FishAI : Character
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
         m_DamageColloder.enabled = true;
-        m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
+        if (OnSpawn != null) OnSpawn();
     }
     protected override void Start()
     {
@@ -163,6 +168,7 @@ public class FishAI : Character
     {
         m_bDead = true;
         PerformDead();
+        if (OnDeath != null) OnDeath();
     }
 
     private void OnDrawGizmos()
