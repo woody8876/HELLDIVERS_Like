@@ -16,6 +16,7 @@ public class PatrolAI : Character
     //private GameObject[] m_PlayerGO;
     private float m_MinDis = 10000000f;
     private float Timer = 0.0f;
+    public bool m_bGoIdle = false;
 
     public eFSMStateID m_CurrentState;
 
@@ -24,10 +25,22 @@ public class PatrolAI : Character
     {
         if (m_FSM == null) return;
         m_bDead = false;
+        m_bGoIdle = false;
         m_CurrentHp = m_MaxHp;
         m_BoxCollider.enabled = true;
         m_DamageCollider.enabled = true;
+        m_FSM.PerformTransition(eFSMTransition.Go_WanderIdle);
     }
+        FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
+        FSMWanderState m_WanderState = new FSMWanderState();
+        FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
+        FSMFleeState m_FleeState = new FSMFleeState();
+        FSMChaseState m_Chasestate = new FSMChaseState();
+        FSMPatrolAttackState m_PatrolAttackstate = new FSMPatrolAttackState();
+        FSMIdleState m_IdleState = new FSMIdleState();
+        FSMDodgeState m_DodgeState = new FSMDodgeState();
+        FSMNoPlayerWanderIdleState m_FSMNoPlayerWanderIdleState = new FSMNoPlayerWanderIdleState();
+        FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
     protected override void Start()
     {
         m_AIData = new MobInfo();
@@ -51,13 +64,10 @@ public class PatrolAI : Character
         #region FSMMap
 
         #region Phase1
-        FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
-        FSMWanderState m_WanderState = new FSMWanderState();
-        FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
-        FSMFleeState m_FleeState = new FSMFleeState();
 
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Flee, m_FleeState);
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
 
         m_WanderState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
         m_WanderState.AddTransition(eFSMTransition.Go_Flee, m_FleeState);
@@ -66,12 +76,6 @@ public class PatrolAI : Character
         #endregion
 
         #region Phase2
-        FSMChaseState m_Chasestate = new FSMChaseState();
-        FSMPatrolAttackState m_PatrolAttackstate = new FSMPatrolAttackState();
-        FSMIdleState m_IdleState = new FSMIdleState();
-        FSMDodgeState m_DodgeState = new FSMDodgeState();
-        FSMNoPlayerWanderIdleState m_FSMNoPlayerWanderIdleState = new FSMNoPlayerWanderIdleState();
-        FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
 
         m_CallArmyState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_CallArmyState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
@@ -94,6 +98,7 @@ public class PatrolAI : Character
         m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_NoPlayerWander, m_FSMNoPlayerWander);
         m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_FSMNoPlayerWanderIdleState.AddTransition(eFSMTransition.Go_Dodge, m_DodgeState);
+        
 
         m_FSMNoPlayerWander.AddTransition(eFSMTransition.Go_NoPlayerWanderIdle, m_FSMNoPlayerWanderIdleState);
         m_FSMNoPlayerWander.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
@@ -131,9 +136,23 @@ public class PatrolAI : Character
     {
         MobInfo.AIFunction.SearchPlayer(m_AIData);
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
-        m_FSM.DoState();
+        if (m_bGoIdle)
+        {
+            m_WanderIdleState.ToIdle(m_AIData);
+            m_bGoIdle = false;
+        }
+        else
+        {
+            m_FSM.DoState();
+        }
+        
     }
 
+    public void PerFormmToIdle()
+    {
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Idle);
+    }
+    
     public void PerformGetHurt()
     {
         if (IsDead) return;
@@ -152,7 +171,6 @@ public class PatrolAI : Character
         m_MobAimLine.CloseAimLine();
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
-
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
         if (IsDead) return false;
@@ -175,7 +193,6 @@ public class PatrolAI : Character
     {
         return TakeDamage(damager.Damage, hitPoint);
     }
-
     public override void Death()
     {
         m_bDead = true;
