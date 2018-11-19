@@ -28,6 +28,7 @@ public class MobManager
     private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
     private GameObject m_GORadarPoint;
+    private GameObject m_GORMapPoint;
     private Player m_Player;
 
     public void Init()
@@ -38,6 +39,7 @@ public class MobManager
         }
 
         m_GORadarPoint = Resources.Load("UI/InGame/Radar/TargetPoint") as GameObject;
+        m_GORMapPoint = Resources.Load("UI/InGame/Map/MapPoint") as GameObject;
         m_GOFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GOFishVariant = Resources.Load("Mobs/Fish2/Fish2") as GameObject;
         m_GOPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
@@ -47,6 +49,7 @@ public class MobManager
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
 
         ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 3003);
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
@@ -152,7 +155,8 @@ public class MobManager
             m_FishCount++;
 
             if (UIPanelRadar.Instance == null) return;
-            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
+            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
+            UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
 
         }
     }
@@ -179,7 +183,7 @@ public class MobManager
             m_FishCount++;
 
             if (UIPanelRadar.Instance == null) return;
-            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
+            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
         }
     }
 

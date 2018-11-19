@@ -182,20 +182,6 @@ public class PatrolAI : Character
         PerformDead();
     }
 
-    private void Init()
-    {
-        m_AIData.m_ID = MobData.Instance.AIDataTable[3200].m_ID;
-        m_AIData.m_fHp = MobData.Instance.AIDataTable[3200].m_fHp;
-        m_AIData.m_fProbeLength = MobData.Instance.AIDataTable[3200].m_fProbeLength;
-        m_AIData.m_fSight = MobData.Instance.AIDataTable[3200].m_fSight;
-        m_AIData.m_fRadius = MobData.Instance.AIDataTable[3200].m_fRadius;
-        m_AIData.m_fPatrolVisionLength = MobData.Instance.AIDataTable[3200].m_fPatrolVisionLength;
-        m_AIData.m_fAttackRange = MobData.Instance.AIDataTable[3200].m_fAttackRange;
-        m_AIData.m_fAttackDamage = MobData.Instance.AIDataTable[3200].m_fAttackDamage;
-        m_AIData.m_Money = MobData.Instance.AIDataTable[3200].m_Money;
-        m_AIData.m_Exp = MobData.Instance.AIDataTable[3200].m_Exp;
-    }
-
     private void OnDrawGizmos()
     {
         if (m_AIData == null || m_FSM == null)
