@@ -15,9 +15,9 @@ public class FSMSystem
     //private PlayerFSMState m_CurrentGlobalState = null;
     //private PlayerFSMState m_PreviousState;
     public FSMState CurrentState { get { return m_currentState; } }
-    private AIData m_Data;
+    private MobInfo m_Data;
 
-    public FSMSystem(AIData data)
+    public FSMSystem(MobInfo data)
     {
         m_Data = data;
         m_states = new List<FSMState>();

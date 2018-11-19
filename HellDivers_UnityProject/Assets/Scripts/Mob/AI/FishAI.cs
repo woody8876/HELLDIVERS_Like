@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class FishAI : Character
 {
     FSMSystem m_FSM;
-    public AIData m_AIData;
+    public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
@@ -40,8 +40,8 @@ public class FishAI : Character
     }
     protected override void Start()
     {
-        m_AIData = new AIData();
-        MobData.Instance.AIDataTable[3100].CopyTo(m_AIData);
+        m_AIData = new MobInfo();
+        GameData.Instance.MobInfoTable[3100].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
@@ -113,7 +113,7 @@ public class FishAI : Character
 
         if (Timer > 2.0f)
         {
-            AIData.AIFunction.SearchPlayer(m_AIData);
+            MobInfo.AIFunction.SearchPlayer(m_AIData);
             Timer = 0.0f;
             return;
         }

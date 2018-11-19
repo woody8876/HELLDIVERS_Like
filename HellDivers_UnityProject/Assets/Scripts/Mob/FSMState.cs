@@ -90,22 +90,22 @@ public class FSMState
         return m_Map[trans];
     }
 
-    public virtual void DoBeforeEnter(AIData data)
+    public virtual void DoBeforeEnter(MobInfo data)
     {
 
     }
 
-    public virtual void DoBeforeLeave(AIData data)
+    public virtual void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public virtual void Do(AIData data)
+    public virtual void Do(MobInfo data)
     {
 
     }
 
-    public virtual void CheckCondition(AIData data)
+    public virtual void CheckCondition(MobInfo data)
     {
 
     }
@@ -120,7 +120,7 @@ public class FSMRespawnState : FSMState
     {
         m_StateID = eFSMStateID.RespawnStateID;
     }
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         m_fCurrentTime = 0.0f;
         m_fIdleTime = Random.Range(1.0f, 1.5f);
@@ -132,17 +132,17 @@ public class FSMRespawnState : FSMState
         m_EffectAnimator.SetTrigger("startTrigger");
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         ObjectPool.m_Instance.UnLoadObjectToPool(3001, GO);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         m_fCurrentTime += Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (m_fCurrentTime > m_fIdleTime)
         {
@@ -159,24 +159,24 @@ public class FSMIdleState : FSMState
     {
         m_StateID = eFSMStateID.IdleStateID;
     }
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         m_fCurrentTime = 0.0f;
         m_fIdleTim = Random.Range(1.0f, 2.0f);
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         m_fCurrentTime += Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (data.m_Player.IsDead || data.m_Player == null)
         {
@@ -210,17 +210,17 @@ public class FSMMoveToState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
 
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_Player.transform.position;
@@ -229,10 +229,10 @@ public class FSMMoveToState : FSMState
         data.m_Go.transform.position += v;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         bool bAttack = false;
-        GameObject go = AIData.AIFunction.CheckEnemyInSight(data, ref bAttack);
+        GameObject go = MobInfo.AIFunction.CheckEnemyInSight(data, ref bAttack);
         if (go != null)
         {
             if (bAttack)
@@ -255,17 +255,17 @@ public class FSMChaseState : FSMState
         m_StateID = eFSMStateID.ChaseStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_Player.transform.position;
@@ -274,7 +274,7 @@ public class FSMChaseState : FSMState
         data.m_Go.transform.position += v;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (data.m_Player == null || data.m_Player.IsDead)
         {
@@ -283,7 +283,7 @@ public class FSMChaseState : FSMState
         }
 
         bool bAttack = false;
-        bool bCheck = AIData.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
+        bool bCheck = MobInfo.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
 
         if (bAttack)
         {
@@ -303,17 +303,17 @@ public class FSMChaseToRemoteAttackState : FSMState
         m_StateID = eFSMStateID.ChaseToRemoteAttackStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_Player.transform.position;
@@ -322,7 +322,7 @@ public class FSMChaseToRemoteAttackState : FSMState
         data.m_Go.transform.position += v;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (data.m_Player == null || data.m_Player.IsDead)
         {
@@ -351,7 +351,7 @@ public class FSMAttackState : FSMState
         m_StateID = eFSMStateID.AttackStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         AttackCount = 0;
         Count = 0;
@@ -359,13 +359,13 @@ public class FSMAttackState : FSMState
         data.navMeshAgent.enabled = false;
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
 
@@ -405,7 +405,7 @@ public class FSMAttackState : FSMState
         }
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (data.m_Player == null || data.m_Player.IsDead)
@@ -426,7 +426,7 @@ public class FSMAttackState : FSMState
 
     }
 
-    private void DoDamage(AIData data)
+    private void DoDamage(MobInfo data)
     {
         data.m_Player.TakeDamage(10.0f, data.m_Go.transform.position);
     }
@@ -450,7 +450,7 @@ public class FSMPatrolAttackState : FSMState
         m_StateID = eFSMStateID.PatrolAttackStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         Count = 0;
         AttackCount = 0;
@@ -461,7 +461,7 @@ public class FSMPatrolAttackState : FSMState
         data.navMeshAgent.enabled = false;
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         m_fCurrentTime = 0;
         bulletIndex = 0;
@@ -469,7 +469,7 @@ public class FSMPatrolAttackState : FSMState
         bCompleteFire = false;
         data.m_MobAimLine.CloseAimLine();
     }
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         if (bIsReady)
         {
@@ -530,7 +530,7 @@ public class FSMPatrolAttackState : FSMState
         }
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
@@ -550,7 +550,7 @@ public class FSMPatrolAttackState : FSMState
         }
     }
 
-    private void Fire(AIData data)
+    private void Fire(MobInfo data)
     {
         Degree.Add(-20);
         Degree.Add(0);
@@ -598,18 +598,18 @@ public class FSMRemoteAttackState : FSMState
         m_StateID = eFSMStateID.RemoteAttackStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         Count = 0;
         m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_vTarget = data.m_Player.transform.position;
         vDir = data.m_Player.transform.position - data.m_Go.transform.position;
@@ -633,7 +633,7 @@ public class FSMRemoteAttackState : FSMState
         }
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         //temp...
         data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
@@ -656,7 +656,7 @@ public class FSMRemoteAttackState : FSMState
         }
     }
 
-    private void Fire(AIData data)
+    private void Fire(MobInfo data)
     {
         GOBullet = ObjectPool.m_Instance.LoadGameObjectFromPool(3201);
         if (GOBullet == null) return;
@@ -675,23 +675,23 @@ public class FSMFishGetHurtState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
 
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
@@ -722,23 +722,23 @@ public class FSMPatrolGetHurtState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("GetHurt"))
@@ -769,23 +769,23 @@ public class FSMTankGetHurtState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("GetHurt"))
@@ -816,7 +816,7 @@ public class FSMWanderIdleState : FSMState
         m_StateID = eFSMStateID.WanderIdleStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
@@ -826,17 +826,17 @@ public class FSMWanderIdleState : FSMState
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         m_fCurrentTime += Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
@@ -873,21 +873,21 @@ public class FSMWanderState : FSMState
     {
         m_StateID = eFSMStateID.WanderStateID;
     }
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);
     }
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         if (data.m_ID == 3100)
         {
@@ -930,7 +930,7 @@ public class FSMNoPlayerWanderIdleState : FSMState
         m_StateID = eFSMStateID.NoPlayerWanderIdleStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
@@ -940,17 +940,17 @@ public class FSMNoPlayerWanderIdleState : FSMState
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         m_fCurrentTime += Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -987,21 +987,21 @@ public class FSMNoPlayerWanderState : FSMState
     {
         m_StateID = eFSMStateID.NoPlayerWanderStateID;
     }
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID, false);
     }
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);
     }
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -1039,18 +1039,18 @@ public class FSMCallArmyState : FSMState
         m_StateID = eFSMStateID.CallArmyStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         count = 0;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("CallArmy") && count < 1)
@@ -1063,7 +1063,7 @@ public class FSMCallArmyState : FSMState
         }
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -1094,7 +1094,7 @@ public class FSMFleeState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.navMeshAgent.speed *= 2f;
@@ -1107,7 +1107,7 @@ public class FSMFleeState : FSMState
         m_Animator.SetTrigger("startTrigger");
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
@@ -1116,7 +1116,7 @@ public class FSMFleeState : FSMState
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         vec = data.m_Go.transform.forward;
         vec += data.m_Go.transform.position;
@@ -1128,7 +1128,7 @@ public class FSMFleeState : FSMState
         SteeringBehaviours.NavMove(data);
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -1149,28 +1149,28 @@ public class FSMDodgeState : FSMState
         m_StateID = eFSMStateID.DodgeStateID;
     }
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
         data.navMeshAgent.speed *= 2f;
         data.m_AnimationController.SetAnimator(m_StateID, true);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_vTarget = data.m_Go.transform.position + (data.m_Go.transform.position - data.m_Player.transform.position).normalized;
         data.m_vTarget.y = data.m_Go.transform.position.y;
         SteeringBehaviours.NavMove(data);
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -1189,23 +1189,23 @@ public class FSMDeadState : FSMState
     }
 
 
-    public override void DoBeforeEnter(AIData data)
+    public override void DoBeforeEnter(MobInfo data)
     {
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
 
-    public override void DoBeforeLeave(AIData data)
+    public override void DoBeforeLeave(MobInfo data)
     {
 
     }
 
-    public override void Do(AIData data)
+    public override void Do(MobInfo data)
     {
         data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
-    public override void CheckCondition(AIData data)
+    public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Dead"))

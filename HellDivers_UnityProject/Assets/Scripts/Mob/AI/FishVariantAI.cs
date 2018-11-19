@@ -8,7 +8,7 @@ public class FishVariantAI : Character
 {
 
     FSMSystem m_FSM;
-    public AIData m_AIData;
+    public MobInfo m_AIData;
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
@@ -33,7 +33,7 @@ public class FishVariantAI : Character
     }
     protected override void Start()
     {
-        m_AIData = new AIData();
+        m_AIData = new MobInfo();
         MobData.Instance.AIDataTable[3300].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
@@ -103,7 +103,7 @@ public class FishVariantAI : Character
 
         if (Timer > 2.0f)
         {
-            AIData.AIFunction.SearchPlayer(m_AIData);
+            MobInfo.AIFunction.SearchPlayer(m_AIData);
             Timer = 0.0f;
             return;
         }

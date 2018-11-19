@@ -151,6 +151,7 @@ public class MobManager
             m_GOFish.SetActive(true);
             m_FishCount++;
 
+            if (UIPanelRadar.Instance == null) return;
             UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
 
         }
@@ -177,6 +178,7 @@ public class MobManager
             m_GOFish.SetActive(true);
             m_FishCount++;
 
+            if (UIPanelRadar.Instance == null) return;
             UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
         }
     }
@@ -215,9 +217,10 @@ public class MobManager
         }
     }
 
-    public void UnloadMob(int ID, AIData data)
+    public void UnloadMob(int ID, MobInfo data)
     {
         ObjectPool.m_Instance.UnLoadObjectToPool(ID, data.m_Go);
+        if (UIPanelRadar.Instance == null) return;
         UIPanelRadar.Instance.DeletePointPrefab(data.m_Go);
     }
 }

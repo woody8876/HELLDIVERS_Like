@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class AIData
+public class MobInfo
 {
     public int m_ID;
     public float m_fHp;
@@ -51,7 +51,7 @@ public class AIData
     public void SetMoney(float money) { m_Money = money; }
     public void SetExp(float exp) { m_Exp = exp; }
     
-    public void CopyTo(AIData other)
+    public void CopyTo(MobInfo other)
     {
         other.m_ID = this.m_ID;
         other.m_fHp = this.m_fHp;
@@ -67,7 +67,7 @@ public class AIData
 
     public class AIFunction
     {
-        public static GameObject CheckEnemyInSight(AIData data, ref bool bAttack)
+        public static GameObject CheckEnemyInSight(MobInfo data, ref bool bAttack)
         {
             GameObject go = data.m_Player.gameObject;
             Vector3 v = go.transform.position - data.m_Go.transform.position;
@@ -85,7 +85,7 @@ public class AIData
             return null;
         }
 
-        public static bool CheckTargetEnemyInSight(AIData data, GameObject target, ref bool bAttack)
+        public static bool CheckTargetEnemyInSight(MobInfo data, GameObject target, ref bool bAttack)
         {
             GameObject go = target;
             Vector3 v = go.transform.position - data.m_Go.transform.position;
@@ -103,7 +103,7 @@ public class AIData
             return false;
         }
 
-        public static void SearchPlayer(AIData data)
+        public static void SearchPlayer(MobInfo data)
         {
             data.m_Player = null;
             List<Player> pList = InGamePlayerManager.Instance.Players;

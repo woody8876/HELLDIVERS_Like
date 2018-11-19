@@ -14,6 +14,7 @@ public class UIPanelRadar : MonoBehaviour {
     public float RadarRadius { get { return m_RadarRadius; } }
     public Color Color { get { return m_Color; } }
     public float Timer { get { return m_Timer; } }
+    public List<GameObject> PointList { get { return m_PointList; } }
     [SerializeField] private UIRadarPoint m_PointPrefab;
     private RectTransform m_RectTransform;
     private float m_RectWidth;
@@ -21,7 +22,7 @@ public class UIPanelRadar : MonoBehaviour {
     private Image m_Image;
     private Color m_Color;
     private float m_Timer;
-    private List<GameObject> pointList;
+    private List<GameObject> m_PointList = new List<GameObject>();
 
     [SerializeField] private float m_RadarRadius = 40.0f;
 
@@ -52,6 +53,7 @@ public class UIPanelRadar : MonoBehaviour {
         UIRadarPoint p = go.GetComponent<UIRadarPoint>();
         p.Init(target, type);
         p.transform.parent = this.transform;
+        m_PointList.Add(go);
     }
     public void DeletePointPrefab(GameObject target)
     {
@@ -78,7 +80,10 @@ public class UIPanelRadar : MonoBehaviour {
         m_Timer += Time.deltaTime;
         if (m_Timer >= 2.0f && m_Color.g > 0.2f)
         {
-            UpdatePoint();
+            if(m_PointList.Count > 0)
+            {
+                UpdatePoint();
+            }
             m_Timer = 0.0f;
         }
     }

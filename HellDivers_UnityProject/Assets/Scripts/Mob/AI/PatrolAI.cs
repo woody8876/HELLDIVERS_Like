@@ -7,7 +7,7 @@ public class PatrolAI : Character
 {
 
     private FSMSystem m_FSM;
-    public AIData m_AIData;
+    public MobInfo m_AIData;
     public PlayerController m_PlayerController;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
@@ -30,8 +30,8 @@ public class PatrolAI : Character
     }
     protected override void Start()
     {
-        m_AIData = new AIData();
-        MobData.Instance.AIDataTable[3200].CopyTo(m_AIData);
+        m_AIData = new MobInfo();
+        GameData.Instance.MobInfoTable[3200].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
@@ -129,7 +129,7 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
-        AIData.AIFunction.SearchPlayer(m_AIData);
+        MobInfo.AIFunction.SearchPlayer(m_AIData);
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         m_FSM.DoState();
     }

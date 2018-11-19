@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MobInfoLoader {
 
-    public static Dictionary<int, AIData> LoadData(string filePath)
+    public static Dictionary<int, MobInfo> LoadData(string filePath)
     {
-        Dictionary<int, AIData> mobIngo = new Dictionary<int, AIData>();
+        Dictionary<int, MobInfo> mobIngo = new Dictionary<int, MobInfo>();
         if (_LoadDataBase(filePath, ref mobIngo) == true)
         {
             return mobIngo;
@@ -16,7 +16,7 @@ public class MobInfoLoader {
             return null;
         }
     }
-    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, AIData> Info)
+    private static bool _LoadDataBase(string tablePath, ref Dictionary<int, MobInfo> Info)
     {
         Info.Clear();
         TextAsset datas = Resources.Load<TextAsset>(tablePath);
@@ -26,7 +26,7 @@ public class MobInfoLoader {
             for (int i = 1; i < lines.Length - 1; i++)
             {
                 string[] mobInfo = lines[i].Split(',');
-                AIData data = new AIData();
+                MobInfo data = new MobInfo();
                 data.SetID(int.Parse(mobInfo[0]));
                 data.SetHP(float.Parse(mobInfo[1]));
                 data.SetProbeLength(float.Parse(mobInfo[2]));
