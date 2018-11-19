@@ -49,7 +49,6 @@ public class GameMain : MonoBehaviour
 
         m_MobSpawner.SpawnPatrol(40);
         InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
-
     }
 
     [ContextMenu("GameStart")]
@@ -76,6 +75,12 @@ public class GameMain : MonoBehaviour
     public void GameEnd()
     {
         SceneController.Instance.ToLobby();
+    }
+
+    [ContextMenu("MissionFailed")]
+    public void MissionFailed()
+    {
+        UIInGameMain.Instance.DrawMissionFailedUI();
     }
 
     private void SpawnMobs()
