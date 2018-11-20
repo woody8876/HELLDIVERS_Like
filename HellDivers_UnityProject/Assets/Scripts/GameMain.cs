@@ -62,7 +62,7 @@ public class GameMain : MonoBehaviour
     {
         for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
         {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
         }
 
         //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);

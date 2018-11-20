@@ -35,7 +35,7 @@ public class WelcomeButtonController : MonoBehaviour {
     {
         if (!m_bSetting)
         {
-            if (!PlayerManager.Instance.Players[1].controllerSetting) return;
+            if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
             else
             {
                 m_controller = PlayerManager.Instance.Players[1].controllerSetting;
