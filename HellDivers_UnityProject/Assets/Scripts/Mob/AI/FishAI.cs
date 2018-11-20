@@ -55,7 +55,7 @@ public class FishAI : Character
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(6.5f, 7.0f);
-        m_AIData.navMeshAgent.enabled = true;
+        m_AIData.navMeshAgent.enabled = false;
 
         #region FSMMap
         FSMRespawnState m_RespawnState = new FSMRespawnState();
@@ -161,7 +161,25 @@ public class FishAI : Character
 
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
-        return TakeDamage(damager.Damage, hitPoint);
+
+        if (IsDead) return false;
+        CurrentHp -= damager.Damage;
+        if (m_CurrentHp <= 0)
+        {
+            m_CapsuleCollider.enabled = false;
+            m_DamageColloder.enabled = false;
+            Death();
+
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        else
+        {
+            PerformGetHurt();
+        }
+        return true;
     }
 
     public override void Death()
