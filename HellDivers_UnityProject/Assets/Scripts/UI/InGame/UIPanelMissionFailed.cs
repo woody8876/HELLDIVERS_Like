@@ -46,7 +46,7 @@ public class UIPanelMissionFailed : MonoBehaviour
     private void DoFadeIn()
     {
         m_CanvasGroup.alpha = Mathf.Lerp(m_CanvasGroup.alpha, m_TargetAlpha, Time.deltaTime);
-        if (m_CanvasGroup.alpha >= m_TargetAlpha + 0.001f)
+        if (m_CanvasGroup.alpha >= m_TargetAlpha - 0.01f)
         {
             m_CanvasGroup.alpha = m_TargetAlpha;
             DoState = null;
