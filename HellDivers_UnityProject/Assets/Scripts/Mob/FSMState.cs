@@ -178,7 +178,7 @@ public class FSMIdleState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-        if (data.m_Player.IsDead || data.m_Player == null)
+        if (data.m_Player == null || data.m_Player.IsDead)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
@@ -279,6 +279,7 @@ public class FSMChaseState : FSMState
         if (data.m_Player == null || data.m_Player.IsDead)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
             return;
         }
 
@@ -842,7 +843,7 @@ public class FSMWanderIdleState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Wander);
         }
-        if (data.m_Player != null)
+        if (data.m_Player != null && data.m_Player.IsDead == false)
         {
             float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
@@ -850,17 +851,13 @@ public class FSMWanderIdleState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Flee);
             }
-
-            if (data.m_bIsPlayerDead == false)
+            AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("WanderIdle"))
             {
-                AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-                if (info.IsName("WanderIdle"))
+                if (info.normalizedTime > m_AnimatorLeaveTime)
                 {
-                    if (info.normalizedTime > m_AnimatorLeaveTime)
-                    {
-                        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
-                        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_ChaseToRemoteAttack);
-                    }
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Chase);
+                    data.m_FSMSystem.PerformTransition(eFSMTransition.Go_ChaseToRemoteAttack);
                 }
             }
         }
@@ -956,14 +953,12 @@ public class FSMNoPlayerWanderIdleState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
-
         if (m_fCurrentTime > m_fIdleTime && SteeringBehaviours.CreatRandomTarget(data) == true)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWander);
         }
 
-        if (data.m_bIsPlayerDead == false)
+        if (data.m_Player != null && data.m_Player.IsDead == false)
         {
             AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
             if (info.IsName("WanderIdle2"))
@@ -1007,14 +1002,12 @@ public class FSMNoPlayerWanderState : FSMState
     }
     public override void CheckCondition(MobInfo data)
     {
-        float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
-
         if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
         }
 
-        if (data.m_bIsPlayerDead == false)
+        if (data.m_Player != null && data.m_Player.IsDead == false)
         {
             AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
             if (info.IsName("WanderIdle2"))

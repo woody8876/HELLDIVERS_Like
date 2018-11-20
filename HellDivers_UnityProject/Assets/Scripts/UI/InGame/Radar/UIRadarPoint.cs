@@ -88,7 +88,10 @@ public class UIRadarPoint : MonoBehaviour
             m_PlayersCount++;
             m_Center += pList[i].transform.position;
         }
-        m_Center /= m_PlayersCount;
+        if(m_PlayersCount > 0)
+        {
+            m_Center /= m_PlayersCount;
+        }
         m_PlayersCount = 0;
     }
 

@@ -145,14 +145,8 @@ public class PatrolAI : Character
         {
             m_FSM.DoState();
         }
-        
     }
 
-    public void PerFormmToIdle()
-    {
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_Idle);
-    }
-    
     public void PerformGetHurt()
     {
         if (IsDead) return;

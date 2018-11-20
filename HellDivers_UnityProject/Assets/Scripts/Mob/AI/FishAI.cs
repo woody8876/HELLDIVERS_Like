@@ -55,7 +55,7 @@ public class FishAI : Character
         m_AIData.m_AnimationController = this.GetComponent<MobAnimationsController>();
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(6.5f, 7.0f);
-        m_AIData.navMeshAgent.enabled = false;
+        m_AIData.navMeshAgent.enabled = true;
 
         #region FSMMap
         FSMRespawnState m_RespawnState = new FSMRespawnState();
