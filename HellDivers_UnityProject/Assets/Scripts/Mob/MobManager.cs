@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using HELLDIVERS.UI.InGame;
 
 
 public class MobManager
@@ -28,6 +29,7 @@ public class MobManager
     private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
     private GameObject m_GORadarPoint;
+    private GameObject m_GORMapPoint;
     private Player m_Player;
 
     public void Init()
@@ -38,6 +40,7 @@ public class MobManager
         }
 
         m_GORadarPoint = Resources.Load("UI/InGame/Radar/TargetPoint") as GameObject;
+        m_GORMapPoint = Resources.Load("UI/InGame/Map/MapPoint") as GameObject;
         m_GOFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GOFishVariant = Resources.Load("Mobs/Fish2/Fish2") as GameObject;
         m_GOPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
@@ -47,11 +50,12 @@ public class MobManager
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
 
         ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 3003);
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GOTank, 10, 3400);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 20, 3201);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
         m_TotalKill = 0;
@@ -134,15 +138,22 @@ public class MobManager
         Center /= pList.Count;
 
         Vector3 spawnTarget = Center;
-        NavMeshHit nHit;
-        do
+        //NavMeshHit nHit;
+
+        while (true)
         {
             spawnTarget = Vector3.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
             spawnTarget *= Random.Range(25f, 35f);
             spawnTarget += Center;
-        } while (NavMesh.Raycast(Center, spawnTarget, out nHit, NavMesh.AllAreas));
-
+            if(Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale"))){
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
         for (int i = 0; i < num; i++)
         {
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
@@ -151,10 +162,19 @@ public class MobManager
             m_GOFish.SetActive(true);
             m_FishCount++;
 
-            if (UIPanelRadar.Instance == null) return;
-            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
-
+            if (UIInGameMain.Instance != null)
+                UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
+            if (UIPanelMap.Instance != null)
+                UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
         }
+
+        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        //if (m_GOPatrol == null) return;
+        //m_GOPatrol.transform.position = spawnTarget;
+        //m_GOPatrol.SetActive(true);
+        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        //patrolAI.m_bGoIdle = true;
+        //m_PatrolCount++;
     }
 
     public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
@@ -178,9 +198,18 @@ public class MobManager
             m_GOFish.SetActive(true);
             m_FishCount++;
 
-            if (UIPanelRadar.Instance == null) return;
-            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eRadarPointType.FISH);
+            if (UIPanelRadar.Instance != null)
+                UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
+            if (UIPanelMap.Instance != null)
+                UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
         }
+        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        //if (m_GOPatrol == null) return;
+        //m_GOPatrol.transform.position = spawnTarget;
+        //m_GOPatrol.SetActive(true);
+        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        //patrolAI.m_bGoIdle = true;
+        //m_PatrolCount++;
     }
 
     public void SpawnFishVariant(int num)
@@ -220,8 +249,6 @@ public class MobManager
     public void UnloadMob(int ID, MobInfo data)
     {
         ObjectPool.m_Instance.UnLoadObjectToPool(ID, data.m_Go);
-        if (UIPanelRadar.Instance == null) return;
-        UIPanelRadar.Instance.DeletePointPrefab(data.m_Go);
     }
 }
 

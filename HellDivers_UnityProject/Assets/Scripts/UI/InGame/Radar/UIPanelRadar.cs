@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class UIPanelRadar : MonoBehaviour {
 
-    public delegate void UIEventHolder();
-    public event UIEventHolder UpdatePoint;
+    public delegate void UIRadarEventHolder();
+    public event UIRadarEventHolder UpdatePoint;
 
     public static UIPanelRadar Instance { get; private set; }
     public float RectWidth { get { return m_RectWidth; } }
@@ -32,7 +32,7 @@ public class UIPanelRadar : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         if (Instance == null) Instance = this;
-        //else Destroy(this.gameObject);
+
         m_RectTransform = this.GetComponent<RectTransform>();
         m_RectWidth = m_RectTransform.sizeDelta.x;
         m_RectHeight = m_RectTransform.sizeDelta.y;
@@ -46,7 +46,7 @@ public class UIPanelRadar : MonoBehaviour {
         CountTimer();
     }
 
-    public void AddPointPrefab(GameObject target, eRadarPointType type)
+    public void AddPointPrefab(GameObject target, eMapPointType type)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3002);
         go.SetActive(true);
@@ -55,10 +55,6 @@ public class UIPanelRadar : MonoBehaviour {
         p.transform.parent = this.transform;
         m_PointList.Add(go);
     }
-    public void DeletePointPrefab(GameObject target)
-    {
-    }
-
     private void Blink()
     {
         if (bAdd)

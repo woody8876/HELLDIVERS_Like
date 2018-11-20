@@ -167,6 +167,7 @@ public class Player : Character
         m_GrenadesController.ResetGrenades();
 
         this.gameObject.SetActive(true);
+        m_bDead = false;
         StartCoroutine(OnSpawn());
 
         if (OnSpawnBegin != null) OnSpawnBegin();

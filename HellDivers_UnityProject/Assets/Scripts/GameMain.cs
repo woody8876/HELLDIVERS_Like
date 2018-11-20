@@ -25,6 +25,10 @@ public class GameMain : MonoBehaviour
     private CameraFollowing m_CameraFollowing;
     [SerializeField] private uint m_NumberOfTowers = 1;
 
+    private delegate void GameStateDelegateFunc();
+
+    private GameStateDelegateFunc DoCheckCondition;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -49,33 +53,49 @@ public class GameMain : MonoBehaviour
 
         m_MobSpawner.SpawnPatrol(40);
         InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
-
     }
 
     [ContextMenu("GameStart")]
     private void GameStart()
     {
-        //for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
-        //{
-        //    m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i], i);
-        //}
+        for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
+        {
+            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+        }
 
-        m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
-        m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
+        //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
+        //m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
+        DoCheckCondition = CheckGameCondition;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (DoCheckCondition != null) DoCheckCondition();
     }
 
     [ContextMenu("GameEnd")]
     public void GameEnd()
     {
         SceneController.Instance.ToLobby();
+    }
+
+    private void CheckGameCondition()
+    {
+        if (InGamePlayerManager.Instance.IsAllPlayerDead())
+        {
+            MissionFailed();
+            DoCheckCondition = null;
+        }
+    }
+
+    [ContextMenu("MissionFailed")]
+    public void MissionFailed()
+    {
+        UIInGameMain.Instance.DrawMissionFailedUI();
     }
 
     private void SpawnMobs()

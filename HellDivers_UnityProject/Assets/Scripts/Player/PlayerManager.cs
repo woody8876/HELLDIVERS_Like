@@ -39,9 +39,9 @@ public class PlayerManager
         playerInfo.UnlockWeapon(1101);
         playerInfo.UnlockWeapon(1301);
         playerInfo.UnlockWeapon(1401);
-        playerInfo.AddStratagem(2000);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);
+        playerInfo.AddStratagem(2000);
         playerInfo.Grenades.Add(4001);
         playerInfo.Grenades.Add(4002);
         playerInfo.Grenades.Add(4003);

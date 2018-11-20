@@ -31,7 +31,7 @@ public class AimLine : MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            OpenAimLine();
+            //OpenAimLine();
         }
         else if (Input.GetMouseButtonUp(1))
         {
