@@ -80,8 +80,6 @@ public class Player : Character
 
     public event PlayerEventHolder OnDeathBegin;
 
-    public event PlayerStatusCollect OnDeathBeginCollect;
-
     public event PlayerEventHolder OnDamaged;
 
     public event PlayerEventHolder OnTakeHealth;
@@ -100,6 +98,7 @@ public class Player : Character
         m_SerialNumber = serialNum;
         m_Record = new PlayerRecord();
 
+        this.OnDeathBegin += () => { m_Record.TimesOfDeath++; };
         m_ControllerSetting = InputManager.Instance.InputSettingMap[serialNum];
         m_Controller.SetJoyNumber(serialNum);
 
@@ -111,6 +110,7 @@ public class Player : Character
 
         // Setup weapons
         m_WeapoonController.ClearWeapon();
+        m_WeapoonController.OnFire += () => { m_Record.Shots++; };
         if (m_Data.Weapons.Count > 0) m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint, this);
 
         // Setup grenades
@@ -215,14 +215,12 @@ public class Player : Character
     {
         if (IsDead) return;
         m_bDead = true;
-        m_Record.TimesOfDeath++;
         StartCoroutine(DoDeath());
 
         // Reset stragem
         m_StratagemController.Reset();
 
         if (OnDeathBegin != null) OnDeathBegin();
-        if (OnDeathBeginCollect != null) OnDeathBeginCollect(this);
     }
 
     /// <summary>
