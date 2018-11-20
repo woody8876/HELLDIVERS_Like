@@ -31,6 +31,7 @@ public class MobManager
     private GameObject m_GORadarPoint;
     private GameObject m_GORMapPoint;
     private Player m_Player;
+    private int count = 0;
 
     public void Init()
     {
@@ -140,13 +141,14 @@ public class MobManager
         Vector3 spawnTarget = Center;
         //NavMeshHit nHit;
 
-        while (true)
+        for(int i = 0; i < 30; i++)
         {
             spawnTarget = Vector3.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
             spawnTarget *= Random.Range(25f, 35f);
             spawnTarget += Center;
-            if(Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale"))){
+            if (Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
+            {
                 continue;
             }
             else
@@ -184,14 +186,22 @@ public class MobManager
 
         for (int i = 0; i < num; i++)
         {
-            do
+            for (int j = 0; j < 30; j++)
             {
-                spawnTarget = center.forward;
+                spawnTarget = Vector3.forward;
                 spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-                spawnTarget *= Random.Range(minRadius, maxRadius);
+                spawnTarget *= Random.Range(25f, 35f);
                 spawnTarget += center.position;
-            } while (NavMesh.Raycast(center.position, spawnTarget, out nHit, NavMesh.AllAreas));
-            
+                if (Physics.Linecast(center.position, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
             if (m_GOFish == null) return;
             m_GOFish.transform.position = spawnTarget;
@@ -225,15 +235,23 @@ public class MobManager
         }
         Center /= pList.Count;
 
-        Vector3 spawnTarget = new Vector3();
-        NavMeshHit nHit;
-        do
+        Vector3 spawnTarget = Center;
+
+        for (int i = 0; i < 30; i++)
         {
             spawnTarget = Vector3.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
             spawnTarget *= Random.Range(25f, 35f);
             spawnTarget += Center;
-        } while (NavMesh.Raycast(Center, spawnTarget, out nHit, NavMesh.AllAreas));
+            if (Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
+            {
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
 
         for (int i = 0; i < num; i++)
         {
