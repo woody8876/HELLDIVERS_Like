@@ -18,17 +18,20 @@ public class TweenAlpha : MonoBehaviour
     [ContextMenu("Play Forward")]
     public void PlayForward()
     {
+        this.gameObject.SetActive(true);
         Play(m_StratAlpha, m_TargetAlpha);
     }
 
     [ContextMenu("Play Backward")]
     public void PlayeBackward()
     {
+        this.gameObject.SetActive(true);
         Play(m_TargetAlpha, m_StratAlpha);
     }
 
     public void Play(float start, float end)
     {
+        this.gameObject.SetActive(true);
         m_CurrentAlpha = start;
         m_origin = start;
         m_target = end;
@@ -69,5 +72,6 @@ public class TweenAlpha : MonoBehaviour
         Color currentColor = m_Image.color;
         currentColor.a = alpha;
         m_Image.color = currentColor;
+        if (currentColor.a <= 0.0f) this.gameObject.SetActive(false);
     }
 }

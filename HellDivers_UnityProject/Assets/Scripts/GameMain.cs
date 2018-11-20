@@ -60,13 +60,13 @@ public class GameMain : MonoBehaviour
     [ContextMenu("GameStart")]
     private void GameStart()
     {
-        for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
-        {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
-        }
+        //for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
+        //{
+        //    m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
+        //}
 
-        //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
-        //m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
+        m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
+        m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
@@ -108,7 +108,7 @@ public class GameMain : MonoBehaviour
             Player player = InGamePlayerManager.Instance.Players[i];
             m_RewardManager.SetReward(player.SerialNumber, player.Record);
         }
-        SceneController.Instance.ToLobby();
+        SceneController.Instance.ToReward();
     }
 
     private void SpawnMobs()
