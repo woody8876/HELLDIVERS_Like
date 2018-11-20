@@ -74,7 +74,7 @@ public class UIRadarPoint : MonoBehaviour
     private void HidePoint()
     {
         UIPanelRadar.Instance.PointList.Remove(this.gameObject);
-        ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
+        ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
     }
 
     private void FindRadarCenter()

@@ -50,8 +50,8 @@ public class MobManager
         m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
 
-        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 3002);
-        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 3003);
+        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9101);
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 9201);
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
@@ -139,7 +139,6 @@ public class MobManager
         Center /= pList.Count;
 
         Vector3 spawnTarget = Center;
-        //NavMeshHit nHit;
 
         for(int i = 0; i < 30; i++)
         {
@@ -167,7 +166,7 @@ public class MobManager
             if (UIInGameMain.Instance != null)
                 UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
             if (UIPanelMap.Instance != null)
-                UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
+                UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 9201);
         }
 
         //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
