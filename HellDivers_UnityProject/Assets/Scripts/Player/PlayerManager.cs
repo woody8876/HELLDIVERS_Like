@@ -5,20 +5,28 @@ using UnityEngine;
 public class PlayerManager
 {
     public static PlayerManager Instance { get; private set; }
-    public Dictionary<int, PlayerInfo> Players { get { return m_PlayerMap; } }
-    private Dictionary<int, PlayerInfo> m_PlayerMap;
+    public Dictionary<int, PlayerData> Players { get { return m_PlayerMap; } }
+    private Dictionary<int, PlayerData> m_PlayerMap;
+
+    public class PlayerData
+    {
+        public PlayerInfo info;
+        public ControllerSetting controllerSetting;
+    }
 
     public void Init()
     {
         if (Instance == null) Instance = this;
-        m_PlayerMap = new Dictionary<int, PlayerInfo>();
-        CreatePlayer(1);
+        m_PlayerMap = new Dictionary<int, PlayerData>();
     }
 
-    public void CreatePlayer(int i)
+    public void CreatePlayer(int i, ControllerSetting controller)
     {
+        PlayerData playerData = new PlayerData();
         PlayerInfo playerInfo = CreatPlayerInfo();
-        m_PlayerMap.Add(i, playerInfo);
+        playerData.info = playerInfo;
+        playerData.controllerSetting = controller;
+        m_PlayerMap.Add(i, playerData);
     }
 
     public PlayerInfo CreatPlayerInfo()
@@ -43,18 +51,18 @@ public class PlayerManager
 
     public void RefreshEquipment(int player, List<int> newEquipWeapon)
     {
-        m_PlayerMap[player].RefreshEquipWeapon(newEquipWeapon);
+        m_PlayerMap[player].info.RefreshEquipWeapon(newEquipWeapon);
     }
         
-    public void LoadPlayerInfo()
-    {
-    }
+    //public void LoadPlayerInfo()
+    //{
+    //}
 
-    public void SavePlayerInfo()
-    {
-        foreach (KeyValuePair<int, PlayerInfo> player in Players)
-        {
-            PlayerInfo currentInfo = player.Value;
-        }
-    }
+    //public void SavePlayerInfo()
+    //{
+    //    foreach (KeyValuePair<int, PlayerInfo> player in Players)
+    //    {
+    //        PlayerInfo currentInfo = player.Value;
+    //    }
+    //}
 }

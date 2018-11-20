@@ -71,7 +71,7 @@ public class UIWeaponList : MonoBehaviour {
     {
         GameObject go;
         Button btn;
-        List<int> unlockWeapons = PlayerManager.Instance.Players[player].UnLockWeapons;
+        List<int> unlockWeapons = PlayerManager.Instance.Players[player].info.UnLockWeapons;
         for (int i = 0; i < unlockWeapons.Count; i++)
         {
             go = Instantiate(m_WeaponUI, m_Content.transform);

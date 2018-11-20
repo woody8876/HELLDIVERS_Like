@@ -58,7 +58,7 @@ public class UI_WeaponButton : MonoBehaviour {
         if (pList[pList.Count - 1] != weaponDisplay.CurWeaponID)
         {
             int i = weaponDisplay.CurWeaponID;
-            PlayerManager.Instance.Players[player].LevelUpWeapon(ref i);
+            PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref i);
             weaponDisplay.SetCurID(i);
             weaponDisplay.WeaponList.LevelUp(i);
             weaponDisplay.Info.SetID(i);
