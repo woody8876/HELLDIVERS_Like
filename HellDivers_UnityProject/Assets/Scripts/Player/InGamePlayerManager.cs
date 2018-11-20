@@ -74,6 +74,15 @@ public class InGamePlayerManager : MonoBehaviour
         }
     }
 
+    public bool IsAllPlayerDead()
+    {
+        for (int i = 0; i < m_Players.Count; i++)
+        {
+            if (m_Players[i].IsDead == false) return false;
+        }
+        return true;
+    }
+
     public void RespawnPlayer(Player player)
     {
         if (m_Players.Count >= 2) return;
