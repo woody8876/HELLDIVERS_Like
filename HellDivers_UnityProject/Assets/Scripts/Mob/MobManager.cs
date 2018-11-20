@@ -54,7 +54,7 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GOTank, 10, 3400);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 20, 3201);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
         m_TotalKill = 0;
@@ -167,10 +167,6 @@ public class MobManager
         PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
         patrolAI.m_bGoIdle = true;
         m_PatrolCount++;
-        if (UIPanelRadar.Instance != null)
-            UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
-        if (UIPanelMap.Instance != null)
-            UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
     }
 
     public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
@@ -199,6 +195,21 @@ public class MobManager
             if (UIPanelMap.Instance != null)
                 UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
         }
+        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        if (m_GOPatrol == null) return;
+        m_GOPatrol.transform.position = spawnTarget;
+        m_GOPatrol.SetActive(true);
+        PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        patrolAI.m_bGoIdle = true;
+        m_PatrolCount++;
+
+        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        if (m_GOPatrol == null) return;
+        m_GOPatrol.transform.position = spawnTarget;
+        m_GOPatrol.SetActive(true);
+        patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        patrolAI.m_bGoIdle = true;
+        m_PatrolCount++;
     }
 
     public void SpawnFishVariant(int num)
