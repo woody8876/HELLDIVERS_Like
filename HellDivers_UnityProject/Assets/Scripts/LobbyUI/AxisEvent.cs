@@ -13,7 +13,7 @@ public class AxisEvent : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!PlayerManager.Instance.Players[1].controllerSetting) { return; }
+        if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) { return; }
         if (timer < 0)
         {
             InputSetting(PlayerManager.Instance.Players[1].controllerSetting);
