@@ -38,7 +38,7 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     private void SetPlayer(int player)
     {
-        m_tPlayerName.text = PlayerManager.Instance.Players[player].Username;
+        m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
         m_tRank.text = "1";
         InitialWeapon(ref m_primary, "PlayerMenu/PrimaryWeapon", player, 0, true);
         InitialWeapon(ref m_secondary, "PlayerMenu/SecondaryWeapon", player, 1, false);
@@ -51,7 +51,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         go = Instantiate(m_WeaponUI, GameObject.Find(m_path + s).transform) as GameObject;
         LobbyUI_Weapon uI = go.GetComponent<LobbyUI_Weapon>();
-        uI.SetID(PlayerManager.Instance.Players[player].Weapons[i]);
+        uI.SetID(PlayerManager.Instance.Players[player].info.Weapons[i]);
         uI.SetWeaponUI();
         uI.SetPrimary(b);
         if (b)  PriWeaponID = uI.ID;
@@ -65,8 +65,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         GameObject go = Instantiate(m_Stratagemes, GameObject.Find(m_path + s).transform) as GameObject;
         LobbyUI_Stratagems uI = go.GetComponent<LobbyUI_Stratagems>();
-        go.name = PlayerManager.Instance.Players[player].Stratagems[i].ToString();
-        uI.m_ID = PlayerManager.Instance.Players[player].Stratagems[i];
+        go.name = PlayerManager.Instance.Players[player].info.Stratagems[i].ToString();
+        uI.m_ID = PlayerManager.Instance.Players[player].info.Stratagems[i];
         //main_Armoury.m_iStrategems.Add(i);
          uI.SetStratagemUI(b);
        

@@ -21,6 +21,7 @@ public class GameMain : MonoBehaviour
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private MissionManager m_MissionManager = new MissionManager();
     private InGamePlayerManager m_PlayerManager;
+    private InGameRewardManager m_RewardManager;
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
     [SerializeField] private uint m_NumberOfTowers = 1;
@@ -43,6 +44,7 @@ public class GameMain : MonoBehaviour
         m_MobSpawner.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
         m_PlayerManager = this.gameObject.AddComponent<InGamePlayerManager>();
+        m_RewardManager = new GameObject("RewardManager").AddComponent<InGameRewardManager>();
     }
 
     // Use this for initialization
@@ -60,7 +62,7 @@ public class GameMain : MonoBehaviour
     {
         for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
         {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i]);
+            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
         }
 
         //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
@@ -77,8 +79,8 @@ public class GameMain : MonoBehaviour
         if (DoCheckCondition != null) DoCheckCondition();
     }
 
-    [ContextMenu("GameEnd")]
-    public void GameEnd()
+    [ContextMenu("Mission Abandon")]
+    public void MissionAbandon()
     {
         SceneController.Instance.ToLobby();
     }
@@ -92,10 +94,21 @@ public class GameMain : MonoBehaviour
         }
     }
 
-    [ContextMenu("MissionFailed")]
+    [ContextMenu("Mission Failed")]
     public void MissionFailed()
     {
         UIInGameMain.Instance.DrawMissionFailedUI();
+    }
+
+    [ContextMenu("Mission Complete")]
+    public void MissionComplete()
+    {
+        for (int i = 0; i < InGamePlayerManager.Instance.Players.Count; i++)
+        {
+            Player player = InGamePlayerManager.Instance.Players[i];
+            m_RewardManager.SetReward(player.SerialNumber, player.Record);
+        }
+        SceneController.Instance.ToLobby();
     }
 
     private void SpawnMobs()

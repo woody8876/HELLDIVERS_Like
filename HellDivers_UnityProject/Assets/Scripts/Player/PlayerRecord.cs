@@ -7,40 +7,47 @@ public class PlayerRecord
 {
     public int TimesOfDeath
     {
-        get { return timesOfDeath; }
-        set { if (value > timesOfDeath) timesOfDeath = value; }
+        get { return m_TimesOfDeath; }
+        set { if (value > m_TimesOfDeath) m_TimesOfDeath = value; }
     }
 
     public int NumOfKills
     {
-        get { return numOfKills; }
-        set { if (value > numOfKills) numOfKills = value; }
+        get { return m_NumOfKills; }
+        set { if (value > m_NumOfKills) m_NumOfKills = value; }
     }
-
-    public int Money { get { return money; } set { money = value; } }
 
     public int NumOfMission
     {
-        get { return numOfMission; }
-        set { if (value > numOfMission) numOfMission = value; }
+        get { return m_NumOfMission; }
+        set { if (value > m_NumOfMission) m_NumOfMission = value; }
     }
+
+    public int Shots
+    {
+        get { return m_Shots; }
+        set { if (value > m_Shots) m_Shots = value; }
+    }
+
+    public int Money { get { return m_Money; } set { m_Money = value; } }
 
     public int Exp
     {
-        get { return exp; }
-        set { if (value > exp) exp = value; }
+        get { return m_Exp; }
+        set { if (value > m_Exp) m_Exp = value; }
     }
 
-    private int timesOfDeath;
-    private int numOfKills;
-    private int money;
-    private int numOfMission;
-    private int exp;
+    private int m_TimesOfDeath;
+    private int m_NumOfKills;
+    private int m_NumOfMission;
+    private int m_Shots;
+    private int m_Money;
+    private int m_Exp;
 
     public void Reset()
     {
-        timesOfDeath = 0;
-        numOfKills = 0;
-        numOfMission = 0;
+        m_TimesOfDeath = 0;
+        m_NumOfKills = 0;
+        m_NumOfMission = 0;
     }
 }

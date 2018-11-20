@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 74883238}
   - component: {fileID: 74883237}
   - component: {fileID: 74883236}
-  - component: {fileID: 74883239}
+  - component: {fileID: 74883240}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -216,7 +216,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &74883239
+--- !u!114 &74883240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -224,9 +224,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 74883235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa7849f502bc95d4ca44e408ff989e34, type: 3}
+  m_Script: {fileID: 11500000, guid: c2910a2b8b85da44b9766184417e3a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axis: {fileID: 701337690}
 --- !u!1 &80469159
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,6 +980,7 @@ GameObject:
   - component: {fileID: 701337688}
   - component: {fileID: 701337687}
   - component: {fileID: 701337689}
+  - component: {fileID: 701337690}
   m_Layer: 5
   m_Name: WELCOME
   m_TagString: Untagged
@@ -1058,6 +1060,18 @@ MonoBehaviour:
   m_Menu: {fileID: 988420471}
   m_FadePanel: {fileID: 1493302465}
   m_Animantion: {fileID: 2083425168}
+  axis: {fileID: 701337690}
+--- !u!114 &701337690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 701337685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7849f502bc95d4ca44e408ff989e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &729553368
 GameObject:
   m_ObjectHideFlags: 0
@@ -2343,6 +2357,7 @@ MonoBehaviour:
   m_Plot: {fileID: 342753590}
   m_Continue: {fileID: 812636831}
   m_FadePanel: {fileID: 1493302465}
+  axis: {fileID: 701337690}
 --- !u!1 &2086498139
 GameObject:
   m_ObjectHideFlags: 0

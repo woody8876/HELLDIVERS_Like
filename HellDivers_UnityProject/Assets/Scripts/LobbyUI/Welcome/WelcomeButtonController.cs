@@ -18,6 +18,9 @@ public class WelcomeButtonController : MonoBehaviour {
     [SerializeField] GameObject m_Animantion;
     #endregion
 
+    private float m_fTimer;
+    private ControllerSetting m_controller;
+    private bool m_bSetting;
     #region Mono Behaviors
     private void Start()
     {
@@ -25,6 +28,31 @@ public class WelcomeButtonController : MonoBehaviour {
         SetStart();
         SetContinue();
         SetExit();
+        m_fTimer = 0.2f;
+    }
+
+    private void LateUpdate()
+    {
+        if (!m_bSetting)
+        {
+            if (!PlayerManager.Instance.Players[1].controllerSetting) return;
+            else
+            {
+                m_controller = PlayerManager.Instance.Players[1].controllerSetting;
+                m_bSetting = true;
+            }
+        }
+
+        if (m_fTimer < 0)
+        {
+            if (Input.GetKey(m_controller.Submit))
+            {
+                Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+                btn.onClick.Invoke();
+                m_fTimer = 0.2f;
+            }
+        }
+        m_fTimer -= Time.fixedDeltaTime;
     }
     #endregion
 
@@ -36,16 +64,19 @@ public class WelcomeButtonController : MonoBehaviour {
         btn.onClick.AddListener(() => Change(m_Press, m_Menu));
         btn.onClick.AddListener(() => Debug.Log("click"));
     }
+
     private void SetStart()
     {
         AddEvent(m_Start);
         m_Start.onClick.AddListener(() => StartCoroutine(ChangePanel()));
     }
+
     private void SetContinue()
     {
         AddEvent(m_Continue);
         m_Continue.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
     }
+
     private void SetExit()
     {
         AddEvent(m_Exit);
