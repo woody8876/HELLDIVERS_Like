@@ -34,7 +34,7 @@ public class TankAI : Character
     protected override void Start()
     {
         m_AIData = new MobInfo();
-        MobData.Instance.AIDataTable[3400].CopyTo(m_AIData);
+        GameData.Instance.MobInfoTable[3400].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();

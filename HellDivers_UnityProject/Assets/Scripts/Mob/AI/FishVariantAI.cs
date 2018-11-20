@@ -34,7 +34,7 @@ public class FishVariantAI : Character
     protected override void Start()
     {
         m_AIData = new MobInfo();
-        MobData.Instance.AIDataTable[3300].CopyTo(m_AIData);
+        GameData.Instance.MobInfoTable[3300].CopyTo(m_AIData);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();

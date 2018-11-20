@@ -5,10 +5,11 @@ using UnityEngine;
 public class MapInfo : MonoBehaviour
 {
     public static MapInfo Instance { get; private set; }
-
+    public Transform MapOrigin { get { return m_MapOrigin; } }
     public List<Transform> SpawnPos { get { return m_SpawnPos; } }
     public List<Transform> TowerPos { get { return m_TowerPos; } }
     public List<Transform> MobPos { get { return m_MobPos; } }
+    [SerializeField] private Transform m_MapOrigin;
     [SerializeField] private List<Transform> m_SpawnPos;
     [SerializeField] private List<Transform> m_TowerPos;
     [SerializeField] private List<Transform> m_MobPos;

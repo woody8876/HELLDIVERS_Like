@@ -865,6 +865,10 @@ public class FSMWanderIdleState : FSMState
             }
         }
     }
+    public void ToIdle(MobInfo data)
+    {
+        data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
+    }
 }
 
 public class FSMWanderState : FSMState

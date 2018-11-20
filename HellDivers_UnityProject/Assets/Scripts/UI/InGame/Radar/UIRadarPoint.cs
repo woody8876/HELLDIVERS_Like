@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum eRadarPointType
+public enum eMapPointType
 {
     PLAYER,
     FISH,
@@ -23,7 +23,7 @@ public class UIRadarPoint : MonoBehaviour
     public GameObject CurrentTarget { get { return m_CurrentTarget; } }
     private GameObject m_CurrentTarget;
 
-    public void Init(GameObject target,eRadarPointType type)
+    public void Init(GameObject target,eMapPointType type)
     {
         m_CurrentTarget = target;
         m_Image = this.GetComponent<Image>();
@@ -33,7 +33,7 @@ public class UIRadarPoint : MonoBehaviour
         CalculatePosition();
         switch (type)
         {
-            case eRadarPointType.FISH:
+            case eMapPointType.FISH:
                 FishAI fish = target.GetComponent<FishAI>();
                 fish.OnSpawn += ShowPoint;
                 fish.OnDeath += HidePoint;
@@ -53,7 +53,6 @@ public class UIRadarPoint : MonoBehaviour
         {
             Blink();
         }
-        UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
     }
 
     private void OnDestroy()
@@ -63,7 +62,7 @@ public class UIRadarPoint : MonoBehaviour
         fish.OnSpawn -= ShowPoint;
         fish.OnDeath -= HidePoint;
 
-        //UIPanelRadar.Instance.UpdatePoint -= UpdatePosition;
+        UIPanelRadar.Instance.UpdatePoint -= UpdatePosition;
     }
 
     private void ShowPoint()
