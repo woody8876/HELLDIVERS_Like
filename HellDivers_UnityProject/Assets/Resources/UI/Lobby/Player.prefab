@@ -1700,7 +1700,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224789766265082120}
-  - component: {fileID: 114419732312500350}
+  - component: {fileID: 114731783552288232}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -6324,17 +6324,6 @@ MonoBehaviour:
     resultId: 0
   m_Sprite: {fileID: 0}
   m_WeaponTexture: {fileID: 114851822777664512}
---- !u!114 &114419732312500350
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1530795193147096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa7849f502bc95d4ca44e408ff989e34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114420614704389500
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8564,6 +8553,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114731783552288232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1530795193147096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe2ffd6f0960f84b8c7f77006a17d32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114732266527606930
 MonoBehaviour:
   m_ObjectHideFlags: 1

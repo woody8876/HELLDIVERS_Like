@@ -39,6 +39,7 @@ public class PlayArmoury : MonoBehaviour {
         GameObject go = Instantiate(m_PlayerInGame, pos, rotate, this.transform);
         go.name = "Player" + i;
         go.GetComponentInChildren<SetPlayerWeapon>().PlayerID = i;
+        go.GetComponent<ControlEvent>().SetID(i);
     }
 
     // Update is called once per frame

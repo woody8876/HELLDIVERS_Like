@@ -22,11 +22,15 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
     int _posY;
+    float m_Timer;
+    float m_TCountDown = 0.2f;
+    ControllerSetting controller;
     // Use this for initialization
     void Start()
     {
         CreateWeaponUI(weaponDisplay.SetPlayer.PlayerID);
-        SetButtonNav();
+        int PlayerID = GetComponentInParent<ControlEvent>().PlayerID;
+        controller = PlayerManager.Instance.Players[PlayerID].controllerSetting;
     }
     private void OnEnable()
     {
@@ -36,9 +40,23 @@ public class UIWeaponList : MonoBehaviour {
 
     private void LateUpdate()
     {
+        if (m_Timer < 0)
+        {
+            if (Input.GetAxis(controller.Vertical) > 0)
+            {
+                ButtonNavUP();
+                m_Timer = m_TCountDown;
+            }
+            if (Input.GetAxis(controller.Vertical) < 0)
+            {
+                ButtonNavDown();
+                m_Timer = m_TCountDown;
+            }
+        }
         Vector3 pos = m_Content.transform.localPosition;
         pos.y = posY;
         m_Content.transform.localPosition = Vector3.Lerp(m_Content.transform.localPosition, pos, 0.05f);
+        m_Timer -= Time.fixedDeltaTime;
     }
 
     private IEnumerator ChangeWeapon()
@@ -113,27 +131,37 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
 
-    private void SetButtonNav()
+    private void ButtonNavDown()
     {
-        Navigation buttonNav;
-        for (int i = 0; i < m_weapons.Count; i++)
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        if (go == m_weapons[m_weapons.Count - 1]) return;
+        for (int i = 0; i < m_weapons.Count-1; i++)
         {
-            buttonNav = m_weapons[i].navigation;
-            buttonNav.mode = Navigation.Mode.Explicit;
-            buttonNav.selectOnUp = (i != 0) ? m_weapons[i - 1] : m_weapons[i];
-            buttonNav.selectOnDown = (i != m_weapons.Count - 1) ? m_weapons[i + 1] : m_weapons[i];
-            m_weapons[i].navigation = buttonNav;
+            if (go == m_weapons[i].gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(m_weapons[i + 1].gameObject);
+                return;
+            }
+        }
+    }
+    private void ButtonNavUP()
+    {
+        GameObject go = EventSystem.current.currentSelectedGameObject;
+        if (go == m_weapons[0]) return;
+        for (int i = 1; i < m_weapons.Count; i++)
+        {
+            if (go == m_weapons[i].gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(m_weapons[i - 1].gameObject);
+                return;
+            }
         }
     }
 
     private void OnSelectEvent(GameObject go)
     {
-        EventTrigger trigger = go.AddComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventData) => SetInfo(go));
-        entry.callback.AddListener((eventData) => OnValueChange(go));
-        trigger.triggers.Add(entry);
+        SetInfo(go);
+        OnValueChange(go);
     }
 
     private void OnClickEvent(string s, GameObject next) 
@@ -142,5 +170,6 @@ public class UIWeaponList : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(next);
     }
 
+    private void SetSelectedGameObject() { }
     #endregion
 }
