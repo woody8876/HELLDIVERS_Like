@@ -55,10 +55,6 @@ public class UIPanelRadar : MonoBehaviour {
         p.transform.parent = this.transform;
         m_PointList.Add(go);
     }
-    public void DeletePointPrefab(GameObject target)
-    {
-    }
-
     private void Blink()
     {
         if (bAdd)

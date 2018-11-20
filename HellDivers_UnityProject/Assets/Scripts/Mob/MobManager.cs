@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using HELLDIVERS.UI.InGame;
 
 
 public class MobManager
@@ -154,19 +155,19 @@ public class MobManager
             m_GOFish.SetActive(true);
             m_FishCount++;
 
-            if (UIPanelRadar.Instance != null)
-                UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
+            if (UIInGameMain.Instance != null)
+                UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
             if (UIPanelMap.Instance != null)
                 UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
         }
 
-        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
-        if (m_GOPatrol == null) return;
-        m_GOPatrol.transform.position = spawnTarget;
-        m_GOPatrol.SetActive(true);
-        PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
-        patrolAI.m_bGoIdle = true;
-        m_PatrolCount++;
+        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        //if (m_GOPatrol == null) return;
+        //m_GOPatrol.transform.position = spawnTarget;
+        //m_GOPatrol.SetActive(true);
+        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        //patrolAI.m_bGoIdle = true;
+        //m_PatrolCount++;
     }
 
     public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
@@ -195,21 +196,13 @@ public class MobManager
             if (UIPanelMap.Instance != null)
                 UIPanelMap.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH, 3002);
         }
-        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
-        if (m_GOPatrol == null) return;
-        m_GOPatrol.transform.position = spawnTarget;
-        m_GOPatrol.SetActive(true);
-        PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
-        patrolAI.m_bGoIdle = true;
-        m_PatrolCount++;
-
-        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
-        if (m_GOPatrol == null) return;
-        m_GOPatrol.transform.position = spawnTarget;
-        m_GOPatrol.SetActive(true);
-        patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
-        patrolAI.m_bGoIdle = true;
-        m_PatrolCount++;
+        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        //if (m_GOPatrol == null) return;
+        //m_GOPatrol.transform.position = spawnTarget;
+        //m_GOPatrol.SetActive(true);
+        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        //patrolAI.m_bGoIdle = true;
+        //m_PatrolCount++;
     }
 
     public void SpawnFishVariant(int num)
@@ -249,8 +242,6 @@ public class MobManager
     public void UnloadMob(int ID, MobInfo data)
     {
         ObjectPool.m_Instance.UnLoadObjectToPool(ID, data.m_Go);
-        if (UIPanelRadar.Instance == null) return;
-        UIPanelRadar.Instance.DeletePointPrefab(data.m_Go);
     }
 }
 
