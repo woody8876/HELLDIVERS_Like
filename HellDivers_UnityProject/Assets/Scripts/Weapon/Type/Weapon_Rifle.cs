@@ -19,7 +19,7 @@ public class Weapon_Rifle : Weapon
             go.transform.position = t.position;
             go.transform.forward = t.forward;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
-            go.GetComponent<Bullet>().m_BulletPlayer = player;
+            go.GetComponent<Bullet>().SetPlayer(player);
             go.GetComponent<Bullet>().SetID(weaponInfo.ID);
             go.SetActive(true);
             weaponInfo.Ammo--;

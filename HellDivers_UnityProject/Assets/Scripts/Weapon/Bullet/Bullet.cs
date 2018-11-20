@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IDamager
 {
     #region SerializeField
 
@@ -63,7 +63,7 @@ public class Bullet : MonoBehaviour
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(m_fDamage, rh2.point);
+                    target.TakeDamage(this, rh2.point);
                     m_Target = go;
                 }
                 if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh2.normal, rh2.point, 30); }
@@ -80,7 +80,7 @@ public class Bullet : MonoBehaviour
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(m_fDamage, rh.point);
+                    target.TakeDamage(this, rh.point);
                     m_Target = go;
                 }
                 if (m_ID != 1301 && m_ID != 1501)
@@ -128,18 +128,27 @@ public class Bullet : MonoBehaviour
         ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject);
     }
 
+    public void SetPlayer(Player player)
+    {
+        m_BulletPlayer = player;
+    }
+
     #endregion Bullet Method
 
-    [HideInInspector]
-    public Player m_BulletPlayer;
+    
 
     #region Private Field
 
     private GameObject m_Target;
     private float m_fNextPosDis;
     private float m_fRange;
-    private float m_fDamage;
     private float m_Time;
+    private float m_fDamage;
+    private Player m_BulletPlayer;
+
+
+    public Player Damager { get { return m_BulletPlayer; } }
+    public float Damage { get { return m_fDamage; } }
 
     #endregion Private Field
 }

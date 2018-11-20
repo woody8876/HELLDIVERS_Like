@@ -138,15 +138,22 @@ public class MobManager
         Center /= pList.Count;
 
         Vector3 spawnTarget = Center;
-        NavMeshHit nHit;
-        do
+        //NavMeshHit nHit;
+
+        while (true)
         {
             spawnTarget = Vector3.forward;
             spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
             spawnTarget *= Random.Range(25f, 35f);
             spawnTarget += Center;
-        } while (NavMesh.Raycast(Center, spawnTarget, out nHit, NavMesh.AllAreas));
-
+            if(Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale"))){
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
         for (int i = 0; i < num; i++)
         {
             m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
