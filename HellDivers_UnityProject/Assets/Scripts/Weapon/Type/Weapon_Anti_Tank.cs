@@ -15,6 +15,7 @@ public class Weapon_Anti_Tank : Weapon
             go.transform.forward = t.forward;
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.GetComponent<Bullet>().m_BulletPlayer = player;
+            go.GetComponent<Bullet>().SetID(weaponInfo.ID);
             go.SetActive(true);
             weaponInfo.Ammo--;
         }

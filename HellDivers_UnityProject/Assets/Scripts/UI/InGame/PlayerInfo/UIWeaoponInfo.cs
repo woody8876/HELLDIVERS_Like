@@ -22,7 +22,7 @@ namespace HELLDIVERS.UI.InGame
             CurrentPlayer = player;
             CurrentWeapon = weapon;
 
-            string fileName = string.Format("icon_{0}", CurrentWeapon.ID);
+            string fileName = string.Format("icon_{0}", CurrentWeapon.Image);
             m_IconBG.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.WeaponIconFolder, fileName);
             m_IconFill.sprite = m_IconBG.sprite;
 

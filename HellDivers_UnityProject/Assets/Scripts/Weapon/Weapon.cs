@@ -11,7 +11,6 @@ using UnityEngine;
 public class WeaponInfo
 {
     #region Properties
-
     public int ID { private set; get; }
     public int Type { private set; get; }
     public string Title { private set; get; }
@@ -30,96 +29,28 @@ public class WeaponInfo
     public float Range { private set; get; }
     public float FireMode { private set; get; }
     public string Name { private set; get; }
-
+    public string Image { private set; get; }
     #endregion Properties
 
     #region Set Properties
-
-    public void SetID(int id)
-    {
-        ID = id;
-    }
-
-    public void SetType(int type)
-    {
-        Type = type;
-    }
-
-    public void SetTitle(string title)
-    {
-        Title = title;
-    }
-
-    public void SetDamage(float damage)
-    {
-        Damage = damage;
-    }
-
-    public void SetExplosion(float explosion)
-    {
-        Explosion_Damage = explosion;
-    }
-
-    public void SetFireRate(float fireRate)
-    {
-        _FireRate = fireRate;
-    }
-
-    public void SetCapacity(int capacity)
-    {
-        Capacity = capacity;
-    }
-
-    public void SetStart_Mags(int sMags)
-    {
-        Start_Mags = sMags;
-    }
-
-    public void SetMax_Mags(int mMags)
-    {
-        Max_Mags = mMags;
-    }
-
-    public void SetEmpty_Reload_Speed(float erSpeed)
-    {
-        Empty_Reload_Speed = erSpeed;
-    }
-
-    public void SetTactical_Reload_Speed(float trSpeed)
-    {
-        Tactical_Reload_Speed = trSpeed;
-    }
-
-    public void SetMin_Spread(float minSpread)
-    {
-        Min_Spread = minSpread;
-    }
-
-    public void SetMax_Spread(float maxSpread)
-    {
-        Max_Spread = maxSpread;
-    }
-
-    public void SetSpread_Increase_per_shot(float SpreadIPS)
-    {
-        Spread_Increase_per_shot = SpreadIPS;
-    }
-
-    public void SetRange(float range)
-    {
-        Range = range;
-    }
-
-    public void SetFireMode(float mode)
-    {
-        FireMode = mode;
-    }
-
-    public void SetName(string name)
-    {
-        Name = name;
-    }
-
+    public void SetID(int id) { ID = id; }
+    public void SetType(int type) { Type = type; }
+    public void SetTitle(string title) { Title = title; }
+    public void SetDamage(float damage) { Damage = damage; }
+    public void SetExplosion(float explosion) { Explosion_Damage = explosion; }
+    public void SetFireRate(float fireRate) { _FireRate = fireRate; }
+    public void SetCapacity(int capacity) { Capacity = capacity; }
+    public void SetStart_Mags(int sMags) { Start_Mags = sMags; }
+    public void SetMax_Mags(int mMags) { Max_Mags = mMags; }
+    public void SetEmpty_Reload_Speed(float erSpeed) { Empty_Reload_Speed = erSpeed; }
+    public void SetTactical_Reload_Speed(float trSpeed) { Tactical_Reload_Speed = trSpeed; }
+    public void SetMin_Spread(float minSpread) { Min_Spread = minSpread; }
+    public void SetMax_Spread(float maxSpread) { Max_Spread = maxSpread; }
+    public void SetSpread_Increase_per_shot(float SpreadIPS) { Spread_Increase_per_shot = SpreadIPS; }
+    public void SetRange(float range) { Range = range; }
+    public void SetFireMode(float mode) { FireMode = mode; }
+    public void SetName(string name) { Name = name; }
+    public void SetImage (string image) { Image = image; }
     #endregion Set Properties
 
     #region Properties
@@ -184,8 +115,10 @@ public class WeaponInfo
         other.SetRange(this.Range);
         other.SetFireMode(this.FireMode);
         other.SetName(this.Name);
+        other.SetImage(this.Image);
         other.Ammo = this.Ammo;
         other.Mags = this.Mags;
+        
     }
 }
 
