@@ -20,6 +20,5 @@ public class MainUI : MonoBehaviour
     {
         m_PanelLoading = Instantiate(m_PanelLoading, this.transform);
         m_PanelLoading.gameObject.SetActive(false);
-        DontDestroyOnLoad(m_PanelLoading);
     }
 }
