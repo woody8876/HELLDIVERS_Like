@@ -369,6 +369,7 @@ public class FSMAttackState : FSMState
     public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
+        if (data.m_Player == null || data.m_Player.IsDead) return;
 
         data.m_vTarget = data.m_Player.transform.position;
         vDir = data.m_Player.transform.position - data.m_Go.transform.position;
@@ -472,6 +473,8 @@ public class FSMPatrolAttackState : FSMState
     }
     public override void Do(MobInfo data)
     {
+        if (data.m_Player == null || data.m_Player.IsDead) return;
+
         if (bIsReady)
         {
             m_fCurrentTime += Time.deltaTime;

@@ -99,8 +99,8 @@ public class Player : Character
         m_Record = new PlayerRecord();
 
         this.OnDeathBegin += () => { m_Record.TimesOfDeath++; };
-        m_ControllerSetting = InputManager.Instance.InputSettingMap[serialNum];
-        m_Controller.SetJoyNumber(serialNum);
+        m_ControllerSetting = PlayerManager.Instance.Players[serialNum].controllerSetting;
+        m_Controller.SetJoyNumber(m_ControllerSetting);
 
         // Setup stratagems
         m_StratagemController.CheckCodesMechine.InputVertical = m_ControllerSetting.StratagemVertical;
