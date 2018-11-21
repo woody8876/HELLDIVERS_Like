@@ -59,17 +59,18 @@ public class UIPanelMap : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (m_bDisplay == false && (Input.GetKeyDown(KeyCode.M)))
+        if (m_bDisplay == false && (Input.GetKeyDown(KeyCode.M) || Input.GetButtonDown("Map")))
         {
             m_Color.a = 1;
             m_Image.color = m_Color;
             m_bDisplay = true;
         }
-        else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M)))
+        else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M) || Input.GetButtonDown("Map")))
         {
             m_Color.a = 0;
             m_Image.color = m_Color;
             m_bDisplay = false;
+            m_Timer = 0.0f;
         }
         if (m_bDisplay)
         {
