@@ -68,7 +68,7 @@ public class UIPanelMap : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIMapPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
             case eMapPointType.MISSIONTOWER:
@@ -76,7 +76,7 @@ public class UIPanelMap : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIMapPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
@@ -92,7 +92,7 @@ public class UIPanelMap : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIMapPoint>();
                 p.Init(player, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }

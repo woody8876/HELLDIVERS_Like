@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222882468145922896}
   - component: {fileID: 114208114749822284}
   - component: {fileID: 114560984724666950}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PlayerPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 1e555e1bc111bd24db51bff91091b9d7, type: 3}
+  m_Sprite: {fileID: 21300078, guid: 5df2a2393fdbcc0469cdb37d485a2f82, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

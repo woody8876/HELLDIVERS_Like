@@ -27,7 +27,7 @@ public class UIPanelRadar : MonoBehaviour {
     private bool bAdd = true;
     private List<GameObject> m_PointList = new List<GameObject>();
 
-    [SerializeField] private float m_RadarRadius = 40.0f;
+    [SerializeField] private float m_RadarRadius = 100.0f;
     #endregion
 
     public void Init()
@@ -66,7 +66,7 @@ public class UIPanelRadar : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
             case eMapPointType.FISH:
@@ -74,7 +74,7 @@ public class UIPanelRadar : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
@@ -90,7 +90,7 @@ public class UIPanelRadar : MonoBehaviour {
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(player, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
@@ -99,22 +99,24 @@ public class UIPanelRadar : MonoBehaviour {
     {
         if (bAdd)
         {
-            m_Color.g += Time.deltaTime * 0.2f;
+            m_Color.b += Time.deltaTime * 0.1f;
+            m_Color.g += Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.g > 0.2) bAdd = false;
+            if (m_Color.b > 0.35) bAdd = false;
         }
         else if (bAdd == false)
         {
-            m_Color.g -= Time.deltaTime * 0.2f;
+            m_Color.b -= Time.deltaTime * 0.1f;
+            m_Color.g -= Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.g <= 0) bAdd = true;
+            if (m_Color.b <= 0.3) bAdd = true;
         }
     }
 
     private void CountTimer()
     {
         m_Timer += Time.deltaTime;
-        if (m_Timer >= 2.0f && m_Color.g > 0.2f)
+        if (m_Timer >= 1.0f && m_Color.b > 0.35f)
         {
             if(m_PointList.Count > 0)
             {
