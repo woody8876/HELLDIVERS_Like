@@ -19,24 +19,43 @@ public class UIRadarPoint : MonoBehaviour
     private int m_PlayersCount = 0;
     [SerializeField] private Image m_Image;
     private Color m_Color;
-    private bool m_Blink = false;
     public GameObject CurrentTarget { get { return m_CurrentTarget; } }
     private GameObject m_CurrentTarget;
+    private Player m_CurrentPlayer;
+    private eMapPointType m_CurrentType;
 
     public void Init(GameObject target,eMapPointType type)
     {
         m_CurrentTarget = target;
+        m_CurrentType = type;
         m_Image = this.GetComponent<Image>();
         m_Color = m_Image.color;
-        m_Blink = false;
         FindRadarCenter();
         CalculatePosition();
-        switch (type)
+        switch (m_CurrentType)
         {
             case eMapPointType.FISH:
                 FishAI fish = target.GetComponent<FishAI>();
                 fish.OnSpawn += ShowPoint;
                 fish.OnDeath += HidePoint;
+                break;
+        }
+        UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
+    }
+    public void Init(Player player, eMapPointType type)
+    {
+        m_CurrentPlayer = player;
+        m_CurrentTarget = player.gameObject;
+        m_CurrentType = type;
+        m_Image = this.GetComponent<Image>();
+        m_Color = m_Image.color;
+        FindRadarCenter();
+        CalculatePosition();
+        switch (m_CurrentType)
+        {
+            case eMapPointType.PLAYER:
+                m_CurrentPlayer.OnSpawnBegin += ShowPoint;
+                m_CurrentPlayer.OnDeathBegin += HidePoint;
                 break;
         }
         UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
@@ -49,19 +68,24 @@ public class UIRadarPoint : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        if (m_Blink)
-        {
-            Blink();
-        }
+        Blink();
     }
 
     private void OnDestroy()
     {
         if (m_CurrentTarget == null) return;
-        FishAI fish = m_CurrentTarget.GetComponent<FishAI>();
-        fish.OnSpawn -= ShowPoint;
-        fish.OnDeath -= HidePoint;
-
+        switch (m_CurrentType)
+        {
+            case eMapPointType.FISH:
+                FishAI fish = m_CurrentTarget.GetComponent<FishAI>();
+                fish.OnSpawn -= ShowPoint;
+                fish.OnDeath -= HidePoint;
+                break;
+            case eMapPointType.PLAYER:
+                m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
+                m_CurrentPlayer.OnDeathBegin -= HidePoint;
+                break;
+        }
         UIPanelRadar.Instance.UpdatePoint -= UpdatePosition;
     }
 
@@ -73,8 +97,16 @@ public class UIRadarPoint : MonoBehaviour
 
     private void HidePoint()
     {
+        switch (m_CurrentType)
+        {
+            case eMapPointType.FISH:
+                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
+                break;
+            case eMapPointType.PLAYER:
+                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                break;
+        }
         UIPanelRadar.Instance.PointList.Remove(this.gameObject);
-        ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
     }
 
     private void FindRadarCenter()
@@ -112,17 +144,13 @@ public class UIRadarPoint : MonoBehaviour
         m_Pos.x = m_Dir.x * (UIPanelRadar.Instance.RectWidth * 0.5f) / UIPanelRadar.Instance.RadarRadius;
         m_Pos.y = m_Dir.z * (UIPanelRadar.Instance.RectHeight * 0.5f) / UIPanelRadar.Instance.RadarRadius;
         this.transform.localPosition = m_Pos;
-        m_Color.r = 1f;
         m_Color.a = 1f;
         m_Image.color = m_Color;
-        m_Blink = true;
     }
 
     private void Blink()
     {
-        m_Color.r -= Time.deltaTime * 0.2f;
-        m_Color.a -= Time.deltaTime * 0.4f;
+        m_Color.a -= Time.deltaTime * 0.5f;
         m_Image.color = m_Color;
-        if (m_Color.a <= 0) m_Blink = false;
     }
 }

@@ -28,7 +28,7 @@ public class MobManager
     private GameObject m_GOWarning;
     private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
-    private GameObject m_GORadarPoint;
+    
     private GameObject m_GORMapPoint;
     private Player m_Player;
     private int count = 0;
@@ -40,7 +40,7 @@ public class MobManager
             m_Instance = this;
         }
 
-        m_GORadarPoint = Resources.Load("UI/InGame/Radar/TargetPoint") as GameObject;
+       
         m_GORMapPoint = Resources.Load("UI/InGame/Map/MapPoint") as GameObject;
         m_GOFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GOFishVariant = Resources.Load("Mobs/Fish2/Fish2") as GameObject;
@@ -50,7 +50,7 @@ public class MobManager
         m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
 
-        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9101);
+        
         ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 9201);
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);

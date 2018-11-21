@@ -23,6 +23,7 @@ namespace HELLDIVERS.UI.InGame
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform).GetComponent<UIPanelStratagemAct>();
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform).GetComponent<UIPanelMissionFailed>();
             m_PanelRadar = Instantiate(m_PanelRadar, this.transform).GetComponent<UIPanelRadar>();
+            m_PanelRadar.Init();
         }
 
         private void Awake()
@@ -32,7 +33,6 @@ namespace HELLDIVERS.UI.InGame
             {
                 Destroy(this.gameObject);
             }
-
             m_DynamicHpBarMap = new Dictionary<Player, UIDynamicHpBar>();
         }
 
@@ -50,6 +50,7 @@ namespace HELLDIVERS.UI.InGame
         {
             m_PanelPlayerInfo.AddPlayer(player);
             m_PanelStratagemAct.AddPlayer(player);
+            m_PanelRadar.AddPointPrefab(player, eMapPointType.PLAYER);
             AddDynamicHpBar(player);
         }
 
