@@ -11,6 +11,12 @@ public class RankData
 
     private int rank;
     private int exp;
+
+    public void CopyTo(RankData other)
+    {
+        other.rank = this.rank;
+        other.exp = this.exp;
+    }
 }
 
 public static class RankDataTableLoader

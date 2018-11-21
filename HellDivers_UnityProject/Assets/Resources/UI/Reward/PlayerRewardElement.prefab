@@ -674,10 +674,13 @@ MonoBehaviour:
   m_RankIcon: {fileID: 114212812187223520}
   m_RankText: {fileID: 114841289870298702}
   m_PlayerName: {fileID: 114882670755810074}
-  m_ExpBarFill: {fileID: 114606549519122940}
-  m_ExpText: {fileID: 114719391454970898}
   m_RewardDetailPrefab: {fileID: 114124387169200278, guid: 14f132457cad9104eab0fd5d660a0ddc,
     type: 2}
+  m_ExpBar:
+    imgFill: {fileID: 114606549519122940}
+    textExp: {fileID: 114719391454970898}
+    currentAmount: 0
+    targetAmount: 0
 --- !u!114 &114841289870298702
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -25,7 +25,7 @@ public class PlayerInfo
     [SerializeField] private List<int> stratagems = new List<int>();
     [SerializeField] private List<int> grenades = new List<int>();
     [SerializeField] private string username;
-    [SerializeField] private int rank;
+    [SerializeField] private int rank = 1;
     [SerializeField] private int money;
     [SerializeField] private int exp;
     private int totalMissionFought;
