@@ -14,21 +14,20 @@ public class MobManager
     private int m_TotalFishKill;
     private int m_TotalFishVariantKill;
     private int m_TotalPatrolKill;
-    private int m_TotalTankKill;
+    //private int m_TotalTankKill;
 
     public int TotalKill { get { return m_TotalKill; } }
     public int TotalFishKill { get { return m_TotalFishKill; } }
     public int TotalFishVariantKill { get { return m_TotalFishVariantKill; } }
     public int TotalPatrolKill { get { return m_TotalPatrolKill; } }
-    public int TotalTotalKill { get { return m_TotalTankKill; } }
+    //public int TotalTotalKill { get { return m_TotalTankKill; } }
     #endregion
 
     private int m_FishCount;
     private int m_FishVariantCount;
     private int m_PatrolCount;
-    private int m_TankCount;
-
-    private GameObject m_GOPlayer;
+    //private int m_TankCount;
+    
     private GameObject m_GOFish;
     private GameObject m_GOFishVariant;
     private GameObject m_GOPatrol;

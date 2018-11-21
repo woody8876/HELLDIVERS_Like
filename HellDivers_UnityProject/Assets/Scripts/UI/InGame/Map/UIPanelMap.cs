@@ -28,6 +28,9 @@ public class UIPanelMap : MonoBehaviour {
     [SerializeField] private float m_MapHeight = 720.0f;
 
     private GameObject m_GORMapPoint;
+
+    private bool m_bDisplay = false;
+    private float m_Timer = 0.0f;
     // Use this for initialization
 
     public void Init()
@@ -45,6 +48,8 @@ public class UIPanelMap : MonoBehaviour {
         m_RectHeight = m_RectTransform.sizeDelta.y;
         m_Image = this.GetComponent<Image>();
         m_Color = m_Image.color;
+        m_Color.a = 0;
+        m_Image.color = m_Color;
     }
     void Start()
     {
@@ -54,7 +59,29 @@ public class UIPanelMap : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        if (m_bDisplay == false && (Input.GetKeyDown(KeyCode.M)))
+        {
+            m_Color.a = 1;
+            m_Image.color = m_Color;
+            m_bDisplay = true;
+        }
+        else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M)))
+        {
+            m_Color.a = 0;
+            m_Image.color = m_Color;
+            m_bDisplay = false;
+        }
+        if (m_bDisplay)
+        {
+            m_Timer += Time.deltaTime;
+            if(m_Timer >= 5.0f)
+            {
+                m_Timer = 0.0f;
+                m_Color.a = 0;
+                m_Image.color = m_Color;
+                m_bDisplay = false;
+            }
+        }
     }
 
     public void AddPointPrefab(GameObject target, eMapPointType type)
