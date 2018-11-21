@@ -29,8 +29,7 @@ public class UIWeaponList : MonoBehaviour {
         int PlayerID = weaponDisplay.SetPlayer.PlayerID;
         CreateWeaponUI(PlayerID);
         SubscriptAxisEvent();
-        m_currentSelectObject = m_weapons[1];
-        OnSelectEvent(m_currentSelectObject);
+        ChangeWeapon();
     }
     private void OnEnable()
     {
@@ -65,7 +64,6 @@ public class UIWeaponList : MonoBehaviour {
 
     private void ChangeWeapon()
     {
-        m_currentSelectObject = m_weapons[0].gameObject;
         for (int i = 0; i < m_weapons.Count; i++)
         {
             if (Determine() == m_weapons[i].gameObject.name)

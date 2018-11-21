@@ -10,6 +10,7 @@ public class PlayArmoury : MonoBehaviour {
     ControllerSetting m_controller;
     Dictionary<int, bool> m_dPlayerReady = new Dictionary<int, bool>();
     bool b_AddPlayer;
+    bool b_Loding;
     int[] Members
     {
         get
@@ -32,7 +33,11 @@ public class PlayArmoury : MonoBehaviour {
 	}
 
     void LateUpdate () {
-        if (CheckState()) SceneController.Instance.ToGameScene();
+        if (CheckState() && !b_Loding)
+        {
+            SceneController.Instance.ToGameScene();
+            b_Loding = true;
+        }
         if (b_AddPlayer) return;
         if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
         {

@@ -16,7 +16,8 @@ public class UI_WeaponButton : MonoBehaviour {
 
     private GameObject m_CurrentObject;
     private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
-    private Color m_BGColor = new Color(1, 1, 1, 0.286f);
+    private Color m_BGColor = new Color(1, 1, 1, 1);
+    private Color m_NonSelectableColor = new Color(1, 1, 1, 0.286f);
 
     #region Button Behaviors
 
@@ -26,8 +27,6 @@ public class UI_WeaponButton : MonoBehaviour {
         DisSelectButton();
         OnLevelUpButton();
         m_CurrentObject = LevelUp;
-        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
-        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
     }
 
     public void SetRightNav()
@@ -36,35 +35,36 @@ public class UI_WeaponButton : MonoBehaviour {
         DisLevelUpButton();
         OnSelectButton();
         m_CurrentObject = Select;
-        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickLevelUpButton;
-        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickSelectButton;
-
     }
 
     public void OnSelectButton()
     {
         SetHighlightBG(m_Select);
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickSelectButton;
     }
 
     private void DisSelectButton()
     {
         SetBG(m_Select);
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
     }
 
     private void ClickSelectButton()
     {
-        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
+        DisSelectButton();
         ClickSelect(weaponDisplay.SetPlayer.PlayerID);
     }
 
     private void OnLevelUpButton()
     {
         SetHighlightBG(m_LevelUp);
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
     }
 
     private void DisLevelUpButton()
     {
         SetBG(m_LevelUp);
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickLevelUpButton;
     }
 
     private void ClickLevelUpButton()
@@ -77,6 +77,7 @@ public class UI_WeaponButton : MonoBehaviour {
     #region Button Method
     private bool CheckLevelUp()
     {
+
         return true;
     }
 
@@ -88,6 +89,11 @@ public class UI_WeaponButton : MonoBehaviour {
     private void SetHighlightBG(Image BG)
     {
         BG.color = m_HighLight;
+    }
+
+    private void SetNonSelectableBG(Image BG)
+    {
+        BG.color = m_NonSelectableColor;
     }
 
     private void ClickLevelUp(int player)
@@ -139,8 +145,6 @@ public class UI_WeaponButton : MonoBehaviour {
             setPlayer.SetSecWeaponID(weaponDisplay.CurWeaponID);
         }
         setPlayer.SelectWeaponUI(false);
-        //EventSystem.current.SetSelectedGameObject(go);
-
     }
 
     #endregion

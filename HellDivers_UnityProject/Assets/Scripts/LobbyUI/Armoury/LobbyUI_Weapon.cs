@@ -12,12 +12,10 @@ public class LobbyUI_Weapon : MonoBehaviour{
     [SerializeField] Text m_WeaponName;
     [Header("== Private Field ==")]
     [SerializeField] int m_ID;
-    [SerializeField] bool m_Primary;
 
     #region Getter
     public int ID { get { return m_ID; } }
     public int Type { get { return GameData.Instance.WeaponInfoTable[m_ID].Type; } }
-    public bool Primary { get { return m_Primary; } }
     #endregion
     private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
     private Color m_BGColor = new Color(1, 1, 1, 0.286f);
@@ -40,8 +38,6 @@ public class LobbyUI_Weapon : MonoBehaviour{
     }
 
     public void SetID(int i) { m_ID = i; }
-
-    public void SetPrimary(bool b) { m_Primary = b; }
 
     #endregion
 }

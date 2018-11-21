@@ -82,7 +82,6 @@ public class SetPlayerWeapon : MonoBehaviour {
         LobbyUI_Weapon uI = go.GetComponent<LobbyUI_Weapon>();
         uI.SetID(PlayerManager.Instance.Players[player].info.Weapons[i]);
         uI.SetWeaponUI();
-        uI.SetPrimary(b);
         if (b)  PriWeaponID = uI.ID;
         else SecWeaponID = uI.ID;
     }
@@ -123,11 +122,6 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         m_primary.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
         m_secondary.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
-    }
-
-    private void Click(LobbyUI_Weapon ui)
-    {
-        m_bPrimary = ui.Primary;
     }
     #endregion
 
@@ -180,12 +174,14 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         Control.AxisUp += ButtonUp;
         Control.AxisDown += ButtonDown;
+        Control.AxisSubmit += ButtonSumbit;
     }
 
     private void UnsubscribeAxisEvent()
     {
         Control.AxisUp -= ButtonUp;
         Control.AxisDown -= ButtonDown;
+        Control.AxisSubmit -= ButtonSumbit;
     }
 
     #region Button Support Function
@@ -235,6 +231,27 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     }
 
+    private void OnClick()
+    {
+        if (m_CurrentObject == m_PrimaryWeapon)
+        {
+            SelectWeaponUI(true);
+            m_bPrimary = true;
+        }
+        else if (m_CurrentObject == m_SecondaryWeapon)
+        {
+            SelectWeaponUI(true);
+            m_bPrimary = false;
+        }
+        else if(m_CurrentObject == m_Stratageme)
+        {
+
+        }
+        else if (m_CurrentObject == m_Confirm.gameObject)
+        {
+            SubmitConfirm();
+        }
+    }
     #endregion
 
     #region Button Behaviors
@@ -253,5 +270,9 @@ public class SetPlayerWeapon : MonoBehaviour {
         OnSelect();
     }
 
+    private void ButtonSumbit()
+    {
+        OnClick(); ;
+    } 
     #endregion
 }

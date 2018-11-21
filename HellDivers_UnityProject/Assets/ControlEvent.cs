@@ -43,33 +43,33 @@ public class ControlEvent : MonoBehaviour {
 
     private void InputSetting(ControllerSetting m_controller)
     {
-        if (Input.GetAxis(m_controller.Vertical) > 0)
+        if (Input.GetAxis(m_controller.Vertical) > 0 || Input.GetAxis("Vertical") > 0)
         {
             if (AxisUp != null) AxisUp();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Vertical) < 0)
+        else if (Input.GetAxis(m_controller.Vertical) < 0 || Input.GetAxis("Vertical") < 0)
         {
             if (AxisDown != null) AxisDown();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Horizontal) > 0)
+        else if (Input.GetAxis(m_controller.Horizontal) > 0 || Input.GetAxis("Horizontal") > 0)
         {
             if (AxisRight != null) AxisRight();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Horizontal) < 0)
+        else if (Input.GetAxis(m_controller.Horizontal) < 0 || Input.GetAxis("Horizontal") < 0)
         {
             if (AxisLeft != null) AxisLeft();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetKeyDown(m_controller.Submit))
+        else if (Input.GetKeyDown(m_controller.Submit) || Input.GetButtonDown("Submit"))
         {
             if (AxisSubmit != null) AxisSubmit();
             timer = timeBetweenInputs;
         }
-        //else if (Input.GetKeyDown(m_controller.Cancel)) {  }
+        //else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetButtonDown("Cancel")) {  }
     }
     private float timer;
-    private float timeBetweenInputs = 0.4f;
+    private float timeBetweenInputs = 0.15f;
 }
