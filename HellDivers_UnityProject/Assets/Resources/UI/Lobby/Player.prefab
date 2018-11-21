@@ -1890,7 +1890,6 @@ GameObject:
   - component: {fileID: 224933153700730900}
   - component: {fileID: 222547101941352236}
   - component: {fileID: 114983686572179152}
-  - component: {fileID: 114947847463254316}
   m_Layer: 5
   m_Name: Confirm
   m_TagString: Untagged
@@ -3978,7 +3977,7 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
@@ -7111,9 +7110,10 @@ MonoBehaviour:
   m_Stratagemes: {fileID: 1582472917340960, guid: 64af21fd10a26a94cb085a70223b08f0,
     type: 2}
   m_SelectWeapon: {fileID: 1281809023922608}
+  m_Confirm: {fileID: 0}
+  m_BG: {fileID: 0}
   PrimaryWeapon: {fileID: 1815366069185088}
   SecondaryWeapon: {fileID: 1220040403416442}
-  m_Confirm: {fileID: 114947847463254316}
   PlayerID: 0
   m_bPrimary: 0
   m_primary: {fileID: 0}
@@ -10664,47 +10664,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114947847463254316
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1561789726849364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.28627452}
-    m_HighlightedColor: {r: 1, g: 0.80517244, b: 0.16911763, a: 0.6666667}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 114983686572179152}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114947926522787210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10900,7 +10859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.28627452}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

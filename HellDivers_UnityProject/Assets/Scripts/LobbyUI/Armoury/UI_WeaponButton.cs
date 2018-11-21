@@ -2,53 +2,93 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class UI_WeaponButton : MonoBehaviour {
 
     [SerializeField] UIWeaponDisplay weaponDisplay;
-    [SerializeField] Button m_LevelUp;
-    [SerializeField] Button m_Select;
+    [SerializeField] Image m_LevelUp;
+    [SerializeField] Image m_Select;
     
     public GameObject LevelUp { get { return m_LevelUp.gameObject; } }
     public GameObject Select  { get { return m_Select.gameObject; } }
+    public GameObject 
+
+    private GameObject m_CurrentObject;
+    private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
+    private Color m_BGColor = new Color(1, 1, 1, 0.286f);
 
     // Use this for initialization
     void Start () {
-        m_Select.onClick.AddListener(() => ClickSelect(weaponDisplay.SetPlayer.PlayerID));
-        m_LevelUp.onClick.AddListener(() => ClickLevelUp(weaponDisplay.SetPlayer.PlayerID));
-        SetNav(m_LevelUp, m_Select, false);
-        SetNav(m_Select, m_LevelUp, true);
-        SelectEvent();
     }
 
     // Update is called once per frame
     void Update () {
 		
 	}
+    #region Button Behaviors
+
+    public void SetLeftNav()
+    {
+        if (m_CurrentObject == LevelUp || !CheckLevelUp()) return;
+        DisSelectButton();
+        OnLevelUpButton();
+        m_CurrentObject = LevelUp;
+    }
+
+    public void SetRightNav()
+    {
+        if (m_CurrentObject == Select) return;
+        DisLevelUpButton();
+        OnSelectButton();
+        m_CurrentObject = Select;
+    }
+
+    public void OnSelectButton()
+    {
+        SetHighlightBG(m_Select);
+    }
+
+    private void DisSelectButton()
+    {
+        SetBG(m_Select);
+    }
+
+    private void ClickSelectButton()
+    {
+        ClickSelect(weaponDisplay.SetPlayer.PlayerID);
+    }
+
+    private void OnLevelUpButton()
+    {
+        SetHighlightBG(m_LevelUp);
+    }
+
+    private void DisLevelUpButton()
+    {
+        SetBG(m_LevelUp);
+    }
+
+    private void ClickLevelUpButton()
+    {
+        ClickLevelUp(weaponDisplay.SetPlayer.PlayerID);
+    }
+
+    #endregion
+
     #region Button Method
-    private void SetNav(Button a, Button b, bool left)
-    {
-        Navigation buttonNav;
-        buttonNav = a.navigation;
-        buttonNav.mode = Navigation.Mode.Explicit;
-        if (left) { buttonNav.selectOnLeft = b; }
-        else { buttonNav.selectOnRight = b; }
-        a.navigation = buttonNav;
-    }
-
-    private void SelectEvent()
-    {
-        EventTrigger trigger = Select.AddComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventdata) => m_LevelUp.interactable = CheckLevelUp());
-        trigger.triggers.Add(entry);
-    }
-
     private bool CheckLevelUp()
     {
         return true;
+    }
+
+    private void SetBG(Image BG)
+    {
+        BG.color = m_BGColor;
+    }
+
+    private void SetHighlightBG(Image BG)
+    {
+        BG.color = m_HighLight;
     }
 
     private void ClickLevelUp(int player)
@@ -66,8 +106,7 @@ public class UI_WeaponButton : MonoBehaviour {
             weaponDisplay.Info.SetWeapon();
             if (weaponDisplay.CurWeaponID == pList[pList.Count - 1])
             {
-                m_LevelUp.interactable = false;
-                EventSystem.current.SetSelectedGameObject(Select.gameObject);
+                SetLeftNav();
             }   
         }
     }

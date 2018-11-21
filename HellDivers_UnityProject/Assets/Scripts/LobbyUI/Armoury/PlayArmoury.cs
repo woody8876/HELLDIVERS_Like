@@ -44,12 +44,14 @@ public class PlayArmoury : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
+        if (b_AddPlayer) return;
+        if (PlayerManager.Instance.Players.ContainsKey(2) && PlayerManager.Instance.Players[2].controllerSetting)
         {
             if (Input.GetKey(m_controller.Submit))
             {
                 PlayerManager.Instance.CreatePlayer(2, m_controller);
                 CreatPlayerMenu(2);
+                b_AddPlayer = true;
             }
         }
 	}

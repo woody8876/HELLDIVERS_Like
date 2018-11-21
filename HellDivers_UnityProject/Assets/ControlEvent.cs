@@ -9,6 +9,8 @@ public class ControlEvent : MonoBehaviour {
 
     public int PlayerID { get; private set; }
     public void SetID(int i) { PlayerID = i; }
+
+
     // Use this for initialization
     void Start()
     {
@@ -60,5 +62,5 @@ public class ControlEvent : MonoBehaviour {
     private AxisEventData currentAxis;
     private GameObject currentButton;
     private float timer;
-    private float timeBetweenInputs = 0.15f;
+    private float timeBetweenInputs = 0.2f;
 }

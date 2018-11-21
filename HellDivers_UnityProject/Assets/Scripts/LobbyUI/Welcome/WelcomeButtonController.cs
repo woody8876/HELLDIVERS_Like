@@ -49,7 +49,7 @@ public class WelcomeButtonController : MonoBehaviour {
             {
                 Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
                 btn.onClick.Invoke();
-                m_fTimer = 0.2f;
+                m_fTimer = 1f;
             }
         }
         m_fTimer -= Time.fixedDeltaTime;

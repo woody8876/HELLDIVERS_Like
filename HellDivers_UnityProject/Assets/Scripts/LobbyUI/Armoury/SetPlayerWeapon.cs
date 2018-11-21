@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class SetPlayerWeapon : MonoBehaviour {
 
@@ -12,10 +11,10 @@ public class SetPlayerWeapon : MonoBehaviour {
         [SerializeField] GameObject m_WeaponUI;
         [SerializeField] GameObject m_Stratagemes;
         [SerializeField] GameObject m_SelectWeapon;
+        [SerializeField] GameObject m_Confirm;
+        [SerializeField] GameObject m_BG;
         public GameObject PrimaryWeapon;
         public GameObject SecondaryWeapon;
-        [SerializeField] Button m_Confirm;
-    [Header("== Lobby Weapon UI Data ==")]
 
 
     #region Field
@@ -30,11 +29,8 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     void Start () {
         m_path += PlayerID +"/";
-        m_Confirm.onClick.AddListener(() => Confirm());
         SetPlayer(PlayerID);
-        EventSystem.current.SetSelectedGameObject(m_Confirm.gameObject); 
     }
-
 
     private void SetPlayer(int player)
     {
@@ -56,9 +52,6 @@ public class SetPlayerWeapon : MonoBehaviour {
         uI.SetPrimary(b);
         if (b)  PriWeaponID = uI.ID;
         else SecWeaponID = uI.ID;
-        go.GetComponent<Button>().onClick.AddListener(() => SelectWeaponUI(true));
-        go.GetComponent<Button>().onClick.AddListener(() => Click(uI));
-
     }
 
     private void InitialStratagems(string s, int player, int i, bool b = false)
