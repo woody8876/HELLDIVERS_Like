@@ -65,7 +65,7 @@ public class MobAnimationsController : MonoBehaviour {
         switch (state)
         {
             case eFSMStateID.ChaseStateID:
-                m_Animator.SetBool("Chase", Bool);
+                //m_Animator.SetBool("Chase", Bool);
                 m_Animator.SetBool("Move", Bool);
                 break;
             case eFSMStateID.IdleStateID:

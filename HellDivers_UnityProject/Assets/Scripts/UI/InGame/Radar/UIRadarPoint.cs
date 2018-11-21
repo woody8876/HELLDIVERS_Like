@@ -10,6 +10,7 @@ public enum eMapPointType
     FISHVARIANT,
     PATROL,
     TANK,
+    MISSIONTOWER,
 }
 public class UIRadarPoint : MonoBehaviour
 {
@@ -100,10 +101,10 @@ public class UIRadarPoint : MonoBehaviour
         switch (m_CurrentType)
         {
             case eMapPointType.FISH:
-                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 break;
             case eMapPointType.PLAYER:
-                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
                 break;
         }
         UIPanelRadar.Instance.PointList.Remove(this.gameObject);
@@ -139,6 +140,7 @@ public class UIRadarPoint : MonoBehaviour
     private void UpdatePosition()
     {
         FindRadarCenter();
+        Vector3 forward = m_CurrentTarget.transform.forward;
         m_Dir = m_CurrentTarget.transform.position - m_Center;
         m_Pos = this.transform.localPosition;
         m_Pos.x = m_Dir.x * (UIPanelRadar.Instance.RectWidth * 0.5f) / UIPanelRadar.Instance.RadarRadius;
@@ -150,7 +152,7 @@ public class UIRadarPoint : MonoBehaviour
 
     private void Blink()
     {
-        m_Color.a -= Time.deltaTime * 0.5f;
+        m_Color.a -= Time.deltaTime;
         m_Image.color = m_Color;
     }
 }

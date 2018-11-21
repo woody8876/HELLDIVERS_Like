@@ -27,15 +27,15 @@ public class UIPanelRadar : MonoBehaviour {
     private bool bAdd = true;
     private List<GameObject> m_PointList = new List<GameObject>();
 
-    [SerializeField] private float m_RadarRadius = 40.0f;
+    [SerializeField] private float m_RadarRadius = 100.0f;
     #endregion
 
     public void Init()
     {
         if (Instance == null) Instance = this;
-        m_GORadarPoint = Resources.Load("UI/InGame/Radar/TargetPoint") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9101);
         m_GORadarPoint = Resources.Load("UI/InGame/Radar/PlayerPoint") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 3, 9101);
+        m_GORadarPoint = Resources.Load("UI/InGame/Radar/MobPoint") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9102);
         m_RectTransform = this.GetComponent<RectTransform>();
         m_RectWidth = m_RectTransform.sizeDelta.x;
@@ -61,20 +61,20 @@ public class UIPanelRadar : MonoBehaviour {
         UIRadarPoint p;
         switch (type)
         {
-            case eMapPointType.FISH:
-                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
-                go.SetActive(true);
-                p = go.GetComponent<UIRadarPoint>();
-                p.Init(target, type);
-                p.transform.parent = this.transform;
-                m_PointList.Add(go);
-                break;
             case eMapPointType.PLAYER:
                 go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
+                m_PointList.Add(go);
+                break;
+            case eMapPointType.FISH:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
+                go.SetActive(true);
+                p = go.GetComponent<UIRadarPoint>();
+                p.Init(target, type);
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
@@ -86,11 +86,11 @@ public class UIPanelRadar : MonoBehaviour {
         switch (type)
         {
             case eMapPointType.PLAYER:
-                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(player, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
@@ -99,22 +99,24 @@ public class UIPanelRadar : MonoBehaviour {
     {
         if (bAdd)
         {
-            m_Color.g += Time.deltaTime * 0.2f;
+            m_Color.b += Time.deltaTime * 0.1f;
+            m_Color.g += Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.g > 0.2) bAdd = false;
+            if (m_Color.b > 0.35) bAdd = false;
         }
         else if (bAdd == false)
         {
-            m_Color.g -= Time.deltaTime * 0.2f;
+            m_Color.b -= Time.deltaTime * 0.1f;
+            m_Color.g -= Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.g <= 0) bAdd = true;
+            if (m_Color.b <= 0.3) bAdd = true;
         }
     }
 
     private void CountTimer()
     {
         m_Timer += Time.deltaTime;
-        if (m_Timer >= 2.0f && m_Color.g > 0.2f)
+        if (m_Timer >= 1.0f && m_Color.b > 0.35f)
         {
             if(m_PointList.Count > 0)
             {

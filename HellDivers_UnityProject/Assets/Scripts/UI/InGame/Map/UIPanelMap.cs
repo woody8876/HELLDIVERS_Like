@@ -14,7 +14,6 @@ public class UIPanelMap : MonoBehaviour {
     public float MapWidth{ get { return m_MapWidth; } }
     public float MapHeight { get { return m_MapHeight; } }
     public Color Color { get { return m_Color; } }
-    public float Timer { get { return m_Timer; } }
     public List<GameObject> PointList { get { return m_PointList; } }
     [SerializeField] private UIMapPoint m_PointPrefab;
     private RectTransform m_RectTransform;
@@ -22,26 +21,34 @@ public class UIPanelMap : MonoBehaviour {
     private float m_RectHeight;
     private Image m_Image;
     private Color m_Color;
-    private float m_Timer;
     private List<GameObject> m_PointList = new List<GameObject>();
 
     [SerializeField] private float m_MapRadius = 40.0f;
     [SerializeField] private float m_MapWidth = 544.0f;
     [SerializeField] private float m_MapHeight = 720.0f;
 
-
-    private bool bAdd = true;
-
+    private GameObject m_GORMapPoint;
     // Use this for initialization
-    void Start()
+
+    public void Init()
     {
         if (Instance == null) Instance = this;
 
+        m_GORMapPoint = Resources.Load("UI/InGame/Map/PlayerPoint") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 3, 9201);
+        m_GORMapPoint = Resources.Load("UI/InGame/Map/MobPoint") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 40, 9202);
+        m_GORMapPoint = Resources.Load("UI/InGame/Map/MissionPoint") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GORMapPoint, 10, 9203);
         m_RectTransform = this.GetComponent<RectTransform>();
         m_RectWidth = m_RectTransform.sizeDelta.x;
         m_RectHeight = m_RectTransform.sizeDelta.y;
         m_Image = this.GetComponent<Image>();
         m_Color = m_Image.color;
+    }
+    void Start()
+    {
+
     }
 
     // Update is called once per frame
@@ -50,20 +57,45 @@ public class UIPanelMap : MonoBehaviour {
 
     }
 
-    public void AddPointPrefab(GameObject target, eMapPointType type, int pointIndex)
+    public void AddPointPrefab(GameObject target, eMapPointType type)
     {
+        GameObject go;
+        UIMapPoint p;
         switch (type)
         {
             case eMapPointType.FISH:
-                GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(9201);
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9202);
                 go.SetActive(true);
-                UIMapPoint p = go.GetComponent<UIMapPoint>();
+                p = go.GetComponent<UIMapPoint>();
                 p.Init(target, type);
-                p.transform.parent = this.transform;
+                p.transform.SetParent(this.transform);
+                m_PointList.Add(go);
+                break;
+            case eMapPointType.MISSIONTOWER:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9203);
+                go.SetActive(true);
+                p = go.GetComponent<UIMapPoint>();
+                p.Init(target, type);
+                p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
         }
-        
+    }
+    public void AddPointPrefab(Player player, eMapPointType type)
+    {
+        GameObject go;
+        UIMapPoint p;
+        switch (type)
+        {
+            case eMapPointType.PLAYER:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9201);
+                go.SetActive(true);
+                p = go.GetComponent<UIMapPoint>();
+                p.Init(player, type);
+                p.transform.SetParent(this.transform);
+                m_PointList.Add(go);
+                break;
+        }
     }
     public void DeletePointPrefab(GameObject target)
     {
