@@ -21,6 +21,7 @@ public class WelcomeButtonController : MonoBehaviour {
     private float m_fTimer;
     private ControllerSetting m_controller;
     private bool m_bSetting;
+
     #region Mono Behaviors
     private void Start()
     {
