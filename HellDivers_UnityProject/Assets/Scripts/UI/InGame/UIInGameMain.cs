@@ -15,6 +15,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private UIDynamicMissionMsg m_DynamicMissionMsg;
         [SerializeField] private UIPanelMissionFailed m_PanelMissionFaild;
         [SerializeField] private UIPanelRadar m_PanelRadar;
+        [SerializeField] private UIPanelMap m_PanelMap;
         private Dictionary<Player, UIDynamicHpBar> m_DynamicHpBarMap;
 
         public void Init()
@@ -23,7 +24,9 @@ namespace HELLDIVERS.UI.InGame
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform).GetComponent<UIPanelStratagemAct>();
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform).GetComponent<UIPanelMissionFailed>();
             m_PanelRadar = Instantiate(m_PanelRadar, this.transform).GetComponent<UIPanelRadar>();
+            m_PanelMap = Instantiate(m_PanelMap, this.transform).GetComponent<UIPanelMap>();
             m_PanelRadar.Init();
+            m_PanelMap.Init();
         }
 
         private void Awake()
@@ -51,12 +54,18 @@ namespace HELLDIVERS.UI.InGame
             m_PanelPlayerInfo.AddPlayer(player);
             m_PanelStratagemAct.AddPlayer(player);
             m_PanelRadar.AddPointPrefab(player, eMapPointType.PLAYER);
+            m_PanelMap.AddPointPrefab(player, eMapPointType.PLAYER);
             AddDynamicHpBar(player);
         }
 
         public void AddRadarPoint(GameObject target, eMapPointType type)
         {
             m_PanelRadar.AddPointPrefab(target, type);
+        }
+
+        public void AddMapPoint(GameObject target, eMapPointType type)
+        {
+            m_PanelMap.AddPointPrefab(target, type);
         }
 
         public void AddDynamicHpBar(Player player)

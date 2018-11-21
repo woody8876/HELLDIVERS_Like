@@ -10,6 +10,7 @@ public enum eMapPointType
     FISHVARIANT,
     PATROL,
     TANK,
+    MISSIONTOWER,
 }
 public class UIRadarPoint : MonoBehaviour
 {
@@ -100,10 +101,10 @@ public class UIRadarPoint : MonoBehaviour
         switch (m_CurrentType)
         {
             case eMapPointType.FISH:
-                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 break;
             case eMapPointType.PLAYER:
-                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
                 break;
         }
         UIPanelRadar.Instance.PointList.Remove(this.gameObject);

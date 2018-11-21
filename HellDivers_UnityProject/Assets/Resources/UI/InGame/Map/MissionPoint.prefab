@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 224179189963092920}
   - component: {fileID: 222882468145922896}
   - component: {fileID: 114208114749822284}
-  - component: {fileID: 114560984724666950}
+  - component: {fileID: 114214777918177626}
   m_Layer: 0
-  m_Name: TargetPoint
+  m_Name: PlayerPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.048275948, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114560984724666950
+--- !u!114 &114214777918177626
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -64,10 +64,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1327004161480418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 710bfeb212c9e0b43bc217d99e4371d5, type: 3}
+  m_Script: {fileID: 11500000, guid: b3e7c17c20538824cae53771e5478770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Image: {fileID: 114208114749822284}
 --- !u!222 &222882468145922896
 CanvasRenderer:
   m_ObjectHideFlags: 1

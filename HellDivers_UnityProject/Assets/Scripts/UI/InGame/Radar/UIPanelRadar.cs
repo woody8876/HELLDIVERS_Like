@@ -33,9 +33,9 @@ public class UIPanelRadar : MonoBehaviour {
     public void Init()
     {
         if (Instance == null) Instance = this;
-        m_GORadarPoint = Resources.Load("UI/InGame/Radar/TargetPoint") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9101);
         m_GORadarPoint = Resources.Load("UI/InGame/Radar/PlayerPoint") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 3, 9101);
+        m_GORadarPoint = Resources.Load("UI/InGame/Radar/MobPoint") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GORadarPoint, 40, 9102);
         m_RectTransform = this.GetComponent<RectTransform>();
         m_RectWidth = m_RectTransform.sizeDelta.x;
@@ -61,7 +61,7 @@ public class UIPanelRadar : MonoBehaviour {
         UIRadarPoint p;
         switch (type)
         {
-            case eMapPointType.FISH:
+            case eMapPointType.PLAYER:
                 go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
@@ -69,8 +69,8 @@ public class UIPanelRadar : MonoBehaviour {
                 p.transform.parent = this.transform;
                 m_PointList.Add(go);
                 break;
-            case eMapPointType.PLAYER:
-                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
+            case eMapPointType.FISH:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(target, type);
@@ -86,7 +86,7 @@ public class UIPanelRadar : MonoBehaviour {
         switch (type)
         {
             case eMapPointType.PLAYER:
-                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(player, type);
