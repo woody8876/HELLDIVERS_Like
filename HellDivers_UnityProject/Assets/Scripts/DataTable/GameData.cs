@@ -13,16 +13,18 @@ public class GameData
 
     #region Tables
 
+    public Dictionary<int, RankData> RankTable;
     public Dictionary<int, StratagemInfo> StratagemTable;
     public Dictionary<int, WeaponInfo> WeaponInfoTable;
     public Dictionary<int, GrenadeInfo> GrenadeInfoTable;
     public Dictionary<int, MobInfo> MobInfoTable;
+
     #endregion Tables
 
     public void Init()
     {
         if (m_Instance == null) m_Instance = this;
-
+        RankTable = new Dictionary<int, RankData>();
         StratagemTable = new Dictionary<int, StratagemInfo>();
         WeaponInfoTable = new Dictionary<int, WeaponInfo>();
         GrenadeInfoTable = new Dictionary<int, GrenadeInfo>();
@@ -32,6 +34,7 @@ public class GameData
 
     private void LoadGameData()
     {
+        RankTable = RankDataTableLoader.LoadData("Table/RankDataTable");
         StratagemTable = StratagemDataLoader.LoadData("Table/StratagemTable");
         WeaponInfoTable = WeaponInfoLoader.LoadData("Table/WeaponInfoTable");
         GrenadeInfoTable = GrenadeInfoLoader.LoadData("Table/GrenadeInfoTable");

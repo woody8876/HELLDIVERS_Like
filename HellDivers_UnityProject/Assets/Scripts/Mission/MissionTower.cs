@@ -42,7 +42,7 @@ public class MissionTower : Mission, IInteractable
     [SerializeField] private float m_AvaliableRadius = 15;
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
-    [SerializeField] private float m_ActivatingTime = 180;
+    [SerializeField] private float m_ActivatingTime = 5;
     [SerializeField] private float m_MobSpawnTime = 30;
     [SerializeField] private float m_MinRadius = 20;
     [SerializeField] private float m_MaxRadius = 25;

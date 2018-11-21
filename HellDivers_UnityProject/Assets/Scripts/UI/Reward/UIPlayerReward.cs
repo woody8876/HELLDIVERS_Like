@@ -12,8 +12,10 @@ namespace HELLDIVERS.UI
         [SerializeField] private Image m_RankIcon;
         [SerializeField] private Text m_RankText;
         [SerializeField] private Text m_PlayerName;
-        [SerializeField] private Image m_XpBarFill;
-        [SerializeField] private Text m_XpText;
+        [SerializeField] private Image m_ExpBarFill;
+        [SerializeField] private Text m_ExpText;
+        [SerializeField] private UIPlayerRewardDetail m_RewardDetailPrefab;
+        private List<UIPlayerRewardDetail> m_Details = new List<UIPlayerRewardDetail>();
 
         public void Initialize(PlayerInfo player, PlayerRecord record)
         {
@@ -23,6 +25,24 @@ namespace HELLDIVERS.UI
             m_RankText.text = player.Rank.ToString();
             string fileName = string.Format("icon_rank_{0}", player.Rank.ToString("00"));
             m_RankIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
+
+            RankData currentRankData = GameData.Instance.RankTable[player.Rank + 1];
+            string expText = string.Format("{0}/{1}", record.Exp, currentRankData.Exp);
+            m_ExpText.text = expText;
+            float percentExp = Mathf.Clamp01(record.Exp / currentRankData.Exp);
+            m_ExpBarFill.fillAmount = percentExp;
+
+            CreateDetail("DEATH", record.TimesOfDeath);
+            CreateDetail("KILLS", record.NumOfKills);
+            CreateDetail("SHOTS", record.Shots);
+            CreateDetail("MONEY", record.Money);
+        }
+
+        private void CreateDetail(string label, int number)
+        {
+            UIPlayerRewardDetail detail = Instantiate(m_RewardDetailPrefab, this.transform);
+            detail.Initialize(label, number);
+            m_Details.Add(detail);
         }
 
         // Use this for initialization
