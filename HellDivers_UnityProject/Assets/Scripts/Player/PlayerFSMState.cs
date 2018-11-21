@@ -266,7 +266,7 @@ public class PlayerFSMMeleeAttackState : PlayerFSMState
 
 public class PlayerFSMReloadState : PlayerFSMState
 {
-    bool bCheck;
+    //bool bCheck;
     public PlayerFSMReloadState()
     {
         m_StateID = ePlayerFSMStateID.ReloadStateID;
@@ -297,7 +297,7 @@ public class PlayerFSMReloadState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(1);
         if (info.IsName("Reload") || data.m_PAC.Animator.IsInTransition(1))
         {
-            bCheck = true;
+            //bCheck = true;
             if (info.normalizedTime > 0.9f)
             data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         }

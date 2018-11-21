@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224220284674710136}
   - component: {fileID: 222385989433754350}
   - component: {fileID: 114372634140887822}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RadarLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114436983593539496}
   - component: {fileID: 114437710234798570}
   - component: {fileID: 114207931069894668}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PanelRadar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PointPrefab: {fileID: 114560984724666950, guid: 9cb123a89b768c84c8ca7180a5a571a4,
     type: 2}
-  m_RadarRadius: 40
+  m_RadarRadius: 100
 --- !u!114 &114372634140887822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.2551725, a: 1}
+  m_Color: {r: 0.26666668, g: 0.84705883, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_Color: {r: 0.08, g: 0.25411767, b: 0.3, a: 0.391}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

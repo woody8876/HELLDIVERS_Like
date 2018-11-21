@@ -46,6 +46,7 @@ public class MissionManager
         mission.OnFinished += DoMissionFinished;
 
         UIInGameMain.Instance.AddDynamicMissionMsg(mission);
+        UIInGameMain.Instance.AddMapPoint(mission.gameObject, eMapPointType.MISSIONTOWER);
     }
 
     private void DoMissionFinished(Mission mission)

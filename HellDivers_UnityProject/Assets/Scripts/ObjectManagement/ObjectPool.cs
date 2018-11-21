@@ -117,6 +117,12 @@ public class ObjectPool
                 go.transform.parent = parent.transform;
                 break;
 
+            case 9:
+                parent = GameObject.Find("Point");
+                if (parent == null) parent = new GameObject("Point");
+                go.transform.SetParent(parent.transform);
+                break;
+
             default:
                 parent = GameObject.Find("Others");
                 if (parent == null) parent = new GameObject("Others");
