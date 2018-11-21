@@ -26201,6 +26201,7 @@ MonoBehaviour:
     username: Player 1
     rank: 40
     money: 1
+    exp: 0
   m_PlayerData2:
     unlockweapons: 
     weapons: 4d04000015050000
@@ -26209,7 +26210,8 @@ MonoBehaviour:
     username: Player 2
     rank: 40
     money: 1
-  m_NumberOfTowers: 7
+    exp: 0
+  m_NumberOfTowers: 1
 --- !u!4 &858686616
 Transform:
   m_ObjectHideFlags: 0
