@@ -52,13 +52,18 @@ public class UIPanelMap : MonoBehaviour {
 
     public void AddPointPrefab(GameObject target, eMapPointType type, int pointIndex)
     {
-        //GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(pointIndex);
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
-        go.SetActive(true);
-        UIMapPoint p = go.GetComponent<UIMapPoint>();
-        p.Init(target, type);
-        p.transform.parent = this.transform;
-        m_PointList.Add(go);
+        switch (type)
+        {
+            case eMapPointType.FISH:
+                GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(9201);
+                go.SetActive(true);
+                UIMapPoint p = go.GetComponent<UIMapPoint>();
+                p.Init(target, type);
+                p.transform.parent = this.transform;
+                m_PointList.Add(go);
+                break;
+        }
+        
     }
     public void DeletePointPrefab(GameObject target)
     {

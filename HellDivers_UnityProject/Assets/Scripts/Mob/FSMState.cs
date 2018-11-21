@@ -284,7 +284,7 @@ public class FSMChaseState : FSMState
         }
 
         bool bAttack = false;
-        bool bCheck = MobInfo.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
+        MobInfo.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
 
         if (bAttack)
         {

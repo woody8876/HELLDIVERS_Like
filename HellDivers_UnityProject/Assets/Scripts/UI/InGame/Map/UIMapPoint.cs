@@ -67,18 +67,15 @@ public class UIMapPoint : MonoBehaviour {
     private void FindRadarCenter()
     {
         m_Center = MapInfo.Instance.MapOrigin.transform.position;
-        m_Center.x += UIPanelMap.Instance.MapWidth * 0.5f;
-        m_Center.z += UIPanelMap.Instance.MapHeight * 0.5f;
     }
 
     private void CalculatePosition()
     {
         Vector3 targetPos = m_CurrentTarget.transform.position;
         m_Dir = targetPos - m_Center;
-        Debug.Log(m_Dir);
         m_Pos = this.transform.localPosition;
-        m_Pos.x = m_Dir.x * (UIPanelMap.Instance.RectWidth * 0.5f) / UIPanelMap.Instance.MapWidth;
-        m_Pos.y = m_Dir.z * (UIPanelMap.Instance.RectHeight * 0.5f) / UIPanelMap.Instance.MapHeight;
+        m_Pos.x = m_Dir.x * (UIPanelMap.Instance.RectWidth) / UIPanelMap.Instance.MapWidth;
+        m_Pos.y = m_Dir.z * (UIPanelMap.Instance.RectHeight) / UIPanelMap.Instance.MapHeight;
         this.transform.localPosition = m_Pos;
     }
 }
