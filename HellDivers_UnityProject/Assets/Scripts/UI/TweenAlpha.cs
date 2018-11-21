@@ -15,17 +15,21 @@ public class TweenAlpha : MonoBehaviour
     private float m_origin;
     private float m_target;
 
+    public delegate void TweenAlphaEventHolder();
+
+    public event TweenAlphaEventHolder OnBegining;
+
+    public event TweenAlphaEventHolder OnFinished;
+
     [ContextMenu("Play Forward")]
     public void PlayForward()
     {
-        this.gameObject.SetActive(true);
         Play(m_StratAlpha, m_TargetAlpha);
     }
 
     [ContextMenu("Play Backward")]
     public void PlayeBackward()
     {
-        this.gameObject.SetActive(true);
         Play(m_TargetAlpha, m_StratAlpha);
     }
 
@@ -36,6 +40,7 @@ public class TweenAlpha : MonoBehaviour
         m_origin = start;
         m_target = end;
         this.enabled = true;
+        if (OnBegining != null) OnBegining();
     }
 
     private void Awake()
@@ -58,11 +63,13 @@ public class TweenAlpha : MonoBehaviour
         if (m_origin > m_target && m_CurrentAlpha <= m_target + m_DeadZone)
         {
             SetAlpha(m_target);
+            if (OnFinished != null) OnFinished();
             this.enabled = false;
         }
         else if (m_origin < m_target && m_CurrentAlpha >= m_target - m_DeadZone)
         {
             SetAlpha(m_target);
+            if (OnFinished != null) OnFinished();
             this.enabled = false;
         }
     }

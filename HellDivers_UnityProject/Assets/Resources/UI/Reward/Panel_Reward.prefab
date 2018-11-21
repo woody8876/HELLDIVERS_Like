@@ -77,7 +77,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &114297968723571486
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Image: {fileID: 114584614654501936}
   m_StratAlpha: 1
   m_TargetAlpha: 0
-  m_DeadZone: 0.01
+  m_DeadZone: 0.05
   m_Lerp: 0.025
 --- !u!114 &114897793002962678
 MonoBehaviour:

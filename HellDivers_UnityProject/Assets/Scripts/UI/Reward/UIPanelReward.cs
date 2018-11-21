@@ -21,18 +21,27 @@ namespace HELLDIVERS.UI
         // Use this for initialization
         private void Start()
         {
-            for (int i = 1; i <= InGameRewardManager.Instance.PlayerRewardMap.Count; i++)
+            if (m_BlackCardTween != null)
             {
-                UIPlayerReward playerReward = Instantiate(m_PlayerRewardPrefab, m_PanelReward);
-                playerReward.Initialize(PlayerManager.Instance.Players[i].info);
+                m_BlackCardTween.OnFinished += CreatePlayerRewardElement;
+                m_BlackCardTween.PlayForward();
             }
-
-            if (m_BlackCardTween != null) m_BlackCardTween.PlayForward();
         }
 
         // Update is called once per frame
         private void Update()
         {
+        }
+
+        private void CreatePlayerRewardElement()
+        {
+            if (InGameRewardManager.Instance == null || InGameRewardManager.Instance.PlayerRewardMap.Count <= 0) return;
+
+            foreach (KeyValuePair<int, PlayerRecord> record in InGameRewardManager.Instance.PlayerRewardMap)
+            {
+                UIPlayerReward playerReward = Instantiate(m_PlayerRewardPrefab, m_PanelReward);
+                playerReward.Initialize(PlayerManager.Instance.Players[record.Key].info, record.Value);
+            }
         }
     }
 }
