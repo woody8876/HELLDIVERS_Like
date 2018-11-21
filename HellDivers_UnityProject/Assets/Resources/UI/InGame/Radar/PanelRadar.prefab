@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PointPrefab: {fileID: 114560984724666950, guid: 9cb123a89b768c84c8ca7180a5a571a4,
     type: 2}
-  m_RadarRadius: 40
+  m_RadarRadius: 100
 --- !u!114 &114372634140887822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_Color: {r: 0.08, g: 0.25411767, b: 0.3, a: 0.391}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
