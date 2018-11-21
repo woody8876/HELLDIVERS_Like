@@ -60,13 +60,13 @@ public class GameMain : MonoBehaviour
     [ContextMenu("GameStart")]
     private void GameStart()
     {
-        for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
-        {
-            m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
-        }
+        //for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
+        //{
+        //    m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
+        //}
 
-        //m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
-        //m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
+        m_PlayerManager.CreatePlayer(m_PlayerData1, 1);
+        m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
@@ -87,9 +87,15 @@ public class GameMain : MonoBehaviour
 
     private void CheckGameCondition()
     {
-        if (InGamePlayerManager.Instance.IsAllPlayerDead())
+        if (m_PlayerManager.IsAllPlayerDead())
         {
             MissionFailed();
+            DoCheckCondition = null;
+        }
+
+        if (m_MissionManager.MissionCount <= 0)
+        {
+            MissionComplete();
             DoCheckCondition = null;
         }
     }
@@ -103,12 +109,12 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Complete")]
     public void MissionComplete()
     {
-        for (int i = 0; i < InGamePlayerManager.Instance.Players.Count; i++)
+        for (int i = 0; i < m_PlayerManager.Players.Count; i++)
         {
-            Player player = InGamePlayerManager.Instance.Players[i];
+            Player player = m_PlayerManager.Players[i];
             m_RewardManager.SetReward(player.SerialNumber, player.Record);
         }
-        SceneController.Instance.ToLobby();
+        SceneController.Instance.ToReward();
     }
 
     private void SpawnMobs()

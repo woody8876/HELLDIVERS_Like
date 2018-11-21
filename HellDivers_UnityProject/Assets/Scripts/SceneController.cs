@@ -25,6 +25,12 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene("Lobby");
     }
 
+    [ContextMenu("ToReward")]
+    public void ToReward()
+    {
+        SceneManager.LoadScene("Reward");
+    }
+
     private IEnumerator LoadScene(string scene)
     {
         AsyncOperation asyncLoading = SceneManager.LoadSceneAsync(scene);

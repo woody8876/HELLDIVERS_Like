@@ -20,6 +20,9 @@ public class Main : MonoBehaviour
         m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_PlayerManager.Init();
         m_InputManager.Init();
+
+        m_PlayerManager.CreatePlayer(1, InputManager.Instance.InputSettingMap[1]);
+        m_PlayerManager.CreatePlayer(2, InputManager.Instance.InputSettingMap[2]);
     }
 
     // Use this for initialization

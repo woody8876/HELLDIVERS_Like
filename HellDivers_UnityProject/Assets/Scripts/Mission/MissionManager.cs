@@ -52,6 +52,5 @@ public class MissionManager
     private void DoMissionFinished(Mission mission)
     {
         m_MissionMap.Remove(mission);
-        if (MissionCount <= 0) GameMain.Instance.MissionAbandon();
     }
 }

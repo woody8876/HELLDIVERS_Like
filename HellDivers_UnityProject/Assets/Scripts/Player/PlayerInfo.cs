@@ -9,6 +9,7 @@ public class PlayerInfo
 
     public string Username { get { return username; } }
     public int Rank { get { return rank; } }
+    public int Exp { get { return exp; } }
     public List<int> Weapons { get { return weapons; } }
     public List<int> Stratagems { get { return stratagems; } }
     public List<int> Grenades { get { return grenades; } }
@@ -24,8 +25,9 @@ public class PlayerInfo
     [SerializeField] private List<int> stratagems = new List<int>();
     [SerializeField] private List<int> grenades = new List<int>();
     [SerializeField] private string username;
-    [SerializeField] private int rank;
+    [SerializeField] private int rank = 1;
     [SerializeField] private int money;
+    [SerializeField] private int exp;
     private int totalMissionFought;
     private int totalMissionWon;
     private int totalDeaths;
@@ -46,7 +48,7 @@ public class PlayerInfo
 
     public bool UnlockWeapon(int id)
     {
-        foreach (var item in unlockweapons) { if (id == item)  return false; }
+        foreach (var item in unlockweapons) { if (id == item) return false; }
         unlockweapons.Add(id);
         return true;
     }
@@ -55,7 +57,7 @@ public class PlayerInfo
     {
         for (int i = 0; i < unlockweapons.Count; i++)
         {
-            if(unlockweapons[i] == id)
+            if (unlockweapons[i] == id)
             {
                 id += 1;
                 unlockweapons[i] = id;
@@ -92,6 +94,11 @@ public class PlayerInfo
         this.money += money;
     }
 
+    public void AddExp(int exp)
+    {
+        this.exp += exp;
+    }
+
     public PlayerInfo Clone()
     {
         PlayerInfo clone = new PlayerInfo();
@@ -112,6 +119,7 @@ public class PlayerInfo
         other.stratagems = this.stratagems;
         other.grenades = this.grenades;
         other.money = this.money;
+        other.exp = this.exp;
     }
 
     #endregion Public Function

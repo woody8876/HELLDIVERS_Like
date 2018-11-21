@@ -6,8 +6,6 @@ using UnityEngine;
 
 public static class StratagemDataLoader
 {
-    public static string Path;
-
     public static Dictionary<int, StratagemInfo> LoadData(string filePah)
     {
         Dictionary<int, StratagemInfo> stratagemTable = new Dictionary<int, StratagemInfo>();
@@ -19,7 +17,7 @@ public static class StratagemDataLoader
         }
         else
         {
-            Debug.LogFormat("StratagemDatabase loading faild.");
+            Debug.LogFormat("StratagemDatabase loading failed.");
             return null;
         }
     }

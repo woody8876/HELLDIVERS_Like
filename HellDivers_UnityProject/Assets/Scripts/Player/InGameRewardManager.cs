@@ -7,6 +7,7 @@ public class InGameRewardManager : MonoBehaviour
     static public InGameRewardManager Instance { get { return m_instance; } }
     static private InGameRewardManager m_instance;
 
+    public Dictionary<int, PlayerRecord> PlayerRewardMap { get { return m_RecordMap; } }
     private Dictionary<int, PlayerRecord> m_RecordMap;
     private PlayerRecord record1;
 

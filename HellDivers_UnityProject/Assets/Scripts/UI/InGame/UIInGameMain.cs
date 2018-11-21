@@ -86,6 +86,7 @@ namespace HELLDIVERS.UI.InGame
 
         public void DrawMissionFailedUI()
         {
+            m_PanelMissionFaild.transform.SetAsLastSibling();
             m_PanelMissionFaild.StartUI();
         }
     }

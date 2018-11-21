@@ -10,7 +10,7 @@ public class UIWeaponList : MonoBehaviour {
     [SerializeField] GameObject m_WeaponUI;
     [SerializeField] GameObject m_Content;
 
-    List<Button> m_weapons = new List<Button>();
+    List<GameObject> m_weapons = new List<GameObject>();
     int posY
     {
         get { return _posY; }
@@ -22,17 +22,25 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
     int _posY;
+    GameObject m_currentSelectObject;
     // Use this for initialization
     void Start()
     {
-        CreateWeaponUI(weaponDisplay.SetPlayer.PlayerID);
-        SetButtonNav();
+        int PlayerID = weaponDisplay.SetPlayer.PlayerID;
+        CreateWeaponUI(PlayerID);
+        SubscriptAxisEvent();
+        ChangeWeapon();
     }
     private void OnEnable()
     {
-        StartCoroutine(ChangeWeapon());
+        if (m_weapons.Count < 1) return;
+        SubscriptAxisEvent();
+        ChangeWeapon();
     }
-
+    private void OnDisable()
+    {
+        UnsubscribeAxisEvent();
+    }
 
     private void LateUpdate()
     {
@@ -41,15 +49,28 @@ public class UIWeaponList : MonoBehaviour {
         m_Content.transform.localPosition = Vector3.Lerp(m_Content.transform.localPosition, pos, 0.05f);
     }
 
-    private IEnumerator ChangeWeapon()
+    private void SubscriptAxisEvent()
     {
-        yield return null;
+        weaponDisplay.SetPlayer.Control.AxisUp += ButtonUp;
+        weaponDisplay.SetPlayer.Control.AxisDown += ButtonDown;
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ButtonSubmit;
+    }
+    private void UnsubscribeAxisEvent()
+    {
+        weaponDisplay.SetPlayer.Control.AxisUp -= ButtonUp;
+        weaponDisplay.SetPlayer.Control.AxisDown -= ButtonDown;
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ButtonSubmit;
+    }
+
+    private void ChangeWeapon()
+    {
         for (int i = 0; i < m_weapons.Count; i++)
         {
             if (Determine() == m_weapons[i].gameObject.name)
             {
-                EventSystem.current.SetSelectedGameObject(m_weapons[i].gameObject);
-                yield break;
+                m_currentSelectObject = m_weapons[i].gameObject;
+                OnSelectEvent(m_currentSelectObject);
+                return;
             }
         }
     }
@@ -70,18 +91,14 @@ public class UIWeaponList : MonoBehaviour {
     private void CreateWeaponUI(int player)
     {
         GameObject go;
-        Button btn;
         List<int> unlockWeapons = PlayerManager.Instance.Players[player].info.UnLockWeapons;
         for (int i = 0; i < unlockWeapons.Count; i++)
         {
             go = Instantiate(m_WeaponUI, m_Content.transform);
-            btn = go.GetComponent<Button>();
             int id = unlockWeapons[i];
             go.name = id.ToString();
-            btn.onClick.AddListener(() => OnClickEvent(go.name ,weaponDisplay.SelectButton));
             weaponDisplay.SetWeaponUI(go, id);
-            OnSelectEvent(go);
-            m_weapons.Add(btn);
+            m_weapons.Add(go);
         }
     }
 
@@ -90,6 +107,27 @@ public class UIWeaponList : MonoBehaviour {
         if (weaponDisplay.SetPlayer.m_bPrimary) return weaponDisplay.SetPlayer.PriWeaponID.ToString();
         else return weaponDisplay.SetPlayer.SecWeaponID.ToString();
     }
+
+    #region Button Behaviors
+    private void ButtonUp()
+    {
+        DisSelectEvent(m_currentSelectObject);
+        ButtonNavUP();
+        OnSelectEvent(m_currentSelectObject);
+
+    }
+    private void ButtonDown()
+    {
+        DisSelectEvent(m_currentSelectObject);
+        ButtonNavDown();
+        OnSelectEvent(m_currentSelectObject);
+    }
+    private void ButtonSubmit()
+    {
+        OnClickEvent();
+    }
+    #endregion
+
 
     #region Set Button
 
@@ -113,34 +151,60 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
 
-    private void SetButtonNav()
+    private void ButtonNavDown()
     {
-        Navigation buttonNav;
-        for (int i = 0; i < m_weapons.Count; i++)
+        GameObject go = m_currentSelectObject;
+        if (go == m_weapons[m_weapons.Count - 1]) return;
+        for (int i = 0; i < m_weapons.Count-1; i++)
         {
-            buttonNav = m_weapons[i].navigation;
-            buttonNav.mode = Navigation.Mode.Explicit;
-            buttonNav.selectOnUp = (i != 0) ? m_weapons[i - 1] : m_weapons[i];
-            buttonNav.selectOnDown = (i != m_weapons.Count - 1) ? m_weapons[i + 1] : m_weapons[i];
-            m_weapons[i].navigation = buttonNav;
+            if (go == m_weapons[i].gameObject)
+            {
+                m_currentSelectObject = m_weapons[i + 1].gameObject;
+                return;
+            }
+        }
+    }
+
+    private void ButtonNavUP()
+    {
+        GameObject go = m_currentSelectObject;
+        if (go == m_weapons[0]) return;
+        for (int i = 1; i < m_weapons.Count; i++)
+        {
+            if (go == m_weapons[i].gameObject)
+            {
+                m_currentSelectObject = m_weapons[i - 1].gameObject;
+                return;
+            }
         }
     }
 
     private void OnSelectEvent(GameObject go)
     {
-        EventTrigger trigger = go.AddComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventData) => SetInfo(go));
-        entry.callback.AddListener((eventData) => OnValueChange(go));
-        trigger.triggers.Add(entry);
+        SetInfo(go);
+        OnValueChange(go);
+        go.GetComponent<LobbyUI_Weapon>().SetHighlightBG();
     }
 
-    private void OnClickEvent(string s, GameObject next) 
+    private void DisSelectEvent(GameObject go)
+    {
+        go.GetComponent<LobbyUI_Weapon>().SetBG();
+    }
+
+    private void SetButtonEvent()
+    {
+        weaponDisplay.SetPlayer.Control.AxisRight += weaponDisplay.Button.SetRightNav;
+        weaponDisplay.SetPlayer.Control.AxisLeft += weaponDisplay.Button.SetLeftNav;
+        weaponDisplay.SetPlayer.Control.AxisCancel += SubscriptAxisEvent;
+    }
+
+    private void OnClickEvent() 
     {
         weaponDisplay.SetCurID(weaponDisplay.Info.ID);
-        EventSystem.current.SetSelectedGameObject(next);
+        DisSelectEvent(m_currentSelectObject);
+        weaponDisplay.Button.OnSelectButton();
+        UnsubscribeAxisEvent();
+        SetButtonEvent();
     }
-
     #endregion
 }
