@@ -25,6 +25,7 @@ public class UIPanelRadar : MonoBehaviour {
     private Color m_Color;
     private float m_Timer;
     private bool bAdd = true;
+    private int bPlyaersCount;
     private List<GameObject> m_PointList = new List<GameObject>();
 
     [SerializeField] private float m_RadarRadius = 100.0f;
@@ -53,6 +54,29 @@ public class UIPanelRadar : MonoBehaviour {
 	void Update () {
         Blink();
         CountTimer();
+        
+        List<Player> pList = InGamePlayerManager.Instance.Players;
+        if (pList != null && pList.Count > 0)
+        {
+            for (int i = 0; i < pList.Count; i++)
+            {
+                if (pList[i].IsDead)
+                {
+                    bPlyaersCount++;
+                }
+            }
+            if(bPlyaersCount >= pList.Count)
+            {
+                if (m_Color.a == 0) return;
+                m_Color.a -= Time.deltaTime *0.3f;
+                m_Image.color = m_Color;
+            }
+            else{
+                m_Color.a = 1;
+                m_Image.color = m_Color;
+            }
+            bPlyaersCount = 0;
+        }
     }
 
     public void AddPointPrefab(GameObject target, eMapPointType type)
