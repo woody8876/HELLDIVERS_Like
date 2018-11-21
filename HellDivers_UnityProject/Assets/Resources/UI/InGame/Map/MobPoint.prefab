@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 222882468145922896}
   - component: {fileID: 114208114749822284}
   - component: {fileID: 114214777918177626}
-  m_Layer: 0
-  m_Name: MapPoint
+  m_Layer: 5
+  m_Name: MobPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.048275948, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3e7c17c20538824cae53771e5478770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Image: {fileID: 114208114749822284}
+  m_Image: {fileID: 0}
 --- !u!222 &222882468145922896
 CanvasRenderer:
   m_ObjectHideFlags: 1

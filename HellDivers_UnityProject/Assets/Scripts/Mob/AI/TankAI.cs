@@ -12,7 +12,6 @@ public class TankAI : Character
     private CapsuleCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageColloder;
     //private GameObject[] m_PlayerGO;
-    private float m_MinDis = 100000f;
     private float Timer = 2.0f;
 
     public eFSMStateID m_CurrentState;
@@ -28,7 +27,6 @@ public class TankAI : Character
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
         m_DamageColloder.enabled = true;
-        m_MinDis = 100000f;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
