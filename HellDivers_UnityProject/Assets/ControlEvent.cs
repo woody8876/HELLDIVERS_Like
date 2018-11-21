@@ -9,12 +9,25 @@ public class ControlEvent : MonoBehaviour {
 
     public int PlayerID { get; private set; }
     public void SetID(int i) { PlayerID = i; }
+    public ControllerSetting Controller { get; private set; }
+
+    public delegate void AxisEvent();
+    public event AxisEvent AxisDown;
+    public event AxisEvent AxisUp;
+    public event AxisEvent AxisLeft;
+    public event AxisEvent AxisRight;
+    public event AxisEvent AxisSubmit;
+    public event AxisEvent AxisCancel;
+
+
+
+
 
 
     // Use this for initialization
     void Start()
     {
-    
+        Controller = PlayerManager.Instance.Players[PlayerID].controllerSetting;
     }
 
     // Update is called once per frame
@@ -23,44 +36,40 @@ public class ControlEvent : MonoBehaviour {
         if (!PlayerManager.Instance.Players.ContainsKey(PlayerID) || !PlayerManager.Instance.Players[PlayerID].controllerSetting) { return; }
         if (timer < 0)
         {
-            InputSetting(PlayerManager.Instance.Players[PlayerID].controllerSetting);
+            InputSetting(Controller);
         }
         timer -= Time.fixedDeltaTime;
     }
 
     private void InputSetting(ControllerSetting m_controller)
     {
-        currentAxis = new AxisEventData(EventSystem.current);
-        currentButton = EventSystem.current.currentSelectedGameObject;
-
         if (Input.GetAxis(m_controller.Vertical) > 0)
         {
-            currentAxis.moveDir = MoveDirection.Up;
-            ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
+            if (AxisUp != null) AxisUp();
             timer = timeBetweenInputs;
         }
         else if (Input.GetAxis(m_controller.Vertical) < 0)
         {
-            currentAxis.moveDir = MoveDirection.Down;
-            ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
+            if (AxisDown != null) AxisDown();
             timer = timeBetweenInputs;
         }
         else if (Input.GetAxis(m_controller.Horizontal) > 0)
         {
-            currentAxis.moveDir = MoveDirection.Right;
-            ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
+            if (AxisRight != null) AxisRight();
             timer = timeBetweenInputs;
         }
         else if (Input.GetAxis(m_controller.Horizontal) < 0)
         {
-            currentAxis.moveDir = MoveDirection.Left;
-            ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
+            if (AxisLeft != null) AxisLeft();
             timer = timeBetweenInputs;
         }
-
+        else if (Input.GetKeyDown(m_controller.Submit))
+        {
+            if (AxisSubmit != null) AxisSubmit();
+            timer = timeBetweenInputs;
+        }
+        //else if (Input.GetKeyDown(m_controller.Cancel)) {  }
     }
-    private AxisEventData currentAxis;
-    private GameObject currentButton;
     private float timer;
-    private float timeBetweenInputs = 0.2f;
+    private float timeBetweenInputs = 0.4f;
 }

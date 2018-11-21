@@ -6,9 +6,10 @@ public class PlayArmoury : MonoBehaviour {
 
     [SerializeField] GameObject m_PlayerInGame;
 
+    #region Private Field
     ControllerSetting m_controller;
+    Dictionary<int, bool> m_dPlayerReady = new Dictionary<int, bool>();
     bool b_AddPlayer;
-
     int[] Members
     {
         get
@@ -18,34 +19,22 @@ public class PlayArmoury : MonoBehaviour {
             return key;
         }
     }
-	// Use this for initialization
-	void Start () {
+    #endregion
+
+    #region MonoBehaviors
+
+    void Start () {
         foreach (var item in Members)
         {
             CreatPlayerMenu(item);
         }
         SetController();
 	}
-	
-    public void SetController()
-    {
-        m_controller = (PlayerManager.Instance.Players[1].controllerSetting == InputManager.Instance.InputSettingMap[1]) ? InputManager.Instance.InputSettingMap[2] : InputManager.Instance.InputSettingMap[1];
-    }
 
-    public void CreatPlayerMenu(int i)
-    {
-        Vector3 pos = new Vector3(150 + 810 * (i - 1), 780, 0);
-        Quaternion rotate = new Quaternion(0, 0, 0, 1);
-        GameObject go = Instantiate(m_PlayerInGame, pos, rotate, this.transform);
-        go.name = "Player" + i;
-        go.GetComponentInChildren<SetPlayerWeapon>().PlayerID = i;
-        go.GetComponent<ControlEvent>().SetID(i);
-    }
-
-    // Update is called once per frame
-    void Update () {
+    void LateUpdate () {
+        if (CheckState()) SceneController.Instance.ToGameScene();
         if (b_AddPlayer) return;
-        if (PlayerManager.Instance.Players.ContainsKey(2) && PlayerManager.Instance.Players[2].controllerSetting)
+        if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
         {
             if (Input.GetKey(m_controller.Submit))
             {
@@ -55,4 +44,40 @@ public class PlayArmoury : MonoBehaviour {
             }
         }
 	}
+
+    #endregion
+
+    #region Private Method
+
+    private void SetController()
+    {
+        m_controller = (PlayerManager.Instance.Players[1].controllerSetting == InputManager.Instance.InputSettingMap[1]) ? InputManager.Instance.InputSettingMap[2] : InputManager.Instance.InputSettingMap[1];
+    }
+
+    private void CreatPlayerMenu(int i)
+    {
+        Vector3 pos = new Vector3(150 + 810 * (i - 1), 780, 0);
+        Quaternion rotate = new Quaternion(0, 0, 0, 1);
+        GameObject go = Instantiate(m_PlayerInGame, pos, rotate, this.transform);
+        go.name = "Player" + i;
+        //go.GetComponentInChildren<SetPlayerWeapon>().PlayerID = i;
+        go.GetComponent<ControlEvent>().SetID(i);
+        m_dPlayerReady.Add(i, false);
+    }
+
+    private bool CheckState()
+    {
+        for (int i = 1; i < m_dPlayerReady.Count + 1 ; i++)
+        {
+            if (m_dPlayerReady[i] == false) return false;
+        }
+        return true;
+    }
+
+    #endregion
+
+    public void SetPlayerState(int i, bool ready = true)
+    {
+        m_dPlayerReady[i] = ready;
+    }
 }

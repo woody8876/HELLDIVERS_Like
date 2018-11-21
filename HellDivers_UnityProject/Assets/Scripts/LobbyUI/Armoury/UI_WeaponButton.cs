@@ -4,27 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_WeaponButton : MonoBehaviour {
-
+    
     [SerializeField] UIWeaponDisplay weaponDisplay;
     [SerializeField] Image m_LevelUp;
     [SerializeField] Image m_Select;
     
+
     public GameObject LevelUp { get { return m_LevelUp.gameObject; } }
     public GameObject Select  { get { return m_Select.gameObject; } }
-    public GameObject 
+    //public GameObject 
 
     private GameObject m_CurrentObject;
     private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
     private Color m_BGColor = new Color(1, 1, 1, 0.286f);
 
-    // Use this for initialization
-    void Start () {
-    }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
     #region Button Behaviors
 
     public void SetLeftNav()
@@ -33,6 +26,8 @@ public class UI_WeaponButton : MonoBehaviour {
         DisSelectButton();
         OnLevelUpButton();
         m_CurrentObject = LevelUp;
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
     }
 
     public void SetRightNav()
@@ -41,6 +36,9 @@ public class UI_WeaponButton : MonoBehaviour {
         DisLevelUpButton();
         OnSelectButton();
         m_CurrentObject = Select;
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickLevelUpButton;
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickSelectButton;
+
     }
 
     public void OnSelectButton()
@@ -55,6 +53,7 @@ public class UI_WeaponButton : MonoBehaviour {
 
     private void ClickSelectButton()
     {
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
         ClickSelect(weaponDisplay.SetPlayer.PlayerID);
     }
 
@@ -140,7 +139,7 @@ public class UI_WeaponButton : MonoBehaviour {
             setPlayer.SetSecWeaponID(weaponDisplay.CurWeaponID);
         }
         setPlayer.SelectWeaponUI(false);
-        EventSystem.current.SetSelectedGameObject(go);
+        //EventSystem.current.SetSelectedGameObject(go);
 
     }
 

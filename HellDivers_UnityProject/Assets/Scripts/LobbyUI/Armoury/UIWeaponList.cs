@@ -22,52 +22,45 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
     int _posY;
-    float m_Timer;
-    float m_TCountDown = 0.4f;
     GameObject m_currentSelectObject;
-    ControllerSetting controller;
     // Use this for initialization
     void Start()
     {
         int PlayerID = weaponDisplay.SetPlayer.PlayerID;
         CreateWeaponUI(PlayerID);
-        controller = PlayerManager.Instance.Players[PlayerID].controllerSetting;
+        SubscriptAxisEvent();
         m_currentSelectObject = m_weapons[1];
+        OnSelectEvent(m_currentSelectObject);
     }
     private void OnEnable()
     {
         if (m_weapons.Count < 1) return;
+        SubscriptAxisEvent();
         ChangeWeapon();
     }
-
+    private void OnDisable()
+    {
+        UnsubscribeAxisEvent();
+    }
 
     private void LateUpdate()
     {
-        if (m_Timer < 0)
-        {
-            if (Input.GetAxis(controller.Vertical) > 0)
-            {
-                DisSelectEvent(m_currentSelectObject);
-                ButtonNavUP();
-                OnSelectEvent(m_currentSelectObject);
-                m_Timer = m_TCountDown;
-            }
-            else if (Input.GetAxis(controller.Vertical) < 0)
-            {
-                DisSelectEvent(m_currentSelectObject);
-                ButtonNavDown();
-                OnSelectEvent(m_currentSelectObject);
-                m_Timer = m_TCountDown;
-            }
-            else if (Input.GetKey(controller.Submit))
-            {
-                OnClickEvent(m_currentSelectObject.name, weaponDisplay.SelectButton);
-            }
-        }
         Vector3 pos = m_Content.transform.localPosition;
         pos.y = posY;
         m_Content.transform.localPosition = Vector3.Lerp(m_Content.transform.localPosition, pos, 0.05f);
-        m_Timer -= Time.fixedDeltaTime;
+    }
+
+    private void SubscriptAxisEvent()
+    {
+        weaponDisplay.SetPlayer.Control.AxisUp += ButtonUp;
+        weaponDisplay.SetPlayer.Control.AxisDown += ButtonDown;
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ButtonSubmit;
+    }
+    private void UnsubscribeAxisEvent()
+    {
+        weaponDisplay.SetPlayer.Control.AxisUp -= ButtonUp;
+        weaponDisplay.SetPlayer.Control.AxisDown -= ButtonDown;
+        weaponDisplay.SetPlayer.Control.AxisSubmit -= ButtonSubmit;
     }
 
     private void ChangeWeapon()
@@ -117,6 +110,27 @@ public class UIWeaponList : MonoBehaviour {
         else return weaponDisplay.SetPlayer.SecWeaponID.ToString();
     }
 
+    #region Button Behaviors
+    private void ButtonUp()
+    {
+        DisSelectEvent(m_currentSelectObject);
+        ButtonNavUP();
+        OnSelectEvent(m_currentSelectObject);
+
+    }
+    private void ButtonDown()
+    {
+        DisSelectEvent(m_currentSelectObject);
+        ButtonNavDown();
+        OnSelectEvent(m_currentSelectObject);
+    }
+    private void ButtonSubmit()
+    {
+        OnClickEvent();
+    }
+    #endregion
+
+
     #region Set Button
 
     private void SetInfo(GameObject go)
@@ -152,6 +166,7 @@ public class UIWeaponList : MonoBehaviour {
             }
         }
     }
+
     private void ButtonNavUP()
     {
         GameObject go = m_currentSelectObject;
@@ -172,15 +187,26 @@ public class UIWeaponList : MonoBehaviour {
         OnValueChange(go);
         go.GetComponent<LobbyUI_Weapon>().SetHighlightBG();
     }
+
     private void DisSelectEvent(GameObject go)
     {
         go.GetComponent<LobbyUI_Weapon>().SetBG();
+    }
+
+    private void SetButtonEvent()
+    {
+        weaponDisplay.SetPlayer.Control.AxisRight += weaponDisplay.Button.SetRightNav;
+        weaponDisplay.SetPlayer.Control.AxisLeft += weaponDisplay.Button.SetLeftNav;
+        weaponDisplay.SetPlayer.Control.AxisCancel += SubscriptAxisEvent;
     }
 
     private void OnClickEvent() 
     {
         weaponDisplay.SetCurID(weaponDisplay.Info.ID);
         DisSelectEvent(m_currentSelectObject);
+        weaponDisplay.Button.OnSelectButton();
+        UnsubscribeAxisEvent();
+        SetButtonEvent();
     }
     #endregion
 }
