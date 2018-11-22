@@ -166,17 +166,17 @@ public class MobManager
             }
             else
             {
-                //for (int j = 0; j < num; j++)
-                //{
-                //    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
-                //    if (m_GOFish == null) return;
-                //    m_GOFish.transform.position = spawnTarget;
-                //    m_GOFish.SetActive(true);
-                //    m_FishCount++;
+                for (int j = 0; j < num; j++)
+                {
+                    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+                    if (m_GOFish == null) return;
+                    m_GOFish.transform.position = spawnTarget;
+                    m_GOFish.SetActive(true);
+                    m_FishCount++;
 
-                //    if (UIInGameMain.Instance != null)
-                //        UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
-                //}
+                    if (UIInGameMain.Instance != null)
+                        UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
+                }
                 break;
             }
         }
@@ -188,12 +188,19 @@ public class MobManager
         PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
         patrolAI.m_bGoIdle = true;
         m_PatrolCount++;
-
-        m_FishVariantCount++;
-
-
         if (UIInGameMain.Instance != null)
             UIInGameMain.Instance.AddRadarPoint(m_GOPatrol, eMapPointType.PATROL);
+
+        m_GOFishVariant = ObjectPool.m_Instance.LoadGameObjectFromPool(3300);
+        if (m_GOFishVariant == null) return;
+        m_GOFishVariant.transform.position = spawnTarget;
+        m_GOFishVariant.SetActive(true);
+        m_FishVariantCount++;
+        if (UIInGameMain.Instance != null)
+            UIInGameMain.Instance.AddRadarPoint(m_GOFishVariant, eMapPointType.FISHVARIANT);
+
+
+
     }
 
     public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
@@ -276,6 +283,73 @@ public class MobManager
             m_FishVariantCount++;
         }
     }
+
+    public void SpawnMobs(int fishCount, int patrolCount, int tankCount, Transform center, float minRadius, float maxRadius)
+    {
+        Vector3 spawnTarget = center.forward;
+
+        for (int i = 0; i < fishCount; i++)
+        {
+            for (int j = 0; j < 30; j++)
+            {
+                spawnTarget = Vector3.forward;
+                spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
+                spawnTarget *= Random.Range(25f, 35f);
+                spawnTarget += center.position;
+                if (Physics.Linecast(center.position, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
+                {
+                    continue;
+                }
+                else
+                {
+                    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+                    if (m_GOFish == null) return;
+                    m_GOFish.transform.position = spawnTarget;
+                    m_GOFish.SetActive(true);
+                    m_FishCount++;
+                    if (UIPanelRadar.Instance != null)
+                        UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < patrolCount; i++)
+        {
+            for (int j = 0; j < 30; j++)
+            {
+                spawnTarget = Vector3.forward;
+                spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
+                spawnTarget *= Random.Range(25f, 35f);
+                spawnTarget += center.position;
+                if (Physics.Linecast(center.position, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
+                {
+                    continue;
+                }
+                else
+                {
+                    m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+                    if (m_GOPatrol == null) return;
+                    m_GOPatrol.transform.position = spawnTarget;
+                    m_GOPatrol.SetActive(true);
+                    PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+                    patrolAI.m_bGoIdle = true;
+                    m_PatrolCount++;
+                    if (UIInGameMain.Instance != null)
+                        UIInGameMain.Instance.AddRadarPoint(m_GOPatrol, eMapPointType.PATROL);
+                    break;
+                }
+            }
+        }
+        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
+        //if (m_GOPatrol == null) return;
+        //m_GOPatrol.transform.position = spawnTarget;
+        //m_GOPatrol.SetActive(true);
+        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
+        //patrolAI.m_bGoIdle = true;
+        //m_PatrolCount++;
+    }
+
+
 
     public void UnloadMob(int ID, MobInfo data)
     {
