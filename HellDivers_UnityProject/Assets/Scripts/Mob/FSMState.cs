@@ -1137,7 +1137,7 @@ public class FSMFleeState : FSMState
 
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        if (Dist > data.m_fPatrolVisionLength * 1.5f || Physics.Linecast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward, 1 << LayerMask.NameToLayer("Obstcale")))
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
         }
@@ -1182,7 +1182,7 @@ public class FSMDodgeState : FSMState
 
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        if (Dist > data.m_fPatrolVisionLength * 1.5f || Physics.Linecast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward * 2f, 1 << LayerMask.NameToLayer("Obstcale")))
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
         }

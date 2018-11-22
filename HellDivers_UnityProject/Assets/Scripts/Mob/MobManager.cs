@@ -189,6 +189,9 @@ public class MobManager
         patrolAI.m_bGoIdle = true;
         m_PatrolCount++;
 
+        m_FishVariantCount++;
+
+
         if (UIInGameMain.Instance != null)
             UIInGameMain.Instance.AddRadarPoint(m_GOPatrol, eMapPointType.PATROL);
     }
@@ -265,10 +268,10 @@ public class MobManager
 
         for (int i = 0; i < num; i++)
         {
-            m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3300);
-            if (m_GOFish == null) return;
-            m_GOFish.transform.position = spawnTarget;
-            m_GOFish.SetActive(true);
+            m_GOFishVariant = ObjectPool.m_Instance.LoadGameObjectFromPool(3300);
+            if (m_GOFishVariant == null) return;
+            m_GOFishVariant.transform.position = spawnTarget;
+            m_GOFishVariant.SetActive(true);
 
             m_FishVariantCount++;
         }

@@ -95,7 +95,9 @@ public class UIMapPoint : MonoBehaviour {
     {
         m_Image = this.GetComponent<Image>();
         m_Color = m_Image.color;
-        m_Color.g = 1f;
+        m_Color.r = 192.0f / 255.0f;
+        m_Color.g = 192.0f / 255.0f;
+        m_Color.b = 192.0f / 255.0f;
         m_Image.color = m_Color;
     }
 
