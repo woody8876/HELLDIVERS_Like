@@ -16,7 +16,14 @@ public class PatrolAI : Character
     public bool m_bGoIdle = false;
 
     public eFSMStateID m_CurrentState;
+    
+    #region Events
 
+    public delegate void MobEventHolder();
+    public event MobEventHolder OnSpawn;
+    public event MobEventHolder OnDeath;
+
+    #endregion
     // Use this for initialization
     private void OnEnable()
     {
@@ -182,12 +189,30 @@ public class PatrolAI : Character
     }
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
-        return TakeDamage(damager.Damage, hitPoint);
+        if (IsDead) return false;
+        CurrentHp -= damager.Damage;
+        if (m_CurrentHp <= 0)
+        {
+            m_BoxCollider.enabled = false;
+            m_DamageCollider.enabled = false;
+            Death();
+
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        else
+        {
+            PerformGetHurt();
+        }
+        return true;
     }
     public override void Death()
     {
         m_bDead = true;
         PerformDead();
+        if (OnDeath != null) OnDeath();
     }
 
     private void OnDrawGizmos()

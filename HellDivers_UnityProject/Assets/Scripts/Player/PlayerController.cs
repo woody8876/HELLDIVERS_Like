@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetAxis(m_InputSetting.DirectionHorizontal) != 0 || Input.GetAxis(m_InputSetting.DirectionVertical) != 0)
         {
             FaceDirection();
-            //m_AimLine.OpenAimLine();
+            m_AimLine.OpenAimLine();
             bInBattle = true;
         }
         else

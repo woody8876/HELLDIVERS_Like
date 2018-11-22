@@ -12,7 +12,7 @@ public class FishAI : Character
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
-    private CapsuleCollider m_DamageColloder;
+    private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
     #region Events
@@ -34,7 +34,7 @@ public class FishAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
-        m_DamageColloder.enabled = true;
+        m_DamageCollider.enabled = true;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
         if (OnSpawn != null) OnSpawn();
     }
@@ -48,7 +48,7 @@ public class FishAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
-        m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
+        m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
@@ -117,9 +117,17 @@ public class FishAI : Character
             Timer = 0.0f;
             return;
         }
-        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
+        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+        {
+            MobInfo.AIFunction.SearchPlayer(m_AIData);
+        }
+        //if(MobInfo.AIFunction.CheckAllPlayersLife() == false)
+        //{
+        //    Debug.Log("No Enemy");
+        //}
         m_FSM.DoState();
 
+        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
@@ -148,7 +156,7 @@ public class FishAI : Character
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
-            m_DamageColloder.enabled = false;
+            m_DamageCollider.enabled = false;
             Death();
             return true;
         }
@@ -167,7 +175,7 @@ public class FishAI : Character
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
-            m_DamageColloder.enabled = false;
+            m_DamageCollider.enabled = false;
             Death();
 
             damager.Damager.Record.NumOfKills++;

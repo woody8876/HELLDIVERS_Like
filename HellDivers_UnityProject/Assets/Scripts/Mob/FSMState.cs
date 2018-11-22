@@ -415,8 +415,8 @@ public class FSMAttackState : FSMState
             if (info.normalizedTime > m_AnimatorLeaveTime)
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
+                return;
             }
-            return;
         }
         if (info.IsName("Attack"))
         {
@@ -425,7 +425,6 @@ public class FSMAttackState : FSMState
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
         }
-
     }
 
     private void DoDamage(MobInfo data)
@@ -537,6 +536,13 @@ public class FSMPatrolAttackState : FSMState
     public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
+        if (data.m_Player == null || data.m_Player.IsDead)
+        {
+            if (info.normalizedTime > m_AnimatorLeaveTime)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+            }
+        }
         if (info.IsName("Attack"))
         {
             if (info.normalizedTime > m_AnimatorLeaveTime && bCompleteFire)
@@ -544,13 +550,6 @@ public class FSMPatrolAttackState : FSMState
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
             return;
-        }
-        if (data.m_bIsPlayerDead)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
-            }
         }
     }
 
@@ -1130,6 +1129,12 @@ public class FSMFleeState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
+        if (data.m_Player == null || data.m_Player.IsDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+            return;
+        }
+
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (Dist > data.m_fPatrolVisionLength * 1.5f)
@@ -1141,9 +1146,6 @@ public class FSMFleeState : FSMState
 
 public class FSMDodgeState : FSMState
 {
-    Animator m_Animator;
-    Vector3 vec;
-    GameObject GO;
     public FSMDodgeState()
     {
         m_StateID = eFSMStateID.DodgeStateID;
@@ -1172,6 +1174,12 @@ public class FSMDodgeState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
+        if (data.m_Player == null || data.m_Player.IsDead)
+        {
+            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+            return;
+        }
+
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
         if (Dist > data.m_fPatrolVisionLength * 1.5f)

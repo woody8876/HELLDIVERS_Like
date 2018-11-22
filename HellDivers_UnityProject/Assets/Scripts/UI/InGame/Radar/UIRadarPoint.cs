@@ -40,6 +40,11 @@ public class UIRadarPoint : MonoBehaviour
                 fish.OnSpawn += ShowPoint;
                 fish.OnDeath += HidePoint;
                 break;
+            case eMapPointType.PATROL:
+                PatrolAI patrol = target.GetComponent<PatrolAI>();
+                patrol.OnSpawn += ShowPoint;
+                patrol.OnDeath += HidePoint;
+                break;
         }
         UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
     }
@@ -59,7 +64,6 @@ public class UIRadarPoint : MonoBehaviour
                 m_CurrentPlayer.OnDeathBegin += HidePoint;
                 break;
         }
-        UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
     }
 
     // Use this for initialization
@@ -69,10 +73,15 @@ public class UIRadarPoint : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
+        if (m_CurrentType == eMapPointType.PLAYER)
+        {
+            UpdatePosition();
+            return;
+        }
+
         Blink();
     }
-
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (m_CurrentTarget == null) return;
         switch (m_CurrentType)
@@ -81,6 +90,11 @@ public class UIRadarPoint : MonoBehaviour
                 FishAI fish = m_CurrentTarget.GetComponent<FishAI>();
                 fish.OnSpawn -= ShowPoint;
                 fish.OnDeath -= HidePoint;
+                break;
+            case eMapPointType.PATROL:
+                PatrolAI patrol = m_CurrentTarget.GetComponent<PatrolAI>();
+                patrol.OnSpawn -= ShowPoint;
+                patrol.OnDeath -= HidePoint;
                 break;
             case eMapPointType.PLAYER:
                 m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
@@ -101,6 +115,9 @@ public class UIRadarPoint : MonoBehaviour
         switch (m_CurrentType)
         {
             case eMapPointType.FISH:
+                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                break;
+            case eMapPointType.PATROL:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 break;
             case eMapPointType.PLAYER:
@@ -141,6 +158,11 @@ public class UIRadarPoint : MonoBehaviour
     {
         FindRadarCenter();
         Vector3 forward = m_CurrentTarget.transform.forward;
+        Vector3 m_2DForward = new Vector3();
+        m_2DForward.x = forward.x;
+        m_2DForward.y = forward.z;
+        this.transform.up = m_2DForward;
+
         m_Dir = m_CurrentTarget.transform.position - m_Center;
         m_Pos = this.transform.localPosition;
         m_Pos.x = m_Dir.x * (UIPanelRadar.Instance.RectWidth * 0.5f) / UIPanelRadar.Instance.RadarRadius;
