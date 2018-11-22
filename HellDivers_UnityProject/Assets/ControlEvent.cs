@@ -63,7 +63,7 @@ public class ControlEvent : MonoBehaviour {
             if (AxisLeft != null) AxisLeft();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetKeyDown(m_controller.Submit) || Input.GetButtonDown("Submit"))
+        else if (Input.GetKeyDown(m_controller.Submit) || Input.GetKey(KeyCode.Space))
         {
             if (AxisSubmit != null) AxisSubmit();
             timer = timeBetweenInputs;
