@@ -32,29 +32,29 @@ public class WelcomeButtonController : MonoBehaviour {
         m_fTimer = 0.2f;
     }
 
-    private void LateUpdate()
-    {
-        if (!m_bSetting)
-        {
-            if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
-            else
-            {
-                m_controller = PlayerManager.Instance.Players[1].controllerSetting;
-                m_bSetting = true;
-            }
-        }
+    //private void LateUpdate()
+    //{
+    //    if (!m_bSetting)
+    //    {
+    //        if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
+    //        else
+    //        {
+    //            m_controller = PlayerManager.Instance.Players[1].controllerSetting;
+    //            m_bSetting = true;
+    //        }
+    //    }
 
-        if (m_fTimer < 0)
-        {
-            if (Input.GetKey(m_controller.Submit))
-            {
-                Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-                btn.onClick.Invoke();
-                m_fTimer = 1f;
-            }
-        }
-        m_fTimer -= Time.fixedDeltaTime;
-    }
+    //    if (m_fTimer < 0)
+    //    {
+    //        if (Input.GetKey(m_controller.Submit))
+    //        {
+    //            Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+    //            btn.onClick.Invoke();
+    //            m_fTimer = 1f;
+    //        }
+    //    }
+    //    m_fTimer -= Time.fixedDeltaTime;
+    //}
     #endregion
 
     #region Set Button event
