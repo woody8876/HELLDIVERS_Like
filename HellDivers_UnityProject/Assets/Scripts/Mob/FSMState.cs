@@ -1012,7 +1012,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                MobManager.m_Instance.SpawnFish(10, data.m_Go.transform, 2, 5);
+                MobManager.m_Instance.SpawnMobs(5, 1, 0, data.m_Go.transform, 25, 30);
                 count++;
             }
         }
@@ -1177,7 +1177,6 @@ public class FSMDeadState : FSMState
             if (info.normalizedTime >= 1.0f)
             {
                 MobManager.m_Instance.UnloadMob(data.m_ID, data);
-                MobManager.m_Instance.DecreaseMobCount(data.m_ID);
             }
         }
     }
