@@ -9,12 +9,15 @@ public class InGameRewardManager : MonoBehaviour
 
     public Dictionary<int, PlayerRecord> PlayerRewardMap { get { return m_RecordMap; } }
     private Dictionary<int, PlayerRecord> m_RecordMap;
-    private PlayerRecord record1;
 
     private void Awake()
     {
-        if (m_instance == null) m_instance = this;
-        else Destroy(this.gameObject);
+        if (m_instance != null)
+        {
+            Destroy(m_instance.gameObject);
+        }
+
+        m_instance = this;
     }
 
     // Use this for initialization
@@ -39,7 +42,5 @@ public class InGameRewardManager : MonoBehaviour
         {
             m_RecordMap.Add(SerialNum, record);
         }
-
-        record1 = record;
     }
 }
