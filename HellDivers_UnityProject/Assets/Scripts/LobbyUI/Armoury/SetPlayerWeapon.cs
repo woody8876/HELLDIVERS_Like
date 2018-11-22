@@ -55,10 +55,12 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         if (m_CurrentObject == null) return;
         SubsrtiptAxisEvent();
+        OnSelect();
     }
 
     private void OnDisable()
     {
+        Control.AxisCancel -= ButtonCanael;
         UnsubscribeAxisEvent();
     }
     #endregion
@@ -69,8 +71,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
         m_tRank.text = "1";
-        InitialWeapon(ref m_primary, "PlayerMenu/PrimaryWeapon", player, 0, true);
-        InitialWeapon(ref m_secondary, "PlayerMenu/SecondaryWeapon", player, 1, false);
+        InitialWeapon(ref m_primary, "PlayerMenu/PrimaryWeapon", player, 1, true);
+        InitialWeapon(ref m_secondary, "PlayerMenu/SecondaryWeapon", player, 0, false);
         InitialStratagems("PlayerMenu/Stratagems/", player, 0);
         InitialStratagems("PlayerMenu/Stratagems/", player, 1);
 
@@ -142,6 +144,8 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tConfirm.text = "CORFIRM";
         SetColor(ref m_Confirm, m_HighLight);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID, false);
+        Control.AxisCancel -= ButtonCanael;
+        SubsrtiptAxisEvent();
     }
 
     private void SubmitConfirm()
@@ -150,8 +154,9 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tConfirm.text = "READY";
         SetColor(ref m_Confirm, m_Ready);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID);
+        UnsubscribeAxisEvent();
     }
-    
+
     #endregion
 
     private List<int> WeaponList()
@@ -175,6 +180,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         Control.AxisUp += ButtonUp;
         Control.AxisDown += ButtonDown;
         Control.AxisSubmit += ButtonSumbit;
+        Control.AxisCancel += ButtonCanael;
     }
 
     private void UnsubscribeAxisEvent()
@@ -235,13 +241,13 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         if (m_CurrentObject == m_PrimaryWeapon)
         {
-            SelectWeaponUI(true);
             m_bPrimary = true;
+            SelectWeaponUI(true);
         }
         else if (m_CurrentObject == m_SecondaryWeapon)
         {
-            SelectWeaponUI(true);
             m_bPrimary = false;
+            SelectWeaponUI(true);
         }
         else if(m_CurrentObject == m_Stratageme)
         {
@@ -272,7 +278,16 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     private void ButtonSumbit()
     {
-        OnClick(); ;
+        DisSelect();
+        OnClick();
     } 
+
+    private void ButtonCanael()
+    {
+        DisSelect();
+        m_CurrentObject = m_Confirm.gameObject;
+        OnSelect();
+    }
+         
     #endregion
 }

@@ -21,7 +21,19 @@ public class UI_WeaponButton : MonoBehaviour {
 
     #region Button Behaviors
 
-    public void SetLeftNav()
+    public void SetCancel(bool plus = true)
+    {
+        if (plus) weaponDisplay.SetPlayer.Control.AxisCancel += weaponDisplay.WeaponList.Return;
+        else
+        {
+            DisSelectButton();
+            DisLevelUpButton();
+            weaponDisplay.SetPlayer.Control.AxisCancel -= weaponDisplay.WeaponList.Return;
+            weaponDisplay.SetPlayer.Control.AxisLeft -= SetLeftNav;
+        }
+    }
+
+    private void SetLeftNav()
     {
         if (m_CurrentObject == LevelUp || !CheckLevelUp()) return;
         DisSelectButton();
@@ -29,7 +41,7 @@ public class UI_WeaponButton : MonoBehaviour {
         m_CurrentObject = LevelUp;
     }
 
-    public void SetRightNav()
+    private void SetRightNav()
     {
         if (m_CurrentObject == Select) return;
         DisLevelUpButton();
@@ -41,6 +53,16 @@ public class UI_WeaponButton : MonoBehaviour {
     {
         SetHighlightBG(m_Select);
         weaponDisplay.SetPlayer.Control.AxisSubmit += ClickSelectButton;
+        weaponDisplay.SetPlayer.Control.AxisLeft += SetLeftNav;
+        weaponDisplay.SetPlayer.Control.AxisRight -= SetRightNav;
+    }
+
+    private void OnLevelUpButton()
+    {
+        SetHighlightBG(m_LevelUp);
+        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
+        weaponDisplay.SetPlayer.Control.AxisLeft -= SetLeftNav;
+        weaponDisplay.SetPlayer.Control.AxisRight += SetRightNav;
     }
 
     private void DisSelectButton()
@@ -49,22 +71,16 @@ public class UI_WeaponButton : MonoBehaviour {
         weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickSelectButton;
     }
 
-    private void ClickSelectButton()
-    {
-        DisSelectButton();
-        ClickSelect(weaponDisplay.SetPlayer.PlayerID);
-    }
-
-    private void OnLevelUpButton()
-    {
-        SetHighlightBG(m_LevelUp);
-        weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
-    }
-
     private void DisLevelUpButton()
     {
         SetBG(m_LevelUp);
         weaponDisplay.SetPlayer.Control.AxisSubmit -= ClickLevelUpButton;
+    }
+
+    private void ClickSelectButton()
+    {
+        SetCancel(false);
+        ClickSelect(weaponDisplay.SetPlayer.PlayerID);
     }
 
     private void ClickLevelUpButton()

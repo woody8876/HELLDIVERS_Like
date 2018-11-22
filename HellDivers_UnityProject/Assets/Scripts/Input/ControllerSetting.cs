@@ -14,6 +14,7 @@ public class ControllerSetting : ScriptableObject
     public string Fire = "Fire";
     public string Grenade = "Grenade";
     public KeyCode Submit = KeyCode.Joystick1Button1;
+    public KeyCode Cancel = KeyCode.Joystick1Button0;
     public KeyCode MeleeAttack = KeyCode.Joystick1Button0;
     public KeyCode Interactive = KeyCode.Joystick1Button1;
     public KeyCode Roll = KeyCode.Joystick1Button2;

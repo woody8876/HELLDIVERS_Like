@@ -14,14 +14,15 @@ public class Weapon_ShotGun : Weapon
     
     public override void Shot(Transform t, float fSpreadperShot, Player player)
     {
-        for (int i = 0; i < 10; i++)
+        float angle = (weaponInfo.Min_Spread * 2) / weaponInfo.Explosion_Damage;
+        for (int i = 0; i < weaponInfo.Explosion_Damage; i++)
         {
             GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(weaponInfo.ID);
             if (go != null)
             {
                 go.transform.position = t.position;
                 go.transform.forward = t.forward;
-                go.transform.Rotate(0, -weaponInfo.Min_Spread + i*3, 0);
+                go.transform.Rotate(0, -weaponInfo.Min_Spread + i * angle, 0);
                 go.GetComponent<Bullet>().SetPlayer(player);
                 go.GetComponent<Bullet>().SetID(weaponInfo.ID);
                 go.SetActive(true);
@@ -37,7 +38,7 @@ public class Weapon_ShotGun : Weapon
 
     public override void Reload()
     {
-        weaponInfo.Ammo += 10;
+        weaponInfo.Ammo += (int)weaponInfo.Explosion_Damage;
         weaponInfo.Mags -= 1;
     }
 }

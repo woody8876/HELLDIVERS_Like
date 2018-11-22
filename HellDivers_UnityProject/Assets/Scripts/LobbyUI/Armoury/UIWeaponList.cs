@@ -54,12 +54,15 @@ public class UIWeaponList : MonoBehaviour {
         weaponDisplay.SetPlayer.Control.AxisUp += ButtonUp;
         weaponDisplay.SetPlayer.Control.AxisDown += ButtonDown;
         weaponDisplay.SetPlayer.Control.AxisSubmit += ButtonSubmit;
+        weaponDisplay.SetPlayer.Control.AxisCancel += ButtonCancel;
     }
+
     private void UnsubscribeAxisEvent()
     {
         weaponDisplay.SetPlayer.Control.AxisUp -= ButtonUp;
         weaponDisplay.SetPlayer.Control.AxisDown -= ButtonDown;
         weaponDisplay.SetPlayer.Control.AxisSubmit -= ButtonSubmit;
+        weaponDisplay.SetPlayer.Control.AxisCancel -= ButtonCancel;
     }
 
     private void ChangeWeapon()
@@ -109,6 +112,7 @@ public class UIWeaponList : MonoBehaviour {
     }
 
     #region Button Behaviors
+
     private void ButtonUp()
     {
         DisSelectEvent(m_currentSelectObject);
@@ -116,16 +120,25 @@ public class UIWeaponList : MonoBehaviour {
         OnSelectEvent(m_currentSelectObject);
 
     }
+
     private void ButtonDown()
     {
         DisSelectEvent(m_currentSelectObject);
         ButtonNavDown();
         OnSelectEvent(m_currentSelectObject);
     }
+
     private void ButtonSubmit()
     {
         OnClickEvent();
     }
+
+    private void ButtonCancel()
+    {
+        DisSelectEvent(m_currentSelectObject);
+        weaponDisplay.SetPlayer.SelectWeaponUI(false);
+    }
+
     #endregion
 
 
@@ -190,21 +203,21 @@ public class UIWeaponList : MonoBehaviour {
     {
         go.GetComponent<LobbyUI_Weapon>().SetBG();
     }
-
-    private void SetButtonEvent()
-    {
-        weaponDisplay.SetPlayer.Control.AxisRight += weaponDisplay.Button.SetRightNav;
-        weaponDisplay.SetPlayer.Control.AxisLeft += weaponDisplay.Button.SetLeftNav;
-        weaponDisplay.SetPlayer.Control.AxisCancel += SubscriptAxisEvent;
-    }
-
+    
     private void OnClickEvent() 
     {
         weaponDisplay.SetCurID(weaponDisplay.Info.ID);
         DisSelectEvent(m_currentSelectObject);
-        weaponDisplay.Button.OnSelectButton();
         UnsubscribeAxisEvent();
-        SetButtonEvent();
+        weaponDisplay.Button.SetCancel();
+        weaponDisplay.Button.OnSelectButton();
+    }
+
+    public void Return()
+    {
+        weaponDisplay.Button.SetCancel(false);
+        SubscriptAxisEvent();
+        OnSelectEvent(m_currentSelectObject);
     }
     #endregion
 }
