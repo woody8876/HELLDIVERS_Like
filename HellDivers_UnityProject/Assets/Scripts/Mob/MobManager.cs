@@ -166,17 +166,17 @@ public class MobManager
             }
             else
             {
-                for (int j = 0; j < num; j++)
-                {
-                    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
-                    if (m_GOFish == null) return;
-                    m_GOFish.transform.position = spawnTarget;
-                    m_GOFish.SetActive(true);
-                    m_FishCount++;
+                //for (int j = 0; j < num; j++)
+                //{
+                //    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
+                //    if (m_GOFish == null) return;
+                //    m_GOFish.transform.position = spawnTarget;
+                //    m_GOFish.SetActive(true);
+                //    m_FishCount++;
 
-                    if (UIInGameMain.Instance != null)
-                        UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
-                }
+                //    if (UIInGameMain.Instance != null)
+                //        UIInGameMain.Instance.AddRadarPoint(m_GOFish, eMapPointType.FISH);
+                //}
                 break;
             }
         }

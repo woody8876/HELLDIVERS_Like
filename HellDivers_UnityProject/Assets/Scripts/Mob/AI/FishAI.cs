@@ -68,15 +68,12 @@ public class FishAI : Character
         m_RespawnState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_Chasestate.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_Chasestate.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
         m_Attackstate.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
-        m_Attackstate.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
         m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_IdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Chase, m_Chasestate);
@@ -92,8 +89,9 @@ public class FishAI : Character
 
         m_DeadState.AddTransition(eFSMTransition.Go_Respawn, m_RespawnState);
 
-        m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
         m_FSM.AddState(m_RespawnState);
         m_FSM.AddState(m_WanderIdleState);
@@ -121,10 +119,13 @@ public class FishAI : Character
         {
             MobInfo.AIFunction.SearchPlayer(m_AIData);
         }
-        //if(MobInfo.AIFunction.CheckAllPlayersLife() == false)
-        //{
-        //    Debug.Log("No Enemy");
-        //}
+        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+        {
+            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            {
+                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+            }
+        }
         m_FSM.DoState();
 
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
