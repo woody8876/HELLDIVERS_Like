@@ -165,6 +165,7 @@ public class UI_WeaponInfo : MonoBehaviour {
         float length = (target / max) * 200;
         return length;
     }
+
     #endregion Create Method
 
     #region SerializeField

@@ -32,7 +32,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     #endregion
 
     #region Private Field
-    private Color m_Ready = new Color(1, 1, 1, 1);
+    private Color m_Ready = new Color(1, 0.765f, 0, 1);
     private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
     private Color m_BGColor = new Color(1, 1, 1, 0.286f);
     private GameObject m_CurrentObject;
@@ -258,6 +258,7 @@ public class SetPlayerWeapon : MonoBehaviour {
             SubmitConfirm();
         }
     }
+
     #endregion
 
     #region Button Behaviors
@@ -285,6 +286,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     private void ButtonCanael()
     {
         DisSelect();
+        CancelConfirm();
         m_CurrentObject = m_Confirm.gameObject;
         OnSelect();
     }
