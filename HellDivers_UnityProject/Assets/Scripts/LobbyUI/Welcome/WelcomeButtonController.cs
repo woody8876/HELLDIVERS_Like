@@ -32,7 +32,18 @@ public class WelcomeButtonController : MonoBehaviour {
         m_fTimer = 0.2f;
     }
 
-    //private void LateUpdate()
+    private void LateUpdate()
+    {
+        if (!m_bSetting)
+        {
+            if (m_fTimer < 0)
+            {
+                EventSystem.current.SetSelectedGameObject(m_Press);
+                m_fTimer = 0.5f;
+            }
+            m_fTimer -= Time.fixedDeltaTime;
+        }
+    }
     //{
     //    if (!m_bSetting)
     //    {
@@ -63,7 +74,7 @@ public class WelcomeButtonController : MonoBehaviour {
         Button btn = m_Press.GetComponentInChildren<Button>();
         btn.onClick.AddListener(() => SetSelectGO(m_Continue));
         btn.onClick.AddListener(() => Change(m_Press, m_Menu));
-        btn.onClick.AddListener(() => Debug.Log("click"));
+        btn.onClick.AddListener(() => m_bSetting = true);
     }
 
     private void SetStart()
