@@ -227,7 +227,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2910a2b8b85da44b9766184417e3a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {fileID: 701337690}
 --- !u!1 &80469159
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 98363817}
   - component: {fileID: 98363818}
+  - component: {fileID: 98363819}
   m_Layer: 5
   m_Name: Press
   m_TagString: Untagged
@@ -487,6 +487,47 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &98363819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 98363816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1380987959}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &141327585
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,12 +1096,11 @@ MonoBehaviour:
   m_Start: {fileID: 414741771}
   m_Continue: {fileID: 514455491}
   m_Exit: {fileID: 1848083736}
+  m_Press: {fileID: 98363819}
   m_Circle: {fileID: 1536110582}
-  m_Press: {fileID: 98363816}
   m_Menu: {fileID: 988420471}
   m_FadePanel: {fileID: 1493302465}
   m_Animantion: {fileID: 2083425168}
-  axis: {fileID: 701337690}
 --- !u!114 &701337690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1423,7 +1463,6 @@ GameObject:
   - component: {fileID: 1380987958}
   - component: {fileID: 1380987960}
   - component: {fileID: 1380987959}
-  - component: {fileID: 1380987961}
   m_Layer: 5
   m_Name: Img_Press
   m_TagString: Untagged
@@ -1482,47 +1521,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1380987957}
---- !u!114 &1380987961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1380987957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1380987959}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1405894246
 GameObject:
   m_ObjectHideFlags: 0
@@ -2357,7 +2355,6 @@ MonoBehaviour:
   m_Plot: {fileID: 342753590}
   m_Continue: {fileID: 812636831}
   m_FadePanel: {fileID: 1493302465}
-  axis: {fileID: 701337690}
 --- !u!1 &2086498139
 GameObject:
   m_ObjectHideFlags: 0
