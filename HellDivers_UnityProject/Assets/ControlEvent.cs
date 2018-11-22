@@ -68,7 +68,11 @@ public class ControlEvent : MonoBehaviour {
             if (AxisSubmit != null) AxisSubmit();
             timer = timeBetweenInputs;
         }
-        //else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetButtonDown("Cancel")) {  }
+        else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetKey(KeyCode.Escape))
+        {
+            if (AxisCancel != null) AxisCancel();
+            timer = timeBetweenInputs;
+        }
     }
     private float timer;
     private float timeBetweenInputs = 0.15f;
