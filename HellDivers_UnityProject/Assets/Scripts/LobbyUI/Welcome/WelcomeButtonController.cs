@@ -11,8 +11,8 @@ public class WelcomeButtonController : MonoBehaviour {
     [SerializeField] Button m_Start;
     [SerializeField] Button m_Continue;
     [SerializeField] Button m_Exit;
+    [SerializeField] Button m_Press;
     [SerializeField] GameObject m_Circle;
-    [SerializeField] GameObject m_Press;
     [SerializeField] GameObject m_Menu;
     [SerializeField] GameObject m_FadePanel;
     [SerializeField] GameObject m_Animantion;
@@ -38,7 +38,7 @@ public class WelcomeButtonController : MonoBehaviour {
         {
             if (m_fTimer < 0)
             {
-                EventSystem.current.SetSelectedGameObject(m_Press);
+                EventSystem.current.SetSelectedGameObject(m_Press.gameObject);
                 m_fTimer = 0.5f;
             }
             m_fTimer -= Time.fixedDeltaTime;
@@ -71,10 +71,9 @@ public class WelcomeButtonController : MonoBehaviour {
     #region Set Button event
     private void SetPress()
     {
-        Button btn = m_Press.GetComponentInChildren<Button>();
-        btn.onClick.AddListener(() => SetSelectGO(m_Continue));
-        btn.onClick.AddListener(() => Change(m_Press, m_Menu));
-        btn.onClick.AddListener(() => m_bSetting = true);
+        m_Press.onClick.AddListener(() => SetSelectGO(m_Continue));
+        m_Press.onClick.AddListener(() => Change(m_Press.gameObject, m_Menu));
+        m_Press.onClick.AddListener(() => m_bSetting = true);
     }
 
     private void SetStart()
