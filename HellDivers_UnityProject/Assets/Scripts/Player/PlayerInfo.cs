@@ -11,6 +11,7 @@ public class PlayerInfo
     public int Rank { get { return rank; } }
     public int Exp { get { return exp; } }
     public List<int> UnlockedWeapons { get { return unlockWeapons; } }
+    public List<int> UnlockedStratagems { get { return unlockStratagems; } }
     public List<int> Weapons { get { return weapons; } }
     public List<int> Stratagems { get { return stratagems; } }
     public List<int> Grenades { get { return grenades; } }
@@ -21,6 +22,7 @@ public class PlayerInfo
     #region Private Variable
 
     [SerializeField] private List<int> unlockWeapons = new List<int>();
+    [SerializeField] private List<int> unlockStratagems = new List<int>();
     [SerializeField] private List<int> weapons = new List<int>();
     [SerializeField] private List<int> stratagems = new List<int>();
     [SerializeField] private List<int> grenades = new List<int>();
@@ -46,7 +48,13 @@ public class PlayerInfo
         return true;
     }
 
-    public void UnlockWeapons()
+    public void UnlockItems()
+    {
+        UnlockWeapons();
+        UnlockStratagems();
+    }
+
+    private void UnlockWeapons()
     {
         for (int i = 0; i < GameData.Instance.UnlockWeaponsTable[rank].Count; i++)
         {
@@ -64,7 +72,23 @@ public class PlayerInfo
         } 
     }
 
-    //public List<int> UnlockStratagems(int level) { return GameData.Instance.UnlockStratagemsTable[level]; }
+    private void UnlockStratagems()
+    {
+        for (int i = 0; i < GameData.Instance.UnlockStratagemsTable[rank].Count; i++)
+        {
+            bool exist = false;
+            int ids = GameData.Instance.UnlockStratagemsTable[rank][i];
+            foreach (int id in unlockStratagems)
+            {
+                if (id == ids)
+                {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) unlockStratagems.Add(GameData.Instance.UnlockStratagemsTable[rank][i]);
+        }
+    }
 
     public bool LevelUpWeapon(ref int id)
     {
@@ -115,10 +139,10 @@ public class PlayerInfo
 
     private void LevelUp(int exp)
     {
-        while (exp < GameData.Instance.RankTable[rank +1].Exp)
+        while (exp > GameData.Instance.RankTable[rank +1].Exp)
         {
             rank++;
-            UnlockWeapons();
+            UnlockItems();
         }
     }
     

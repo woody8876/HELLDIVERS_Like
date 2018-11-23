@@ -69,9 +69,9 @@ public class UIWeaponList : MonoBehaviour {
     {
         for (int i = 0; i < m_weapons.Count; i++)
         {
-            if (Determine() == m_weapons[i].gameObject.name)
+            if (Determine() == m_weapons[i].name)
             {
-                m_currentSelectObject = m_weapons[i].gameObject;
+                m_currentSelectObject = m_weapons[i];
                 OnSelectEvent(m_currentSelectObject);
                 return;
             }
@@ -146,15 +146,13 @@ public class UIWeaponList : MonoBehaviour {
 
     private void SetInfo(GameObject go)
     {
-        int i = int.Parse(go.name);
-        weaponDisplay.Info.SetID(i);
-        weaponDisplay.Info.SetType(GameData.Instance.WeaponInfoTable[i].Type);
-        weaponDisplay.Info.SetWeapon();
+        int id = int.Parse(go.name);
+        int type = GameData.Instance.WeaponInfoTable[id].Type;
+        weaponDisplay.Info.SetWeaponInfo(id, type);
     }
 
     private void OnValueChange(GameObject go)
     {
-        
         for (int j = 0; j < m_weapons.Count; j++)
         {
             if (m_weapons[j].name == go.name)
@@ -170,9 +168,9 @@ public class UIWeaponList : MonoBehaviour {
         if (go == m_weapons[m_weapons.Count - 1]) return;
         for (int i = 0; i < m_weapons.Count-1; i++)
         {
-            if (go == m_weapons[i].gameObject)
+            if (go == m_weapons[i])
             {
-                m_currentSelectObject = m_weapons[i + 1].gameObject;
+                m_currentSelectObject = m_weapons[i + 1];
                 return;
             }
         }
@@ -184,9 +182,9 @@ public class UIWeaponList : MonoBehaviour {
         if (go == m_weapons[0]) return;
         for (int i = 1; i < m_weapons.Count; i++)
         {
-            if (go == m_weapons[i].gameObject)
+            if (go == m_weapons[i])
             {
-                m_currentSelectObject = m_weapons[i - 1].gameObject;
+                m_currentSelectObject = m_weapons[i - 1];
                 return;
             }
         }

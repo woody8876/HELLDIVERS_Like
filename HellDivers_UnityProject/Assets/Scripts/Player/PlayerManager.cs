@@ -42,7 +42,7 @@ public class PlayerManager
         playerInfo.Grenades.Add(4002);
         playerInfo.Grenades.Add(4003);
         playerInfo.Grenades.Add(4004);
-        playerInfo.UnlockWeapons();
+        playerInfo.UnlockItems();
         return playerInfo;
     }
 
