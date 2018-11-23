@@ -9,8 +9,7 @@ public class TankAI : Character
     public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
-    private PlayerController m_PlayerController;
-    private CapsuleCollider m_CapsuleCollider;
+    private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
@@ -45,7 +44,7 @@ public class TankAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
-        m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
+        m_CapsuleCollider = this.GetComponent<BoxCollider>();
         m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
@@ -57,7 +56,7 @@ public class TankAI : Character
 
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseToRemoteAttackState m_ChaseToRemoteAttackState = new FSMChaseToRemoteAttackState();
-        FSMChaseState m_ChaseState = new FSMChaseState();
+        FSMChaseToMeleeAttackState m_ChaseToMeleeAttackState = new FSMChaseToMeleeAttackState();
         FSMAttackState m_Attackstate = new FSMAttackState();
         FSMRemoteAttackState m_RemoteAttackstate = new FSMRemoteAttackState();
         FSMTankIdleState m_TankIdleState = new FSMTankIdleState();
@@ -72,10 +71,11 @@ public class TankAI : Character
 
         m_TankIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
         m_TankIdleState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
-        m_TankIdleState.AddTransition(eFSMTransition.Go_Chase, m_ChaseState);
+        m_TankIdleState.AddTransition(eFSMTransition.Go_ChaseToMeleeAttack, m_ChaseToMeleeAttackState);
         m_TankIdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
-        m_ChaseState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        m_ChaseToMeleeAttackState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
+        m_ChaseToMeleeAttackState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
 
         m_Attackstate.AddTransition(eFSMTransition.Go_TankIdle, m_TankIdleState);
         
@@ -91,13 +91,13 @@ public class TankAI : Character
         m_DeadState.AddTransition(eFSMTransition.Go_Respawn, m_RespawnState);
 
         m_FSM.AddGlobalTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
-        m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_TankGetHurt, m_GetHurtState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
 
         m_FSM.AddState(m_RespawnState);
         m_FSM.AddState(m_ChaseToRemoteAttackState);
-        m_FSM.AddState(m_ChaseState);
+        m_FSM.AddState(m_ChaseToMeleeAttackState);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_RemoteAttackstate);
         m_FSM.AddState(m_TankIdleState);

@@ -42,6 +42,9 @@ public class MobAnimationsController : MonoBehaviour {
             case eFSMStateID.AttackStateID:
                 m_Animator.SetTrigger("Attack");
                 break;
+            case eFSMStateID.RemoteAttackStateID:
+                m_Animator.SetTrigger("Attack2");
+                break;
             case eFSMStateID.PatrolAttackStateID:
                 m_Animator.SetTrigger("Attack");
                 break;
@@ -52,6 +55,9 @@ public class MobAnimationsController : MonoBehaviour {
                 m_Animator.SetTrigger("GetHurt");
                 break;
             case eFSMStateID.PatrolGetHurtStateID:
+                m_Animator.SetTrigger("GetHurt");
+                break;
+            case eFSMStateID.TankGetHurtStateID:
                 m_Animator.SetTrigger("GetHurt");
                 break;
             case eFSMStateID.DeadStateID:
@@ -65,10 +71,18 @@ public class MobAnimationsController : MonoBehaviour {
         switch (state)
         {
             case eFSMStateID.ChaseStateID:
-                //m_Animator.SetBool("Chase", Bool);
                 m_Animator.SetBool("Move", Bool);
                 break;
+            case eFSMStateID.ChaseToMeleeAttackStateID:
+                m_Animator.SetBool("Move", Bool);
+                break;
+            case eFSMStateID.ChaseToRemoteAttackStateID:
+                m_Animator.SetBool("Move2", Bool);
+                break;
             case eFSMStateID.IdleStateID:
+                m_Animator.SetBool("Idle", Bool);
+                break;
+            case eFSMStateID.TankIdleStateID:
                 m_Animator.SetBool("Idle", Bool);
                 break;
             case eFSMStateID.WanderStateID:
