@@ -54,5 +54,7 @@ public class InGameRewardManager : MonoBehaviour
             info.AddExp(record.Exp);
             info.AddMoney(record.Money);
         }
+
+        Destroy(this.gameObject);
     }
 }

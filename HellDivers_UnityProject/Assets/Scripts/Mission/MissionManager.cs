@@ -43,7 +43,7 @@ public class MissionManager
         tower.transform.position = pos.position;
         MissionTower mission = tower.AddComponent<MissionTower>();
         m_MissionMap.Add(mission);
-        mission.OnFinished += DoMissionFinished;
+        mission.OnMissionComplete += DoMissionFinished;
 
         UIInGameMain.Instance.AddDynamicMissionMsg(mission);
         UIInGameMain.Instance.AddMapPoint(mission.gameObject, eMapPointType.MISSIONTOWER);

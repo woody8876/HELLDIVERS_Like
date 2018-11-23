@@ -7,8 +7,11 @@ namespace HELLDIVERS.UI
 {
     public class UIPlayerReward : MonoBehaviour
     {
-        private PlayerInfo m_CurrentPlayer;
-        private PlayerRecord m_CurrentRecord;
+        public PlayerInfo CurrentPlayerInfo { get { return currentPlayer; } }
+        public PlayerRecord CurrentPlayerRecord { get { return currentRecord; } }
+
+        private PlayerInfo currentPlayer;
+        private PlayerRecord currentRecord;
         private Animator m_Animator;
         [SerializeField] private Image m_RankIcon;
         [SerializeField] private Text m_RankText;
@@ -19,20 +22,21 @@ namespace HELLDIVERS.UI
 
         public void Initialize(PlayerInfo player, PlayerRecord record)
         {
-            m_CurrentPlayer = player;
-            m_CurrentRecord = record;
-            m_PlayerName.text = player.Username;
-            m_RankText.text = player.Rank.ToString();
-            string fileName = string.Format("icon_rank_{0}", player.Rank.ToString("00"));
-            m_RankIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
+            currentPlayer = player;
+            currentRecord = record;
+
+            m_PlayerName.text = currentPlayer.Username;
+            m_RankText.text = currentPlayer.Rank.ToString();
+            RefreshRankIcon(currentPlayer.Rank);
 
             m_ExpBar = Instantiate(m_ExpBar, this.transform);
-            m_ExpBar.OnRankUpdate += RefreshRankText;
-            m_ExpBar.Initialize(player.Exp, player.Exp + record.Exp, player.Rank);
-            CreateDetail("DEATH", record.TimesOfDeath);
-            CreateDetail("KILLS", record.NumOfKills);
-            CreateDetail("SHOTS", record.Shots);
-            CreateDetail("MONEY", record.Money);
+            m_ExpBar.OnRankUpdate += RefreshRankInfo;
+            m_ExpBar.Initialize(currentPlayer.Exp, currentPlayer.Exp + record.Exp, currentPlayer.Rank);
+
+            CreateDetail("DEATH", currentRecord.TimesOfDeath);
+            CreateDetail("KILLS", currentRecord.NumOfKills);
+            CreateDetail("SHOTS", currentRecord.Shots);
+            CreateDetail("MONEY", currentRecord.Money);
 
             DrawUI();
         }
@@ -75,9 +79,16 @@ namespace HELLDIVERS.UI
             }
         }
 
-        private void RefreshRankText()
+        private void RefreshRankInfo()
         {
+            RefreshRankIcon(m_ExpBar.CurrentRank);
             m_RankText.text = m_ExpBar.CurrentRank.ToString();
+        }
+
+        private void RefreshRankIcon(int rank)
+        {
+            string fileName = string.Format("icon_rank_{0}", rank.ToString("00"));
+            m_RankIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
         }
 
         private void Awake()
@@ -87,7 +98,7 @@ namespace HELLDIVERS.UI
 
         private void OnDestroy()
         {
-            m_ExpBar.OnRankUpdate -= RefreshRankText;
+            m_ExpBar.OnRankUpdate -= RefreshRankInfo;
         }
     }
 }
