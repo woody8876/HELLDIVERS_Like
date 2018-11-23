@@ -28,7 +28,7 @@ public class UIPanelRadar : MonoBehaviour {
     private int bPlyaersCount;
     private List<GameObject> m_PointList = new List<GameObject>();
 
-    [SerializeField] private float m_RadarRadius = 100.0f;
+    [SerializeField] private float m_RadarRadius = 50.0f;
     #endregion
 
     public void Init()
@@ -72,7 +72,7 @@ public class UIPanelRadar : MonoBehaviour {
                 m_Image.color = m_Color;
             }
             else{
-                m_Color.a = 1;
+                m_Color.a = 0.4f;
                 m_Image.color = m_Color;
             }
             bPlyaersCount = 0;
@@ -85,15 +85,23 @@ public class UIPanelRadar : MonoBehaviour {
         UIRadarPoint p;
         switch (type)
         {
-            case eMapPointType.PLAYER:
-                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9101);
+            case eMapPointType.FISH:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(target, type);
                 p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
-            case eMapPointType.FISH:
+            case eMapPointType.PATROL:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
+                go.SetActive(true);
+                p = go.GetComponent<UIRadarPoint>();
+                p.Init(target, type);
+                p.transform.SetParent(this.transform);
+                m_PointList.Add(go);
+                break;
+            case eMapPointType.FISHVARIANT:
                 go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
                 go.SetActive(true);
                 p = go.GetComponent<UIRadarPoint>();
@@ -115,7 +123,7 @@ public class UIPanelRadar : MonoBehaviour {
                 p = go.GetComponent<UIRadarPoint>();
                 p.Init(player, type);
                 p.transform.SetParent(this.transform);
-                m_PointList.Add(go);
+                //m_PointList.Add(go);
                 break;
         }
     }

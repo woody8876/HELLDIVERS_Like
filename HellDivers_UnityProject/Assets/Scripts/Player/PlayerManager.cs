@@ -35,10 +35,6 @@ public class PlayerManager
         playerInfo.SetUsername("TestPlayer");
         playerInfo.AddWeapon(1101);
         playerInfo.AddWeapon(1301);
-        playerInfo.UnlockWeapon(1001);
-        playerInfo.UnlockWeapon(1101);
-        playerInfo.UnlockWeapon(1301);
-        playerInfo.UnlockWeapon(1401);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);
         playerInfo.AddStratagem(2000);
@@ -46,6 +42,7 @@ public class PlayerManager
         playerInfo.Grenades.Add(4002);
         playerInfo.Grenades.Add(4003);
         playerInfo.Grenades.Add(4004);
+        playerInfo.UnlockItems();
         return playerInfo;
     }
 

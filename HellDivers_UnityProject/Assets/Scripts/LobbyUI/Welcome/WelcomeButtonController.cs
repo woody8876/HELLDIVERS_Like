@@ -11,8 +11,8 @@ public class WelcomeButtonController : MonoBehaviour {
     [SerializeField] Button m_Start;
     [SerializeField] Button m_Continue;
     [SerializeField] Button m_Exit;
+    [SerializeField] Button m_Press;
     [SerializeField] GameObject m_Circle;
-    [SerializeField] GameObject m_Press;
     [SerializeField] GameObject m_Menu;
     [SerializeField] GameObject m_FadePanel;
     [SerializeField] GameObject m_Animantion;
@@ -36,34 +36,44 @@ public class WelcomeButtonController : MonoBehaviour {
     {
         if (!m_bSetting)
         {
-            if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
-            else
+            if (m_fTimer < 0)
             {
-                m_controller = PlayerManager.Instance.Players[1].controllerSetting;
-                m_bSetting = true;
+                EventSystem.current.SetSelectedGameObject(m_Press.gameObject);
+                m_fTimer = 0.5f;
             }
+            m_fTimer -= Time.fixedDeltaTime;
         }
-
-        if (m_fTimer < 0)
-        {
-            if (Input.GetKey(m_controller.Submit))
-            {
-                Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-                btn.onClick.Invoke();
-                m_fTimer = 1f;
-            }
-        }
-        m_fTimer -= Time.fixedDeltaTime;
     }
+    //{
+    //    if (!m_bSetting)
+    //    {
+    //        if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
+    //        else
+    //        {
+    //            m_controller = PlayerManager.Instance.Players[1].controllerSetting;
+    //            m_bSetting = true;
+    //        }
+    //    }
+
+    //    if (m_fTimer < 0)
+    //    {
+    //        if (Input.GetKey(m_controller.Submit))
+    //        {
+    //            Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+    //            btn.onClick.Invoke();
+    //            m_fTimer = 1f;
+    //        }
+    //    }
+    //    m_fTimer -= Time.fixedDeltaTime;
+    //}
     #endregion
 
     #region Set Button event
     private void SetPress()
     {
-        Button btn = m_Press.GetComponentInChildren<Button>();
-        btn.onClick.AddListener(() => SetSelectGO(m_Continue));
-        btn.onClick.AddListener(() => Change(m_Press, m_Menu));
-        btn.onClick.AddListener(() => Debug.Log("click"));
+        m_Press.onClick.AddListener(() => SetSelectGO(m_Continue));
+        m_Press.onClick.AddListener(() => Change(m_Press.gameObject, m_Menu));
+        m_Press.onClick.AddListener(() => m_bSetting = true);
     }
 
     private void SetStart()

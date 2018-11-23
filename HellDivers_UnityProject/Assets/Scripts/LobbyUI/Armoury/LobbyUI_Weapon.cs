@@ -21,23 +21,18 @@ public class LobbyUI_Weapon : MonoBehaviour{
     private Color m_BGColor = new Color(1, 1, 1, 0.286f);
     
     #region Method
-    public void SetWeaponUI () {
+    public void SetWeaponUI (int i) {
+        m_ID = i;
         WeaponInfo info = GameData.Instance.WeaponInfoTable[m_ID];
         Sprite sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite),HELLDIVERS.UI.UIHelper.WeaponIconFolder, "icon_" + info.Image, false);
         m_WeaponName.text = info.Name;
         m_WeaponTexture.sprite = sprite;
 	}
 
-    public void SetBG()
-    {
-        m_BG.color = m_BGColor;
-    }
-    public void SetHighlightBG()
-    {
-        m_BG.color = m_HighLight;
-    }
+    public void SetBG() { m_BG.color = m_BGColor; }
 
-    public void SetID(int i) { m_ID = i; }
+    public void SetHighlightBG() { m_BG.color = m_HighLight; }
+
 
     #endregion
 }

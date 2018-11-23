@@ -178,12 +178,6 @@ public class FSMIdleState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-        if (data.m_Player == null || data.m_Player.IsDead)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
-            return;
-        }
         if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange)
         {
             if (m_fCurrentTime > m_fIdleTim)
@@ -276,13 +270,6 @@ public class FSMChaseState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-        if (data.m_Player == null || data.m_Player.IsDead)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
-            return;
-        }
-
         bool bAttack = false;
         MobInfo.AIFunction.CheckTargetEnemyInSight(data, data.m_Player.gameObject, ref bAttack);
 
@@ -325,11 +312,6 @@ public class FSMChaseToRemoteAttackState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-        if (data.m_Player == null || data.m_Player.IsDead)
-        {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
-            return;
-        }
         if((data.m_Player.transform.position - data.m_Go.transform.position).magnitude < data.m_fPatrolVisionLength)
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_RemoteAttack);
@@ -369,7 +351,6 @@ public class FSMAttackState : FSMState
     public override void Do(MobInfo data)
     {
         data.navMeshAgent.enabled = true;
-        if (data.m_Player == null || data.m_Player.IsDead) return;
 
         data.m_vTarget = data.m_Player.transform.position;
         vDir = data.m_Player.transform.position - data.m_Go.transform.position;
@@ -410,14 +391,6 @@ public class FSMAttackState : FSMState
     public override void CheckCondition(MobInfo data)
     {
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (data.m_Player == null || data.m_Player.IsDead)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
-            }
-            return;
-        }
         if (info.IsName("Attack"))
         {
             if (info.normalizedTime > m_AnimatorLeaveTime)
@@ -425,7 +398,6 @@ public class FSMAttackState : FSMState
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
         }
-
     }
 
     private void DoDamage(MobInfo data)
@@ -473,8 +445,6 @@ public class FSMPatrolAttackState : FSMState
     }
     public override void Do(MobInfo data)
     {
-        if (data.m_Player == null || data.m_Player.IsDead) return;
-
         if (bIsReady)
         {
             m_fCurrentTime += Time.deltaTime;
@@ -544,13 +514,6 @@ public class FSMPatrolAttackState : FSMState
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Idle);
             }
             return;
-        }
-        if (data.m_bIsPlayerDead)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
-            }
         }
     }
 
@@ -651,13 +614,6 @@ public class FSMRemoteAttackState : FSMState
             }
             return;
         }
-        if (data.m_Player == null || data.m_Player.IsDead)
-        {
-            if (info.normalizedTime > m_AnimatorLeaveTime)
-            {
-                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_NoPlayerWanderIdle);
-            }
-        }
     }
 
     private void Fire(MobInfo data)
@@ -697,7 +653,6 @@ public class FSMFishGetHurtState : FSMState
 
     public override void CheckCondition(MobInfo data)
     {
-
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("GetHurt"))
         {
@@ -1132,7 +1087,7 @@ public class FSMFleeState : FSMState
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        if (Dist > data.m_fPatrolVisionLength * 1.5f || Physics.Linecast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward, 1 << LayerMask.NameToLayer("Obstcale")))
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_CallArmy);
         }
@@ -1141,9 +1096,6 @@ public class FSMFleeState : FSMState
 
 public class FSMDodgeState : FSMState
 {
-    Animator m_Animator;
-    Vector3 vec;
-    GameObject GO;
     public FSMDodgeState()
     {
         m_StateID = eFSMStateID.DodgeStateID;
@@ -1174,7 +1126,7 @@ public class FSMDodgeState : FSMState
     {
         float Dist = (data.m_Player.transform.position - data.m_Go.transform.position).magnitude;
 
-        if (Dist > data.m_fPatrolVisionLength * 1.5f)
+        if (Dist > data.m_fPatrolVisionLength * 1.5f || Physics.Linecast(data.m_Go.transform.position, data.m_Go.transform.position + data.m_Go.transform.forward * 2f, 1 << LayerMask.NameToLayer("Obstcale")))
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Attack);
         }

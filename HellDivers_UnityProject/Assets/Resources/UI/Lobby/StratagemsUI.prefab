@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222541287590655014}
   - component: {fileID: 114072953242936428}
   m_Layer: 5
-  m_Name: Image 1
+  m_Name: StratagemsTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,20 +84,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4f77167e2a1c84997b06e73ebf4200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_BG: {fileID: 114430119791215370}
+  m_StratagemTexture: {fileID: 114072953242936428}
   m_ID: 0
-  m_StratagemInfo:
-    id: 0
-    rank: 0
-    title: 
-    type: 0
-    codes: 
-    uses: 0
-    cooldown: 0
-    activation: 0
-    displayId: 
-    resultId: 0
-  m_Sprite: {fileID: 0}
-  m_WeaponTexture: {fileID: 114072953242936428}
 --- !u!114 &114430119791215370
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.28627452}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -172,5 +161,5 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 75, y: 75}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
