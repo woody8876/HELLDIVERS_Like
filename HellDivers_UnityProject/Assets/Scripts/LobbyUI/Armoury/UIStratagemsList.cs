@@ -35,6 +35,7 @@ public class UIStratagemsList : MonoBehaviour {
 		
 	}
 
+
     private void CreateStratagemUI(int player)
     {
         GameObject go;
@@ -54,10 +55,24 @@ public class UIStratagemsList : MonoBehaviour {
         int serial = stratagemsDisplay.SetPlayer.CurStratagemPos;
         for (int i = 0; i < m_Stratagems.Count; i++)
         {
-            if (stratagemsDisplay.SetPlayer.Stratagems[serial].ToString() == m_Stratagems[i].name)
+            if (stratagemsDisplay.SetPlayer.Stratagems[serial].name == m_Stratagems[i].name)
             {
                 m_currentSelectObject = m_Stratagems[i];
                 OnSelectEvent(m_currentSelectObject);
+                return;
+            }
+        }
+    }
+
+    private void OnClickCheck()
+    {
+        for (int i = 0; i < stratagemsDisplay.SetPlayer.Stratagems.Length; i++)
+        {
+            if (stratagemsDisplay.SetPlayer.Stratagems[i].name == stratagemsDisplay.Info.ID.ToString())
+            {
+                int id = int.Parse(stratagemsDisplay.SetPlayer.Stratagems[stratagemsDisplay.SetPlayer.CurStratagemPos].name);
+                stratagemsDisplay.SetPlayer.SetStratagems(i, id);
+                return;
             }
         }
     }
@@ -85,7 +100,6 @@ public class UIStratagemsList : MonoBehaviour {
     }
 
     #endregion
-
 
     #region Button Behaviors
 
@@ -126,11 +140,14 @@ public class UIStratagemsList : MonoBehaviour {
     private void ButtonCancel()
     {
         DisSelectEvent(m_currentSelectObject);
+        UnsubscribeAxisEvent();
+        stratagemsDisplay.SetPlayer.SelectStratagemUI(false);
     }
 
     #endregion
 
     #region Button Navigation
+
     private void ButtonNavUP()
     {
         GameObject go = m_currentSelectObject;
@@ -197,7 +214,7 @@ public class UIStratagemsList : MonoBehaviour {
         {
             if (go == m_Stratagems[i])
             {
-                m_currentSelectObject = m_Stratagems[i + 1];
+                m_currentSelectObject = m_Stratagems[i - 1];
                 return;
             }
         }
@@ -206,11 +223,10 @@ public class UIStratagemsList : MonoBehaviour {
     private void ButtonNavRight()
     {
         GameObject go = m_currentSelectObject;
-        for (int i = 1; i < m_Stratagems.Count; i++)
+        for (int i = 0; i < m_Stratagems.Count-1; i++)
         {
             if (go == m_Stratagems[i])
             {
-                if (i == m_Stratagems.Count - 1) return;
                 m_currentSelectObject = m_Stratagems[i + 1];
                 return;
             }
@@ -243,7 +259,9 @@ public class UIStratagemsList : MonoBehaviour {
     {
         DisSelectEvent(m_currentSelectObject);
         UnsubscribeAxisEvent();
-        stratagemsDisplay.SetPlayer.SelectStratagemUI(false, stratagemsDisplay.Info.ID);
+        OnClickCheck();
+        stratagemsDisplay.SetPlayer.SetStratagems(stratagemsDisplay.SetPlayer.CurStratagemPos, stratagemsDisplay.Info.ID);
+        stratagemsDisplay.SetPlayer.SelectStratagemUI(false);
     }
 
 }

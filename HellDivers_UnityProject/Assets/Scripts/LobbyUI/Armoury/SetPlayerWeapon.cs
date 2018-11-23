@@ -21,13 +21,15 @@ public class SetPlayerWeapon : MonoBehaviour {
         [SerializeField] GameObject m_PrimaryWeapon;
         [SerializeField] GameObject m_SecondaryWeapon;
         [SerializeField] GameObject m_Stratagem;
+    [Header("== Private Field  ==")]
+    [SerializeField] int _CurStratagemPos;
     #endregion
 
     #region Public Field
     public int PlayerID { get { return m_Control.PlayerID; } }
     public int PriWeaponID { private set; get; }
     public int SecWeaponID { private set; get; }
-    public int CurStratagemPos { private set; get; }
+    public int CurStratagemPos { get { return _CurStratagemPos; } }
     public ControlEvent Control { get { return m_Control; } }
     public bool m_bPrimary;
     public GameObject m_primary;
@@ -78,17 +80,18 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
         m_tRank.text = "1";
-        InitialWeapon(ref m_primary, "PlayerMenu/PrimaryWeapon", player, 1, true);
-        InitialWeapon(ref m_secondary, "PlayerMenu/SecondaryWeapon", player, 0, false);
-        InitialStratagems("PlayerMenu/Stratagems/", player, 0);
-        InitialStratagems("PlayerMenu/Stratagems/", player, 1);
-        InitialStratagems("PlayerMenu/Stratagems/", player, 2, true);
-        InitialStratagems("PlayerMenu/Stratagems/", player, 3, true);
+        InitialWeapon(ref m_primary, player, 1, true);
+        InitialWeapon(ref m_secondary, player, 0, false);
+        InitialStratagems(player, 0);
+        InitialStratagems(player, 1);
+        InitialStratagems(player, 2);
+        InitialStratagems(player, 3, true);
     }
 
-    private void InitialWeapon(ref GameObject go,string s, int player, int serial, bool b)
+    private void InitialWeapon(ref GameObject go, int player, int serial, bool b)
     {
-        go = Instantiate(m_WeaponUI, GameObject.Find(m_path + s).transform) as GameObject;
+        Transform t = (b) ? m_PrimaryWeapon.transform : m_SecondaryWeapon.transform;
+        go = Instantiate(m_WeaponUI, t) as GameObject;
         LobbyUI_Weapon uI = go.GetComponent<LobbyUI_Weapon>();
         int id = PlayerManager.Instance.Players[player].info.Weapons[serial];
         uI.SetWeaponUI(id);
@@ -96,9 +99,9 @@ public class SetPlayerWeapon : MonoBehaviour {
         else SecWeaponID = uI.ID;
     }
 
-    private void InitialStratagems(string s, int player, int serial, bool nothing = false , bool b = false)
+    private void InitialStratagems(int player, int serial, bool nothing = false , bool b = false)
     {
-        GameObject go = Instantiate(m_StratagemeUI, GameObject.Find(m_path + s).transform) as GameObject;
+        GameObject go = Instantiate(m_StratagemeUI, m_Stratagem.transform) as GameObject;
         LobbyUI_Stratagems uI = go.GetComponent<LobbyUI_Stratagems>();
         int id =(!nothing)? PlayerManager.Instance.Players[player].info.Stratagems[serial] : 0 ;
         go.name = id.ToString();
@@ -120,14 +123,13 @@ public class SetPlayerWeapon : MonoBehaviour {
         if (b == false) { SetWeapon(); }
     }
 
-    public void SelectStratagemUI(bool b, int id = 0)
+    public void SelectStratagemUI(bool b)
     {
         string s = "Select_Stratagems_SinglePlayer";
         GameObject go = GameObject.Find(m_path + s) ?? GameObject.Find(m_path + s + "(Clone)");
         if (!go) { go = Instantiate(m_SelectStratagem, this.transform.parent) as GameObject; }
         go.SetActive(b);
         this.gameObject.SetActive(!b);
-        if (b == false) { SetStratagems(id); }
     }
 
     public void SetPriWeaponID(int i) { PriWeaponID = i; }
@@ -137,14 +139,17 @@ public class SetPlayerWeapon : MonoBehaviour {
     #endregion
 
     #region Panel Click Event
+
     private void SetWeapon()
     {
         m_primary.GetComponent<LobbyUI_Weapon>().SetWeaponUI(PriWeaponID); 
         m_secondary.GetComponent<LobbyUI_Weapon>().SetWeaponUI(SecWeaponID);
     }
-    private void SetStratagems(int id)
+
+    public void SetStratagems(int serial, int id)
     {
-        Stratagems[CurStratagemPos].GetComponent<LobbyUI_Stratagems>().SetStratagemUI(id);
+        Stratagems[serial].GetComponent<LobbyUI_Stratagems>().SetStratagemUI(id);
+
     }
 
     #endregion
@@ -200,8 +205,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     private void OnStratagems(bool right)
     {
         m_Stratagems[CurStratagemPos].GetComponent<LobbyUI_Stratagems>().SetBG();
-        if (right) CurStratagemPos++;
-        else CurStratagemPos--;
+        if (right) _CurStratagemPos++;
+        else _CurStratagemPos--;
         m_Stratagems[CurStratagemPos].GetComponent<LobbyUI_Stratagems>().SetHighlightBG();
     }
 
@@ -224,6 +229,17 @@ public class SetPlayerWeapon : MonoBehaviour {
         List<int> pList = new List<int>();
         pList.Add(PriWeaponID);
         pList.Add(SecWeaponID);
+        return pList;
+    }
+
+    private List<int> StratagemList()
+    {
+        List<int> pList = new List<int>();
+        for (int i = 0; i < Stratagems.Length; i++)
+        {
+            int id = int.Parse(Stratagems[i].name);
+            pList.Add(id);
+        }
         return pList;
     }
 
