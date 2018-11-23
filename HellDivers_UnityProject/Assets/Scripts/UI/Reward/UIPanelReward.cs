@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace HELLDIVERS.UI
 {
@@ -10,8 +11,14 @@ namespace HELLDIVERS.UI
         [SerializeField] private TweenAlpha m_BlackCardTween;
         [SerializeField] private Transform m_PanelReward;
         [SerializeField] private UIPlayerReward m_PlayerRewardPrefab;
+        [SerializeField] private Button m_BtnContinue;
 
         private Dictionary<int, UIPlayerReward> m_PlayerRewardMap;
+
+        public void ClickContinueBtn()
+        {
+            if (SceneController.Instance != null) SceneController.Instance.ToLobby();
+        }
 
         private void Awake()
         {
@@ -26,6 +33,8 @@ namespace HELLDIVERS.UI
                 m_BlackCardTween.OnFinished += CreatePlayerRewardElement;
                 m_BlackCardTween.PlayForward();
             }
+
+            EventSystem.current.SetSelectedGameObject(m_BtnContinue.gameObject);
         }
 
         // Update is called once per frame

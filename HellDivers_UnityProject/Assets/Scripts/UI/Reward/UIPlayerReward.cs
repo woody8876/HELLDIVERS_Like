@@ -27,6 +27,8 @@ namespace HELLDIVERS.UI
             m_RankIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
 
             m_ExpBar = Instantiate(m_ExpBar, this.transform);
+            m_ExpBar.OnRankUpdate += RefreshRankText;
+            m_ExpBar.Initialize(player.Exp, player.Exp + record.Exp, player.Rank);
             CreateDetail("DEATH", record.TimesOfDeath);
             CreateDetail("KILLS", record.NumOfKills);
             CreateDetail("SHOTS", record.Shots);
@@ -42,7 +44,6 @@ namespace HELLDIVERS.UI
             m_Details.Add(detail);
         }
 
-        [ContextMenu("Draw")]
         public void DrawUI()
         {
             StartCoroutine(DoDraw());
@@ -64,6 +65,8 @@ namespace HELLDIVERS.UI
             m_ExpBar.CanvasTween.Play();
             yield return new WaitForSeconds(m_ExpBar.CanvasTween.TimeLenght);
 
+            m_ExpBar.DoEvaluate();
+
             for (int i = 0; i < m_Details.Count; i++)
             {
                 UITweenCanvasGroup tween = m_Details[i].CanvasTween;
@@ -72,19 +75,19 @@ namespace HELLDIVERS.UI
             }
         }
 
+        private void RefreshRankText()
+        {
+            m_RankText.text = m_ExpBar.CurrentRank.ToString();
+        }
+
         private void Awake()
         {
             m_Animator = this.GetComponent<Animator>();
         }
 
-        // Use this for initialization
-        private void Start()
+        private void OnDestroy()
         {
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
+            m_ExpBar.OnRankUpdate -= RefreshRankText;
         }
     }
 }
