@@ -11,7 +11,7 @@ public class PatrolAI : Character
     public PlayerController m_PlayerController;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
-    private BoxCollider m_DamageCollider;
+    private CapsuleCollider m_DamageCollider;
     private MobAimLine m_MobAimLine;
     public bool m_bGoIdle = false;
 
@@ -55,7 +55,7 @@ public class PatrolAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_BoxCollider = this.GetComponent<BoxCollider>();
-        m_DamageCollider = GetComponentInChildren<BoxCollider>();
+        m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_MobAimLine = this.GetComponent<MobAimLine>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;

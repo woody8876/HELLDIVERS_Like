@@ -246,7 +246,13 @@ public class MobManager
                     if (UIInGameMain.Instance != null)
                         UIInGameMain.Instance.AddRadarPoint(m_GOPatrol, eMapPointType.PATROL);
                 }
-                //for (int j = 0; j < tankCount; j++)
+                for (int j = 0; j < tankCount; j++)
+                {
+                    m_GOTank = ObjectPool.m_Instance.LoadGameObjectFromPool(3400);
+                    if (m_GOTank == null) return;
+                    m_GOTank.transform.position = spawnTarget;
+                    m_GOTank.SetActive(true);
+                }
                 break;
             }
         }

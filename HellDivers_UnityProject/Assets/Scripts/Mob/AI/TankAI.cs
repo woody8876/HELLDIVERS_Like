@@ -7,14 +7,21 @@ public class TankAI : Character
 {
     FSMSystem m_FSM;
     public MobInfo m_AIData;
+    public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
     private PlayerController m_PlayerController;
     private CapsuleCollider m_CapsuleCollider;
-    private CapsuleCollider m_DamageColloder;
-    //private GameObject[] m_PlayerGO;
+    private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
-    public eFSMStateID m_CurrentState;
+
+    #region Events
+
+    public delegate void MobEventHolder();
+    public event MobEventHolder OnSpawn;
+    public event MobEventHolder OnDeath;
+
+    #endregion
 
     private void Awake()
     {
@@ -26,7 +33,7 @@ public class TankAI : Character
         m_bDead = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
-        m_DamageColloder.enabled = true;
+        m_DamageCollider.enabled = true;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
     }
     protected override void Start()
@@ -39,7 +46,7 @@ public class TankAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
-        m_DamageColloder = GetComponentInChildren<CapsuleCollider>();
+        m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
@@ -53,27 +60,24 @@ public class TankAI : Character
         FSMChaseState m_ChaseState = new FSMChaseState();
         FSMAttackState m_Attackstate = new FSMAttackState();
         FSMRemoteAttackState m_RemoteAttackstate = new FSMRemoteAttackState();
-        FSMIdleState m_IdleState = new FSMIdleState();
+        FSMTankIdleState m_TankIdleState = new FSMTankIdleState();
         FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
 
         m_RespawnState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         m_ChaseToRemoteAttackState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
-        m_ChaseToRemoteAttackState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
-        m_RemoteAttackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
+        m_RemoteAttackstate.AddTransition(eFSMTransition.Go_TankIdle, m_TankIdleState);
 
-        m_IdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
-        m_IdleState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
-        m_IdleState.AddTransition(eFSMTransition.Go_Chase, m_ChaseState);
-        m_IdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_IdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+        m_TankIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
+        m_TankIdleState.AddTransition(eFSMTransition.Go_RemoteAttack, m_RemoteAttackstate);
+        m_TankIdleState.AddTransition(eFSMTransition.Go_Chase, m_ChaseState);
+        m_TankIdleState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
 
         m_ChaseState.AddTransition(eFSMTransition.Go_Attack, m_Attackstate);
-        m_ChaseState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
-        m_Attackstate.AddTransition(eFSMTransition.Go_Idle, m_IdleState);
+        m_Attackstate.AddTransition(eFSMTransition.Go_TankIdle, m_TankIdleState);
         
         m_WanderIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
@@ -86,8 +90,9 @@ public class TankAI : Character
 
         m_DeadState.AddTransition(eFSMTransition.Go_Respawn, m_RespawnState);
 
-        m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
         m_FSM.AddGlobalTransition(eFSMTransition.Go_FishGetHurt, m_GetHurtState);
+        m_FSM.AddGlobalTransition(eFSMTransition.Go_Dead, m_DeadState);
 
 
         m_FSM.AddState(m_RespawnState);
@@ -95,7 +100,7 @@ public class TankAI : Character
         m_FSM.AddState(m_ChaseState);
         m_FSM.AddState(m_Attackstate);
         m_FSM.AddState(m_RemoteAttackstate);
-        m_FSM.AddState(m_IdleState);
+        m_FSM.AddState(m_TankIdleState);
         m_FSM.AddState(m_WanderIdleState);
         m_FSM.AddState(m_WanderState);
         m_FSM.AddState(m_GetHurtState);
@@ -112,9 +117,20 @@ public class TankAI : Character
             Timer = 0.0f;
             return;
         }
-        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
+        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+        {
+            MobInfo.AIFunction.SearchPlayer(m_AIData);
+        }
+        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+        {
+            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            {
+                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+            }
+        }
         m_FSM.DoState();
 
+        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
@@ -126,7 +142,7 @@ public class TankAI : Character
         {
             return;
         }
-        m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
+        m_FSM.PerformGlobalTransition(eFSMTransition.Go_TankGetHurt);
         return;
     }
 
@@ -143,7 +159,7 @@ public class TankAI : Character
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
-            m_DamageColloder.enabled = false;
+            m_DamageCollider.enabled = false;
             Death();
             return true;
         }
@@ -156,13 +172,31 @@ public class TankAI : Character
 
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
-        return TakeDamage(damager.Damage, hitPoint);
+        if (IsDead) return false;
+        CurrentHp -= damager.Damage;
+        if (m_CurrentHp <= 0)
+        {
+            m_CapsuleCollider.enabled = false;
+            m_DamageCollider.enabled = false;
+            Death();
+
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        else
+        {
+            PerformGetHurt();
+        }
+        return true;
     }
 
     public override void Death()
     {
         m_bDead = true;
         PerformDead();
+        if (OnDeath != null) OnDeath();
     }
 
 }

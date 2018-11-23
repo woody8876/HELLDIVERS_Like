@@ -7,6 +7,7 @@ public enum eFSMTransition
     NullTransition = 0,
     Go_Respawn,
     Go_Idle,
+    Go_TankIdle,
     Go_MoveTo,
     Go_Chase,
     Go_ChaseToRemoteAttack,
@@ -30,6 +31,7 @@ public enum eFSMStateID
     NullStateID = 0,
     RespawnStateID,
     IdleStateID,
+    TankIdleStateID,
     MoveToStateID,
     ChaseStateID,
     ChaseToRemoteAttackStateID,
@@ -193,6 +195,36 @@ public class FSMIdleState : FSMState
         {
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Dodge);
         }
+    }
+}
+
+public class FSMTankIdleState : FSMState
+{
+    private float m_fIdleTim;
+
+    public FSMTankIdleState()
+    {
+        m_StateID = eFSMStateID.TankIdleStateID;
+    }
+    public override void DoBeforeEnter(MobInfo data)
+    {
+        m_fCurrentTime = 0.0f;
+        m_fIdleTim = Random.Range(1.0f, 2.0f);
+    }
+
+    public override void DoBeforeLeave(MobInfo data)
+    {
+
+    }
+
+    public override void Do(MobInfo data)
+    {
+        m_fCurrentTime += Time.deltaTime;
+    }
+
+    public override void CheckCondition(MobInfo data)
+    {
+        
     }
 }
 
