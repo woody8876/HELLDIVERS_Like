@@ -87,7 +87,7 @@ public class GameMain : MonoBehaviour
 
     private void CheckGameCondition()
     {
-        if (m_PlayerManager.IsAllPlayerDead())
+        if (InGamePlayerManager.Instance.Players.Count > 1 && m_PlayerManager.IsAllPlayerDead())
         {
             MissionFailed();
             DoCheckCondition = null;

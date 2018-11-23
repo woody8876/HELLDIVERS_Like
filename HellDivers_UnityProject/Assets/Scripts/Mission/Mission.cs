@@ -10,7 +10,8 @@ public class Mission : MonoBehaviour
 
     public delegate void MissionEventHolder(Mission mission);
 
-    public MissionEventHolder OnFinished;
+    public MissionEventHolder OnMissionStart;
+    public MissionEventHolder OnMissionComplete;
 
     // Use this for initialization
     private void Start()

@@ -78,10 +78,10 @@ public class MobAnimationsController : MonoBehaviour {
                 m_Animator.SetBool("WanderIdle", Bool);
                 break;
             case eFSMStateID.NoPlayerWanderStateID:
-                m_Animator.SetBool("Wander", Bool);
+                m_Animator.SetBool("NoPlayerWander", Bool);
                 break;
             case eFSMStateID.NoPlayerWanderIdleStateID:
-                m_Animator.SetBool("WanderIdle", Bool);
+                m_Animator.SetBool("NoPlayerWanderIdle", Bool);
                 break;
             case eFSMStateID.FleeStateID:
                 m_Animator.SetBool("Flee", Bool);

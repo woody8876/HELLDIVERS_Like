@@ -56,6 +56,7 @@ public class PlayerInfo
 
     private void UnlockWeapons()
     {
+        if (GameData.Instance.UnlockWeaponsTable.ContainsKey(rank) == false) return;
         for (int i = 0; i < GameData.Instance.UnlockWeaponsTable[rank].Count; i++)
         {
             bool exist = false;
@@ -69,11 +70,12 @@ public class PlayerInfo
                 }
             }
             if (!exist) unlockWeapons.Add(GameData.Instance.UnlockWeaponsTable[rank][i]);
-        } 
+        }
     }
 
     private void UnlockStratagems()
     {
+        if (GameData.Instance.UnlockStratagemsTable.ContainsKey(rank) == false) return;
         for (int i = 0; i < GameData.Instance.UnlockStratagemsTable[rank].Count; i++)
         {
             bool exist = false;
@@ -139,13 +141,12 @@ public class PlayerInfo
 
     private void LevelUp(int exp)
     {
-        while (exp > GameData.Instance.RankTable[rank +1].Exp)
+        while (exp > GameData.Instance.RankTable[rank + 1].Exp)
         {
             rank++;
             UnlockItems();
         }
     }
-    
 
     public PlayerInfo Clone()
     {

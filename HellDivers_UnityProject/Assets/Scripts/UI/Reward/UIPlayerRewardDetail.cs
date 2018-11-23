@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI
 {
+    [RequireComponent(typeof(UITweenCanvasGroup))]
     public class UIPlayerRewardDetail : MonoBehaviour
     {
+        public UITweenCanvasGroup CanvasTween { get { return m_CanvasTween; } }
+
         [SerializeField] private Text m_textLabel;
         [SerializeField] private Text m_textNumber;
+        private UITweenCanvasGroup m_CanvasTween;
         private int m_iNumber;
+        private int m_iCurrentNum;
 
         public void Initialize(string label, int number)
         {
@@ -18,14 +23,9 @@ namespace HELLDIVERS.UI
             m_textNumber.text = m_iNumber.ToString();
         }
 
-        // Use this for initialization
-        private void Start()
+        private void Awake()
         {
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
+            m_CanvasTween = this.GetComponent<UITweenCanvasGroup>();
         }
     }
 }

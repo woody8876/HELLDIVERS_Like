@@ -124,5 +124,24 @@ public class MobInfo
             }
             return;
         }
+        public static bool CheckAllPlayersLife()
+        {
+            int count = 0;
+            List<Player> pList = InGamePlayerManager.Instance.Players;
+            if (pList != null && pList.Count > 0)
+            {
+                for (int i = 0; i < pList.Count; i++)
+                {
+                    if (pList[i].IsDead) continue;
+
+                    count++;
+                }
+                if(count == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

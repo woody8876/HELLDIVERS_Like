@@ -31,4 +31,15 @@ public class Main : MonoBehaviour
     private void Update()
     {
     }
+
+    [ContextMenu("Print Player Info")]
+    public void PrintPlayerInfo()
+    {
+        foreach (var player in PlayerManager.Instance.Players)
+        {
+            PlayerInfo info = player.Value.info;
+            Debug.LogFormat("Player {0} : Rank {1}", player.Key, info.Rank);
+            Debug.LogFormat("Player {0} : Exp {1}", player.Key, info.Exp);
+        }
+    }
 }
