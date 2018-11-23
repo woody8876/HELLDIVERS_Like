@@ -43,4 +43,16 @@ public class InGameRewardManager : MonoBehaviour
             m_RecordMap.Add(SerialNum, record);
         }
     }
+
+    public void ApplyRewardToPlayers()
+    {
+        foreach (var player in PlayerManager.Instance.Players)
+        {
+            PlayerInfo info = player.Value.info;
+            PlayerRecord record = m_RecordMap[player.Key];
+
+            info.AddExp(record.Exp);
+            info.AddMoney(record.Money);
+        }
+    }
 }

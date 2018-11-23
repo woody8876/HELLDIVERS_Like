@@ -17,6 +17,7 @@ namespace HELLDIVERS.UI
 
         public void ClickContinueBtn()
         {
+            if (InGameRewardManager.Instance != null) InGameRewardManager.Instance.ApplyRewardToPlayers();
             if (SceneController.Instance != null) SceneController.Instance.ToLobby();
         }
 
