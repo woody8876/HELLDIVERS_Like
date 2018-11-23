@@ -118,13 +118,11 @@ public class UI_WeaponButton : MonoBehaviour {
         List<int> pList = weaponDisplay.Info.weapons[type];
         if (pList[pList.Count - 1] != weaponDisplay.CurWeaponID)
         {
-            int i = weaponDisplay.CurWeaponID;
-            PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref i);
-            weaponDisplay.SetCurID(i);
-            weaponDisplay.WeaponList.LevelUp(i);
-            weaponDisplay.Info.SetID(i);
-            weaponDisplay.Info.SetType(type);
-            weaponDisplay.Info.SetWeapon();
+            int id = weaponDisplay.CurWeaponID;
+            PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref id);
+            weaponDisplay.SetCurID(id);
+            weaponDisplay.WeaponList.LevelUp(id);
+            weaponDisplay.Info.SetWeaponInfo(id, type);
             if (weaponDisplay.CurWeaponID == pList[pList.Count - 1])
             {
                 SetLeftNav();
