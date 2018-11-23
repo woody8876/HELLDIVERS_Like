@@ -10,15 +10,15 @@ public class UI_WeaponInfo : MonoBehaviour {
     [SerializeField] int m_iCurrentID;
 
     public int ID { get { return m_iCurrentID; } }
-    public void SetID(int id) { m_iCurrentID = id; }
-    public void SetType(int type) { m_iType = type; }
 
-    public void SetWeapon()
+    public void SetWeaponInfo(int id, int type)
     {
         float cur;
         float next;
         float max;
         string mode;
+        m_iCurrentID = id;
+        m_iType = type; 
         SetUI(m_iCurrentID);
         Get_Power(out cur, out next, out max);
         m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
@@ -165,6 +165,7 @@ public class UI_WeaponInfo : MonoBehaviour {
         float length = (target / max) * 200;
         return length;
     }
+
     #endregion Create Method
 
     #region SerializeField

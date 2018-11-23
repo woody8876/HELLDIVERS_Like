@@ -21,24 +21,24 @@ public class UIWeaponDisplay : MonoBehaviour {
     [SerializeField] int Coin;
     #endregion
 
+    #region Public Getter
+
     public int CurWeaponID { get { return _curWeaponID; } }
     public SetPlayerWeapon SetPlayer { get { return m_SetPlayer; } }
     public UI_WeaponInfo Info { get { return m_Info; } }
     public UIWeaponList WeaponList { get { return m_WeaponList; } }
     public UI_WeaponButton Button { get { return m_Button; } }
 
-    #region Private Field
     #endregion
 
 
     #region Support Method
     public void SetCurID(int i) { _curWeaponID = i; }
 
-    public void SetWeaponUI(GameObject go, int current, bool setCurID = true)
+    public void SetWeaponUI(GameObject go, int currentID, bool setCurID = true)
     {
-        go.GetComponent<LobbyUI_Weapon>().SetID(current);
-        go.GetComponent<LobbyUI_Weapon>().SetWeaponUI();
-        if (setCurID) _curWeaponID = current;
+        go.GetComponent<LobbyUI_Weapon>().SetWeaponUI(currentID);
+        if (setCurID) _curWeaponID = currentID;
     }
 
 
