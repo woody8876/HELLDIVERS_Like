@@ -12,6 +12,9 @@ public class TankAI : Character
     private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
+    private bool bGetHurt = false;
+    private float fShield = 0.0f;
+    private float fHurtTime= 0.0f;
 
 
     #region Events
@@ -30,10 +33,12 @@ public class TankAI : Character
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
+        bGetHurt = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
         m_DamageCollider.enabled = true;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
+        if (OnSpawn != null) OnSpawn();
     }
     protected override void Start()
     {
@@ -82,6 +87,8 @@ public class TankAI : Character
         m_WanderIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
 
+        m_WanderIdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+
         FSMTankGetHurtState m_GetHurtState = new FSMTankGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
 
@@ -129,6 +136,13 @@ public class TankAI : Character
             }
         }
         m_FSM.DoState();
+
+        fHurtTime += Time.deltaTime;
+        if (fHurtTime > 1.0f)
+        {
+            fHurtTime = 0.0f;
+            fShield = 0.0f;
+        }
 
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
         if (Input.GetKeyDown(KeyCode.U)) Death();
@@ -187,7 +201,8 @@ public class TankAI : Character
         }
         else
         {
-            PerformGetHurt();
+            fShield += damager.Damage;
+            if (fShield >= 300f) PerformGetHurt();
         }
         return true;
     }

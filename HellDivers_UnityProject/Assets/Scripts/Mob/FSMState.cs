@@ -249,7 +249,16 @@ public class FSMTankIdleState : FSMState
         }
         if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude > data.m_fAttackRange * 2.0f + 1.0f)
         {
-            data.m_FSMSystem.PerformTransition(eFSMTransition.Go_ChaseToRemoteAttack);
+            int i = Random.Range(0, 4);
+            if (i == 0)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_ChaseToRemoteAttack);
+            }
+            else
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_ChaseToMeleeAttack);
+            }
+            return;
         }
     }
 }
@@ -410,7 +419,6 @@ public class FSMChaseToMeleeAttackState : FSMState
     {
         if(chaseTime > 5.0f && (data.m_Player.transform.position - data.m_Go.transform.position).magnitude < data.m_fAttackRange * 2.0f)
         {
-            Debug.Log("Go Remote Attack");
             data.m_FSMSystem.PerformTransition(eFSMTransition.Go_RemoteAttack);
             return;
         }
@@ -851,6 +859,7 @@ public class FSMTankGetHurtState : FSMState
     public override void DoBeforeEnter(MobInfo data)
     {
         data.m_AnimationController.SetAnimator(m_StateID);
+        data.navMeshAgent.enabled = false;
     }
 
     public override void DoBeforeLeave(MobInfo data)
@@ -965,7 +974,7 @@ public class FSMWanderState : FSMState
     }
     public override void CheckCondition(MobInfo data)
     {
-        if (data.m_ID == 3100)
+        if (data.m_ID == 3100 || data.m_ID == 3300)
         {
             if (data.m_Player == null || data.m_Player.IsDead)
             {
@@ -994,6 +1003,14 @@ public class FSMWanderState : FSMState
             {
                 data.m_FSMSystem.PerformTransition(eFSMTransition.Go_Flee);
             }
+        }
+        if (data.m_ID == 3400)
+        {
+            if (Vector3.Distance(data.m_vTarget, data.m_Go.transform.position) < 0.1f)
+            {
+                data.m_FSMSystem.PerformTransition(eFSMTransition.Go_WanderIdle);
+            }
+            return;
         }
     }
 }
