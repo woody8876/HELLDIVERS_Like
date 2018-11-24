@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 1002060327}
   - component: {fileID: 1002060326}
   - component: {fileID: 1002060325}
+  - component: {fileID: 1002060328}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -269,6 +270,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1002060328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1002060324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7849f502bc95d4ca44e408ff989e34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1285459145
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +418,43 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 224015701392628938, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 224275394964707484, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 125
+      objectReference: {fileID: 0}
+    - target: {fileID: 224015701392628938, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 375
+      objectReference: {fileID: 0}
+    - target: {fileID: 224396497055099192, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 224015701392628938, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 224426808088707758, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224275394964707484, guid: 1a9f36411b6db704994f1009a5986cf2,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114148242218454574, guid: 1a9f36411b6db704994f1009a5986cf2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 1a9f36411b6db704994f1009a5986cf2, type: 2}
   m_IsPrefabParent: 0
 --- !u!224 &1306563105 stripped

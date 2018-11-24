@@ -205,18 +205,16 @@ public class MissionTower : Mission, IInteractable
 
     private IEnumerator MissionFinish()
     {
-        yield return new WaitUntil(CheckFinish);
+        yield return new WaitUntil(() =>
+            {
+                if (m_Animator.IsInTransition(0)) return false;
+                AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName("Finish") && stateInfo.normalizedTime >= 1) return true;
+                else return false;
+            });
 
-        if (OnFinished != null) OnFinished(this);
+        if (OnMissionComplete != null) OnMissionComplete(this);
         yield break;
-    }
-
-    private bool CheckFinish()
-    {
-        if (m_Animator.IsInTransition(0)) return false;
-        AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Finish") && stateInfo.normalizedTime >= 1) return true;
-        else return false;
     }
 
     /*------------------------------------------------------------------------
