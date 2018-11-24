@@ -63,7 +63,7 @@ public class Bullet : MonoBehaviour, IDamager
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(this, rh2.point);
+                    target.TakeDamage(this, rh2.point);                    
                     m_Target = go;
                 }
                 if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh2.normal, rh2.point, 30); }
