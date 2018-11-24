@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(WeaponController))]
-public class Turret_Test : MonoBehaviour {
+public class TurretController : MonoBehaviour {
 
 
     [SerializeField] Transform m_GunPos;
