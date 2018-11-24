@@ -56,13 +56,13 @@ public class SetPlayerWeapon : MonoBehaviour {
         SetPlayer(PlayerID);
         m_CurrentObject = m_Confirm.gameObject;
         OnSelect();
-        SubsrtiptAxisEvent();
+        SubscriptAxisEvent();
     }
 
     private void OnEnable()
     {
         if (m_CurrentObject == null) return;
-        SubsrtiptAxisEvent();
+        SubscriptAxisEvent();
         OnSelect();
     }
 
@@ -172,12 +172,12 @@ public class SetPlayerWeapon : MonoBehaviour {
         SetColor(ref m_Confirm, m_HighLight);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID, false);
         Control.AxisCancel -= ButtonCanael;
-        SubsrtiptAxisEvent();
+        SubscriptAxisEvent();
     }
 
     private void SubmitConfirm()
     {
-        PlayerManager.Instance.RefreshEquipment(PlayerID, WeaponList());
+        PlayerManager.Instance.RefreshEquipment(PlayerID, WeaponsList(), StratagemsList());
         m_tConfirm.text = "READY";
         SetColor(ref m_Confirm, m_Ready);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID);
@@ -224,7 +224,9 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     #endregion
 
-    private List<int> WeaponList()
+    #region New Equiptment List
+
+    private List<int> WeaponsList()
     {
         List<int> pList = new List<int>();
         pList.Add(PriWeaponID);
@@ -232,18 +234,23 @@ public class SetPlayerWeapon : MonoBehaviour {
         return pList;
     }
 
-    private List<int> StratagemList()
+    private List<int> StratagemsList()
     {
         List<int> pList = new List<int>();
         for (int i = 0; i < Stratagems.Length; i++)
         {
             int id = int.Parse(Stratagems[i].name);
+            if (id == 0) continue;
             pList.Add(id);
         }
         return pList;
     }
 
-    private void SubsrtiptAxisEvent()
+    #endregion
+
+    #region Subscript Axis
+
+    private void SubscriptAxisEvent()
     {
         Control.AxisUp += ButtonUp;
         Control.AxisDown += ButtonDown;
@@ -257,6 +264,8 @@ public class SetPlayerWeapon : MonoBehaviour {
         Control.AxisDown -= ButtonDown;
         Control.AxisSubmit -= ButtonSumbit;
     }
+
+    #endregion
 
     #region Button Support Function
 

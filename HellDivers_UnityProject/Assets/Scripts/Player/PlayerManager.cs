@@ -46,9 +46,10 @@ public class PlayerManager
         return playerInfo;
     }
 
-    public void RefreshEquipment(int player, List<int> newEquipWeapon)
+    public void RefreshEquipment(int player, List<int> newEquipWeapons, List<int> newEquipStratagems)
     {
-        m_PlayerMap[player].info.RefreshEquipWeapon(newEquipWeapon);
+        m_PlayerMap[player].info.RefreshEquipWeapon(newEquipWeapons);
+        m_PlayerMap[player].info.RefreshEquipStratagem(newEquipStratagems);
     }
         
     //public void LoadPlayerInfo()

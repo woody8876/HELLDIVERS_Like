@@ -62,6 +62,8 @@ public class UIStratagemsList : MonoBehaviour {
                 return;
             }
         }
+        m_currentSelectObject = m_Stratagems[0];
+        OnSelectEvent(m_currentSelectObject);
     }
 
     private void OnClickCheck()
