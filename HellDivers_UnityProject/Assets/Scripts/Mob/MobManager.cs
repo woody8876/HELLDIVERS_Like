@@ -160,45 +160,6 @@ public class MobManager
         //m_PatrolCount++;
     }
 
-    public void SpawnFishVariant(int num)
-    {
-        if (m_FishCount > 5) return;
-
-        List<Player> pList = InGamePlayerManager.Instance.Players;
-        Vector3 Center = new Vector3();
-        Center.Set(0, 0, 0);
-        for (int i = 0; i < pList.Count; i++)
-        {
-            Center += pList[i].transform.position;
-        }
-        Center /= pList.Count;
-
-        Vector3 spawnTarget = Center;
-
-        for (int i = 0; i < 30; i++)
-        {
-            spawnTarget = Vector3.forward;
-            spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-            spawnTarget *= Random.Range(25f, 35f);
-            spawnTarget += Center;
-            if (Physics.Linecast(Center, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
-            {
-                continue;
-            }
-            else
-            {
-                m_GOFishVariant = ObjectPool.m_Instance.LoadGameObjectFromPool(3300);
-                if (m_GOFishVariant == null) return;
-                m_GOFishVariant.transform.position = spawnTarget;
-                m_GOFishVariant.SetActive(true);
-                m_FishVariantCount++;
-                if (UIInGameMain.Instance != null)
-                    UIInGameMain.Instance.AddRadarPoint(m_GOFishVariant, eMapPointType.FISHVARIANT);
-                break;
-            }
-        }
-    }
-
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount)
     {
         if (m_FishCount > 20) return;
@@ -212,7 +173,7 @@ public class MobManager
         }
         Center /= pList.Count;
 
-        Vector3 spawnTarget = Center;
+        Vector3 spawnTarget = Vector3.forward;
 
         for (int i = 0; i < 30; i++)
         {
