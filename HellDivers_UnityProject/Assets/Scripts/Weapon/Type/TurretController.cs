@@ -74,6 +74,7 @@ public class TurretController : MonoBehaviour {
 
     private bool Turning()
     {
+        if (m_CurrentTarget == null) return false;
         Vector3 vec = m_CurrentTarget.transform.position - this.transform.position;
         vec.y = 0;
         transform.forward = Vector3.Lerp(transform.forward, vec, 0.03f);

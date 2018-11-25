@@ -116,10 +116,10 @@ public class UIRadarPoint : MonoBehaviour
                 tank.OnSpawn -= ShowPoint;
                 tank.OnDeath -= HidePoint;
                 break;
-            case eMapPointType.PLAYER:
-                m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
-                m_CurrentPlayer.OnDeathBegin -= HidePoint;
-                break;
+            //case eMapPointType.PLAYER:
+            //    m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
+            //    m_CurrentPlayer.OnDeathBegin -= HidePoint;
+            //    break;
         }
         UIPanelRadar.Instance.UpdatePoint -= UpdatePosition;
     }
@@ -136,21 +136,25 @@ public class UIRadarPoint : MonoBehaviour
         {
             case eMapPointType.FISH:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
             case eMapPointType.PATROL:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
             case eMapPointType.FISHVARIANT:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
             case eMapPointType.TANK:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
             case eMapPointType.PLAYER:
-                ObjectPool.m_Instance.UnLoadObjectToPool(9101, this.gameObject);
+                this.gameObject.SetActive(false);
                 break;
         }
-        UIPanelRadar.Instance.PointList.Remove(this.gameObject);
+      
     }
 
     private void FindRadarCenter()

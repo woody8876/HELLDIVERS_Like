@@ -1146,7 +1146,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                MobManager.m_Instance.SpawnMobs(5, 1, 0, data.m_Go.transform, 25, 30);
+                MobManager.m_Instance.SpawnMobs(5, 0, 1, 2, data.m_Go.transform, 25, 30);
                 count++;
             }
         }
