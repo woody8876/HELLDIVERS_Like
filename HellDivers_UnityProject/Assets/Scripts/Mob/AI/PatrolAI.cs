@@ -11,7 +11,7 @@ public class PatrolAI : Character
     public PlayerController m_PlayerController;
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BoxCollider;
-    private BoxCollider m_DamageCollider;
+    private CapsuleCollider m_DamageCollider;
     private MobAimLine m_MobAimLine;
     public bool m_bGoIdle = false;
 
@@ -55,7 +55,7 @@ public class PatrolAI : Character
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
         m_BoxCollider = this.GetComponent<BoxCollider>();
-        m_DamageCollider = GetComponentInChildren<BoxCollider>();
+        m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_MobAimLine = this.GetComponent<MobAimLine>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
@@ -135,23 +135,28 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
-        MobInfo.AIFunction.SearchPlayer(m_AIData);
-        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
-
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+        if (m_bDead == false)
         {
             MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if(m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
-        {
-            if (m_CurrentState != eFSMStateID.NoPlayerWanderIdleStateID && m_CurrentState != eFSMStateID.NoPlayerWanderStateID)
+            m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
+
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
             {
-                if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            {
+                if (m_CurrentState != eFSMStateID.NoPlayerWanderIdleStateID && m_CurrentState != eFSMStateID.NoPlayerWanderStateID)
                 {
-                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+                    if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+                    {
+                        m_FSM.PerformGlobalTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+                    }
                 }
             }
         }
+
+       
         if (m_bGoIdle)
         {
             m_WanderIdleState.ToIdle(m_AIData);

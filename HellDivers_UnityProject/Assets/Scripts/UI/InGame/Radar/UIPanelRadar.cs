@@ -109,6 +109,14 @@ public class UIPanelRadar : MonoBehaviour {
                 p.transform.SetParent(this.transform);
                 m_PointList.Add(go);
                 break;
+            case eMapPointType.TANK:
+                go = ObjectPool.m_Instance.LoadGameObjectFromPool(9102);
+                go.SetActive(true);
+                p = go.GetComponent<UIRadarPoint>();
+                p.Init(target, type);
+                p.transform.SetParent(this.transform);
+                m_PointList.Add(go);
+                break;
         }
     }
     public void AddPointPrefab(Player player, eMapPointType type)

@@ -10,8 +10,7 @@ public class FishAI : Character
     public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
-    private PlayerController m_PlayerController;
-    private CapsuleCollider m_CapsuleCollider;
+    private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
@@ -47,8 +46,8 @@ public class FishAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
-        m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
-        m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
+        m_CapsuleCollider = this.GetComponent<BoxCollider>();
+        m_DamageCollider = this.GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
         m_AIData.m_FSMSystem = m_FSM;
@@ -107,25 +106,29 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
-        Timer += Time.deltaTime;
+        if (m_bDead == false)
+        {
+            Timer += Time.deltaTime;
 
-        if (Timer > 2.0f)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-            Timer = 0.0f;
-            return;
-        }
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
-        {
-            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            if (Timer > 2.0f)
             {
-                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+                Timer = 0.0f;
+                return;
+            }
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+            {
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+            {
+                if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+                {
+                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                }
             }
         }
+        
         m_FSM.DoState();
 
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
@@ -170,7 +173,6 @@ public class FishAI : Character
 
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
-
         if (IsDead) return false;
         CurrentHp -= damager.Damage;
         if (m_CurrentHp <= 0)
@@ -198,27 +200,27 @@ public class FishAI : Character
         if (OnDeath != null) OnDeath();
     }
 
-    private void OnDrawGizmos()
-    {
-        if (m_AIData == null || m_FSM == null)
-        {
-            return;
-        }
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(this.transform.position, this.transform.position + this.transform.forward * 2.0f);
+    //private void OnDrawGizmos()
+    //{
+    //    if (m_AIData == null || m_FSM == null)
+    //    {
+    //        return;
+    //    }
+    //    Gizmos.color = Color.cyan;
+    //    Gizmos.DrawLine(this.transform.position, this.transform.position + this.transform.forward * 2.0f);
 
-        if (m_FSM.CurrentStateID == eFSMStateID.ChaseStateID)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
-        }
-        else if (m_FSM.CurrentStateID == eFSMStateID.AttackStateID)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
-        }
-        //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
+    //    if (m_FSM.CurrentStateID == eFSMStateID.ChaseStateID)
+    //    {
+    //        Gizmos.color = Color.blue;
+    //        Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
+    //    }
+    //    else if (m_FSM.CurrentStateID == eFSMStateID.AttackStateID)
+    //    {
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawLine(this.transform.position, m_AIData.m_vTarget);
+    //    }
+    //    //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
-        Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
-    }
+    //    Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
+    //}
 }

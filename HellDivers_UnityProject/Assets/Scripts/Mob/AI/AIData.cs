@@ -136,12 +136,9 @@ public class MobInfo
 
                     count++;
                 }
-                if(count == 0)
-                {
-                    return false;
-                }
             }
-            return true;
+            if (count == 0) return false;
+            else return true;
         }
     }
 }

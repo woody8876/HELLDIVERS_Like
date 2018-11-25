@@ -10,7 +10,7 @@ public class FishVariantAI : Character
     public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
-    private CapsuleCollider m_CapsuleCollider;
+    private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
@@ -43,7 +43,7 @@ public class FishVariantAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
-        m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
+        m_CapsuleCollider = this.GetComponent<BoxCollider>();
         m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
@@ -103,25 +103,30 @@ public class FishVariantAI : Character
     // Update is called once per frame
     void Update()
     {
-        Timer += Time.deltaTime;
+        if (m_bDead == false)
+        {
+            Timer += Time.deltaTime;
 
-        if (Timer > 2.0f)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-            Timer = 0.0f;
-            return;
-        }
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
-        {
-            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            if (Timer > 2.0f)
             {
-                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+                Timer = 0.0f;
+                return;
+            }
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+            {
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+            {
+                if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+                {
+                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                }
             }
         }
+
+        
         m_FSM.DoState();
 
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;

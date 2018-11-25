@@ -20,10 +20,10 @@ public class UIStratagemsDisplay : MonoBehaviour {
     public UIStratagemsList StratagemList { get { return m_StratagemsList; } }
     #endregion
 
-    public void SetCurID (int i) { _curStratagemID = i; }
     public void SetStratagemUI(GameObject go, int currentID, bool setCurID = true)
     {
         go.GetComponent<LobbyUI_Stratagems>().SetStratagemUI(currentID);
         if (setCurID) _curStratagemID = currentID;
     }
+
 }

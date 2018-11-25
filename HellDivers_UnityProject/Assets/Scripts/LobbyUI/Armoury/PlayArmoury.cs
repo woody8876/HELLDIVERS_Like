@@ -9,6 +9,7 @@ public class PlayArmoury : MonoBehaviour {
     #region Private Field
     ControllerSetting m_controller;
     Dictionary<int, bool> m_dPlayerReady = new Dictionary<int, bool>();
+    float f_Timer = 1;
     bool b_AddPlayer;
     bool b_Loding;
     int[] Members
@@ -33,20 +34,28 @@ public class PlayArmoury : MonoBehaviour {
 	}
 
     void LateUpdate () {
-        if (CheckState() && !b_Loding)
+        if (b_Loding) return;
+        else if (!CheckState())
         {
-            SceneController.Instance.ToGameScene();
-            b_Loding = true;
-        }
-        if (b_AddPlayer) return;
-        if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
-        {
-            if (Input.GetKey(m_controller.Submit))
+            if (b_AddPlayer) return;
+            if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
             {
-                PlayerManager.Instance.CreatePlayer(2, m_controller);
-                CreatPlayerMenu(2);
-                b_AddPlayer = true;
+                if (Input.GetKey(m_controller.Submit))
+                {
+                    PlayerManager.Instance.CreatePlayer(2, m_controller);
+                    CreatPlayerMenu(2);
+                    b_AddPlayer = true;
+                }
             }
+        }
+        else
+        {
+            if (f_Timer < 0)
+            {
+                SceneController.Instance.ToGameScene();
+                b_Loding = true;
+            }
+            f_Timer -= Time.fixedDeltaTime;
         }
 	}
 
@@ -65,7 +74,6 @@ public class PlayArmoury : MonoBehaviour {
         Quaternion rotate = new Quaternion(0, 0, 0, 1);
         GameObject go = Instantiate(m_PlayerInGame, pos, rotate, this.transform);
         go.name = "Player" + i;
-        //go.GetComponentInChildren<SetPlayerWeapon>().PlayerID = i;
         go.GetComponent<ControlEvent>().SetID(i);
         m_dPlayerReady.Add(i, false);
     }

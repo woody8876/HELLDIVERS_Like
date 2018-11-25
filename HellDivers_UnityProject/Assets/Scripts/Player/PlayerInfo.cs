@@ -112,6 +112,13 @@ public class PlayerInfo
         return true;
     }
 
+    public bool RefreshEquipStratagem(List<int> pList)
+    {
+        if (stratagems.Count < 1) { return false; }
+        stratagems = pList;
+        return true;
+    }
+
     public bool AddWeapon(int id)
     {
         if (GameData.Instance.WeaponInfoTable.ContainsKey(id) == false) return false;
