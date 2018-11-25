@@ -17,6 +17,7 @@ namespace HELLDIVERS.UI
         private PlayerInfo currentPlayer;
         private PlayerRecord currentRecord;
         private Animator m_Animator;
+        [SerializeField] private Image m_Header;
         [SerializeField] private Image m_RankIcon;
         [SerializeField] private Text m_RankText;
         [SerializeField] private Text m_PlayerName;
@@ -24,10 +25,14 @@ namespace HELLDIVERS.UI
         [SerializeField] private UIPlayerRewardDetail m_RewardDetailPrefab;
         private List<UIPlayerRewardDetail> m_Details = new List<UIPlayerRewardDetail>();
 
-        public void Initialize(PlayerInfo player, PlayerRecord record)
+        public void Initialize(PlayerInfo player, PlayerRecord record, int serialNumber = 1)
         {
             currentPlayer = player;
             currentRecord = record;
+
+            Color playerColor = UIHelper.GetPlayerColor(serialNumber);
+            m_Header.color = playerColor;
+            m_RankText.color = playerColor;
 
             m_PlayerName.text = currentPlayer.Username;
             m_RankText.text = currentPlayer.Rank.ToString();

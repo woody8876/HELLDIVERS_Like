@@ -9,6 +9,7 @@ namespace HELLDIVERS.UI.InGame
     {
         public Player CurrentPlayer { get; private set; }
 
+        [SerializeField] private Image m_Header;
         [SerializeField] private Transform m_Panel_Title;
         [SerializeField] private Transform m_Panel_StratagemCD;
         [SerializeField] private GameObject m_PlayerTitle;
@@ -31,6 +32,8 @@ namespace HELLDIVERS.UI.InGame
         public void Init(Player player)
         {
             CurrentPlayer = player;
+
+            m_Header.color = UIHelper.GetPlayerColor(player.SerialNumber);
 
             m_UIPlayerTitle = Instantiate(m_PlayerTitle, m_Panel_Title).GetComponent<UIPlayerTitle>();
             m_UIPlayerTitle.Init(CurrentPlayer);
