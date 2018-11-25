@@ -55,11 +55,12 @@ public class SceneController : MonoBehaviour
             if (asyncLoading.isDone || asyncLoading.progress > 0.89999f) break;
             yield return 0;
         }
-        asyncLoading.allowSceneActivation = true;
 
         loadingScreen.SetLoadingBarProcess(1);
-        yield return new WaitForSeconds(1.0f);
+        MusicManager.Instance.FadeOut(2);
+        yield return new WaitForSeconds(2.0f);
 
+        asyncLoading.allowSceneActivation = true;
         loadingScreen.FadeOut();
 
         yield break;

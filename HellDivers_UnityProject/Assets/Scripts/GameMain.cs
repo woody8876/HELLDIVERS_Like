@@ -62,6 +62,8 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        MusicManager.Instance.PlayMusic(eMusicSelection.BattleField, 3);
+
         for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
         {
             m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
