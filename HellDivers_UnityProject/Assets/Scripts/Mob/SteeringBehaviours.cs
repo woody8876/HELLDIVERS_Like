@@ -8,6 +8,9 @@ public class SteeringBehaviours
 {
     static public void NavMove(MobInfo data)
     {
+        if (data.navMeshAgent.SetDestination(data.m_vTarget) == false)
+            data.m_FSMSystem.PerformGlobalTransition(eFSMTransition.Go_Dead);
+
         data.navMeshAgent.SetDestination(data.m_vTarget);
     }
 

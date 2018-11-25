@@ -50,6 +50,11 @@ public class UIRadarPoint : MonoBehaviour
                 fishVariant.OnSpawn += ShowPoint;
                 fishVariant.OnDeath += HidePoint;
                 break;
+            case eMapPointType.TANK:
+                TankAI tank = target.GetComponent<TankAI>();
+                tank.OnSpawn += ShowPoint;
+                tank.OnDeath += HidePoint;
+                break;
         }
         UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
     }
@@ -106,6 +111,11 @@ public class UIRadarPoint : MonoBehaviour
                 fishVariant.OnSpawn -= ShowPoint;
                 fishVariant.OnDeath -= HidePoint;
                 break;
+            case eMapPointType.TANK:
+                TankAI tank = m_CurrentTarget.GetComponent<TankAI>();
+                tank.OnSpawn -= ShowPoint;
+                tank.OnDeath -= HidePoint;
+                break;
             case eMapPointType.PLAYER:
                 m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
                 m_CurrentPlayer.OnDeathBegin -= HidePoint;
@@ -131,6 +141,9 @@ public class UIRadarPoint : MonoBehaviour
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 break;
             case eMapPointType.FISHVARIANT:
+                ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
+                break;
+            case eMapPointType.TANK:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 break;
             case eMapPointType.PLAYER:

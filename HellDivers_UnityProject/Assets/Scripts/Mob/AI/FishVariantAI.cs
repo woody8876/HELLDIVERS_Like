@@ -10,7 +10,7 @@ public class FishVariantAI : Character
     public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
     private MobAnimationsController m_MobAnimator;
-    private CapsuleCollider m_CapsuleCollider;
+    private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
@@ -43,7 +43,7 @@ public class FishVariantAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
-        m_CapsuleCollider = this.GetComponent<CapsuleCollider>();
+        m_CapsuleCollider = this.GetComponent<BoxCollider>();
         m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_FSM = new FSMSystem(m_AIData);
         m_AIData.m_Go = this.gameObject;
