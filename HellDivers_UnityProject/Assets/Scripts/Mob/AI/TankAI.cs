@@ -12,7 +12,6 @@ public class TankAI : Character
     private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
-    private bool bGetHurt = false;
     private float fShield = 0.0f;
     private float fHurtTime= 0.0f;
 
@@ -33,7 +32,6 @@ public class TankAI : Character
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
-        bGetHurt = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
         m_DamageCollider.enabled = true;
@@ -116,25 +114,30 @@ public class TankAI : Character
 
     // Update is called once per frame
     void Update () {
-        Timer += Time.deltaTime;
+        if (m_bDead == false)
+        {
+            Timer += Time.deltaTime;
 
-        if (Timer > 2.0f)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-            Timer = 0.0f;
-            return;
-        }
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
-        {
-            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            if (Timer > 2.0f)
             {
-                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+                Timer = 0.0f;
+                return;
+            }
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+            {
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+            {
+                if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+                {
+                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                }
             }
         }
+
+       
         m_FSM.DoState();
 
         fHurtTime += Time.deltaTime;

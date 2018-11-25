@@ -15,12 +15,33 @@ namespace HELLDIVERS.UI
         private UITweenCanvasGroup m_CanvasTween;
         private int m_iNumber;
         private int m_iCurrentNum;
+        private int m_iEvulateRate;
 
         public void Initialize(string label, int number)
         {
             m_textLabel.text = label;
+            m_iCurrentNum = 0;
             m_iNumber = number;
-            m_textNumber.text = m_iNumber.ToString();
+            m_iEvulateRate = Mathf.FloorToInt(number * 0.1f);
+            if (m_iEvulateRate < 1) m_iEvulateRate = 1;
+            m_textNumber.text = m_iCurrentNum.ToString();
+        }
+
+        public void StartCountNum()
+        {
+            StartCoroutine(EvulateNum());
+        }
+
+        private IEnumerator EvulateNum()
+        {
+            m_textNumber.text = m_iCurrentNum.ToString();
+            while (m_iCurrentNum < m_iNumber)
+            {
+                m_iCurrentNum += m_iEvulateRate;
+                if (m_iCurrentNum > m_iNumber) m_iCurrentNum = m_iNumber;
+                m_textNumber.text = m_iCurrentNum.ToString();
+                yield return null;
+            }
         }
 
         private void Awake()
