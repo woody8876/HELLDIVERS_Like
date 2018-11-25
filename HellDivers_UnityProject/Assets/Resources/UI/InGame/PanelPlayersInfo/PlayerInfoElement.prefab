@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2647059, g: 0.84787, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.58235294, b: 0.2647059, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72bd8e589960ad4eaaf2d9b7870c8e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Header: {fileID: 114066437345748326}
   m_Panel_Title: {fileID: 224549742941755626}
   m_Panel_StratagemCD: {fileID: 224709834988541396}
   m_PlayerTitle: {fileID: 1038889989377864, guid: 3eae0332fdaa94449ae35cd41f14456d,

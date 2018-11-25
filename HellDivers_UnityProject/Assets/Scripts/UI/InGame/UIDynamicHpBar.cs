@@ -18,6 +18,9 @@ namespace HELLDIVERS.UI.InGame
         public void Init(Player player)
         {
             CurrentPlayer = player;
+
+            m_SerialIcon.color = UIHelper.GetPlayerColor(player.SerialNumber);
+
             m_NameText.text = CurrentPlayer.Info.Username;
             m_BarBg.enabled = false;
             m_BarFill.enabled = false;

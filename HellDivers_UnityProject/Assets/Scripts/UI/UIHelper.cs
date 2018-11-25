@@ -7,9 +7,43 @@ namespace HELLDIVERS.UI
 {
     public static class UIHelper
     {
-        public static readonly string RankIconFolder = "UI/Resource/Icons/Rank";
-        public static readonly string StratagemIconFolder = "UI/Resource/Icons/Stratagem";
-        public static readonly string WeaponIconFolder = "UI/Resource/Icons/Weapon";
-        public static readonly string GrenadeIconFolder = "UI/Resource/Icons/Grenade";
+        public static string RankIconFolder { get { return Setting.RankIconFolder; } }
+        public static string StratagemIconFolder { get { return Setting.StratagemIconFolder; } }
+        public static string WeaponIconFolder { get { return Setting.WeaponIconFolder; } }
+        public static string GrenadeIconFolder { get { return Setting.GrenadeIconFolder; } }
+        public static Color Player1_Color { get { return Setting.Player1Color; } }
+        public static Color Player2_Color { get { return Setting.Player2Color; } }
+
+        public static Color GetPlayerColor(int num)
+        {
+            switch (num)
+            {
+                case 1:
+                    return Setting.Player1Color;
+
+                case 2:
+                    return Setting.Player2Color;
+            }
+
+            return Color.white;
+        }
+
+        private static UISetting Setting
+        {
+            get
+            {
+                if (setting == null)
+                {
+                    setting = Resources.Load<UISetting>("UISetting");
+                    if (setting == null)
+                    {
+                        Debug.LogErrorFormat("UISetting Error : Load setting file faild");
+                    }
+                }
+                return setting;
+            }
+        }
+
+        private static UISetting setting;
     }
 }

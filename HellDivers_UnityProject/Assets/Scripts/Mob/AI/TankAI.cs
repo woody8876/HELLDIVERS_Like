@@ -205,7 +205,7 @@ public class TankAI : Character
         else
         {
             fShield += damager.Damage;
-            if (fShield >= 300f) PerformGetHurt();
+            if (fShield >= 800f) PerformGetHurt();
         }
         return true;
     }
