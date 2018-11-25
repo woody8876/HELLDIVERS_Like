@@ -85,7 +85,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         InitialStratagems(player, 0);
         InitialStratagems(player, 1);
         InitialStratagems(player, 2);
-        InitialStratagems(player, 3, true);
+        InitialStratagems(player, 3);
     }
 
     private void InitialWeapon(ref GameObject go, int player, int serial, bool b)

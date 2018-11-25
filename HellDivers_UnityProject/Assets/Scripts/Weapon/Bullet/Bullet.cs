@@ -63,7 +63,8 @@ public class Bullet : MonoBehaviour, IDamager
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(this, rh2.point);                    
+                    if (m_ID == 1901) target.TakeDamage(m_fDamage, rh2.point);
+                    else target.TakeDamage(this, rh2.point);                    
                     m_Target = go;
                 }
                 if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh2.normal, rh2.point, 30); }
@@ -80,7 +81,8 @@ public class Bullet : MonoBehaviour, IDamager
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(this, rh.point);
+                    if (m_ID == 1901) target.TakeDamage(m_fDamage, rh2.point);
+                    else target.TakeDamage(this, rh.point);
                     m_Target = go;
                 }
                 if (m_ID != 1301 && m_ID != 1501)
@@ -95,7 +97,7 @@ public class Bullet : MonoBehaviour, IDamager
             target = go.GetComponent<IDamageable>();
             if (m_Target != go)
             {
-                target.TakeDamage(m_fDamage *.3f, rh.point);
+                target.TakeDamage(m_fDamage *.5f, rh.point);
                 m_Target = go;
             }
             if (m_ID != 1301 && m_ID != 1501)
