@@ -54,7 +54,7 @@ public class GameMain : MonoBehaviour
         GameStart();
 
         m_MobSpawner.SpawnPatrol(40);
-        InvokeRepeating("SpawnMobs", 1.0f, 30.0f);
+        InvokeRepeating("SpawnMobs", 1.0f, 10.0f);
     }
 
     [ContextMenu("GameStart")]
@@ -123,6 +123,7 @@ public class GameMain : MonoBehaviour
         int fishVariant = Random.Range(-1, 2);
         int patrol = Random.Range(0, 2);
         int tank = Random.Range(-1, 2);
-        m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        //m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        m_MobSpawner.SpawnMobs(0, 0, 0, 1);
     }
 }

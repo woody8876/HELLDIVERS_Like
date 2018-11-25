@@ -135,25 +135,28 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_bDead) return;
-
-        MobInfo.AIFunction.SearchPlayer(m_AIData);
-        m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
-
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+        if (m_bDead == false)
         {
             MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if(m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
-        {
-            if (m_CurrentState != eFSMStateID.NoPlayerWanderIdleStateID && m_CurrentState != eFSMStateID.NoPlayerWanderStateID)
+            m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
+
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
             {
-                if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            {
+                if (m_CurrentState != eFSMStateID.NoPlayerWanderIdleStateID && m_CurrentState != eFSMStateID.NoPlayerWanderStateID)
                 {
-                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+                    if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+                    {
+                        m_FSM.PerformGlobalTransition(eFSMTransition.Go_NoPlayerWanderIdle);
+                    }
                 }
             }
         }
+
+       
         if (m_bGoIdle)
         {
             m_WanderIdleState.ToIdle(m_AIData);

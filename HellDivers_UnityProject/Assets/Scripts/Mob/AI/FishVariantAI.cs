@@ -103,27 +103,30 @@ public class FishVariantAI : Character
     // Update is called once per frame
     void Update()
     {
-        if (m_bDead) return;
+        if (m_bDead == false)
+        {
+            Timer += Time.deltaTime;
 
-        Timer += Time.deltaTime;
-
-        if (Timer > 2.0f)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-            Timer = 0.0f;
-            return;
-        }
-        if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
-        {
-            MobInfo.AIFunction.SearchPlayer(m_AIData);
-        }
-        if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
-        {
-            if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+            if (Timer > 2.0f)
             {
-                m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+                Timer = 0.0f;
+                return;
+            }
+            if (m_AIData.m_Player == null || m_AIData.m_Player.IsDead)
+            {
+                MobInfo.AIFunction.SearchPlayer(m_AIData);
+            }
+            if (MobInfo.AIFunction.CheckAllPlayersLife() == false)
+            {
+                if (m_CurrentState != eFSMStateID.WanderIdleStateID && m_CurrentState != eFSMStateID.WanderStateID)
+                {
+                    m_FSM.PerformGlobalTransition(eFSMTransition.Go_WanderIdle);
+                }
             }
         }
+
+        
         m_FSM.DoState();
 
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
