@@ -52,6 +52,8 @@ public class CameraFollowing : MonoBehaviour
     [SerializeField] private float m_CamLerp = 0.1f;
     [SerializeField] private float m_CamWalkAdd = 3.0f;
     private float m_CurrentLerp;
+    private float m_fTimer;
+    private float m_fTime = 2; 
     private Vector3 m_Destination;
     private Vector2 m_ExtraVec;
 
@@ -111,6 +113,11 @@ public class CameraFollowing : MonoBehaviour
     private void Update()
     {
         if (m_Targets.Count <= 0) return;
+        if (m_fTimer < 0)
+        {
+            Borderable();
+            m_fTimer = m_fTime;
+        }
 
         UpdateDestination();
 
@@ -135,6 +142,8 @@ public class CameraFollowing : MonoBehaviour
         }
 
         MoveToDestination();
+
+        m_fTimer -= Time.fixedDeltaTime;
     }
 
     #endregion MonoBehaviour
@@ -170,6 +179,12 @@ public class CameraFollowing : MonoBehaviour
             Debug.Log(pos);
             b.size = pos;
         }
+    }
+
+    private void Borderable()
+    {
+        if (m_Targets.Count < 2) { m_box1.enabled = m_box2.enabled = m_box3.enabled = m_box4.enabled = false; }
+        else { m_box1.enabled = m_box2.enabled = m_box3.enabled = m_box4.enabled = true; }
     }
 
     private bool RayCast(Transform t, ref Vector3 pos, int i)
