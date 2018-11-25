@@ -12,7 +12,6 @@ public class TankAI : Character
     private BoxCollider m_CapsuleCollider;
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
-    private bool bGetHurt = false;
     private float fShield = 0.0f;
     private float fHurtTime= 0.0f;
 
@@ -33,7 +32,6 @@ public class TankAI : Character
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
-        bGetHurt = false;
         m_CurrentHp = m_MaxHp;
         m_CapsuleCollider.enabled = true;
         m_DamageCollider.enabled = true;
@@ -116,6 +114,8 @@ public class TankAI : Character
 
     // Update is called once per frame
     void Update () {
+        if (m_bDead) return;
+
         Timer += Time.deltaTime;
 
         if (Timer > 2.0f)

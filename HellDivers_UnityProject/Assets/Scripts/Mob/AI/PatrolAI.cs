@@ -135,6 +135,8 @@ public class PatrolAI : Character
     // Update is called once per frame
     void Update()
     {
+        if (m_bDead) return;
+
         MobInfo.AIFunction.SearchPlayer(m_AIData);
         m_CurrentState = m_AIData.m_FSMSystem.CurrentStateID;
 

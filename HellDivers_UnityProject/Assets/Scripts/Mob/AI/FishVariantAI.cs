@@ -103,6 +103,8 @@ public class FishVariantAI : Character
     // Update is called once per frame
     void Update()
     {
+        if (m_bDead) return;
+
         Timer += Time.deltaTime;
 
         if (Timer > 2.0f)
