@@ -11,9 +11,12 @@ public class GameMain : MonoBehaviour
     #region Properties
 
     public static GameMain Instance { get; private set; }
+    public float GameTime { get { return Time.realtimeSinceStartup - m_GameStartTime; } }
     public CameraFollowing CameraFolloing { get { return m_CameraFollowing; } }
 
     #endregion Properties
+
+    #region Private Variable
 
     private AssetManager m_AssetManager = new AssetManager();
     private ResourceManager m_ResourceManager = new ResourceManager();
@@ -24,11 +27,20 @@ public class GameMain : MonoBehaviour
     private InGameRewardManager m_RewardManager;
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
+    private float m_GameStartTime;
     [SerializeField] private uint m_NumberOfTowers = 1;
+
+    #endregion Private Variable
+
+    #region Delegate Function
 
     private delegate void GameStateDelegateFunc();
 
     private GameStateDelegateFunc DoCheckCondition;
+
+    #endregion Delegate Function
+
+    #region MonoBehaviour
 
     private void Awake()
     {
@@ -78,10 +90,22 @@ public class GameMain : MonoBehaviour
         if (DoCheckCondition != null) DoCheckCondition();
     }
 
-    [ContextMenu("Mission Abandon")]
-    public void MissionAbandon()
+    #endregion MonoBehaviour
+
+    #region Game Control
+
+    [ContextMenu("Mission Start")]
+    public void GameStart()
     {
-        SceneController.Instance.ToLobby();
+        m_GameStartTime = Time.realtimeSinceStartup;
+
+        m_PlayerManager.SpawnPlayers();
+        UIInGameMain.Instance.DrawGameUI();
+
+        m_MobSpawner.SpawnPatrol(40);
+        InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
+
+        DoCheckCondition = CheckGameCondition;
     }
 
     private void CheckGameCondition()
@@ -99,15 +123,11 @@ public class GameMain : MonoBehaviour
         }
     }
 
-    [ContextMenu("Mission Failed")]
-    public void MissionFailed()
-    {
-        UIInGameMain.Instance.DrawMissionFailedUI();
-    }
-
     [ContextMenu("Mission Complete")]
     public void MissionComplete()
     {
+        m_RewardManager.SetGameDurationTime(GameTime);
+
         for (int i = 0; i < m_PlayerManager.Players.Count; i++)
         {
             Player player = m_PlayerManager.Players[i];
@@ -116,12 +136,26 @@ public class GameMain : MonoBehaviour
         SceneController.Instance.ToReward();
     }
 
-    private void SpawnMobs()
+    [ContextMenu("Mission Failed")]
+    public void MissionFailed()
     {
-        int fish = Random.Range(2, 4);
+        UIInGameMain.Instance.DrawMissionFailedUI();
+    }
+
+    [ContextMenu("Mission Abandon")]
+    public void MissionAbandon()
+    {
+        SceneController.Instance.ToLobby();
+    }
+
+    public void SpawnMobs()
+    {
+	int fish = Random.Range(2, 4);
         int fishVariant = Random.Range(-1, 2);
         int patrol = Random.Range(0, 2);
         int tank = Random.Range(-1, 2);
         m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
     }
+
+    #endregion Game Control
 }
