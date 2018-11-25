@@ -6,11 +6,23 @@ using UnityEngine.EventSystems;
 
 public class UIWeaponList : MonoBehaviour {
 
+    #region SerializeField
+
+    [Header("== Script Setting ==")]
     [SerializeField] UIWeaponDisplay weaponDisplay;
+    [Header("== Prefabs Setting ==")]
     [SerializeField] GameObject m_WeaponUI;
+    [SerializeField] GameObject m_WeaponUI_Lock;
     [SerializeField] GameObject m_Content;
+    [Header("== Panel Setting ==")]
+    [SerializeField] GameObject m_LockPanel;
+
+    #endregion
+
+    #region Private Field
 
     List<GameObject> m_weapons = new List<GameObject>();
+
     int posY
     {
         get { return _posY; }
@@ -21,22 +33,36 @@ public class UIWeaponList : MonoBehaviour {
             else _posY = value;
         }
     }
+
     int _posY;
+
+    int m_unlockWeaponCount;
+
+    int m_currentCount;
+
     GameObject m_currentSelectObject;
-    // Use this for initialization
-    void Start()
+
+    #endregion
+
+    #region Monobehaviors
+
+    private void Start()
     {
         int PlayerID = weaponDisplay.SetPlayer.PlayerID;
         CreateWeaponUI(PlayerID);
+        m_unlockWeaponCount = m_weapons.Count;
+        CreateWeaponUILock(PlayerID);
         SubscriptAxisEvent();
         ChangeWeapon();
     }
+
     private void OnEnable()
     {
         if (m_weapons.Count < 1) return;
         SubscriptAxisEvent();
         ChangeWeapon();
     }
+
     private void OnDisable()
     {
         UnsubscribeAxisEvent();
@@ -48,6 +74,10 @@ public class UIWeaponList : MonoBehaviour {
         pos.y = posY;
         m_Content.transform.localPosition = Vector3.Lerp(m_Content.transform.localPosition, pos, 0.05f);
     }
+
+    #endregion
+
+    #region Subscript Event
 
     private void SubscriptAxisEvent()
     {
@@ -64,6 +94,10 @@ public class UIWeaponList : MonoBehaviour {
         weaponDisplay.SetPlayer.Control.AxisSubmit -= ButtonSubmit;
         weaponDisplay.SetPlayer.Control.AxisCancel -= ButtonCancel;
     }
+
+    #endregion
+
+    #region Method
 
     private void ChangeWeapon()
     {
@@ -105,11 +139,33 @@ public class UIWeaponList : MonoBehaviour {
         }
     }
 
+    private void CreateWeaponUILock(int player)
+    {
+        GameObject go;
+        int rank = PlayerManager.Instance.Players[player].info.Rank;
+        foreach (var item in GameData.Instance.UnlockWeaponsTable)
+        {
+            if (item.Key < rank + 1) continue;
+            for (int i = 0; i < item.Value.Count; i++)
+            {
+                go = Instantiate(m_WeaponUI_Lock, m_Content.transform);
+                int id = item.Value[i];
+                go.name = id.ToString();
+                go.GetComponent<LobbyUI_Weapon>().IsLocok(true);
+                go.GetComponent<LobbyUI_Weapon>().SetWeaponUI(id, item.Key);
+                m_weapons.Add(go);
+            }
+        }
+
+    }
+
     private string Determine()
     {
         if (weaponDisplay.SetPlayer.m_bPrimary) return weaponDisplay.SetPlayer.PriWeaponID.ToString();
         else return weaponDisplay.SetPlayer.SecWeaponID.ToString();
     }
+
+    #endregion
 
     #region Button Behaviors
 
@@ -140,8 +196,7 @@ public class UIWeaponList : MonoBehaviour {
     }
 
     #endregion
-
-
+    
     #region Set Button
 
     private void SetInfo(GameObject go)
@@ -171,6 +226,7 @@ public class UIWeaponList : MonoBehaviour {
             if (go == m_weapons[i])
             {
                 m_currentSelectObject = m_weapons[i + 1];
+                m_currentCount = i + 1 ;
                 return;
             }
         }
@@ -185,6 +241,7 @@ public class UIWeaponList : MonoBehaviour {
             if (go == m_weapons[i])
             {
                 m_currentSelectObject = m_weapons[i - 1];
+                m_currentCount = i -1;
                 return;
             }
         }
@@ -192,18 +249,25 @@ public class UIWeaponList : MonoBehaviour {
 
     private void OnSelectEvent(GameObject go)
     {
-        SetInfo(go);
         OnValueChange(go);
         go.GetComponent<LobbyUI_Weapon>().SetHighlightBG();
+        if (m_currentCount > m_unlockWeaponCount - 1)
+        {
+            m_LockPanel.SetActive(true);
+            return;
+        }
+        SetInfo(go);
     }
 
     private void DisSelectEvent(GameObject go)
     {
         go.GetComponent<LobbyUI_Weapon>().SetBG();
+        m_LockPanel.SetActive(false);
     }
     
     private void OnClickEvent() 
     {
+        if (m_currentCount > m_unlockWeaponCount - 1) return;
         weaponDisplay.SetCurID(weaponDisplay.Info.ID);
         DisSelectEvent(m_currentSelectObject);
         UnsubscribeAxisEvent();
@@ -217,5 +281,6 @@ public class UIWeaponList : MonoBehaviour {
         SubscriptAxisEvent();
         OnSelectEvent(m_currentSelectObject);
     }
+
     #endregion
 }

@@ -57,13 +57,13 @@ public class Bullet : MonoBehaviour, IDamager
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
         {
             RaycastHit rh2;
-            if (Physics.Raycast(transform.position, transform.forward, out rh2, m_fNextPosDis * 5, 1 << LayerMask.NameToLayer("Enemies")))
+            if (Physics.Raycast(transform.position, transform.forward, out rh2, m_fNextPosDis * 2, 1 << LayerMask.NameToLayer("Enemies")))
             {
                 go = rh2.collider.gameObject;
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    target.TakeDamage(this, rh2.point);
+                    target.TakeDamage(this, rh2.point);                    
                     m_Target = go;
                 }
                 if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh2.normal, rh2.point, 30); }

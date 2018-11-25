@@ -37,6 +37,7 @@ public class PlayerManager
         playerInfo.AddWeapon(1301);
         playerInfo.AddStratagem(2001);
         playerInfo.AddStratagem(2002);
+        playerInfo.AddStratagem(2003);
         playerInfo.AddStratagem(2000);
         playerInfo.Grenades.Add(4001);
         playerInfo.Grenades.Add(4002);
@@ -51,7 +52,7 @@ public class PlayerManager
         m_PlayerMap[player].info.RefreshEquipWeapon(newEquipWeapons);
         m_PlayerMap[player].info.RefreshEquipStratagem(newEquipStratagems);
     }
-        
+
     //public void LoadPlayerInfo()
     //{
     //}

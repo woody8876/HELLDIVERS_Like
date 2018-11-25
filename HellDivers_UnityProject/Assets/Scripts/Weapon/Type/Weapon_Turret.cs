@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon_Turret : Weapon {
 
-    protected override int activeAmmo { get { return base.activeAmmo - 10; } }
+    protected override int activeAmmo { get { return base.activeAmmo - 7; } }
     public override void WeaponLoader() { base.WeaponLoader(); }
 
     public override void Shot(Transform t, float spread, Player player)

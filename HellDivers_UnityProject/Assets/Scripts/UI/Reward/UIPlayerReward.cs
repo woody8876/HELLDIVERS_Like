@@ -10,6 +10,10 @@ namespace HELLDIVERS.UI
         public PlayerInfo CurrentPlayerInfo { get { return currentPlayer; } }
         public PlayerRecord CurrentPlayerRecord { get { return currentRecord; } }
 
+        public delegate void UIPlayerRewardEventHolder();
+
+        public event UIPlayerRewardEventHolder OnDrawUIFinished;
+
         private PlayerInfo currentPlayer;
         private PlayerRecord currentRecord;
         private Animator m_Animator;
@@ -76,7 +80,10 @@ namespace HELLDIVERS.UI
                 UITweenCanvasGroup tween = m_Details[i].CanvasTween;
                 tween.Play();
                 yield return new WaitForSeconds(tween.TimeLenght);
+                m_Details[i].StartCountNum();
             }
+
+            if (OnDrawUIFinished != null) OnDrawUIFinished();
         }
 
         private void RefreshRankInfo()

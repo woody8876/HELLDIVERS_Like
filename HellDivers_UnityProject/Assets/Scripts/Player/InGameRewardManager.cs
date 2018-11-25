@@ -7,8 +7,10 @@ public class InGameRewardManager : MonoBehaviour
     static public InGameRewardManager Instance { get { return m_instance; } }
     static private InGameRewardManager m_instance;
 
+    public float GameDurationTime { get { return m_GameDurationTime; } }
     public Dictionary<int, PlayerRecord> PlayerRewardMap { get { return m_RecordMap; } }
     private Dictionary<int, PlayerRecord> m_RecordMap;
+    private float m_GameDurationTime;
 
     private void Awake()
     {
@@ -27,11 +29,6 @@ public class InGameRewardManager : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
-
     public void SetReward(int SerialNum, PlayerRecord record)
     {
         if (m_RecordMap.ContainsKey(SerialNum))
@@ -42,6 +39,11 @@ public class InGameRewardManager : MonoBehaviour
         {
             m_RecordMap.Add(SerialNum, record);
         }
+    }
+
+    public void SetGameDurationTime(float time)
+    {
+        m_GameDurationTime = time;
     }
 
     public void ApplyRewardToPlayers()

@@ -21,7 +21,7 @@ public class UI_StratagemsInfo : MonoBehaviour {
         m_ID = id;
         string s = " seconds";
         m_ItemName.text = GameData.Instance.StratagemTable[m_ID].Title;
-        m_Cooldown.text = cooldown + GameData.Instance.StratagemTable[m_ID].CoolDown.ToString();
+        m_Cooldown.text = cooldown + GameData.Instance.StratagemTable[m_ID].CoolDown.ToString() + s;
         m_Activation.text = activation + GameData.Instance.StratagemTable[m_ID].Activation.ToString();
         SetUI(m_ID);
     }
