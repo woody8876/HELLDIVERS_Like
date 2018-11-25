@@ -11,3 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7bab42c09efe0b4ba10149fffd82a6f, type: 3}
   m_Name: UISetting
   m_EditorClassIdentifier: 
+  RankIconFolder: UI/Resource/Icons/Rank
+  StratagemIconFolder: UI/Resource/Icons/Stratagem
+  WeaponIconFolder: UI/Resource/Icons/Weapon
+  GrenadeIconFolder: UI/Resource/Icons/Grenade
+  Player1Color: {r: 0.2647059, g: 0.84787, b: 1, a: 1}
+  Player2Color: {r: 1, g: 0.58235294, b: 0.2647059, a: 1}
