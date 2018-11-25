@@ -52,9 +52,6 @@ public class GameMain : MonoBehaviour
     {
         m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
         GameStart();
-
-        m_MobSpawner.SpawnPatrol(40);
-        InvokeRepeating("SpawnMobs", 1.0f, 10.0f);
     }
 
     [ContextMenu("GameStart")]
@@ -69,6 +66,8 @@ public class GameMain : MonoBehaviour
         //m_PlayerManager.CreatePlayer(m_PlayerData2, 2);
 
         m_PlayerManager.SpawnPlayers();
+        m_MobSpawner.SpawnPatrol(40);
+        InvokeRepeating("SpawnMobs", 1.0f, 10.0f);
         UIInGameMain.Instance.DrawGameUI();
         DoCheckCondition = CheckGameCondition;
     }
@@ -123,7 +122,6 @@ public class GameMain : MonoBehaviour
         int fishVariant = Random.Range(-1, 2);
         int patrol = Random.Range(0, 2);
         int tank = Random.Range(-1, 2);
-        //m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
-        m_MobSpawner.SpawnMobs(0, 0, 0, 1);
+        m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
     }
 }
