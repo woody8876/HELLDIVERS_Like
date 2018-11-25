@@ -17,6 +17,8 @@ namespace HELLDIVERS.UI.InGame
         {
             CurrentPlayer = player;
 
+            m_RankText.color = UIHelper.GetPlayerColor(player.SerialNumber);
+
             int rank = CurrentPlayer.Info.Rank;
             if (rank > 40) rank = 40;
             else if (rank < 0) rank = 0;

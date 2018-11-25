@@ -64,7 +64,7 @@ namespace HELLDIVERS.UI
             foreach (var record in InGameRewardManager.Instance.PlayerRewardMap)
             {
                 UIPlayerReward playerReward = Instantiate(m_PlayerRewardPrefab, m_PanelReward);
-                playerReward.Initialize(PlayerManager.Instance.Players[record.Key].info, record.Value);
+                playerReward.Initialize(PlayerManager.Instance.Players[record.Key].info, record.Value, record.Key);
                 playerReward.OnDrawUIFinished += RefreshCountinueBtn;
                 m_DrawFinishedCount++;
                 m_PlayerRewardMap.Add(record.Key, playerReward);
