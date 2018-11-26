@@ -184,6 +184,18 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
+    m_Name: Shoot
+    m_StateMachine: {fileID: 1107924155295121642}
+    m_Mask: {fileID: 31900000, guid: 664f87b86b8db06458fafd629904b8fc, type: 2}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 1
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
     m_Name: Get Hurt
     m_StateMachine: {fileID: 1107905626931277382}
     m_Mask: {fileID: 31900000, guid: 664f87b86b8db06458fafd629904b8fc, type: 2}
@@ -199,18 +211,6 @@ AnimatorController:
     m_Name: Any State
     m_StateMachine: {fileID: 1107759930886498318}
     m_Mask: {fileID: 31900000, guid: 69f432b720cf2ad4bba9cecb24c52b10, type: 2}
-    m_Motions: []
-    m_Behaviours: []
-    m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
-    m_IKPass: 0
-    m_SyncedLayerAffectsTiming: 0
-    m_Controller: {fileID: 9100000}
-  - serializedVersion: 5
-    m_Name: Shoot
-    m_StateMachine: {fileID: 1107924155295121642}
-    m_Mask: {fileID: 31900000, guid: 664f87b86b8db06458fafd629904b8fc, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
