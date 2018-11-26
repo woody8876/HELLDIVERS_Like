@@ -90,10 +90,11 @@ GameObject:
   - component: {fileID: 4393057572655542}
   - component: {fileID: 33809400453129026}
   - component: {fileID: 23428561222550202}
-  - component: {fileID: 135472198924002648}
   - component: {fileID: 114396207140271724}
   - component: {fileID: 114107941034378460}
-  m_Layer: 0
+  - component: {fileID: 136575170533677278}
+  - component: {fileID: 208594439075611264}
+  m_Layer: 12
   m_Name: Cannon_Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1599662098927398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 349.25626, y: 54.561436, z: 896.6033}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4393057572655542}
@@ -517,6 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3478be0126dccdd4e8c292ada4acf4fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CurrentHp: 0
+  m_MaxHp: 100
+  m_Base: {fileID: 1599662098927398}
   m_GunPos: {fileID: 4596466530726612}
 --- !u!114 &114396207140271724
 MonoBehaviour:
@@ -532,18 +536,6 @@ MonoBehaviour:
   m_fSpreadIncrease: 0
   m_bAutoFire: 1
   m_bShooting: 1
---- !u!135 &135472198924002648
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1641557053925644}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.44
-  m_Center: {x: -0.00000044703484, y: 1.4466889, z: 0.02245301}
 --- !u!136 &136233791521644880
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -557,3 +549,31 @@ CapsuleCollider:
   m_Height: 4.54
   m_Direction: 2
   m_Center: {x: -0.01, y: 0.28, z: 0.8642883}
+--- !u!136 &136575170533677278
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1641557053925644}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.44
+  m_Height: 10
+  m_Direction: 1
+  m_Center: {x: -0.00000044703484, y: 3, z: 0.02245301}
+--- !u!208 &208594439075611264
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1641557053925644}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.15, y: 5, z: 0.15}
+  m_MoveThreshold: 1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.0000004470348, y: 3, z: 0.02245301}
+  m_TimeToStationary: 0.5

@@ -168,7 +168,7 @@ public class Weapon : IWeaponBehaviour
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
         ObjectPool.m_Instance.InitGameObjects(HitMobEffect, activeAmmo, 10);
         ObjectPool.m_Instance.InitGameObjects(HitObsEffect, activeAmmo * 5, 20);
-        ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo * 20, 30);
+        ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo * 5, 30);
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID);
         ObjectPool.m_Instance.InitGameObjects(effect, activeAmmo, _weaponInfo.ID * 10 + 1);
     }

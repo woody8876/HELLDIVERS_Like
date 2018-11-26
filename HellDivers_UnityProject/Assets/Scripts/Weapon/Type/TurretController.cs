@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(WeaponController))]
-public class TurretController : MonoBehaviour {
+public class TurretController : Character {
 
-
+    [SerializeField] GameObject m_Base;
     [SerializeField] Transform m_GunPos;
 
     private WeaponController m_weaponController;
@@ -14,14 +14,19 @@ public class TurretController : MonoBehaviour {
     Collider[] targets;
     float m_fTimer = .4f;
 
-    private void Start()
+
+    private void OnEnable()
     {
+        m_MaxHp = 1000;
+        m_CurrentHp = m_MaxHp;
         m_weaponController = GetComponent<WeaponController>();
         m_weaponController.AddWeapon(1901, m_GunPos, null);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void FixedUpdate () {
+        m_CurrentHp -= 10 * Time.fixedDeltaTime;
+        if (m_CurrentHp < 0) Death();
         if (m_fTimer > 0)
         {
             m_fTimer -= Time.fixedDeltaTime;
@@ -89,6 +94,9 @@ public class TurretController : MonoBehaviour {
         if (target.IsDead) m_CurrentTarget = null;
     }
 
-
-
+    public override void Death()
+    {
+        m_bDead = true;
+        Destroy(m_Base);
+    }
 }
