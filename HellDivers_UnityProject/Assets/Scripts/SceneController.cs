@@ -7,6 +7,10 @@ public class SceneController : MonoBehaviour
 {
     public static SceneController Instance { get; private set; }
 
+    private delegate void DelegateOnSceneLoad();
+
+    private DelegateOnSceneLoad OnLoadFinished;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -41,6 +45,7 @@ public class SceneController : MonoBehaviour
         float progress = 0;
         loadingScreen.SetLoadingBarProcess(progress);
         loadingScreen.FadeIn();
+        MusicManager.Instance.FadeOut(1f);
         yield return new WaitForSeconds(1.0f);
 
         while (progress <= 0.9f)
@@ -55,11 +60,12 @@ public class SceneController : MonoBehaviour
             if (asyncLoading.isDone || asyncLoading.progress > 0.89999f) break;
             yield return 0;
         }
-        asyncLoading.allowSceneActivation = true;
 
+        MusicManager.Instance.PlayMusic(eMusicSelection.BattleField, 2);
         loadingScreen.SetLoadingBarProcess(1);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
 
+        asyncLoading.allowSceneActivation = true;
         loadingScreen.FadeOut();
 
         yield break;

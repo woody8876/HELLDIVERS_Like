@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using HELLDIVERS.UI;
 
 public enum eMapPointType
 {
@@ -12,6 +13,7 @@ public enum eMapPointType
     TANK,
     MISSIONTOWER,
 }
+
 public class UIRadarPoint : MonoBehaviour
 {
     private Vector3 m_Pos = new Vector3();
@@ -25,7 +27,7 @@ public class UIRadarPoint : MonoBehaviour
     private Player m_CurrentPlayer;
     private eMapPointType m_CurrentType;
 
-    public void Init(GameObject target,eMapPointType type)
+    public void Init(GameObject target, eMapPointType type)
     {
         m_CurrentTarget = target;
         m_CurrentType = type;
@@ -40,16 +42,19 @@ public class UIRadarPoint : MonoBehaviour
                 fish.OnSpawn += ShowPoint;
                 fish.OnDeath += HidePoint;
                 break;
+
             case eMapPointType.PATROL:
                 PatrolAI patrol = target.GetComponent<PatrolAI>();
                 patrol.OnSpawn += ShowPoint;
                 patrol.OnDeath += HidePoint;
                 break;
+
             case eMapPointType.FISHVARIANT:
                 FishVariantAI fishVariant = target.GetComponent<FishVariantAI>();
                 fishVariant.OnSpawn += ShowPoint;
                 fishVariant.OnDeath += HidePoint;
                 break;
+
             case eMapPointType.TANK:
                 TankAI tank = target.GetComponent<TankAI>();
                 tank.OnSpawn += ShowPoint;
@@ -58,13 +63,14 @@ public class UIRadarPoint : MonoBehaviour
         }
         UIPanelRadar.Instance.UpdatePoint += UpdatePosition;
     }
+
     public void Init(Player player, eMapPointType type)
     {
         m_CurrentPlayer = player;
         m_CurrentTarget = player.gameObject;
         m_CurrentType = type;
         m_Image = this.GetComponent<Image>();
-        m_Color = m_Image.color;
+        m_Color = UIHelper.GetPlayerColor(player.SerialNumber);
         FindRadarCenter();
         CalculatePosition();
         switch (m_CurrentType)
@@ -77,12 +83,13 @@ public class UIRadarPoint : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start () {
-       
+    private void Start()
+    {
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    private void Update()
+    {
         if (m_CurrentType == eMapPointType.PLAYER)
         {
             UpdatePosition();
@@ -91,6 +98,7 @@ public class UIRadarPoint : MonoBehaviour
 
         Blink();
     }
+
     private void OnDisable()
     {
         if (m_CurrentTarget == null) return;
@@ -101,25 +109,28 @@ public class UIRadarPoint : MonoBehaviour
                 fish.OnSpawn -= ShowPoint;
                 fish.OnDeath -= HidePoint;
                 break;
+
             case eMapPointType.PATROL:
                 PatrolAI patrol = m_CurrentTarget.GetComponent<PatrolAI>();
                 patrol.OnSpawn -= ShowPoint;
                 patrol.OnDeath -= HidePoint;
                 break;
+
             case eMapPointType.FISHVARIANT:
                 FishVariantAI fishVariant = m_CurrentTarget.GetComponent<FishVariantAI>();
                 fishVariant.OnSpawn -= ShowPoint;
                 fishVariant.OnDeath -= HidePoint;
                 break;
+
             case eMapPointType.TANK:
                 TankAI tank = m_CurrentTarget.GetComponent<TankAI>();
                 tank.OnSpawn -= ShowPoint;
                 tank.OnDeath -= HidePoint;
                 break;
-            //case eMapPointType.PLAYER:
-            //    m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
-            //    m_CurrentPlayer.OnDeathBegin -= HidePoint;
-            //    break;
+                //case eMapPointType.PLAYER:
+                //    m_CurrentPlayer.OnSpawnBegin -= ShowPoint;
+                //    m_CurrentPlayer.OnDeathBegin -= HidePoint;
+                //    break;
         }
         UIPanelRadar.Instance.UpdatePoint -= UpdatePosition;
     }
@@ -138,23 +149,26 @@ public class UIRadarPoint : MonoBehaviour
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
+
             case eMapPointType.PATROL:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
+
             case eMapPointType.FISHVARIANT:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
+
             case eMapPointType.TANK:
                 ObjectPool.m_Instance.UnLoadObjectToPool(9102, this.gameObject);
                 UIPanelRadar.Instance.PointList.Remove(this.gameObject);
                 break;
+
             case eMapPointType.PLAYER:
                 this.gameObject.SetActive(false);
                 break;
         }
-      
     }
 
     private void FindRadarCenter()
@@ -168,7 +182,7 @@ public class UIRadarPoint : MonoBehaviour
             m_PlayersCount++;
             m_Center += pList[i].transform.position;
         }
-        if(m_PlayersCount > 0)
+        if (m_PlayersCount > 0)
         {
             m_Center /= m_PlayersCount;
         }
