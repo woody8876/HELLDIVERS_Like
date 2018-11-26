@@ -133,7 +133,7 @@ public class FishVariantAI : Character
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
-    public void PerformGetHurt()
+    public void PerformGetHurt(Vector3 point)
     {
         if (IsDead) return;
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
@@ -141,32 +141,26 @@ public class FishVariantAI : Character
         {
             return;
         }
+        StartCoroutine(Displacement(point, 1.0f));
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_FishGetHurt);
         return;
+    }
+
+    IEnumerator Displacement(Vector3 point, float time)
+    {
+        Vector3 dir = this.transform.position - point;
+        dir.y = 0;
+        for (float i = 0; i < time; i += Time.deltaTime)
+        {
+            this.transform.position += dir * Time.deltaTime;
+            yield return 0;
+        }
     }
 
     public void PerformDead()
     {
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
-    }
-
-    public override bool TakeDamage(float dmg, Vector3 hitPoint)
-    {
-        if (IsDead) return false;
-        CurrentHp -= dmg;
-        if (m_CurrentHp <= 0)
-        {
-            m_CapsuleCollider.enabled = false;
-            m_DamageCollider.enabled = false;
-            Death();
-            return true;
-        }
-        else
-        {
-            PerformGetHurt();
-        }
-        return true;
     }
 
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
@@ -178,6 +172,7 @@ public class FishVariantAI : Character
         {
             m_CapsuleCollider.enabled = false;
             m_DamageCollider.enabled = false;
+            StartCoroutine(Displacement(hitPoint, 0.2f));
             Death();
 
             damager.Damager.Record.NumOfKills++;
@@ -187,7 +182,7 @@ public class FishVariantAI : Character
         }
         else
         {
-            PerformGetHurt();
+            PerformGetHurt(hitPoint);
         }
         return true;
     }

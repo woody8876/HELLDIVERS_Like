@@ -9,6 +9,8 @@ public class PlayerFSMSystem
     private ePlayerFSMStateID m_currentStateID;
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private ePlayerFSMStateID m_CurrentGlobalStateID;
+    public ePlayerFSMStateID CurrentGlobalStateID { get { return m_CurrentGlobalStateID; } }
+
     private PlayerFSMState m_currentState;
     private PlayerFSMState m_CurrentGlobalState = null;
     private PlayerFSMState m_PreviousState;
