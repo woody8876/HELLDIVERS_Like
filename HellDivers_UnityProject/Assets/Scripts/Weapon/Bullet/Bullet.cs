@@ -54,7 +54,27 @@ public class Bullet : MonoBehaviour, IDamager
         RaycastHit rh;
         GameObject go = null;
         IDamageable target = null;
-        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
+        if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Enemies")))
+        {
+            go = rh.collider.gameObject;
+            target = go.GetComponent<IDamageable>();
+            if (m_Target != go)
+            {
+                if (m_ID == 1901) target.TakeDamage(m_fDamage, rh.point);
+                else target.TakeDamage(this, rh.point);
+                m_Target = go;
+            }
+            if (GameData.Instance.WeaponInfoTable[m_ID].Type == 3 || GameData.Instance.WeaponInfoTable[m_ID].Type == 5)
+            {
+                PlayHitEffect(rh.normal, rh.point, 30);
+            }
+            else
+            {
+                PlayHitEffect(rh.normal, rh.point, 10);
+                BulletDeath();
+            }
+        }
+        else if (Physics.Raycast(transform.position, transform.forward, out rh, m_fNextPosDis, 1 << LayerMask.NameToLayer("Battle")))
         {
             RaycastHit rh2;
             if (Physics.Raycast(transform.position, transform.forward, out rh2, m_fNextPosDis * 2, 1 << LayerMask.NameToLayer("Enemies")))
@@ -67,7 +87,7 @@ public class Bullet : MonoBehaviour, IDamager
                     else target.TakeDamage(this, rh2.point);                    
                     m_Target = go;
                 }
-                if (GameData.Instance.WeaponInfoTable[m_ID].Type != 3 || GameData.Instance.WeaponInfoTable[m_ID].Type != 5)
+                if (GameData.Instance.WeaponInfoTable[m_ID].Type == 3 || GameData.Instance.WeaponInfoTable[m_ID].Type == 5)
                 {
                     PlayHitEffect(rh2.normal, rh2.point, 30);
                 }
