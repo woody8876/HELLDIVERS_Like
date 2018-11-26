@@ -18,8 +18,8 @@ public class Main : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
         m_GameData.Init();
-        m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_MusicManager = this.gameObject.AddComponent<MusicManager>();
+        m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_PlayerManager.Init();
         m_InputManager.Init();
     }
@@ -27,7 +27,6 @@ public class Main : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        m_MusicManager.PlayMusic(eMusicSelection.Theme, 3);
     }
 
     // Update is called once per frame

@@ -24,7 +24,6 @@ namespace HELLDIVERS.UI
         // Use this for initialization
         private void Start()
         {
-            MusicManager.Instance.PlayMusic(eMusicSelection.MissionSuccess, 3);
             m_BlackCardTween.OnFinished += PrintGameTime;
             m_PlayerRewardMap = new Dictionary<int, UIPlayerReward>();
             m_BlackCardTween.OnFinished += CreatePlayerRewardElement;
@@ -38,7 +37,7 @@ namespace HELLDIVERS.UI
 
         public void ClickContinueBtn()
         {
-            MusicManager.Instance.FadeOut(2);
+            MusicManager.Instance.FadeOut(1);
             m_BlackCardTween.OnFinished += SceneChangeToLobby;
             m_BlackCardTween.PlayeBackward();
         }

@@ -11,8 +11,10 @@ public enum eMusicSelection
 public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
+    public eMusicSelection CurrentSelection { get { return m_CurrentSelection; } }
 
     private AudioSource m_AudioSource;
+    private eMusicSelection m_CurrentSelection;
 
     private void Awake()
     {
@@ -22,27 +24,36 @@ public class MusicManager : MonoBehaviour
         m_AudioSource.loop = true;
     }
 
+    private void Start()
+    {
+        PlayMusic(eMusicSelection.Theme, 2);
+    }
+
     public void PlayMusic(eMusicSelection music, float time = 0)
     {
         BGMSetting bgm = Resources.Load<BGMSetting>("BGMSetting");
         if (bgm == null) return;
-
+        m_AudioSource.Stop();
         switch (music)
         {
             case eMusicSelection.Theme:
+                m_CurrentSelection = eMusicSelection.Theme;
                 m_AudioSource.clip = bgm.Theme;
                 break;
 
             case eMusicSelection.BattleField:
+                m_CurrentSelection = eMusicSelection.BattleField;
                 int index = Random.Range(0, bgm.BattleField.Count);
                 m_AudioSource.clip = bgm.BattleField[index];
                 break;
 
             case eMusicSelection.MissionSuccess:
+                m_CurrentSelection = eMusicSelection.MissionSuccess;
                 m_AudioSource.clip = bgm.MissionSuccess;
                 break;
 
             case eMusicSelection.MissionFailed:
+                m_CurrentSelection = eMusicSelection.MissionFailed;
                 m_AudioSource.clip = bgm.MissionFailed;
                 break;
         }
@@ -61,7 +72,11 @@ public class MusicManager : MonoBehaviour
         while (m_AudioSource.volume > 0)
         {
             m_AudioSource.volume -= Time.deltaTime / time;
-            if (m_AudioSource.volume < 0) m_AudioSource.volume = 0;
+            if (m_AudioSource.volume < 0)
+            {
+                m_AudioSource.volume = 0;
+                m_AudioSource.Stop();
+            }
             yield return null;
         }
     }
