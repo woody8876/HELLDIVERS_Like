@@ -14,6 +14,7 @@ public class MusicManager : MonoBehaviour
     public eMusicSelection CurrentSelection { get { return m_CurrentSelection; } }
 
     private AudioSource m_AudioSource;
+    private BGMSetting m_Setting;
     private eMusicSelection m_CurrentSelection;
 
     private void Awake()
@@ -22,6 +23,7 @@ public class MusicManager : MonoBehaviour
         else Destroy(this);
         m_AudioSource = this.GetComponent<AudioSource>();
         m_AudioSource.loop = true;
+        m_Setting = Resources.Load<BGMSetting>("BGMSetting");
     }
 
     private void Start()
@@ -31,30 +33,28 @@ public class MusicManager : MonoBehaviour
 
     public void PlayMusic(eMusicSelection music, float time = 0)
     {
-        BGMSetting bgm = Resources.Load<BGMSetting>("BGMSetting");
-        if (bgm == null) return;
         m_AudioSource.Stop();
         switch (music)
         {
             case eMusicSelection.Theme:
                 m_CurrentSelection = eMusicSelection.Theme;
-                m_AudioSource.clip = bgm.Theme;
+                m_AudioSource.clip = m_Setting.Theme;
                 break;
 
             case eMusicSelection.BattleField:
                 m_CurrentSelection = eMusicSelection.BattleField;
-                int index = Random.Range(0, bgm.BattleField.Count);
-                m_AudioSource.clip = bgm.BattleField[index];
+                int index = Random.Range(0, m_Setting.BattleField.Count);
+                m_AudioSource.clip = m_Setting.BattleField[index];
                 break;
 
             case eMusicSelection.MissionSuccess:
                 m_CurrentSelection = eMusicSelection.MissionSuccess;
-                m_AudioSource.clip = bgm.MissionSuccess;
+                m_AudioSource.clip = m_Setting.MissionSuccess;
                 break;
 
             case eMusicSelection.MissionFailed:
                 m_CurrentSelection = eMusicSelection.MissionFailed;
-                m_AudioSource.clip = bgm.MissionFailed;
+                m_AudioSource.clip = m_Setting.MissionFailed;
                 break;
         }
 
