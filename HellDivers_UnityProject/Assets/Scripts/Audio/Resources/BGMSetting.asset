@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3368aef3db7f1704ebcd74b94081128f, type: 3}
+  m_Name: BGMSetting
+  m_EditorClassIdentifier: 
+  Theme: {fileID: 8300000, guid: c45de23416a8dd84f8c06da4a9c4f559, type: 3}
+  BattleField:
+  - {fileID: 8300000, guid: d1cc4ad41b5b5a74d97255db8c4a3c09, type: 3}
+  - {fileID: 8300000, guid: 1f51b5acc798db748b1e7aafd183e942, type: 3}
+  - {fileID: 8300000, guid: da8695da02431b64ba12381c73a4b6d5, type: 3}
+  MissionSuccess: {fileID: 8300000, guid: 079d74122a7ef5e4cab36a6b058e01e3, type: 3}
+  MissionFailed: {fileID: 8300000, guid: 5f1a802d2caf3994ab2828247893d09f, type: 3}

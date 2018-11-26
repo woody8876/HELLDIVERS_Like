@@ -37,6 +37,7 @@ namespace HELLDIVERS.UI
 
         public void ClickContinueBtn()
         {
+            MusicManager.Instance.FadeOut(1);
             m_BlackCardTween.OnFinished += SceneChangeToLobby;
             m_BlackCardTween.PlayeBackward();
         }

@@ -114,6 +114,8 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Complete")]
     public void MissionComplete()
     {
+        MusicManager.Instance.PlayMusic(eMusicSelection.MissionSuccess, 3);
+
         m_RewardManager.SetGameDurationTime(GameTime);
 
         for (int i = 0; i < m_PlayerManager.Players.Count; i++)
@@ -127,6 +129,8 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Failed")]
     public void MissionFailed()
     {
+        MusicManager.Instance.PlayMusic(eMusicSelection.MissionFailed, 3);
+
         UIInGameMain.Instance.DrawMissionFailedUI();
     }
 

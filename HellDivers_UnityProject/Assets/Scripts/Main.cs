@@ -6,6 +6,7 @@ public class Main : MonoBehaviour
 {
     public static Main Instance { get; private set; }
     private SceneController m_SceneController;
+    private MusicManager m_MusicManager;
     private InputManager m_InputManager = new InputManager();
     private GameData m_GameData = new GameData();
     private PlayerManager m_PlayerManager = new PlayerManager();
@@ -17,6 +18,7 @@ public class Main : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
         m_GameData.Init();
+        m_MusicManager = this.gameObject.AddComponent<MusicManager>();
         m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_PlayerManager.Init();
         m_InputManager.Init();
