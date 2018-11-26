@@ -67,7 +67,10 @@ public class Bullet : MonoBehaviour, IDamager
                     else target.TakeDamage(this, rh2.point);                    
                     m_Target = go;
                 }
-                if (m_ID == 1301 || m_ID == 1501) { PlayHitEffect(rh2.normal, rh2.point, 30); }
+                if (GameData.Instance.WeaponInfoTable[m_ID].Type != 3 || GameData.Instance.WeaponInfoTable[m_ID].Type != 5)
+                {
+                    PlayHitEffect(rh2.normal, rh2.point, 30);
+                }
                 else
                 {
                     PlayHitEffect(rh2.normal, rh2.point, 10);
@@ -85,7 +88,7 @@ public class Bullet : MonoBehaviour, IDamager
                     else target.TakeDamage(this, rh.point);
                     m_Target = go;
                 }
-                if (m_ID != 1301 && m_ID != 1501)
+                if (GameData.Instance.WeaponInfoTable[m_ID].Type != 3 && GameData.Instance.WeaponInfoTable[m_ID].Type != 5)
                 {
                     BulletDeath();
                 }
@@ -100,8 +103,9 @@ public class Bullet : MonoBehaviour, IDamager
                 target.TakeDamage(m_fDamage *.5f, rh.point);
                 m_Target = go;
             }
-            if (m_ID != 1301 && m_ID != 1501)
+            if (GameData.Instance.WeaponInfoTable[m_ID].Type != 3 && GameData.Instance.WeaponInfoTable[m_ID].Type != 5)
             {
+                PlayHitEffect(rh.normal, rh.point, 30);
                 BulletDeath();
             }
         }

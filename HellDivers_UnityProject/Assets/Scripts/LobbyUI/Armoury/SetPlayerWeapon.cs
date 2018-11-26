@@ -8,6 +8,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     #region SerializeField
     [Header("== UI Setting ==")]
         [SerializeField] ControlEvent m_Control;
+        [SerializeField] Image m_Top;
         [SerializeField] Text m_tPlayerName;
         [SerializeField] Text m_tRank;
         [SerializeField] Text m_tConfirm;
@@ -78,8 +79,9 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     private void SetPlayer(int player)
     {
+        m_Top.color = (player == 1) ? HELLDIVERS.UI.UIHelper.Player1_Color : HELLDIVERS.UI.UIHelper.Player2_Color;
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
-        m_tRank.text = "1";
+        m_tRank.text = PlayerManager.Instance.Players[player].info.Rank.ToString();
         InitialWeapon(ref m_primary, player, 1, true);
         InitialWeapon(ref m_secondary, player, 0, false);
         InitialStratagems(player, 0);

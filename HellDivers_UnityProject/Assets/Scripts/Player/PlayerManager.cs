@@ -23,16 +23,16 @@ public class PlayerManager
     public void CreatePlayer(int i, ControllerSetting controller)
     {
         PlayerData playerData = new PlayerData();
-        PlayerInfo playerInfo = CreatPlayerInfo();
+        PlayerInfo playerInfo = CreatPlayerInfo(i);
         playerData.info = playerInfo;
         playerData.controllerSetting = controller;
         m_PlayerMap.Add(i, playerData);
     }
 
-    public PlayerInfo CreatPlayerInfo()
+    public PlayerInfo CreatPlayerInfo(int i)
     {
         PlayerInfo playerInfo = new PlayerInfo();
-        playerInfo.SetUsername("TestPlayer");
+        playerInfo.SetUsername("Player" + i);
         playerInfo.AddWeapon(1101);
         playerInfo.AddWeapon(1301);
         playerInfo.AddStratagem(2001);

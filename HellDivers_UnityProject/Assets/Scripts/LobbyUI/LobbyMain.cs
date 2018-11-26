@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainTest : MonoBehaviour
+public class LobbyMain : MonoBehaviour
 {
     // Testing player info.
 
