@@ -85,6 +85,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
         InitialWeapon(ref m_primary, player, 0, true);
         InitialWeapon(ref m_secondary, player, 1, false);
+
         InitialStratagems(player, 0);
         InitialStratagems(player, 1);
         InitialStratagems(player, 2);

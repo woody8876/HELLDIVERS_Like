@@ -704,6 +704,7 @@ public class PlayerFSMRollState : PlayerFSMState
         {
             if (info.normalizedTime > 0.8f)
             {
+                data.m_Collider.enabled = true;
                 data.m_PlayerFSM.PerformPreviousTransition();
             }
         }

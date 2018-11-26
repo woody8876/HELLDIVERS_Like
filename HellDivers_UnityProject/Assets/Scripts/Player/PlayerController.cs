@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     #region Private Variable
     private CharacterController m_Controller;
+    public Collider m_Collider;
     private Transform m_Cam;
     private Vector3 m_CamForward;
     private Vector3 m_Move;
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour
         bIsDead = false;
         bIsAlive = true;
         m_PAC.ResetAnimator(this);
+        m_Collider.enabled = true;
     }
     private void Start()
     {
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
         m_GrenadesController = this.GetComponent<GrenadesController>();
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
+        m_Collider = m_Controller.GetComponent<Collider>();
         m_AimLine = this.GetComponent<AimLine>();
         if (Camera.main != null)
         {
@@ -160,6 +163,7 @@ public class PlayerController : MonoBehaviour
             {
                 return;
             }
+
             PerformPlayerRoll();
             return;
         }
