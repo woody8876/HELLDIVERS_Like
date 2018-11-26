@@ -83,8 +83,8 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tRank.color = (player == 1) ? HELLDIVERS.UI.UIHelper.Player1_Color : HELLDIVERS.UI.UIHelper.Player2_Color;
         m_tRank.text = PlayerManager.Instance.Players[player].info.Rank.ToString();
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
-        InitialWeapon(ref m_primary, player, 1, true);
-        InitialWeapon(ref m_secondary, player, 0, false);
+        InitialWeapon(ref m_primary, player, 0, true);
+        InitialWeapon(ref m_secondary, player, 1, false);
         InitialStratagems(player, 0);
         InitialStratagems(player, 1);
         InitialStratagems(player, 2);
@@ -232,8 +232,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     private List<int> WeaponsList()
     {
         List<int> pList = new List<int>();
-        pList.Add(PriWeaponID);
         pList.Add(SecWeaponID);
+        pList.Add(PriWeaponID);
         return pList;
     }
 
