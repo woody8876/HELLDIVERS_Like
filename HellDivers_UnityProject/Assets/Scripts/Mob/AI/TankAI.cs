@@ -85,7 +85,7 @@ public class TankAI : Character
         m_WanderIdleState.AddTransition(eFSMTransition.Go_ChaseToRemoteAttack, m_ChaseToRemoteAttackState);
         m_WanderIdleState.AddTransition(eFSMTransition.Go_Wander, m_WanderState);
 
-        m_WanderIdleState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
+        m_WanderState.AddTransition(eFSMTransition.Go_WanderIdle, m_WanderIdleState);
 
         FSMTankGetHurtState m_GetHurtState = new FSMTankGetHurtState();
         FSMDeadState m_DeadState = new FSMDeadState();
@@ -151,7 +151,7 @@ public class TankAI : Character
         if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
-    public void PerformGetHurt()
+    public void PerformGetHurt(Vector3 point)
     {
         if (IsDead) return;
         AnimatorStateInfo info = m_MobAnimator.Animator.GetCurrentAnimatorStateInfo(0);
@@ -168,25 +168,7 @@ public class TankAI : Character
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
-
-    public override bool TakeDamage(float dmg, Vector3 hitPoint)
-    {
-        if (IsDead) return false;
-        CurrentHp -= dmg;
-        if (m_CurrentHp <= 0)
-        {
-            m_CapsuleCollider.enabled = false;
-            m_DamageCollider.enabled = false;
-            Death();
-            return true;
-        }
-        else
-        {
-            PerformGetHurt();
-        }
-        return true;
-    }
-
+    
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
         if (IsDead) return false;
@@ -205,7 +187,7 @@ public class TankAI : Character
         else
         {
             fShield += damager.Damage;
-            if (fShield >= 800f) PerformGetHurt();
+            if (fShield >= 300f) PerformGetHurt(hitPoint);
         }
         return true;
     }
@@ -216,5 +198,4 @@ public class TankAI : Character
         PerformDead();
         if (OnDeath != null) OnDeath();
     }
-
 }

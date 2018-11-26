@@ -531,7 +531,7 @@ public class FSMAttackState : FSMState
 
     private void DoDamage(MobInfo data)
     {
-        data.m_Player.TakeDamage(10.0f, data.m_Go.transform.position);
+        data.m_Player.TakeDamage(data.m_fAttackDamage, data.m_Go.transform.position);
     }
 }
 
@@ -776,7 +776,7 @@ public class FSMFishGetHurtState : FSMState
 
     public override void Do(MobInfo data)
     {
-        data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
+        //data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
     public override void CheckCondition(MobInfo data)
@@ -822,7 +822,7 @@ public class FSMPatrolGetHurtState : FSMState
 
     public override void Do(MobInfo data)
     {
-        data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
+        //data.m_Go.transform.position += data.m_Go.transform.forward * -1 * Time.deltaTime;
     }
 
     public override void CheckCondition(MobInfo data)
@@ -1297,7 +1297,7 @@ public class FSMDeadState : FSMState
         {
             if (info.normalizedTime < 0.2f)
             {
-                data.m_Go.transform.position += data.m_Go.transform.forward * -3 * Time.deltaTime;
+                //data.m_Go.transform.position += data.m_Go.transform.forward * -3 * Time.deltaTime;
             }
         }
     }

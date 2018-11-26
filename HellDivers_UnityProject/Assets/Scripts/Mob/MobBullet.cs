@@ -33,10 +33,9 @@ public class MobBullet : MonoBehaviour {
         RaycastHit rh;
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_NextPosDis, 1 << LayerMask.NameToLayer("Player")))
         {
-            Debug.Log("Hit");
             GameObject go = rh.collider.gameObject;
             IDamageable target = rh.transform.gameObject.GetComponent<IDamageable>();
-            target.TakeDamage(10.0f, rh.point);
+            target.TakeDamage(0.0f, rh.point);
             BulletDeath();
         }
         else if (Physics.Raycast(transform.position, transform.forward, out rh, m_NextPosDis, 1 << LayerMask.NameToLayer("Obstcale")))

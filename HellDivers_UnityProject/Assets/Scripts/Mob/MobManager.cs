@@ -89,38 +89,6 @@ public class MobManager
         }
     }
 
-    //public void SpawnPatrol(int num, Transform center, float minRadius, float maxRadius)
-    //{
-    //    Vector3 spawnTarget = Vector3.forward;
-
-    //    for (int i = 0; i < num; i++)
-    //    {
-    //        for (int j = 0; j < 30; j++)
-    //        {
-    //            spawnTarget = Vector3.forward;
-    //            spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-    //            spawnTarget *= Random.Range(25f, 35f);
-    //            spawnTarget += center.position;
-    //            if (Physics.Linecast(center.position, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
-    //            {
-    //                continue;
-    //            }
-    //            else
-    //            {
-    //                break;
-    //            }
-    //        }
-
-    //        m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
-    //        if (m_GOPatrol == null) return;
-    //        m_GOPatrol.transform.position = spawnTarget;
-    //        m_GOPatrol.SetActive(true);
-    //        PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
-    //        patrolAI.m_bGoIdle = true;
-    //        m_PatrolCount++;
-    //    }
-    //}
-
     public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
     {
         Vector3 spawnTarget = center.forward;
@@ -162,9 +130,8 @@ public class MobManager
 
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount)
     {
-        Debug.Log(m_FishCount);
-        if (m_FishCount > 20) return;
-
+        Debug.Log("Fish:"+ m_FishCount + " Fish2:" + m_FishVariantCount + " Patrol:" + m_PatrolCount + " Tank:" + m_TankCount);
+       
         List<Player> pList = InGamePlayerManager.Instance.Players;
         Vector3 Center = new Vector3();
         Center.Set(0, 0, 0);
@@ -190,6 +157,7 @@ public class MobManager
             {
                 for (int j = 0; j < fishCount; j++)
                 {
+                    if (m_FishCount > 20) break;
                     m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
                     if (m_GOFish == null) return;
                     m_GOFish.transform.position = spawnTarget;
@@ -200,6 +168,7 @@ public class MobManager
                 }
                 for (int j = 0; j < fishVariantCount; j++)
                 {
+                    if (m_FishVariantCount > 3) break;
                     m_GOFishVariant = ObjectPool.m_Instance.LoadGameObjectFromPool(3300);
                     if (m_GOFishVariant == null) return;
                     m_GOFishVariant.transform.position = spawnTarget;
@@ -210,6 +179,7 @@ public class MobManager
                 }
                 for (int j = 0; j < patrolCount; j++)
                 {
+                    if (m_PatrolCount > 30) break;
                     m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
                     if (m_GOPatrol == null) return;
                     m_GOPatrol.transform.position = spawnTarget;
@@ -222,6 +192,7 @@ public class MobManager
                 }
                 for (int j = 0; j < tankCount; j++)
                 {
+                    if (m_TankCount > 5) break;
                     m_GOTank = ObjectPool.m_Instance.LoadGameObjectFromPool(3400);
                     if (m_GOTank == null) return;
                     m_GOTank.transform.position = spawnTarget;

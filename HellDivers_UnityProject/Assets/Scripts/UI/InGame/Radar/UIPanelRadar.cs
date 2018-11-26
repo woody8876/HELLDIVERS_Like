@@ -54,7 +54,26 @@ public class UIPanelRadar : MonoBehaviour {
 	void Update () {
         Blink();
         CountTimer();
-        
+
+        #region Input
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            MobManager.m_Instance.SpawnMobs(1, 0, 0, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 1, 0, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 0, 1, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1);
+        }
+        #endregion
+
         List<Player> pList = InGamePlayerManager.Instance.Players;
         if (pList != null && pList.Count > 0)
         {

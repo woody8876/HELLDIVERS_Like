@@ -168,7 +168,7 @@ public class PatrolAI : Character
         }
     }
 
-    public void PerformGetHurt()
+    public void PerformGetHurt(Vector3 point)
     {
         if (IsDead) return;
 
@@ -177,33 +177,29 @@ public class PatrolAI : Character
         {
             return;
         }
+        StartCoroutine(Displacement(point, 1.0f));
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_PatrolGetHurt);
         return;
     }
+
+    IEnumerator Displacement(Vector3 point, float time)
+    {
+        Vector3 dir = this.transform.position - point;
+        dir.y = 0;
+        for (float i = 0; i < time; i += Time.deltaTime)
+        {
+            this.transform.position += dir * Time.deltaTime;
+            yield return 0;
+        }
+    }
+
     public void PerformDead()
     {
         m_MobAnimator.Animator.ResetTrigger("GetHurt");
         m_MobAimLine.CloseAimLine();
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
-    public override bool TakeDamage(float dmg, Vector3 hitPoint)
-    {
-        if (IsDead) return false;
 
-        CurrentHp -= dmg;
-        if (m_CurrentHp <= 0)
-        {
-            m_BoxCollider.enabled = false;
-            m_DamageCollider.enabled = false;
-            Death();
-            return true;
-        }
-        else
-        {
-            PerformGetHurt();
-        }
-        return true;
-    }
     public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
     {
         if (IsDead) return false;
@@ -212,6 +208,7 @@ public class PatrolAI : Character
         {
             m_BoxCollider.enabled = false;
             m_DamageCollider.enabled = false;
+            StartCoroutine(Displacement(hitPoint, 0.2f));
             Death();
 
             damager.Damager.Record.NumOfKills++;
@@ -221,7 +218,7 @@ public class PatrolAI : Character
         }
         else
         {
-            PerformGetHurt();
+            PerformGetHurt(hitPoint);
         }
         return true;
     }
