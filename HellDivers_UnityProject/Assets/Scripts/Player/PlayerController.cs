@@ -34,8 +34,9 @@ public class PlayerController : MonoBehaviour
     public float m_fAnimatorTime;
     public bool bIsDead = false;
     public bool bIsAlive = true;
+    public ePlayerFSMStateID m_CurrentState;
 
-    
+
     #region MonoBehaviour
     private void Awake()
     {
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour
     {
         if (m_PlayerFSM == null) return;
         m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        bIsDead = false;
+        bIsAlive = true;
         m_PAC.ResetAnimator(this);
     }
     private void Start()
@@ -136,14 +139,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         #region Input
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            PerformPlayerDead();
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            PerformPlayerHurt();
-        }
+        m_CurrentState = m_PlayerFSM.CurrentStateID;
         if (Input.GetKeyDown(KeyCode.V))
         {
             PerformPlayerVictory();
@@ -166,8 +162,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
         #endregion
-        SelectMotionState();
         m_PlayerFSM.DoState();
+        SelectMotionState();
     }
 
     #endregion MonoBehaviour
