@@ -126,10 +126,10 @@ public class PlayerFSMSystem
                 m_currentState.Do(m_Data);
             }
         }
-        
-        if (m_CurrentGlobalState == null) return;
+
+        if (m_CurrentGlobalStateID == ePlayerFSMStateID.NullStateID) return;
         m_CurrentGlobalState.CheckCondition(m_Data);
-        if (m_CurrentGlobalState == null) return;
+        if (m_CurrentGlobalStateID == ePlayerFSMStateID.NullStateID) return;
         m_CurrentGlobalState.Do(m_Data);
     }
 }

@@ -32,10 +32,12 @@ public class PlayerController : MonoBehaviour
     public StratagemController m_StratagemController;
     public GrenadesController m_GrenadesController;
     public PlayerFSMSystem m_PlayerFSM;
+
     public float m_fAnimatorTime;
     public bool bIsDead = false;
     public bool bIsAlive = true;
     public ePlayerFSMStateID m_CurrentState;
+    public ePlayerFSMStateID m_GlobalState;
 
 
     #region MonoBehaviour
@@ -143,6 +145,7 @@ public class PlayerController : MonoBehaviour
     {
         #region Input
         m_CurrentState = m_PlayerFSM.CurrentStateID;
+        m_GlobalState = m_PlayerFSM.CurrentGlobalStateID;
         if (Input.GetKeyDown(KeyCode.V))
         {
             PerformPlayerVictory();
@@ -160,7 +163,7 @@ public class PlayerController : MonoBehaviour
             {
                 return;
             }
-            m_Collider.enabled = false;
+
             PerformPlayerRoll();
             return;
         }
