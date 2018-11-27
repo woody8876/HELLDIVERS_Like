@@ -13,7 +13,7 @@ public class UIPanelLoading : MonoBehaviour
     [SerializeField] private Text m_TipText;
     private CanvasGroup m_CanvasGroup;
     private float m_targetAlpha;
-    private float m_alphaLerp = 0.025f;
+    private float m_alphaLerp = 0.05f;
     private float m_targetFillAmount;
 
     private delegate void DelegateDoState();
