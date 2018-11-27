@@ -7,6 +7,11 @@ using HELLDIVERS.UI.InGame;
 
 public class MobManager
 {
+    #region Events
+    public delegate void MobEventKill();
+    public event MobEventKill OnKill;
+    #endregion
+
     static public MobManager m_Instance;
 
     #region Kill Count Variable
@@ -40,6 +45,7 @@ public class MobManager
     private GameObject m_GOSpwanEffect;
     private GameObject m_GOBloodSpurtBig;
     private GameObject m_GOBloodSpurtSmall;
+    private GameObject m_GOGroundFissure;
 
 
     //private Player m_Player;
@@ -57,6 +63,7 @@ public class MobManager
         m_GOPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
         m_GOTank = Resources.Load("Mobs/Tank/Tank") as GameObject;
         m_GOBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
+        m_GOGroundFissure = Resources.Load("Mobs/Tank/GroundFissure") as GameObject;
         m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
         m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
@@ -67,6 +74,7 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GOTank, 10, 3400);
+        ObjectPool.m_Instance.InitGameObjects(m_GOGroundFissure, 10, 3401);
         ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
@@ -325,22 +333,27 @@ public class MobManager
         switch (ID)
         {
             case 3100:
-                m_TotalFishKill++;
+                AddTotalKill();
                 m_FishCount--;
                 break;
             case 3200:
-                m_TotalPatrolKill++;
+                AddTotalKill();
                 m_PatrolCount--;
                 break;
             case 3300:
-                m_TotalFishVariantKill++;
+                AddTotalKill();
                 m_FishVariantCount--;
                 break;
             case 3400:
-                m_TotalTankKill++;
+                AddTotalKill();
                 m_TankCount--;
                 break;
         }
+    }
+    public void AddTotalKill()
+    {
+        m_TotalTankKill++;
+        if (OnKill != null) OnKill();
     }
 }
 

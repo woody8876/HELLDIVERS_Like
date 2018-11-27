@@ -439,9 +439,11 @@ public class FSMChaseToMeleeAttackState : FSMState
 
 public class FSMAttackState : FSMState
 {
-    private int AttackCount = 0;
-    private int Count = 0;
+    private int attackCount = 0;
+    private int effectCount = 0;
+    private int count = 0;
     Vector3 vDir;
+
     public FSMAttackState()
     {
         m_StateID = eFSMStateID.AttackStateID;
@@ -449,8 +451,9 @@ public class FSMAttackState : FSMState
 
     public override void DoBeforeEnter(MobInfo data)
     {
-        AttackCount = 0;
-        Count = 0;
+        attackCount = 0;
+        effectCount = 0;
+        count = 0;
         m_AnimatorLeaveTime = Random.Range(0.7f, 1.0f);
         data.navMeshAgent.enabled = false;
     }
@@ -468,7 +471,7 @@ public class FSMAttackState : FSMState
         data.m_vTarget = data.m_Player.transform.position;
         vDir = data.m_Player.transform.position - data.m_Go.transform.position;
 
-        if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && Count < 1)
+        if (Vector3.Angle(data.m_Go.transform.forward, vDir) >= 5.0f && count < 1)
         {
             float fRight = Vector3.Dot(vDir.normalized, data.m_Go.transform.right);
             if (fRight >= 0)
@@ -480,10 +483,10 @@ public class FSMAttackState : FSMState
                 data.m_Go.transform.Rotate(new Vector3(0, -10, 0), Space.Self);
             }
         }
-        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && Count < 1)
+        if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
-            Count++;
+            count++;
         }
 
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 10, true) + SteeringBehaviours.GroupBehavior(data, 10, false)) * 2f * Time.deltaTime;
@@ -492,20 +495,45 @@ public class FSMAttackState : FSMState
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))
         {
-            if (info.normalizedTime > 0.27f && AttackCount < 1)
+            if (info.normalizedTime > 0.27f && attackCount < 1)
             {
-                if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange + 0.5f)
-                    DoDamage(data);
-                AttackCount++;
+                List<Player> pList = InGamePlayerManager.Instance.Players;
+                if (pList != null && pList.Count > 0)
+                {
+                    for (int i = 0; i < pList.Count; i++)
+                    {
+                        if (pList[i].IsDead) continue;
+                        float Dist = (pList[i].transform.position - data.m_Go.transform.position).magnitude;
+                        if (Dist <= data.m_fAttackRange + 0.5f) DoDamage(data);
+                    }
+                }
+                attackCount++;
             }
         }
         else if (info.IsName("MeleeAttack"))
         {
-            if (info.normalizedTime > 0.27f && AttackCount < 1)
+            if (info.normalizedTime > 0.4f && effectCount < 1)
             {
-                if ((data.m_Player.transform.position - data.m_Go.transform.position).magnitude <= data.m_fAttackRange + 0.5f)
-                    DoDamage(data);
-                AttackCount++;
+                GameObject groundFissure = ObjectPool.m_Instance.LoadGameObjectFromPool(3401);
+                Vector3 pos = data.m_Go.transform.position;
+                pos.y += 0.2f;
+                groundFissure.transform.position = pos;
+                groundFissure.SetActive(true);
+                effectCount++;
+            }
+            if (info.normalizedTime > 0.5f && attackCount < 1)
+            {
+                List<Player> pList = InGamePlayerManager.Instance.Players;
+                if (pList != null && pList.Count > 0)
+                {
+                    for (int i = 0; i < pList.Count; i++)
+                    {
+                        if (pList[i].IsDead) continue;
+                        float Dist = (pList[i].transform.position - data.m_Go.transform.position).magnitude;
+                        if (Dist <= data.m_fAttackRange + 0.5f) DoDamage(data);
+                    }
+                }
+                attackCount++;
             }
         }
     }
