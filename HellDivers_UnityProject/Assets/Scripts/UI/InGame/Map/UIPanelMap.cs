@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIPanelMap : MonoBehaviour {
-    //public delegate void UIMapEventHolder();
-    //public event UIMapEventHolder UpdatePoint;
 
     public static UIPanelMap Instance { get; private set; }
     public float RectWidth { get { return m_RectWidth; } }
