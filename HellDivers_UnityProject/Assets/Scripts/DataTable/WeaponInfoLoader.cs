@@ -48,6 +48,7 @@ public class WeaponInfoLoader {
                 data.SetFireMode (float.Parse(weaponInfo[15]));
                 data.SetName(weaponInfo[16]);
                 data.SetImage(weaponInfo[17]);
+                data.SetCost(int.Parse(weaponInfo[18]));
                 Info.Add(data.ID, data);
             }
             return true;
