@@ -15,16 +15,15 @@ public class MissionTower : Mission, IInteractable
     #region Properties
 
     public Player CurrentPlayer { get; private set; }
-    public string ID { get { return m_Id; } }
-    public float Radius { get { return m_Radius; } }
-    public float AvaliableRadius { get { return m_AvaliableRadius; } }
+    public string ID { get { return m_Data.ID; } }
+    public float Radius { get { return m_Data.InteractRadius; } }
     public float ActiveTimer { get { return m_ActTimer; } }
 
     public float ActTimeCountDown
     {
         get
         {
-            float result = (m_ActivatingTime < m_ActTimer) ? 0 : m_ActivatingTime - m_ActTimer;
+            float result = (m_Data.ActivatingTime < m_ActTimer) ? 0 : m_Data.ActivatingTime - m_ActTimer;
             return result;
         }
     }
@@ -37,16 +36,7 @@ public class MissionTower : Mission, IInteractable
 
     #region Private Variable
 
-    [SerializeField] private string m_Id = "MissionTower";
-    [SerializeField] private float m_Radius = 4;
-    [SerializeField] private float m_AvaliableRadius = 15;
-    [SerializeField] private int m_CodeLenghtMin = 6;
-    [SerializeField] private int m_CodeLenghtMax = 8;
-    [SerializeField] private float m_ActivatingTime = 60;
-    [SerializeField] private float m_MobSpawnTime = 10;
-    [SerializeField] private float m_MinRadius = 20;
-    [SerializeField] private float m_MaxRadius = 25;
-    [SerializeField] private int m_MobNum = 5;
+    private MissionTowerData m_Data;
     private float m_ActTimer;
     private float m_MobTimer;
     private int m_CodeLenght;
@@ -54,9 +44,14 @@ public class MissionTower : Mission, IInteractable
     private Animator m_Animator;
     private eCode[] m_Codes;
     private CheckCodesMechine m_CodeMechine;
-    private TowerDoState DoState;
 
     private delegate void TowerDoState();
+
+    private TowerDoState DoState;
+
+    #endregion Private Variable
+
+    #region Events
 
     public delegate void TowerEventHolder();
 
@@ -66,7 +61,20 @@ public class MissionTower : Mission, IInteractable
 
     public event TowerEventHolder OnActive;
 
-    #endregion Private Variable
+    #endregion Events
+
+    #region Initializer
+
+    public void Initialize(eMissionType type, MissionTowerData data)
+    {
+        m_Type = type;
+        m_Data = ScriptableObject.CreateInstance<MissionTowerData>();
+        data.CopyTo(data);
+        m_MobTimer = m_Data.MobSpawnTime;
+        m_Codes = GenerateCode();
+    }
+
+    #endregion Initializer
 
     #region MonoBehaviour
 
@@ -75,18 +83,15 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine = this.GetComponent<CheckCodesMechine>();
         m_CodeMechine.OnGetResult += SuccessOnCheckCode;
         m_CodeMechine.OnFaild += StartCheckCodes;
-        m_Codes = GenerateCode();
-        m_MobTimer = m_MobSpawnTime;
     }
 
     // Use this for initialization
     private void Start()
     {
+        m_Type = eMissionType.Tower;
         m_TowerGo = ResourceManager.m_Instance.LoadData(typeof(GameObject), "Mission/Towers", "Tower01") as GameObject;
         m_TowerGo = Instantiate(m_TowerGo, this.transform);
         m_Animator = m_TowerGo.GetComponentInChildren<Animator>();
-
-        InteractiveItemManager.Instance.AddItem(this);
     }
 
     private void FixedUpdate()
@@ -121,6 +126,11 @@ public class MissionTower : Mission, IInteractable
 
     #region Private Function
 
+    protected override void OnStart()
+    {
+        InteractiveItemManager.Instance.AddItem(this);
+    }
+
     private void StartCheckCodes()
     {
         m_CodeMechine.Clear();
@@ -134,7 +144,7 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine.StopCheckCodes();
         CurrentPlayer = null;
         m_Animator.SetTrigger("Stop");
-        m_MobTimer = m_MobSpawnTime;
+        m_MobTimer = m_Data.MobSpawnTime;
         DoState = null;
         if (OnStop != null) OnStop();
     }
@@ -152,7 +162,7 @@ public class MissionTower : Mission, IInteractable
 
     private void CheckCodeState()
     {
-        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius)
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_Data.ActivateRadius)
         {
             StopCheckCodes();
         }
@@ -164,22 +174,22 @@ public class MissionTower : Mission, IInteractable
 
     private void ActivationState()
     {
-        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_AvaliableRadius || CurrentPlayer.IsDead)
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_Data.ActivateRadius || CurrentPlayer.IsDead)
         {
             StopCheckCodes();
         }
 
-        if (m_ActTimer < m_ActivatingTime)
+        if (m_ActTimer < m_Data.ActivatingTime)
         {
             m_ActTimer += Time.fixedDeltaTime;
 
-            if (m_MobTimer < m_MobSpawnTime)
+            if (m_MobTimer < m_Data.MobSpawnTime)
             {
                 m_MobTimer += Time.fixedDeltaTime;
             }
             else
             {
-                MobManager.m_Instance.SpawnFish(m_MobNum, this.transform, m_MinRadius, m_MaxRadius);
+                MobManager.m_Instance.SpawnFish(m_Data.MobNum, this.transform, m_Data.MinRadius, m_Data.MaxRadius);
                 m_MobTimer = 0;
             }
 
@@ -213,7 +223,7 @@ public class MissionTower : Mission, IInteractable
                 else return false;
             });
 
-        if (OnMissionComplete != null) OnMissionComplete(this);
+        CompleteMission();
         yield break;
     }
 
@@ -223,7 +233,7 @@ public class MissionTower : Mission, IInteractable
 
     private eCode[] GenerateCode()
     {
-        m_CodeLenght = UnityEngine.Random.Range(m_CodeLenghtMin, m_CodeLenghtMax);
+        m_CodeLenght = UnityEngine.Random.Range(m_Data.CodeLenghtMin, m_Data.CodeLenghtMax);
         eCode[] codes = new eCode[m_CodeLenght];
 
         for (int i = 0; i < m_CodeLenght; i++)

@@ -2,24 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MissionPriority
+{
+    Main, Escape, Side
+}
+
 public class Mission : MonoBehaviour
 {
+    public eMissionType Type { get { return m_Type; } }
+    public MissionPriority Priority { get { return m_Priority; } }
     public bool IsFinished { get { return m_bFinished; } }
+    public MissionReward Reward { get { return m_Reward; } }
 
+    protected eMissionType m_Type;
     protected bool m_bFinished;
+    protected MissionPriority m_Priority;
+    protected MissionReward m_Reward;
+
+    public class MissionReward
+    {
+        public int EXP { get; set; }
+        public int Money { get; set; }
+    }
 
     public delegate void MissionEventHolder(Mission mission);
 
     public MissionEventHolder OnMissionStart;
     public MissionEventHolder OnMissionComplete;
 
-    // Use this for initialization
-    private void Start()
+    public void StartMission()
+    {
+        OnStart();
+        if (OnMissionStart != null) OnMissionStart(this);
+    }
+
+    protected virtual void OnStart()
     {
     }
 
-    // Update is called once per frame
-    private void Update()
+    protected void CompleteMission()
     {
+        if (OnMissionComplete != null) OnMissionComplete(this);
     }
 }

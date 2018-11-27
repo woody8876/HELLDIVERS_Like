@@ -67,7 +67,7 @@ public class GameMain : MonoBehaviour
             m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
         }
 
-        m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
+        m_MissionManager.CreateTowerMissions(m_NumberOfTowers);
 
         GameStart();
     }
@@ -89,6 +89,8 @@ public class GameMain : MonoBehaviour
 
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
+
+        m_MissionManager.StartAllMission();
 
         m_MobSpawner.SpawnPatrol(40);
         InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
