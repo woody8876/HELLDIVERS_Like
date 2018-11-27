@@ -169,6 +169,11 @@ public class FishAI : Character
     {
         if (IsDead) return false;
         CurrentHp -= damager.Damage;
+
+        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
+        BloodSpurt bloodSpurt = go.GetComponent<BloodSpurt>();
+        bloodSpurt.Init(this.gameObject, hitPoint);
+
         if (m_CurrentHp <= 0)
         {
             m_CapsuleCollider.enabled = false;
