@@ -149,8 +149,6 @@ public class MobManager
 
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount)
     {
-        Debug.Log("Fish:"+ m_FishCount + " Fish2:" + m_FishVariantCount + " Patrol:" + m_PatrolCount + " Tank:" + m_TankCount);
-       
         List<Player> pList = InGamePlayerManager.Instance.Players;
         Vector3 Center = new Vector3();
         Center.Set(0, 0, 0);
@@ -223,6 +221,7 @@ public class MobManager
                 break;
             }
         }
+        Debug.Log("Fish:" + m_FishCount + " Fish2:" + m_FishVariantCount + " Patrol:" + m_PatrolCount + " Tank:" + m_TankCount);
     }
 
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount, Transform center, float minRadius, float maxRadius)
