@@ -46,8 +46,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     private GameObject m_CurrentObject;
     private GameObject m_UpObject;
     private GameObject m_DownObject;
-    private string m_path = "Canvas/ARMOURY/Player";
     private GameObject[] m_Stratagems = new GameObject[4];
+    private string m_path = "Canvas/ARMOURY/Player";
     #endregion
 
     #region MonoBehaviors
@@ -83,6 +83,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tRank.color = (player == 1) ? HELLDIVERS.UI.UIHelper.Player1_Color : HELLDIVERS.UI.UIHelper.Player2_Color;
         m_tRank.text = PlayerManager.Instance.Players[player].info.Rank.ToString();
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
+
         InitialWeapon(ref m_primary, player, 0, true);
         InitialWeapon(ref m_secondary, player, 1, false);
 
@@ -260,6 +261,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         Control.AxisDown += ButtonDown;
         Control.AxisSubmit += ButtonSumbit;
         Control.AxisCancel += ButtonCanael;
+        Control.AxisSecret += GetRich;
     }
 
     private void UnsubscribeAxisEvent()
@@ -267,6 +269,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         Control.AxisUp -= ButtonUp;
         Control.AxisDown -= ButtonDown;
         Control.AxisSubmit -= ButtonSumbit;
+        Control.AxisSecret -= GetRich;
     }
 
     #endregion
@@ -346,6 +349,12 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         m_UpObject = up;
         m_DownObject = down;
+    }
+
+    private void GetRich()
+    {
+        PlayerManager.Instance.Players[PlayerID].info.AddMoney(2000);
+        Debug.LogWarning("Money: " + PlayerManager.Instance.Players[PlayerID].info.Money);
     }
 
     #endregion

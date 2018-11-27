@@ -49,9 +49,12 @@ public class UIWeaponList : MonoBehaviour {
     private void Start()
     {
         int PlayerID = weaponDisplay.SetPlayer.PlayerID;
+
         CreateWeaponUI(PlayerID);
         m_unlockWeaponCount = m_weapons.Count;
         CreateWeaponUILock(PlayerID);
+
+        UpdateMoney();
         SubscriptAxisEvent();
         ChangeWeapon();
     }
@@ -59,6 +62,7 @@ public class UIWeaponList : MonoBehaviour {
     private void OnEnable()
     {
         if (m_weapons.Count < 1) return;
+        UpdateMoney();
         SubscriptAxisEvent();
         ChangeWeapon();
     }
@@ -103,13 +107,18 @@ public class UIWeaponList : MonoBehaviour {
     {
         for (int i = 0; i < m_weapons.Count; i++)
         {
-            if (Determine() == m_weapons[i].name)
+            if ( GameData.Instance.WeaponInfoTable[Determine()].Type == GameData.Instance.WeaponInfoTable[int.Parse(m_weapons[i].name)].Type)
             {
                 m_currentSelectObject = m_weapons[i];
                 OnSelectEvent(m_currentSelectObject);
                 return;
             }
         }
+    }
+
+    public void UpdateMoney()
+    {
+        weaponDisplay.SetCoin(PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money);
     }
 
     public void LevelUp(int id)
@@ -159,10 +168,10 @@ public class UIWeaponList : MonoBehaviour {
 
     }
 
-    private string Determine()
+    private int Determine()
     {
-        if (weaponDisplay.SetPlayer.m_bPrimary) return weaponDisplay.SetPlayer.PriWeaponID.ToString();
-        else return weaponDisplay.SetPlayer.SecWeaponID.ToString();
+        if (weaponDisplay.SetPlayer.m_bPrimary) return weaponDisplay.SetPlayer.PriWeaponID;
+        else return weaponDisplay.SetPlayer.SecWeaponID;
     }
 
     #endregion

@@ -140,6 +140,12 @@ public class PlayerInfo
         this.money += money;
     }
 
+    public void CostMoney(int money)
+    {
+        if (this.money < money) return;
+        this.money -= money;
+    }
+
     public void AddExp(int exp)
     {
         this.exp += exp;
