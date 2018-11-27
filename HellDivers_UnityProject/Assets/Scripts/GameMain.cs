@@ -125,6 +125,7 @@ public class GameMain : MonoBehaviour
             Player player = m_PlayerManager.Players[i];
             m_RewardManager.SetReward(player.SerialNumber, player.Record);
         }
+
         SceneController.Instance.ToReward();
     }
 

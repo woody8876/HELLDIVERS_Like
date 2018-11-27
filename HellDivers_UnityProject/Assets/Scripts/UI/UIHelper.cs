@@ -11,6 +11,7 @@ namespace HELLDIVERS.UI
         public static string StratagemIconFolder { get { return Setting.StratagemIconFolder; } }
         public static string WeaponIconFolder { get { return Setting.WeaponIconFolder; } }
         public static string GrenadeIconFolder { get { return Setting.GrenadeIconFolder; } }
+        public static string MissionIconFolder { get { return Setting.MissionIconFolder; } }
         public static Color Player1_Color { get { return Setting.Player1Color; } }
         public static Color Player2_Color { get { return Setting.Player2Color; } }
 

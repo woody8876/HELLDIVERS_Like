@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MissionTowerSetting", menuName = "MissionTowerSetting", order = 1000)]
-public class MissionTowerData : ScriptableObject
+public class MissionTowerData : MissionData
 {
     public string ID { get { return m_Id; } }
     public float InteractRadius { get { return m_InteractRadius; } }
