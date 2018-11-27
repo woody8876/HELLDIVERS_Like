@@ -9,6 +9,8 @@ public class PlayerFSMSystem
     private ePlayerFSMStateID m_currentStateID;
     public ePlayerFSMStateID CurrentStateID { get { return m_currentStateID; } }
     private ePlayerFSMStateID m_CurrentGlobalStateID;
+    public ePlayerFSMStateID CurrentGlobalStateID { get { return m_CurrentGlobalStateID; } }
+
     private PlayerFSMState m_currentState;
     private PlayerFSMState m_CurrentGlobalState = null;
     private PlayerFSMState m_PreviousState;
@@ -124,10 +126,10 @@ public class PlayerFSMSystem
                 m_currentState.Do(m_Data);
             }
         }
-        
-        if (m_CurrentGlobalState == null) return;
+
+        if (m_CurrentGlobalStateID == ePlayerFSMStateID.NullStateID) return;
         m_CurrentGlobalState.CheckCondition(m_Data);
-        if (m_CurrentGlobalState == null) return;
+        if (m_CurrentGlobalStateID == ePlayerFSMStateID.NullStateID) return;
         m_CurrentGlobalState.Do(m_Data);
     }
 }

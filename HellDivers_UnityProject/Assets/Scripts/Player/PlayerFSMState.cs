@@ -189,6 +189,8 @@ public class PlayerFSMGunState : PlayerFSMState
 
     public override void CheckCondition(PlayerController data)
     {
+        if (data.m_PlayerFSM.CurrentGlobalStateID == ePlayerFSMStateID.RollStateID) return;
+
         if (Input.GetButton("Reload") || Input.GetKey(data.InputSetting.Reload))
         {
             if (data.m_WeaponController.ReloadState())
@@ -702,6 +704,7 @@ public class PlayerFSMRollState : PlayerFSMState
         {
             if (info.normalizedTime > 0.8f)
             {
+                data.m_Collider.enabled = true;
                 data.m_PlayerFSM.PerformPreviousTransition();
             }
         }

@@ -196,6 +196,7 @@ public class Player : Character
     /// <returns>Was the current health point decreased or not ?</returns>
     public override bool TakeDamage(float dmg, Vector3 hitPoint)
     {
+        if (m_Controller.m_PlayerFSM.CurrentGlobalStateID == ePlayerFSMStateID.RollStateID) return false;
         bool bHurt = m_Controller.PerformPlayerHurt();
         if (bHurt == false) return false;
 

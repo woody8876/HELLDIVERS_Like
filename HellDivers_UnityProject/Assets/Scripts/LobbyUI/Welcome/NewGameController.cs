@@ -52,7 +52,7 @@ public class NewGameController : MonoBehaviour {
         }
         if (m_bContinue)
         {
-            if (Input.GetKey(PlayerManager.Instance.Players[1].controllerSetting.Submit))
+            if (Input.GetKey(PlayerManager.Instance.Players[1].controllerSetting.Submit) || Input.GetKey(KeyCode.Space))
             {
                 m_Continue.GetComponentInChildren<Button>().onClick.Invoke();
             }

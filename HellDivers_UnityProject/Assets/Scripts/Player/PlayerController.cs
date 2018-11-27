@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     #region Private Variable
     private CharacterController m_Controller;
+    public Collider m_Collider;
     private Transform m_Cam;
     private Vector3 m_CamForward;
     private Vector3 m_Move;
@@ -31,11 +32,14 @@ public class PlayerController : MonoBehaviour
     public StratagemController m_StratagemController;
     public GrenadesController m_GrenadesController;
     public PlayerFSMSystem m_PlayerFSM;
+
     public float m_fAnimatorTime;
     public bool bIsDead = false;
     public bool bIsAlive = true;
+    public ePlayerFSMStateID m_CurrentState;
+    public ePlayerFSMStateID m_GlobalState;
 
-    
+
     #region MonoBehaviour
     private void Awake()
     {
@@ -45,7 +49,10 @@ public class PlayerController : MonoBehaviour
     {
         if (m_PlayerFSM == null) return;
         m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        bIsDead = false;
+        bIsAlive = true;
         m_PAC.ResetAnimator(this);
+        m_Collider.enabled = true;
     }
     private void Start()
     {
@@ -57,6 +64,7 @@ public class PlayerController : MonoBehaviour
         m_GrenadesController = this.GetComponent<GrenadesController>();
         m_PAC = this.GetComponent<PlayerAnimationsContorller>();
         m_Controller = this.GetComponent<CharacterController>();
+        m_Collider = m_Controller.GetComponent<Collider>();
         m_AimLine = this.GetComponent<AimLine>();
         if (Camera.main != null)
         {
@@ -136,14 +144,8 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         #region Input
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            PerformPlayerDead();
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            PerformPlayerHurt();
-        }
+        m_CurrentState = m_PlayerFSM.CurrentStateID;
+        m_GlobalState = m_PlayerFSM.CurrentGlobalStateID;
         if (Input.GetKeyDown(KeyCode.V))
         {
             PerformPlayerVictory();
@@ -166,8 +168,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
         #endregion
-        SelectMotionState();
         m_PlayerFSM.DoState();
+        SelectMotionState();
     }
 
     #endregion MonoBehaviour

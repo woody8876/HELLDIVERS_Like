@@ -8,6 +8,7 @@ public class SetPlayerWeapon : MonoBehaviour {
     #region SerializeField
     [Header("== UI Setting ==")]
         [SerializeField] ControlEvent m_Control;
+        [SerializeField] Image m_Top;
         [SerializeField] Text m_tPlayerName;
         [SerializeField] Text m_tRank;
         [SerializeField] Text m_tConfirm;
@@ -78,14 +79,17 @@ public class SetPlayerWeapon : MonoBehaviour {
 
     private void SetPlayer(int player)
     {
+        m_Top.color = (player == 1) ? HELLDIVERS.UI.UIHelper.Player1_Color : HELLDIVERS.UI.UIHelper.Player2_Color;
+        m_tRank.color = (player == 1) ? HELLDIVERS.UI.UIHelper.Player1_Color : HELLDIVERS.UI.UIHelper.Player2_Color;
+        m_tRank.text = PlayerManager.Instance.Players[player].info.Rank.ToString();
         m_tPlayerName.text = PlayerManager.Instance.Players[player].info.Username;
-        m_tRank.text = "1";
-        InitialWeapon(ref m_primary, player, 1, true);
-        InitialWeapon(ref m_secondary, player, 0, false);
+        InitialWeapon(ref m_primary, player, 0, true);
+        InitialWeapon(ref m_secondary, player, 1, false);
+
         InitialStratagems(player, 0);
         InitialStratagems(player, 1);
         InitialStratagems(player, 2);
-        InitialStratagems(player, 3, true);
+        InitialStratagems(player, 3);
     }
 
     private void InitialWeapon(ref GameObject go, int player, int serial, bool b)
@@ -229,8 +233,8 @@ public class SetPlayerWeapon : MonoBehaviour {
     private List<int> WeaponsList()
     {
         List<int> pList = new List<int>();
-        pList.Add(PriWeaponID);
         pList.Add(SecWeaponID);
+        pList.Add(PriWeaponID);
         return pList;
     }
 

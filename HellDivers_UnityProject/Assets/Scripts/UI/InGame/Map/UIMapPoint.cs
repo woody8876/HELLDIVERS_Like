@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using HELLDIVERS.UI;
 
 public class UIMapPoint : MonoBehaviour {
 
@@ -40,6 +41,9 @@ public class UIMapPoint : MonoBehaviour {
         m_CurrentPlayer = player;
         m_CurrentTarget = player.gameObject;
         m_CurrentType = type;
+        m_Image = this.GetComponent<Image>();
+        m_Color = UIHelper.GetPlayerColor(player.SerialNumber);
+        m_Image.color = m_Color;
         FindRadarCenter();
         CalculatePosition();
         switch (m_CurrentType)
@@ -121,6 +125,29 @@ public class UIMapPoint : MonoBehaviour {
 
     private void CalculatePosition()
     {
+        if(m_CurrentType == eMapPointType.PLAYER)
+        {
+            int m_PlayersCount = 0;
+            List<Player> pList = InGamePlayerManager.Instance.Players;
+            if (pList == null) return;
+            m_Center.Set(0, 0, 0);
+            for (int i = 0; i < pList.Count; i++)
+            {
+                if (pList[i].IsDead) continue;
+                m_PlayersCount++;
+                m_Center += pList[i].transform.position;
+            }
+            if (m_PlayersCount > 0)
+            {
+                m_Center /= m_PlayersCount;
+            }
+            Vector3 forward = m_CurrentTarget.transform.forward;
+            Vector3 m_2DForward = new Vector3();
+            m_2DForward.x = forward.x;
+            m_2DForward.y = forward.z;
+            this.transform.up = m_2DForward;
+        }
+        FindRadarCenter();
         Vector3 targetPos = m_CurrentTarget.transform.position;
         m_Dir = targetPos - m_Center;
         m_Pos = this.transform.localPosition;
