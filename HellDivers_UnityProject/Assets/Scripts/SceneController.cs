@@ -23,6 +23,12 @@ public class SceneController : MonoBehaviour
         StartCoroutine(LoadScene("Game"));
     }
 
+    [ContextMenu("ToLauncher")]
+    public void ToLauncher()
+    {
+        SceneManager.LoadScene("Launcher");
+    }
+
     [ContextMenu("ToLobby")]
     public void ToLobby()
     {

@@ -8,9 +8,7 @@ public class UIWeaponDisplay : MonoBehaviour {
 
     #region SerializeField
     [Header("== GameObject Setting ==")]
-//    [SerializeField] GameObject m_WeaponUI;
     [SerializeField] Text m_coin;
-//    [SerializeField] GameObject m_Content;
     [Header("== Script Setting ==")]
     [SerializeField] SetPlayerWeapon m_SetPlayer;
     [SerializeField] UI_WeaponInfo m_Info;
@@ -18,7 +16,6 @@ public class UIWeaponDisplay : MonoBehaviour {
     [SerializeField] UI_WeaponButton m_Button;
     [Header("== Private Field ==")]
     [SerializeField] int _curWeaponID;
-    [SerializeField] int Coin;
     #endregion
 
     #region Public Getter
@@ -33,6 +30,7 @@ public class UIWeaponDisplay : MonoBehaviour {
 
 
     #region Support Method
+
     public void SetCurID(int i) { _curWeaponID = i; }
 
     public void SetWeaponUI(GameObject go, int currentID, bool setCurID = true)
@@ -41,11 +39,8 @@ public class UIWeaponDisplay : MonoBehaviour {
         if (setCurID) _curWeaponID = currentID;
     }
 
-
-    private void CheckCoin()
-    {
-        int coin = int.Parse(m_coin.text);
-    }
+    public void SetCoin(int coin) { m_coin.text = coin.ToString(); }
+    
     #endregion
 
 }

@@ -18,10 +18,7 @@ public class ControlEvent : MonoBehaviour {
     public event AxisEvent AxisRight;
     public event AxisEvent AxisSubmit;
     public event AxisEvent AxisCancel;
-
-
-
-
+    public event AxisEvent AxisSecret;
 
 
     // Use this for initialization
@@ -63,14 +60,24 @@ public class ControlEvent : MonoBehaviour {
             if (AxisLeft != null) AxisLeft();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetKeyDown(m_controller.Submit) || Input.GetKey(KeyCode.Space))
+        else if (Input.GetKeyDown(m_controller.Submit) || Input.GetKeyDown(KeyCode.Space))
         {
             if (AxisSubmit != null) AxisSubmit();
             timer = timeBetweenInputs;
         }
-        else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetKey(KeyCode.Escape))
+        else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetKeyDown(KeyCode.Escape))
         {
             if (AxisCancel != null) AxisCancel();
+            timer = timeBetweenInputs;
+        }
+        else if (Input.GetButtonDown("Return") || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            SceneController.Instance.ToLauncher();
+            timer = timeBetweenInputs;
+        }
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (AxisSecret != null) AxisSecret();
             timer = timeBetweenInputs;
         }
     }

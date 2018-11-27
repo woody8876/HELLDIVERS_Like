@@ -30,6 +30,7 @@ public class WeaponInfo
     public float FireMode { private set; get; }
     public string Name { private set; get; }
     public string Image { private set; get; }
+    public int Cost { private set; get; }
     #endregion Properties
 
     #region Set Properties
@@ -51,6 +52,7 @@ public class WeaponInfo
     public void SetFireMode(float mode) { FireMode = mode; }
     public void SetName(string name) { Name = name; }
     public void SetImage (string image) { Image = image; }
+    public void SetCost (int cost) { Cost = cost; }
     #endregion Set Properties
 
     #region Properties
@@ -116,6 +118,7 @@ public class WeaponInfo
         other.SetFireMode(this.FireMode);
         other.SetName(this.Name);
         other.SetImage(this.Image);
+        other.SetCost(this.Cost);
         other.Ammo = this.Ammo;
         other.Mags = this.Mags;
         

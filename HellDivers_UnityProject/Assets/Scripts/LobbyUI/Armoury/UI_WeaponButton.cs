@@ -19,6 +19,17 @@ public class UI_WeaponButton : MonoBehaviour {
     private Color m_BGColor = new Color(1, 1, 1, 1);
     private Color m_NonSelectableColor = new Color(1, 1, 1, 0.286f);
 
+    private int mi_money;
+    private bool mb_costing;
+
+    private void LateUpdate()
+    {
+        if (!mb_costing) return;
+        mi_money =(int)Mathf.Lerp(mi_money, PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money, 0.1f);
+        weaponDisplay.SetCoin(mi_money);
+        if (mi_money == PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money) mb_costing = false;
+    }
+
     #region Button Behaviors
 
     public void SetCancel(bool plus = true)
@@ -93,8 +104,19 @@ public class UI_WeaponButton : MonoBehaviour {
     #region Button Method
     private bool CheckLevelUp()
     {
-
+        int id = weaponDisplay.Info.ID;
+        int cost = GameData.Instance.WeaponInfoTable[id].Cost;
+        int money = PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money;
+        if (money < cost) return false;
         return true;
+    }
+
+    private void CostMoney()
+    {
+        int cost = GameData.Instance.WeaponInfoTable[weaponDisplay.Info.ID].Cost;
+        mi_money = PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money;
+        PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.CostMoney(cost);
+        mb_costing = true;
     }
 
     private void SetBG(Image BG)
@@ -121,11 +143,12 @@ public class UI_WeaponButton : MonoBehaviour {
             int id = weaponDisplay.CurWeaponID;
             PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref id);
             weaponDisplay.SetCurID(id);
+            CostMoney();
             weaponDisplay.WeaponList.LevelUp(id);
             weaponDisplay.Info.SetWeaponInfo(id, type);
-            if (weaponDisplay.CurWeaponID == pList[pList.Count - 1])
+            if (weaponDisplay.CurWeaponID == pList[pList.Count - 1] || !CheckLevelUp())
             {
-                SetLeftNav();
+                SetRightNav();
             }   
         }
     }
