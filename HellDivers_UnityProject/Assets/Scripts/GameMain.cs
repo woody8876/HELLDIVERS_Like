@@ -67,7 +67,7 @@ public class GameMain : MonoBehaviour
             m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
         }
 
-        m_MissionManager.CreateTowerMissionsOnMap(m_NumberOfTowers);
+        m_MissionManager.CreateTowerMissions(m_NumberOfTowers);
 
         GameStart();
     }
@@ -92,6 +92,8 @@ public class GameMain : MonoBehaviour
 
         m_MobSpawner.SpawnPatrol(20);
         InvokeRepeating("SpawnMobs", 1.0f, 30.0f);
+
+        m_MissionManager.StartAllMission();
 
         DoCheckCondition = CheckGameCondition;
     }
