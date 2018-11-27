@@ -17,9 +17,9 @@ public class FadeOut : MonoBehaviour {
     {
         if (!m_bBlack)
         {
-            color.a = Mathf.Lerp(color.a, 1, 0.03f);
+            color.a = Mathf.Lerp(color.a, 1, 0.05f);
             GetComponent<Image>().color = color;
-            if (GetComponent<Image>().color.a > .95f) m_bBlack = true;
+            if (GetComponent<Image>().color.a > .99f) m_bBlack = true;
         }
         else
         {

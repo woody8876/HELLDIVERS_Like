@@ -13,7 +13,10 @@ public class ControllerTesting : MonoBehaviour {
     void Start () {
         m_ControllerSetting1 = InputManager.Instance.InputSettingMap[1];
         m_ControllerSetting2 = InputManager.Instance.InputSettingMap[2];
-        PlayerManager.Instance.CreatePlayer(1, m_ControllerSetting1);
+        if (!PlayerManager.Instance.Players.ContainsKey(1) && !PlayerManager.Instance.Players.ContainsKey(2))
+        {
+            PlayerManager.Instance.CreatePlayer(1, m_ControllerSetting1);
+        }
 
     }
 

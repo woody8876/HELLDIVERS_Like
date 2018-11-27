@@ -20,10 +20,6 @@ public class ControlEvent : MonoBehaviour {
     public event AxisEvent AxisCancel;
 
 
-
-
-
-
     // Use this for initialization
     void Start()
     {
@@ -71,6 +67,11 @@ public class ControlEvent : MonoBehaviour {
         else if (Input.GetKeyDown(m_controller.Cancel)|| Input.GetKey(KeyCode.Escape))
         {
             if (AxisCancel != null) AxisCancel();
+            timer = timeBetweenInputs;
+        }
+        else if (Input.GetButtonDown("Return") || Input.GetKey(KeyCode.Backspace))
+        {
+            SceneController.Instance.ToLauncher();
             timer = timeBetweenInputs;
         }
     }
