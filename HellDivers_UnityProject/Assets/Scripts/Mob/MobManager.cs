@@ -38,6 +38,8 @@ public class MobManager
     private GameObject m_GOWarning;
     private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
+    private GameObject m_GOBloodSpurtBig;
+    private GameObject m_GOBloodSpurtSmall;
 
 
     //private Player m_Player;
@@ -57,7 +59,8 @@ public class MobManager
         m_GOBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
         m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
-
+        m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
+        m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
 
 
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
@@ -67,6 +70,8 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 300, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 300, 3003);
         m_TotalKill = 0;
         m_TotalFishKill = 0;
         m_TotalPatrolKill = 0;

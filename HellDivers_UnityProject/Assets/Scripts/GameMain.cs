@@ -90,8 +90,8 @@ public class GameMain : MonoBehaviour
         m_PlayerManager.SpawnPlayers();
         UIInGameMain.Instance.DrawGameUI();
 
-        m_MobSpawner.SpawnPatrol(40);
-        InvokeRepeating("SpawnMobs", 10.0f, 30.0f);
+        m_MobSpawner.SpawnPatrol(20);
+        InvokeRepeating("SpawnMobs", 1.0f, 30.0f);
 
         DoCheckCondition = CheckGameCondition;
     }
@@ -146,7 +146,8 @@ public class GameMain : MonoBehaviour
         int fishVariant = Random.Range(-1, 2);
         int patrol = Random.Range(0, 2);
         int tank = Random.Range(-1, 2);
-        m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        //m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        m_MobSpawner.SpawnMobs(0, 0, 0, 0);
     }
 
     #endregion Game Control
