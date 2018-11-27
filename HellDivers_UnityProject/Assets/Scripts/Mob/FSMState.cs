@@ -775,7 +775,7 @@ public class FSMRemoteAttackState : FSMState
 
     private void Fire(MobInfo data)
     {
-        GOBullet = ObjectPool.m_Instance.LoadGameObjectFromPool(3201);
+        GOBullet = ObjectPool.m_Instance.LoadGameObjectFromPool(3402);
         if (GOBullet == null) return;
         GOBullet.transform.position = data.m_Go.transform.position + Vector3.up;
         GOBullet.transform.forward = data.m_Go.transform.forward;
