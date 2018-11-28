@@ -96,6 +96,7 @@ namespace HELLDIVERS.UI.InGame
         public void DrawMissionCompletedUI()
         {
             m_PanelMissionCompleted.transform.SetAsLastSibling();
+            m_PanelMissionCompleted.gameObject.SetActive(true);
             m_PanelMissionCompleted.StartUI();
         }
 

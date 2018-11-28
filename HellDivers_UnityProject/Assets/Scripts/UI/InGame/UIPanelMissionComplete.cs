@@ -18,7 +18,6 @@ public class UIPanelMissionComplete : MonoBehaviour
 
     public void StartUI()
     {
-        this.gameObject.SetActive(true);
         StartCoroutine(OnStartUI());
     }
 
