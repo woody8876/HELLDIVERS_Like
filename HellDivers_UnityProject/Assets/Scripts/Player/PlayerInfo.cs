@@ -48,6 +48,8 @@ public class PlayerInfo
         return true;
     }
 
+    #region Level UP to Unlock Items
+
     public void UnlockItems()
     {
         UnlockWeapons();
@@ -105,6 +107,10 @@ public class PlayerInfo
         return false;
     }
 
+    #endregion
+
+    #region Refresh List
+
     public bool RefreshEquipWeapon(List<int> pList)
     {
         if (weapons.Count < 1) { return false; }
@@ -118,6 +124,29 @@ public class PlayerInfo
         stratagems = pList;
         return true;
     }
+
+    public bool RefreshEquipGrenade(List<int> pList)
+    {
+        if (grenades.Count < 1) { return false; }
+        grenades = pList;
+        return true;
+    }
+
+    public bool RefreshUnlockedWeapons(List<int> pList)
+    {
+        if (unlockWeapons.Count < 1) { return false; }
+        unlockWeapons = pList;
+        return true;
+    }
+
+    public bool RefreshUnlockedStratagems(List<int> pList)
+    {
+        if (unlockStratagems.Count < 1) { return false; }
+        unlockStratagems = pList;
+        return true;
+    }
+
+    #endregion
 
     public bool AddWeapon(int id)
     {

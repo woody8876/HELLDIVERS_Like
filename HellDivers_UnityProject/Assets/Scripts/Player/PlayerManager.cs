@@ -12,6 +12,7 @@ public class PlayerManager
     {
         public PlayerInfo info;
         public ControllerSetting controllerSetting;
+        public DataSaver data;
     }
 
     public void Init()
@@ -20,12 +21,23 @@ public class PlayerManager
         m_PlayerMap = new Dictionary<int, PlayerData>();
     }
 
-    public void CreatePlayer(int i, ControllerSetting controller)
+    public void CreatePlayer(int i, ControllerSetting controller, DataSaver data)
     {
         PlayerData playerData = new PlayerData();
         PlayerInfo playerInfo = CreatPlayerInfo(i);
         playerData.info = playerInfo;
         playerData.controllerSetting = controller;
+        playerData.data = data;
+        m_PlayerMap.Add(i, playerData);
+    }
+
+    public void LoadPlayer(int i, ControllerSetting controller, DataSaver data)
+    {
+        PlayerData playerData = new PlayerData();
+        PlayerInfo playerInfo = LoadPlayerInfo(data);
+        playerData.info = playerInfo;
+        playerData.controllerSetting = controller;
+        playerData.data = data;
         m_PlayerMap.Add(i, playerData);
     }
 
@@ -47,21 +59,41 @@ public class PlayerManager
         return playerInfo;
     }
 
+    public PlayerInfo LoadPlayerInfo(DataSaver data)
+    {
+        PlayerInfo player = new PlayerInfo();
+        player.SetUsername(data.Username);
+        player.AddExp(data.Exp);
+        player.AddMoney(data.Money);
+        player.RefreshEquipWeapon(data.Weapons);
+        player.RefreshEquipStratagem(data.Stratagems);
+        player.RefreshEquipGrenade(data.Grenades);
+        player.RefreshUnlockedWeapons(data.UnlockedWeapons);
+        player.RefreshUnlockedStratagems(data.UnlockedStratagems);
+
+        return player;
+    }
+
+    public void SavePlayerInfo(int i)
+    {
+        PlayerInfo info = Players[i].info;
+        DataSaver data = Players[i].data;
+        data.Username = info.Username;
+        data.Rank = info.Rank;
+        data.Exp = info.Exp;
+        data.Money = info.Money;
+        data.Weapons = info.Weapons;
+        data.Stratagems = info.Stratagems;
+        data.Grenades = info.Grenades;
+        data.UnlockedWeapons = info.UnlockedWeapons;
+        data.UnlockedStratagems = info.UnlockedStratagems;
+    }
+
     public void RefreshEquipment(int player, List<int> newEquipWeapons, List<int> newEquipStratagems)
     {
         m_PlayerMap[player].info.RefreshEquipWeapon(newEquipWeapons);
         m_PlayerMap[player].info.RefreshEquipStratagem(newEquipStratagems);
     }
 
-    //public void LoadPlayerInfo()
-    //{
-    //}
 
-    //public void SavePlayerInfo()
-    //{
-    //    foreach (KeyValuePair<int, PlayerInfo> player in Players)
-    //    {
-    //        PlayerInfo currentInfo = player.Value;
-    //    }
-    //}
 }
