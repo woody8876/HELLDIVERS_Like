@@ -10,7 +10,7 @@ public class PatrolAI : Character
     public MobInfo m_AIData;
     public PlayerController m_PlayerController;
     private MobAnimationsController m_MobAnimator;
-    private BoxCollider m_BoxCollider;
+    private BoxCollider m_BobyCollider;
     private CapsuleCollider m_DamageCollider;
     private MobAimLine m_MobAimLine;
     public bool m_bGoIdle = false;
@@ -31,7 +31,7 @@ public class PatrolAI : Character
         m_bDead = false;
         m_bGoIdle = false;
         m_CurrentHp = m_MaxHp;
-        m_BoxCollider.enabled = true;
+        m_BobyCollider.enabled = true;
         m_DamageCollider.enabled = true;
         m_FSM.PerformTransition(eFSMTransition.Go_WanderIdle);
     }
@@ -54,7 +54,7 @@ public class PatrolAI : Character
         base.Start();
 
         m_MobAnimator = this.GetComponent<MobAnimationsController>();
-        m_BoxCollider = this.GetComponent<BoxCollider>();
+        m_BobyCollider = this.GetComponent<BoxCollider>();
         m_DamageCollider = GetComponentInChildren<CapsuleCollider>();
         m_MobAimLine = this.GetComponent<MobAimLine>();
         m_FSM = new FSMSystem(m_AIData);
@@ -210,10 +210,12 @@ public class PatrolAI : Character
 
         if (m_CurrentHp <= 0)
         {
-            m_BoxCollider.enabled = false;
+            m_BobyCollider.enabled = false;
             m_DamageCollider.enabled = false;
             StartCoroutine(Displacement(hitPoint, 2f));
-            
+
+            go = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
+            bloodSpurt = go.GetComponent<BloodSpurt>();
             bloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             Death();
 
