@@ -207,13 +207,14 @@ public class PatrolAI : Character
 
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
         BloodSpurt bloodSpurt = go.GetComponent<BloodSpurt>();
-        bloodSpurt.Init(this.gameObject, hitPoint);
 
         if (m_CurrentHp <= 0)
         {
             m_BoxCollider.enabled = false;
             m_DamageCollider.enabled = false;
-            StartCoroutine(Displacement(hitPoint, 0.2f));
+            StartCoroutine(Displacement(hitPoint, 2f));
+            
+            bloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             Death();
 
             damager.Damager.Record.NumOfKills++;
@@ -223,6 +224,7 @@ public class PatrolAI : Character
         }
         else
         {
+            bloodSpurt.Init(m_AIData, hitPoint);
             PerformGetHurt(hitPoint);
         }
         return true;

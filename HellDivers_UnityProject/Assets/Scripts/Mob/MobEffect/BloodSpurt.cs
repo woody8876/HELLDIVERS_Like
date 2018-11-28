@@ -22,6 +22,22 @@ public class BloodSpurt : MonoBehaviour {
         this.gameObject.SetActive(true);
         this.transform.SetParent(target.transform);
     }
+    public void Init(MobInfo data, Vector3 hitPoint)
+    {
+        Vector3 pos = this.transform.position;
+        pos = data.m_Go.transform.position;
+        if (data.m_ID == 3200)
+        {
+            pos.y += 1f;
+        }
+        else pos.y += 2.0f;
+        this.transform.position = pos;
+        Vector3 dir = hitPoint - data.m_Go.transform.position;
+        dir.y = 0.0f;
+        this.transform.forward = dir;
+        this.gameObject.SetActive(true);
+        this.transform.SetParent(data.m_Go.transform);
+    }
     // Use this for initialization
     void Start () {
     }

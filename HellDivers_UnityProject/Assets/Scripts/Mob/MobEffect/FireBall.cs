@@ -42,21 +42,15 @@ public class FireBall : MonoBehaviour {
         List<Player> pList = InGamePlayerManager.Instance.Players;
         if (pList != null && pList.Count > 0)
         {
-            bool bAttack = false;
             for (int i = 0; i < pList.Count; i++)
             {
                 if (pList[i].IsDead) continue;
                 float Dist = (pList[i].transform.position - this.transform.position).magnitude;
                 if (Dist <= 2.0f)
                 {
-                    IDamageable target = pList[i].transform.gameObject.GetComponent<IDamageable>();
-                    target.TakeDamage(10.0f, this.transform.position);
-                    bAttack = true;
+                    BulletDeath();
+                    break;
                 }
-            }
-            if (bAttack)
-            {
-                BulletDeath();
             }
         }
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_NextPosDis, 1 << LayerMask.NameToLayer("Obstcale")))
