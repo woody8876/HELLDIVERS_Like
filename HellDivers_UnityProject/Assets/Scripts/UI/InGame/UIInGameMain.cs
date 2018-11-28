@@ -88,12 +88,7 @@ namespace HELLDIVERS.UI.InGame
 
         public void AddMissionInfo(Mission mission)
         {
-            switch (mission.Type)
-            {
-                case eMissionType.Tower:
-                    m_PanelMissionInfo.AddMissionInfo(mission);
-                    break;
-            }
+            m_PanelMissionInfo.AddMissionInfo(mission);
         }
 
         public void DrawMissionFailedUI()

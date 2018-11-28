@@ -19,7 +19,7 @@ public class MissionFactory
                 missionTower.Initialize(data);
                 mission = missionTower;
 
-                UIInGameMain.Instance.AddMissionInfo(missionTower);
+                UIInGameMain.Instance.AddMissionInfo(mission);
                 UIInGameMain.Instance.AddDynamicMissionMsg(missionTower);
                 UIInGameMain.Instance.AddMapPoint(tower, eMapPointType.MISSIONTOWER);
                 break;
@@ -32,6 +32,7 @@ public class MissionFactory
                 missionKill.Initialize(killData);
                 mission = missionKill;
 
+                UIInGameMain.Instance.AddMissionInfo(mission);
                 break;
         }
 

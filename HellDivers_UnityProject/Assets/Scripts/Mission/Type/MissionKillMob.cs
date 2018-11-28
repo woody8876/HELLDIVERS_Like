@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class MissionKillMob : Mission
 {
+    public MissionKillMobData Data { get { return m_Data; } }
     public int CurrentAmount { get { return m_CurrentAmount; } }
 
     private MissionKillMobData m_Data;
     private int m_CurrentAmount;
+
+    public event MissionEventHolder OnCount;
 
     public void Initialize(MissionKillMobData data)
     {
@@ -37,5 +40,7 @@ public class MissionKillMob : Mission
             m_bFinished = true;
             CompleteMission();
         }
+
+        if (OnCount != null) OnCount();
     }
 }
