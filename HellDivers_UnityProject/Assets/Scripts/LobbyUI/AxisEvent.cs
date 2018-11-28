@@ -6,45 +6,41 @@ using UnityEngine.EventSystems;
 
 public class AxisEvent : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) { return; }
+        if (!PlayerManager.Instance.Players.ContainsKey(1) && m_controller == null) { return; }
+        if (PlayerManager.Instance.Players.ContainsKey(1)) { m_controller = PlayerManager.Instance.Players[1].controllerSetting; }
         if (timer < 0)
         {
-            InputSetting(PlayerManager.Instance.Players[1].controllerSetting);
+            InputSetting(m_controller);
         }
         timer -= Time.fixedDeltaTime;
     }
 
-    private void InputSetting(ControllerSetting m_controller)
+    private void InputSetting(ControllerSetting controller)
     {
         currentAxis = new AxisEventData(EventSystem.current);
         currentButton = EventSystem.current.currentSelectedGameObject;
 
-        if (Input.GetAxis(m_controller.Vertical) > 0)
+        if (Input.GetAxis(controller.Vertical) > 0)
         {
             currentAxis.moveDir = MoveDirection.Up;
             ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Vertical) < 0)
+        else if (Input.GetAxis(controller.Vertical) < 0)
         {
             currentAxis.moveDir = MoveDirection.Down;
             ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Horizontal) > 0)
+        else if (Input.GetAxis(controller.Horizontal) > 0)
         {
             currentAxis.moveDir = MoveDirection.Right;
             ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
             timer = timeBetweenInputs;
         }
-        else if (Input.GetAxis(m_controller.Horizontal) < 0)
+        else if (Input.GetAxis(controller.Horizontal) < 0)
         {
             currentAxis.moveDir = MoveDirection.Left;
             ExecuteEvents.Execute(currentButton, currentAxis, ExecuteEvents.moveHandler);
@@ -52,6 +48,10 @@ public class AxisEvent : MonoBehaviour {
         }
 
     }
+
+    public void SetController(ControllerSetting controller) { m_controller = controller; }
+
+    private ControllerSetting m_controller;
     private AxisEventData currentAxis;
     private GameObject currentButton;
     private float timer;

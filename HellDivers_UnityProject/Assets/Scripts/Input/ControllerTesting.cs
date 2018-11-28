@@ -5,7 +5,7 @@ using UnityEngine;
 public class ControllerTesting : MonoBehaviour {
 
     [SerializeField] WelcomeButtonController buttonController;
-
+    [SerializeField] AxisEvent axis;
     private ControllerSetting m_ControllerSetting1;
     private ControllerSetting m_ControllerSetting2;
 
@@ -28,11 +28,13 @@ public class ControllerTesting : MonoBehaviour {
 		if (Input.GetKey(m_ControllerSetting1.Submit))
         {
             buttonController.SetController(m_ControllerSetting1);
+            axis.SetController(m_ControllerSetting1);
             m_Interactive = true;
         }
         else if(Input.GetKey(m_ControllerSetting2.Submit))
         {
             buttonController.SetController(m_ControllerSetting2);
+            axis.SetController(m_ControllerSetting2);
             m_Interactive = true;
         }
 	}

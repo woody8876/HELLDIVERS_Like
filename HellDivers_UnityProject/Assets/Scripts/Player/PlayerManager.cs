@@ -28,7 +28,8 @@ public class PlayerManager
         playerData.info = playerInfo;
         playerData.controllerSetting = controller;
         playerData.data = data;
-        m_PlayerMap.Add(i, playerData);
+        if (m_PlayerMap.ContainsKey(i)) m_PlayerMap[i] = playerData;
+        else m_PlayerMap.Add(i, playerData);
     }
 
     public void LoadPlayer(int i, ControllerSetting controller, DataSaver data)
@@ -38,7 +39,8 @@ public class PlayerManager
         playerData.info = playerInfo;
         playerData.controllerSetting = controller;
         playerData.data = data;
-        m_PlayerMap.Add(i, playerData);
+        if (m_PlayerMap.ContainsKey(i)) m_PlayerMap[i] = playerData;
+        else m_PlayerMap.Add(i, playerData);
     }
 
     public PlayerInfo CreatPlayerInfo(int i)
