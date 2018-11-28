@@ -26,7 +26,9 @@ public class Mission : MonoBehaviour
     protected MissionPriority m_Priority;
     protected MissionReward m_Reward;
 
-    public delegate void MissionEventHolder(Mission mission);
+    public delegate void MissionEventHolder();
+
+    public delegate void MissionEventTracker(Mission mission);
 
     public MissionEventHolder OnMissionStart;
     public MissionEventHolder OnMissionComplete;
@@ -34,7 +36,7 @@ public class Mission : MonoBehaviour
     public void StartMission()
     {
         OnStart();
-        if (OnMissionStart != null) OnMissionStart(this);
+        if (OnMissionStart != null) OnMissionStart();
     }
 
     protected virtual void OnStart()
@@ -43,6 +45,6 @@ public class Mission : MonoBehaviour
 
     protected void CompleteMission()
     {
-        if (OnMissionComplete != null) OnMissionComplete(this);
+        if (OnMissionComplete != null) OnMissionComplete();
     }
 }
