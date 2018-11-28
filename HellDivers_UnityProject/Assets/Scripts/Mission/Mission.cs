@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum eMissionType
+{
+    Tower,
+    KillMob,
+    Escape,
+}
+
 public enum eMissionPriority
 {
     Main, Escape, Side

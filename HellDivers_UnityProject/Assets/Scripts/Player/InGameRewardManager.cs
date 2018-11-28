@@ -93,6 +93,8 @@ public class InGameRewardManager : MonoBehaviour
             MissionReward missionReward = CaculateAllMissionReward();
             info.AddExp(missionReward.EXP);
             info.AddMoney(missionReward.Money);
+
+            PlayerManager.Instance.SavePlayerInfo(player.Key);
         }
 
         Destroy(this.gameObject);

@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using HELLDIVERS.UI.InGame;
 
-public enum eMissionType
-{
-    Tower,
-    Escape,
-}
-
 public class MissionFactory
 {
     public Mission CreateMission(eMissionType type)
@@ -28,6 +22,16 @@ public class MissionFactory
                 UIInGameMain.Instance.AddMissionInfo(missionTower);
                 UIInGameMain.Instance.AddDynamicMissionMsg(missionTower);
                 UIInGameMain.Instance.AddMapPoint(tower, eMapPointType.MISSIONTOWER);
+                break;
+
+            case eMissionType.KillMob:
+                GameObject killMob = new GameObject("MissionKillMob");
+                MissionKillMob missionKill = killMob.AddComponent<MissionKillMob>();
+
+                MissionKillMobData killData = ResourceManager.m_Instance.LoadData(typeof(MissionKillMobData), "Mission/Settings", "MissionKillMobSetting") as MissionKillMobData;
+                missionKill.Initialize(killData);
+                mission = missionKill;
+
                 break;
         }
 
