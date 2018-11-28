@@ -131,7 +131,7 @@ public class GameMain : MonoBehaviour
         {
             foreach (var mission in missionList.Value)
             {
-                m_RewardManager.SetMissionReward(mission.Type, mission.Reward);
+                if (mission.IsFinished) m_RewardManager.SetMissionReward(mission.Type, mission.Reward);
             }
         }
 

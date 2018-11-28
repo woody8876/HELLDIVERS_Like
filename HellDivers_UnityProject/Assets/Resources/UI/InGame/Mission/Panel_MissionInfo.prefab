@@ -108,7 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0888c0a81a072ad47a212bb5dceccc9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MissionInfoPrefab: {fileID: 114715225880302132, guid: b0ecb76400c20754faf2bb671b247738,
+  m_MissionGroupInfoPrefab: {fileID: 114683177910082254, guid: b0ecb76400c20754faf2bb671b247738,
+    type: 2}
+  m_MissionCountInfoPrefab: {fileID: 114621041253366986, guid: a7a939f9122dc6b4d879b5efba85e502,
     type: 2}
 --- !u!114 &114246032141857154
 MonoBehaviour:

@@ -11,8 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aafcb3553899b44599cf1517fdf6b55, type: 3}
   m_Name: MissionKillMobSetting
   m_EditorClassIdentifier: 
-  m_Priority: 0
-  m_Type: 0
+  m_Priority: 2
+  m_Type: 1
   m_Reward:
-    EXP: 0
-    Money: 0
+    EXP: 500
+    Money: 500
+  m_KillAmout: 50

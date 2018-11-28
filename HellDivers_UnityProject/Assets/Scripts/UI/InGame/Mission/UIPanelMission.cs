@@ -7,7 +7,8 @@ public class UIPanelMission : MonoBehaviour
 {
     public static UIPanelMission Instance { get; private set; }
 
-    [SerializeField] private UIMissionInfo m_MissionInfoPrefab;
+    [SerializeField] private UIMissionGroupInfo m_MissionGroupInfoPrefab;
+    [SerializeField] private UIMissionCountInfo m_MissionCountInfoPrefab;
 
     private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap;
 
@@ -21,34 +22,39 @@ public class UIPanelMission : MonoBehaviour
 
     public void AddMissionInfo(Mission mission)
     {
+        List<UIMissionInfo> pList;
+        if (m_MissionElementMap.ContainsKey(mission.Type))
+        {
+            pList = m_MissionElementMap[mission.Type];
+        }
+        else
+        {
+            pList = new List<UIMissionInfo>();
+            m_MissionElementMap.Add(mission.Type, pList);
+        }
+
         switch (mission.Type)
         {
             case eMissionType.Tower:
 
-                List<UIMissionInfo> pList;
-                if (m_MissionElementMap.ContainsKey(mission.Type))
-                {
-                    pList = m_MissionElementMap[mission.Type];
-                }
-                else
-                {
-                    pList = new List<UIMissionInfo>();
-                    m_MissionElementMap.Add(mission.Type, pList);
-                }
-
-                UIMissionInfo missionUI;
                 if (pList.Count > 0)
                 {
-                    missionUI = pList[0];
-                    missionUI.AddMission(mission);
+                    UIMissionGroupInfo missionGroupUI = pList[0] as UIMissionGroupInfo;
+                    missionGroupUI.AddMission(mission);
                 }
                 else
                 {
-                    missionUI = Instantiate(m_MissionInfoPrefab, this.transform);
-                    missionUI.Initialize(mission);
-                    pList.Add(missionUI);
+                    UIMissionGroupInfo missionGroupUI = Instantiate(m_MissionGroupInfoPrefab, this.transform);
+                    missionGroupUI.Initialize(mission);
+                    pList.Add(missionGroupUI);
                 }
 
+                break;
+
+            case eMissionType.KillMob:
+                UIMissionCountInfo missionCountUI = Instantiate(m_MissionCountInfoPrefab, this.transform);
+                missionCountUI.Initialize(mission);
+                pList.Add(missionCountUI);
                 break;
         }
     }

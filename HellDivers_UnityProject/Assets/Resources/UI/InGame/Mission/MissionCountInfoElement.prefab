@@ -55,9 +55,9 @@ GameObject:
   m_Component:
   - component: {fileID: 224650939462790588}
   - component: {fileID: 114130861302193722}
-  - component: {fileID: 114715225880302132}
+  - component: {fileID: 114621041253366986}
   m_Layer: 5
-  m_Name: MissionInfoElement
+  m_Name: MissionCountInfoElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,6 +225,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114621041253366986
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1479450220085460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3839164fda8eec4fbcc4915462fb296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CheckMark: {fileID: 114353013096196358}
+  m_Icon: {fileID: 114592811793472358}
+  m_Description: {fileID: 114580350482711132}
+  m_Count: {fileID: 114975347018963738}
 --- !u!114 &114622327730671534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,21 +281,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
---- !u!114 &114715225880302132
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1479450220085460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c0f90e6ebc809049baf08731832b319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CheckMark: {fileID: 114353013096196358}
-  m_Icon: {fileID: 114592811793472358}
-  m_Description: {fileID: 114580350482711132}
-  m_Count: {fileID: 114975347018963738}
 --- !u!114 &114818578540151678
 MonoBehaviour:
   m_ObjectHideFlags: 1
