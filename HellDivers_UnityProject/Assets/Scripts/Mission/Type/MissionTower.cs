@@ -65,11 +65,13 @@ public class MissionTower : Mission, IInteractable
 
     #region Initializer
 
-    public void Initialize(eMissionType type, MissionTowerData data)
+    public void Initialize(MissionTowerData data)
     {
-        m_Type = type;
+        m_Priority = data.Priority;
+        m_Type = data.Type;
+        m_Reward = data.Reward;
         m_Data = ScriptableObject.CreateInstance<MissionTowerData>();
-        data.CopyTo(data);
+        data.CopyTo(m_Data);
         m_MobTimer = m_Data.MobSpawnTime;
         m_Codes = GenerateCode();
     }

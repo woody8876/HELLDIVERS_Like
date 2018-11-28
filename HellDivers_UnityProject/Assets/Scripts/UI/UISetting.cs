@@ -9,6 +9,7 @@ public class UISetting : ScriptableObject
     public string StratagemIconFolder = "UI/Resource/Icons/Stratagem";
     public string WeaponIconFolder = "UI/Resource/Icons/Weapon";
     public string GrenadeIconFolder = "UI/Resource/Icons/Grenade";
+    public string MissionIconFolder = "UI/Resource/Icons/Mission";
     public Color Player1Color;
     public Color Player2Color;
 }

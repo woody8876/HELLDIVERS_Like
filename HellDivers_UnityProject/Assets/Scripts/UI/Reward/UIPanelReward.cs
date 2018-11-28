@@ -62,10 +62,12 @@ namespace HELLDIVERS.UI
             m_BlackCardTween.OnFinished -= CreatePlayerRewardElement;
             if (InGameRewardManager.Instance == null || InGameRewardManager.Instance.PlayerRewardMap.Count <= 0) return;
 
+            MissionReward missionReward = InGameRewardManager.Instance.CaculateAllMissionReward();
+
             foreach (var record in InGameRewardManager.Instance.PlayerRewardMap)
             {
                 UIPlayerReward playerReward = Instantiate(m_PlayerRewardPrefab, m_PanelReward);
-                playerReward.Initialize(PlayerManager.Instance.Players[record.Key].info, record.Value, record.Key);
+                playerReward.Initialize(PlayerManager.Instance.Players[record.Key].info, record.Value, missionReward, record.Key);
                 playerReward.OnDrawUIFinished += RefreshCountinueBtn;
                 m_DrawFinishedCount++;
                 m_PlayerRewardMap.Add(record.Key, playerReward);

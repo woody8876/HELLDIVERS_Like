@@ -6,10 +6,11 @@ using HELLDIVERS.UI.InGame;
 public class MissionManager
 {
     public static MissionManager Instance { get; private set; }
-    public int MissionCount { get { return m_Missions[eMissionType.Tower].Count; } }
+    public int MainMissionCount { get; private set; }
+    public Dictionary<eMissionPriority, List<Mission>> Missions { get { return m_Missions; } }
 
     private MissionFactory m_Factory = new MissionFactory();
-    private Dictionary<eMissionType, List<Mission>> m_Missions = new Dictionary<eMissionType, List<Mission>>();
+    private Dictionary<eMissionPriority, List<Mission>> m_Missions = new Dictionary<eMissionPriority, List<Mission>>();
 
     public void Init()
     {
@@ -50,7 +51,6 @@ public class MissionManager
     public void CreateMission(eMissionType type, Transform pos = null)
     {
         Mission mission = m_Factory.CreateMission(type);
-        mission.OnMissionComplete += DoMissionFinished;
 
         if (pos != null)
         {
@@ -59,21 +59,22 @@ public class MissionManager
         }
 
         List<Mission> pList;
-        if (m_Missions.ContainsKey(type))
+        if (m_Missions.ContainsKey(mission.Priority))
         {
-            pList = m_Missions[type];
+            pList = m_Missions[mission.Priority];
         }
         else
         {
             pList = new List<Mission>();
-            m_Missions.Add(type, pList);
+            m_Missions.Add(mission.Priority, pList);
+        }
+
+        if (mission.Priority == eMissionPriority.Main)
+        {
+            MainMissionCount++;
+            mission.OnMissionComplete += () => { MainMissionCount--; };
         }
 
         pList.Add(mission);
-    }
-
-    private void DoMissionFinished(Mission mission)
-    {
-        if (m_Missions.ContainsKey(mission.Type)) m_Missions[mission.Type].Remove(mission);
     }
 }

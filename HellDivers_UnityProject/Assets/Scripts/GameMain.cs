@@ -106,7 +106,7 @@ public class GameMain : MonoBehaviour
             DoCheckCondition = null;
         }
 
-        if (m_MissionManager.MissionCount <= 0)
+        if (m_MissionManager.MainMissionCount <= 0)
         {
             MissionComplete();
             DoCheckCondition = null;
@@ -125,15 +125,33 @@ public class GameMain : MonoBehaviour
             Player player = m_PlayerManager.Players[i];
             m_RewardManager.SetReward(player.SerialNumber, player.Record);
         }
+
+        foreach (var missionList in m_MissionManager.Missions)
+        {
+            foreach (var mission in missionList.Value)
+            {
+                m_RewardManager.SetMissionReward(mission.Type, mission.Reward);
+            }
+        }
+
         SceneController.Instance.ToReward();
     }
 
     [ContextMenu("Mission Failed")]
     public void MissionFailed()
     {
+        StartCoroutine(MissionFailedProgress());
+    }
+
+    private IEnumerator MissionFailedProgress()
+    {
         MusicManager.Instance.PlayMusic(eMusicSelection.MissionFailed, 3);
 
+        yield return new WaitForSeconds(3);
+
         UIInGameMain.Instance.DrawMissionFailedUI();
+
+        yield break;
     }
 
     [ContextMenu("Mission Abandon")]
