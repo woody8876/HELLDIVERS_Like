@@ -42,7 +42,7 @@ public class PlayArmoury : MonoBehaviour {
             {
                 if (Input.GetKey(m_controller.Submit))
                 {
-                    PlayerManager.Instance.CreatePlayer(2, m_controller);
+                    //PlayerManager.Instance.CreatePlayer(2, m_controller);
                     CreatPlayerMenu(2);
                     b_AddPlayer = true;
                 }

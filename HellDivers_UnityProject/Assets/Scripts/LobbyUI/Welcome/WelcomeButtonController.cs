@@ -3,23 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 public class WelcomeButtonController : MonoBehaviour {
 
     #region SerializeField
+    [Header("== Button ==")]
     [SerializeField] Button m_Start;
     [SerializeField] Button m_Continue;
     [SerializeField] Button m_Exit;
     [SerializeField] Button m_Press;
+    [SerializeField] Button m_LoadData1;
+    [SerializeField] Button m_LoadData2;
+    [SerializeField] Button m_LoadData3;
+    [SerializeField] Button m_LoadData4;
+    [Header("== Circle ==")]
     [SerializeField] GameObject m_Circle;
+    [SerializeField] GameObject m_Circle2;
+    [Header("== GameObject ==")]
     [SerializeField] GameObject m_Menu;
+    [SerializeField] GameObject m_ContinueGO;
     [SerializeField] GameObject m_FadePanel;
     [SerializeField] GameObject m_Animantion;
     #endregion
 
+    public ControllerSetting m_Controller { private set; get; }
+
+    private DataSaver m_data;
     private float m_fTimer;
-    private ControllerSetting m_controller;
     private bool m_bSetting;
 
     #region Mono Behaviors
@@ -29,6 +39,7 @@ public class WelcomeButtonController : MonoBehaviour {
         SetStart();
         SetContinue();
         SetExit();
+        SetLoadData();
         m_fTimer = 0.2f;
     }
 
@@ -44,31 +55,10 @@ public class WelcomeButtonController : MonoBehaviour {
             m_fTimer -= Time.fixedDeltaTime;
         }
     }
-    //{
-    //    if (!m_bSetting)
-    //    {
-    //        if (!PlayerManager.Instance.Players.ContainsKey(1) || !PlayerManager.Instance.Players[1].controllerSetting) return;
-    //        else
-    //        {
-    //            m_controller = PlayerManager.Instance.Players[1].controllerSetting;
-    //            m_bSetting = true;
-    //        }
-    //    }
-
-    //    if (m_fTimer < 0)
-    //    {
-    //        if (Input.GetKey(m_controller.Submit))
-    //        {
-    //            Button btn = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
-    //            btn.onClick.Invoke();
-    //            m_fTimer = 1f;
-    //        }
-    //    }
-    //    m_fTimer -= Time.fixedDeltaTime;
-    //}
     #endregion
 
     #region Set Button event
+
     private void SetPress()
     {
         m_Press.onClick.AddListener(() => SetSelectGO(m_Continue));
@@ -79,13 +69,31 @@ public class WelcomeButtonController : MonoBehaviour {
     private void SetStart()
     {
         AddEvent(m_Start);
+        m_Start.onClick.AddListener(() => DataLoader(1, false));
         m_Start.onClick.AddListener(() => StartCoroutine(ChangePanel()));
     }
 
     private void SetContinue()
     {
         AddEvent(m_Continue);
-        m_Continue.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
+        m_Continue.onClick.AddListener(() => SetSelectGO(m_LoadData1));
+        m_Continue.onClick.AddListener(() => Change(m_Menu, m_ContinueGO));
+    }
+
+    private void SetLoadData()
+    {
+        AddEvent(m_LoadData1, false);
+        AddEvent(m_LoadData2, false);
+        AddEvent(m_LoadData3, false);
+        AddEvent(m_LoadData4, false);
+        m_LoadData1.onClick.AddListener(() => DataLoader(1));
+        m_LoadData2.onClick.AddListener(() => DataLoader(2));
+        m_LoadData3.onClick.AddListener(() => DataLoader(3));
+        m_LoadData4.onClick.AddListener(() => DataLoader(4));
+        m_LoadData1.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
+        m_LoadData2.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
+        m_LoadData3.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
+        m_LoadData4.onClick.AddListener(()=> StartCoroutine(ChangeScene()));
     }
 
     private void SetExit()
@@ -109,6 +117,7 @@ public class WelcomeButtonController : MonoBehaviour {
         yield return new WaitForSeconds(1.5f);
         SceneController.Instance.ToLobby();
     }
+
     #endregion
 
     #region Method
@@ -121,20 +130,30 @@ public class WelcomeButtonController : MonoBehaviour {
         m_Exit.interactable = false;
     }
     //Add event into button
-    private void AddEvent(Button btn)
+    private void AddEvent(Button btn, bool circle1 = true)
     {
         EventTrigger trigger = btn.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener((eventdata) => SwitchCircle(btn.gameObject));
+        if (circle1) entry.callback.AddListener((eventdata) => SwitchCircle(btn.gameObject));
+        else entry.callback.AddListener((eventdata) => SwitchCircle(btn.gameObject, false));
         trigger.triggers.Add(entry);
     }
     //Move the circle to the front of the chosen button
-    private void SwitchCircle(GameObject go)
+    private void SwitchCircle(GameObject go, bool circle1 = true)
     {
-        Vector3 pos = m_Circle.transform.position;
-        pos.y = go.transform.position.y;
-        m_Circle.transform.position = pos;
+        if (circle1)
+        {
+            Vector3 pos = m_Circle.transform.position;
+            pos.y = go.transform.position.y;
+            m_Circle.transform.position = pos;
+        }
+        else
+        {
+            Vector3 pos = m_Circle2.transform.position;
+            pos.y = go.transform.position.y;
+            m_Circle2.transform.position = pos;
+        }
     }
     //Change active panel
     private void Change(GameObject pre, GameObject next)
@@ -147,5 +166,35 @@ public class WelcomeButtonController : MonoBehaviour {
     {
         EventSystem.current.SetSelectedGameObject(next.gameObject, null);
     }
+    //Set controller
+    public void SetController(ControllerSetting controller)
+    {
+        m_Controller = controller;
+    } 
+
     #endregion
+
+    #region Start 
+
+    private void CreateData()
+    {
+        if (m_Controller == null) { m_Controller = InputManager.Instance.InputSettingMap[1]; }
+        PlayerManager.Instance.CreatePlayer(1, m_Controller, m_data);
+    }
+
+    private void LoadData()
+    {
+        if (m_Controller == null) { m_Controller = InputManager.Instance.InputSettingMap[1]; }
+        PlayerManager.Instance.LoadPlayer(1, m_Controller, m_data);
+    }
+
+    private void DataLoader(int i, bool load = true)
+    {
+        m_data = DataSaverManager.Instance.DataSaverMap[i];
+        if (!load) CreateData();
+        else LoadData();
+    }
+
+    #endregion
+
 }
