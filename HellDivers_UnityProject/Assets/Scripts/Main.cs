@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     private SceneController m_SceneController;
     private MusicManager m_MusicManager;
     private InputManager m_InputManager = new InputManager();
+    private DataSaverManager m_DataManager = new DataSaverManager();
     private GameData m_GameData = new GameData();
     private PlayerManager m_PlayerManager = new PlayerManager();
 
@@ -22,6 +23,7 @@ public class Main : MonoBehaviour
         m_SceneController = this.gameObject.AddComponent<SceneController>();
         m_PlayerManager.Init();
         m_InputManager.Init();
+        m_DataManager.Init();
     }
 
     // Use this for initialization

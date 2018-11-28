@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum eMissionType
+{
+    Tower,
+    KillMob,
+    Escape,
+}
+
 public enum eMissionPriority
 {
     Main, Escape, Side
@@ -14,6 +21,10 @@ public struct MissionReward
     public int Money;
 }
 
+public delegate void MissionEventHolder();
+
+public delegate void MissionEventTracker(Mission mission);
+
 public class Mission : MonoBehaviour
 {
     public eMissionType Type { get { return m_Type; } }
@@ -25,10 +36,6 @@ public class Mission : MonoBehaviour
     protected bool m_bFinished;
     protected eMissionPriority m_Priority;
     protected MissionReward m_Reward;
-
-    public delegate void MissionEventHolder();
-
-    public delegate void MissionEventTracker(Mission mission);
 
     public MissionEventHolder OnMissionStart;
     public MissionEventHolder OnMissionComplete;

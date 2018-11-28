@@ -2,80 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using HELLDIVERS.UI;
 
-public class UIMissionInfo : MonoBehaviour
+namespace HELLDIVERS.UI.InGame
 {
-    [SerializeField] private Image m_CheckMark;
-    [SerializeField] private Image m_Icon;
-    [SerializeField] private Text m_Description;
-    [SerializeField] private Text m_Count;
-    private eMissionType m_Type;
-    private LinkedList<Mission> m_Missions = new LinkedList<Mission>();
-
-    public void Initialize(Mission mission)
+    public class UIMissionInfo : MonoBehaviour
     {
-        m_Type = mission.Type;
-        SetupDisplay(mission.Type);
-        m_Missions.AddFirst(mission);
-        SubscribeEvents(mission);
-        RefreshCount();
-    }
+        [SerializeField] protected Image m_CheckMark;
+        [SerializeField] protected Image m_Icon;
+        [SerializeField] protected Text m_Description;
+        [SerializeField] protected Text m_Count;
+        protected eMissionType m_Type;
 
-    public void AddMission(Mission mission)
-    {
-        if (mission.Type != m_Type) return;
-
-        m_Missions.AddLast(mission);
-        SubscribeEvents(mission);
-        RefreshCount();
-    }
-
-    private void SetupDisplay(eMissionType type)
-    {
-        switch (type)
+        public void Initialize(Mission mission)
         {
-            case eMissionType.Tower:
-                Sprite icon = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
-                m_Icon.sprite = icon;
-
-                m_Description.text = "Activate Truth Transmitter";
-                break;
+            m_Type = mission.Type;
+            SetupDisplay(mission.Type);
+            OnInitialized(mission);
         }
-    }
 
-    private void SubscribeEvents(Mission mission)
-    {
-        mission.OnMissionComplete += RefreshCount;
-    }
-
-    private void UnsbscribeEvents(Mission mission)
-    {
-        mission.OnMissionComplete += RefreshCount;
-    }
-
-    private void RefreshCount()
-    {
-        int completeCount = 0;
-        foreach (Mission mission in m_Missions)
+        protected virtual void OnInitialized(Mission mission)
         {
-            if (mission.IsFinished) completeCount++;
         }
-        m_Count.text = string.Format("( {0} / {1} )", completeCount, m_Missions.Count); ;
 
-        if (completeCount == m_Missions.Count)
+        protected virtual void SetupDisplay(eMissionType type)
         {
-            m_CheckMark.gameObject.SetActive(true);
-            m_Description.color = UIHelper.Player1_Color;
-            m_Count.color = UIHelper.Player1_Color;
-        }
-    }
+            switch (type)
+            {
+                case eMissionType.Tower:
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
+                    m_Description.text = "Activate Truth Transmitter";
+                    break;
 
-    private void OnDestroy()
-    {
-        foreach (Mission mission in m_Missions)
-        {
-            UnsbscribeEvents(mission);
+                case eMissionType.KillMob:
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionAssassinate");
+                    m_Description.text = "MissionAssassinate";
+                    break;
+            }
         }
     }
 }

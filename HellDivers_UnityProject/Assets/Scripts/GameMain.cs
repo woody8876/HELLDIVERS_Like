@@ -28,6 +28,7 @@ public class GameMain : MonoBehaviour
     private MobManager m_MobSpawner = new MobManager();
     private CameraFollowing m_CameraFollowing;
     private float m_GameStartTime;
+    private bool m_bMissionCompleted;
     [SerializeField] private uint m_NumberOfTowers = 1;
 
     #endregion Private Variable
@@ -68,6 +69,7 @@ public class GameMain : MonoBehaviour
         }
 
         m_MissionManager.CreateTowerMissions(m_NumberOfTowers);
+        m_MissionManager.CreateMission(eMissionType.KillMob);
 
         GameStart();
     }
@@ -116,8 +118,7 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Complete")]
     public void MissionComplete()
     {
-        MusicManager.Instance.PlayMusic(eMusicSelection.MissionSuccess, 3);
-
+        m_bMissionCompleted = true;
         m_RewardManager.SetGameDurationTime(GameTime);
 
         for (int i = 0; i < m_PlayerManager.Players.Count; i++)
@@ -130,9 +131,19 @@ public class GameMain : MonoBehaviour
         {
             foreach (var mission in missionList.Value)
             {
-                m_RewardManager.SetMissionReward(mission.Type, mission.Reward);
+                if (mission.IsFinished) m_RewardManager.SetMissionReward(mission.Type, mission.Reward);
             }
         }
+
+        StartCoroutine(MissionCompleteProgress());
+    }
+
+    private IEnumerator MissionCompleteProgress()
+    {
+        MusicManager.Instance.PlayMusic(eMusicSelection.MissionSuccess, 3);
+        UIInGameMain.Instance.DrawMissionCompletedUI();
+
+        yield return new WaitForSeconds(3);
 
         SceneController.Instance.ToReward();
     }
@@ -140,6 +151,7 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Failed")]
     public void MissionFailed()
     {
+        if (m_bMissionCompleted) return;
         StartCoroutine(MissionFailedProgress());
     }
 

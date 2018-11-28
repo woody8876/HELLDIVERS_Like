@@ -3,53 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIPanelMission : MonoBehaviour
+namespace HELLDIVERS.UI.InGame
 {
-    public static UIPanelMission Instance { get; private set; }
-
-    [SerializeField] private UIMissionInfo m_MissionInfoPrefab;
-
-    private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap;
-
-    private void Awake()
+    public class UIPanelMission : MonoBehaviour
     {
-        if (Instance == null) Instance = this;
-        else Destroy(this.gameObject);
+        public static UIPanelMission Instance { get; private set; }
 
-        m_MissionElementMap = new Dictionary<eMissionType, List<UIMissionInfo>>();
-    }
+        [SerializeField] private UIMissionGroupInfo m_MissionGroupInfoPrefab;
+        [SerializeField] private UIMissionCountInfo m_MissionCountInfoPrefab;
 
-    public void AddMissionInfo(Mission mission)
-    {
-        switch (mission.Type)
+        private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap;
+
+        private void Awake()
         {
-            case eMissionType.Tower:
+            if (Instance == null) Instance = this;
+            else Destroy(this.gameObject);
 
-                List<UIMissionInfo> pList;
-                if (m_MissionElementMap.ContainsKey(mission.Type))
-                {
-                    pList = m_MissionElementMap[mission.Type];
-                }
-                else
-                {
-                    pList = new List<UIMissionInfo>();
-                    m_MissionElementMap.Add(mission.Type, pList);
-                }
+            m_MissionElementMap = new Dictionary<eMissionType, List<UIMissionInfo>>();
+        }
 
-                UIMissionInfo missionUI;
-                if (pList.Count > 0)
-                {
-                    missionUI = pList[0];
-                    missionUI.AddMission(mission);
-                }
-                else
-                {
-                    missionUI = Instantiate(m_MissionInfoPrefab, this.transform);
-                    missionUI.Initialize(mission);
-                    pList.Add(missionUI);
-                }
+        public void AddMissionInfo(Mission mission)
+        {
+            List<UIMissionInfo> pList;
+            if (m_MissionElementMap.ContainsKey(mission.Type))
+            {
+                pList = m_MissionElementMap[mission.Type];
+            }
+            else
+            {
+                pList = new List<UIMissionInfo>();
+                m_MissionElementMap.Add(mission.Type, pList);
+            }
 
-                break;
+            switch (mission.Type)
+            {
+                case eMissionType.Tower:
+
+                    if (pList.Count > 0)
+                    {
+                        UIMissionGroupInfo missionGroupUI = pList[0] as UIMissionGroupInfo;
+                        missionGroupUI.AddMission(mission);
+                    }
+                    else
+                    {
+                        UIMissionGroupInfo missionGroupUI = Instantiate(m_MissionGroupInfoPrefab, this.transform);
+                        missionGroupUI.Initialize(mission);
+                        pList.Add(missionGroupUI);
+                    }
+
+                    break;
+
+                case eMissionType.KillMob:
+                    UIMissionCountInfo missionCountUI = Instantiate(m_MissionCountInfoPrefab, this.transform);
+                    missionCountUI.Initialize(mission);
+                    pList.Add(missionCountUI);
+                    break;
+            }
         }
     }
 }

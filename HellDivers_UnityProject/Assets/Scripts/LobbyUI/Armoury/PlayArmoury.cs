@@ -7,10 +7,8 @@ public class PlayArmoury : MonoBehaviour {
     [SerializeField] GameObject m_PlayerInGame;
 
     #region Private Field
-    ControllerSetting m_controller;
     Dictionary<int, bool> m_dPlayerReady = new Dictionary<int, bool>();
     float f_Timer = 1;
-    bool b_AddPlayer;
     bool b_Loding;
     int[] Members
     {
@@ -25,29 +23,11 @@ public class PlayArmoury : MonoBehaviour {
 
     #region MonoBehaviors
 
-    void Start () {
-        foreach (var item in Members)
-        {
-            CreatPlayerMenu(item);
-        }
-        SetController();
-	}
+    void Start () { foreach (var item in Members) { CreatPlayerMenu(item); } }
 
     void LateUpdate () {
         if (b_Loding) return;
-        else if (!CheckState())
-        {
-            if (b_AddPlayer) return;
-            if (!PlayerManager.Instance.Players.ContainsKey(2) || !PlayerManager.Instance.Players[2].controllerSetting)
-            {
-                if (Input.GetKey(m_controller.Submit))
-                {
-                    PlayerManager.Instance.CreatePlayer(2, m_controller);
-                    CreatPlayerMenu(2);
-                    b_AddPlayer = true;
-                }
-            }
-        }
+        else if (!CheckState()) { return; }
         else
         {
             if (f_Timer < 0)
@@ -63,12 +43,8 @@ public class PlayArmoury : MonoBehaviour {
 
     #region Private Method
 
-    private void SetController()
-    {
-        m_controller = (PlayerManager.Instance.Players[1].controllerSetting == InputManager.Instance.InputSettingMap[1]) ? InputManager.Instance.InputSettingMap[2] : InputManager.Instance.InputSettingMap[1];
-    }
 
-    private void CreatPlayerMenu(int i)
+    public void CreatPlayerMenu(int i)
     {
         Vector3 pos = new Vector3(150 + 810 * (i - 1), 780, 0);
         Quaternion rotate = new Quaternion(0, 0, 0, 1);
