@@ -113,35 +113,35 @@ public class PlayerInfo
 
     public bool RefreshEquipWeapon(List<int> pList)
     {
-        if (weapons.Count < 1) { return false; }
+        if (pList.Count < 1) { return false; }
         weapons = pList;
         return true;
     }
 
     public bool RefreshEquipStratagem(List<int> pList)
     {
-        if (stratagems.Count < 1) { return false; }
+        if (pList.Count < 1) { return false; }
         stratagems = pList;
         return true;
     }
 
     public bool RefreshEquipGrenade(List<int> pList)
     {
-        if (grenades.Count < 1) { return false; }
+        if (pList.Count < 1) { return false; }
         grenades = pList;
         return true;
     }
 
     public bool RefreshUnlockedWeapons(List<int> pList)
     {
-        if (unlockWeapons.Count < 1) { return false; }
+        if (pList.Count < 1) { return false; }
         unlockWeapons = pList;
         return true;
     }
 
     public bool RefreshUnlockedStratagems(List<int> pList)
     {
-        if (unlockStratagems.Count < 1) { return false; }
+        if (pList.Count < 1) { return false; }
         unlockStratagems = pList;
         return true;
     }

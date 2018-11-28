@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataSaverManager : MonoBehaviour {
+public class DataSaverManager{
 
     public static DataSaverManager Instance { private set; get; }
     public Dictionary<int, DataSaver> DataSaverMap { private set; get; }

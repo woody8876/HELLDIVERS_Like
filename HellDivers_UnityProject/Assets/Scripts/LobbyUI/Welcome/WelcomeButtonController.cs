@@ -69,7 +69,7 @@ public class WelcomeButtonController : MonoBehaviour {
     private void SetStart()
     {
         AddEvent(m_Start);
-        m_Start.onClick.AddListener(() => DataLoader(1));
+        m_Start.onClick.AddListener(() => DataLoader(1, false));
         m_Start.onClick.AddListener(() => StartCoroutine(ChangePanel()));
     }
 
@@ -178,11 +178,13 @@ public class WelcomeButtonController : MonoBehaviour {
 
     private void CreateData()
     {
+        if (m_Controller == null) { m_Controller = InputManager.Instance.InputSettingMap[1]; }
         PlayerManager.Instance.CreatePlayer(1, m_Controller, m_data);
     }
 
     private void LoadData()
     {
+        if (m_Controller == null) { m_Controller = InputManager.Instance.InputSettingMap[1]; }
         PlayerManager.Instance.LoadPlayer(1, m_Controller, m_data);
     }
 
