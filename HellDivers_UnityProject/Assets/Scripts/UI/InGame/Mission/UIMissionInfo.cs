@@ -2,40 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using HELLDIVERS.UI;
 
-public class UIMissionInfo : MonoBehaviour
+namespace HELLDIVERS.UI.InGame
 {
-    [SerializeField] protected Image m_CheckMark;
-    [SerializeField] protected Image m_Icon;
-    [SerializeField] protected Text m_Description;
-    [SerializeField] protected Text m_Count;
-    protected eMissionType m_Type;
-
-    public void Initialize(Mission mission)
+    public class UIMissionInfo : MonoBehaviour
     {
-        m_Type = mission.Type;
-        SetupDisplay(mission.Type);
-        OnInitialized(mission);
-    }
+        [SerializeField] protected Image m_CheckMark;
+        [SerializeField] protected Image m_Icon;
+        [SerializeField] protected Text m_Description;
+        [SerializeField] protected Text m_Count;
+        protected eMissionType m_Type;
 
-    protected virtual void OnInitialized(Mission mission)
-    {
-    }
-
-    protected virtual void SetupDisplay(eMissionType type)
-    {
-        switch (type)
+        public void Initialize(Mission mission)
         {
-            case eMissionType.Tower:
-                m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
-                m_Description.text = "Activate Truth Transmitter";
-                break;
+            m_Type = mission.Type;
+            SetupDisplay(mission.Type);
+            OnInitialized(mission);
+        }
 
-            case eMissionType.KillMob:
-                m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionAssassinate");
-                m_Description.text = "MissionAssassinate";
-                break;
+        protected virtual void OnInitialized(Mission mission)
+        {
+        }
+
+        protected virtual void SetupDisplay(eMissionType type)
+        {
+            switch (type)
+            {
+                case eMissionType.Tower:
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
+                    m_Description.text = "Activate Truth Transmitter";
+                    break;
+
+                case eMissionType.KillMob:
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionAssassinate");
+                    m_Description.text = "MissionAssassinate";
+                    break;
+            }
         }
     }
 }

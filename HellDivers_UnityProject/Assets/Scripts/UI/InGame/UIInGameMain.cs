@@ -14,6 +14,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private UIDynamicHpBar m_DynamicHpBar;
         [SerializeField] private UIPanelMission m_PanelMissionInfo;
         [SerializeField] private UIDynamicMissionMsg m_DynamicMissionMsg;
+        [SerializeField] private UIPanelMissionComplete m_PanelMissionCompleted;
         [SerializeField] private UIPanelMissionFailed m_PanelMissionFaild;
         [SerializeField] private UIPanelRadar m_PanelRadar;
         [SerializeField] private UIPanelMap m_PanelMap;
@@ -24,6 +25,7 @@ namespace HELLDIVERS.UI.InGame
             m_PanelPlayerInfo = Instantiate(m_PanelPlayerInfo, this.transform);
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform);
             m_PanelMissionInfo = Instantiate(m_PanelMissionInfo, this.transform);
+            m_PanelMissionCompleted = Instantiate(m_PanelMissionCompleted, this.transform);
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform);
             m_PanelRadar = Instantiate(m_PanelRadar, this.transform);
             m_PanelMap = Instantiate(m_PanelMap, this.transform);
@@ -89,6 +91,12 @@ namespace HELLDIVERS.UI.InGame
         public void AddMissionInfo(Mission mission)
         {
             m_PanelMissionInfo.AddMissionInfo(mission);
+        }
+
+        public void DrawMissionCompletedUI()
+        {
+            m_PanelMissionCompleted.transform.SetAsLastSibling();
+            m_PanelMissionCompleted.StartUI();
         }
 
         public void DrawMissionFailedUI()
