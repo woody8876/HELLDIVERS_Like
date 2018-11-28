@@ -45,7 +45,7 @@ namespace HELLDIVERS.UI
             CreateDetail("DEATH", currentRecord.TimesOfDeath);
             CreateDetail("KILLS", currentRecord.NumOfKills);
             CreateDetail("SHOTS", currentRecord.Shots);
-            CreateDetail("MONEY", currentRecord.Money);
+            CreateDetail("MONEY", currentRecord.Money + missionReward.Money);
 
             DrawUI();
         }

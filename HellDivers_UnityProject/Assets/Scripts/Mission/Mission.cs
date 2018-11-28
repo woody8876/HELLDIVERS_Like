@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MissionPriority
+public enum eMissionPriority
 {
     Main, Escape, Side
 }
@@ -17,13 +17,13 @@ public struct MissionReward
 public class Mission : MonoBehaviour
 {
     public eMissionType Type { get { return m_Type; } }
-    public MissionPriority Priority { get { return m_Priority; } }
+    public eMissionPriority Priority { get { return m_Priority; } }
     public bool IsFinished { get { return m_bFinished; } }
     public MissionReward Reward { get { return m_Reward; } }
 
     protected eMissionType m_Type;
     protected bool m_bFinished;
-    protected MissionPriority m_Priority;
+    protected eMissionPriority m_Priority;
     protected MissionReward m_Reward;
 
     public delegate void MissionEventHolder();

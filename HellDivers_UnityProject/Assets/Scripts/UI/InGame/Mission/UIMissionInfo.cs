@@ -16,7 +16,7 @@ public class UIMissionInfo : MonoBehaviour
     public void Initialize(Mission mission)
     {
         m_Type = mission.Type;
-        SetIcon(mission.Type);
+        SetupDisplay(mission.Type);
         m_Missions.AddFirst(mission);
         SubscribeEvents(mission);
         RefreshCount();
@@ -31,13 +31,15 @@ public class UIMissionInfo : MonoBehaviour
         RefreshCount();
     }
 
-    private void SetIcon(eMissionType type)
+    private void SetupDisplay(eMissionType type)
     {
         switch (type)
         {
             case eMissionType.Tower:
                 Sprite icon = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
                 m_Icon.sprite = icon;
+
+                m_Description.text = "Activate Truth Transmitter";
                 break;
         }
     }
