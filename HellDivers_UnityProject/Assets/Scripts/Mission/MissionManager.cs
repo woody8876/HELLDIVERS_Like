@@ -7,10 +7,10 @@ public class MissionManager
 {
     public static MissionManager Instance { get; private set; }
     public int MainMissionCount { get; private set; }
-    public Dictionary<MissionPriority, List<Mission>> Missions { get { return m_Missions; } }
+    public Dictionary<eMissionPriority, List<Mission>> Missions { get { return m_Missions; } }
 
     private MissionFactory m_Factory = new MissionFactory();
-    private Dictionary<MissionPriority, List<Mission>> m_Missions = new Dictionary<MissionPriority, List<Mission>>();
+    private Dictionary<eMissionPriority, List<Mission>> m_Missions = new Dictionary<eMissionPriority, List<Mission>>();
 
     public void Init()
     {
@@ -69,7 +69,7 @@ public class MissionManager
             m_Missions.Add(mission.Priority, pList);
         }
 
-        if (mission.Priority == MissionPriority.Main)
+        if (mission.Priority == eMissionPriority.Main)
         {
             MainMissionCount++;
             mission.OnMissionComplete += () => { MainMissionCount--; };

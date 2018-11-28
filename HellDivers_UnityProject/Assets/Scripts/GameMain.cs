@@ -140,9 +140,18 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Failed")]
     public void MissionFailed()
     {
+        StartCoroutine(MissionFailedProgress());
+    }
+
+    private IEnumerator MissionFailedProgress()
+    {
         MusicManager.Instance.PlayMusic(eMusicSelection.MissionFailed, 3);
 
+        yield return new WaitForSeconds(3);
+
         UIInGameMain.Instance.DrawMissionFailedUI();
+
+        yield break;
     }
 
     [ContextMenu("Mission Abandon")]

@@ -67,6 +67,7 @@ public class MissionTower : Mission, IInteractable
 
     public void Initialize(MissionTowerData data)
     {
+        m_Priority = data.Priority;
         m_Type = data.Type;
         m_Reward = data.Reward;
         m_Data = ScriptableObject.CreateInstance<MissionTowerData>();
