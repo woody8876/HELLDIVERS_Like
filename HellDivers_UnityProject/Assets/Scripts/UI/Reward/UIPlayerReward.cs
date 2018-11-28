@@ -25,7 +25,7 @@ namespace HELLDIVERS.UI
         [SerializeField] private UIPlayerRewardDetail m_RewardDetailPrefab;
         private List<UIPlayerRewardDetail> m_Details = new List<UIPlayerRewardDetail>();
 
-        public void Initialize(PlayerInfo player, PlayerRecord record, int serialNumber = 1)
+        public void Initialize(PlayerInfo player, PlayerRecord record, MissionReward missionReward, int serialNumber = 1)
         {
             currentPlayer = player;
             currentRecord = record;
@@ -40,7 +40,7 @@ namespace HELLDIVERS.UI
 
             m_ExpBar = Instantiate(m_ExpBar, this.transform);
             m_ExpBar.OnRankUpdate += RefreshRankInfo;
-            m_ExpBar.Initialize(currentPlayer.Exp, currentPlayer.Exp + record.Exp, currentPlayer.Rank);
+            m_ExpBar.Initialize(currentPlayer.Exp, currentPlayer.Exp + record.Exp + missionReward.EXP, currentPlayer.Rank);
 
             CreateDetail("DEATH", currentRecord.TimesOfDeath);
             CreateDetail("KILLS", currentRecord.NumOfKills);

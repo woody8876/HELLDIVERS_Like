@@ -11,3 +11,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb3bd59865397c49b691d5fd0e887a8, type: 3}
   m_Name: MissionTowerSetting
   m_EditorClassIdentifier: 
+  m_Type: 0
+  m_Reward:
+    EXP: 1000
+    Money: 3000
+  m_Id: MissionTower
+  m_InteractRadius: 4
+  m_ActivateRadius: 15
+  m_MinRadius: 20
+  m_MaxRadius: 25
+  m_ActivatingTime: 1
+  m_MobSpawnTime: 10
+  m_CodeLenghtMin: 6
+  m_CodeLenghtMax: 8
+  m_MobNum: 5

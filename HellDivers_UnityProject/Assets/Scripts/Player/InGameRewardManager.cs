@@ -10,6 +10,7 @@ public class InGameRewardManager : MonoBehaviour
     public float GameDurationTime { get { return m_GameDurationTime; } }
     public Dictionary<int, PlayerRecord> PlayerRewardMap { get { return m_RecordMap; } }
     private Dictionary<int, PlayerRecord> m_RecordMap;
+    private Dictionary<eMissionType, List<MissionReward>> m_MissionRewardMap;
     private float m_GameDurationTime;
 
     private void Awake()
@@ -26,6 +27,7 @@ public class InGameRewardManager : MonoBehaviour
     private void Start()
     {
         m_RecordMap = new Dictionary<int, PlayerRecord>();
+        m_MissionRewardMap = new Dictionary<eMissionType, List<MissionReward>>();
         DontDestroyOnLoad(this);
     }
 
@@ -46,6 +48,38 @@ public class InGameRewardManager : MonoBehaviour
         m_GameDurationTime = time;
     }
 
+    public void SetMissionReward(eMissionType type, MissionReward reward)
+    {
+        List<MissionReward> pList;
+        if (m_MissionRewardMap.ContainsKey(type))
+        {
+            pList = m_MissionRewardMap[type];
+        }
+        else
+        {
+            pList = new List<MissionReward>();
+            m_MissionRewardMap.Add(type, pList);
+        }
+
+        pList.Add(reward);
+    }
+
+    public MissionReward CaculateAllMissionReward()
+    {
+        MissionReward reward = new MissionReward();
+
+        foreach (var missions in m_MissionRewardMap)
+        {
+            foreach (var missionReward in missions.Value)
+            {
+                reward.EXP += missionReward.EXP;
+                reward.Money += missionReward.Money;
+            }
+        }
+
+        return reward;
+    }
+
     public void ApplyRewardToPlayers()
     {
         foreach (var player in PlayerManager.Instance.Players)
@@ -55,6 +89,10 @@ public class InGameRewardManager : MonoBehaviour
 
             info.AddExp(record.Exp);
             info.AddMoney(record.Money);
+
+            MissionReward missionReward = CaculateAllMissionReward();
+            info.AddExp(missionReward.EXP);
+            info.AddMoney(missionReward.Money);
         }
 
         Destroy(this.gameObject);

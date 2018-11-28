@@ -7,6 +7,13 @@ public enum MissionPriority
     Main, Escape, Side
 }
 
+[System.Serializable]
+public struct MissionReward
+{
+    public int EXP;
+    public int Money;
+}
+
 public class Mission : MonoBehaviour
 {
     public eMissionType Type { get { return m_Type; } }
@@ -19,13 +26,9 @@ public class Mission : MonoBehaviour
     protected MissionPriority m_Priority;
     protected MissionReward m_Reward;
 
-    public class MissionReward
-    {
-        public int EXP { get; set; }
-        public int Money { get; set; }
-    }
+    public delegate void MissionEventHolder();
 
-    public delegate void MissionEventHolder(Mission mission);
+    public delegate void MissionEventTracker(Mission mission);
 
     public MissionEventHolder OnMissionStart;
     public MissionEventHolder OnMissionComplete;
@@ -33,7 +36,7 @@ public class Mission : MonoBehaviour
     public void StartMission()
     {
         OnStart();
-        if (OnMissionStart != null) OnMissionStart(this);
+        if (OnMissionStart != null) OnMissionStart();
     }
 
     protected virtual void OnStart()
@@ -42,6 +45,6 @@ public class Mission : MonoBehaviour
 
     protected void CompleteMission()
     {
-        if (OnMissionComplete != null) OnMissionComplete(this);
+        if (OnMissionComplete != null) OnMissionComplete();
     }
 }
