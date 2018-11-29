@@ -25,13 +25,11 @@ public class UIMissionBriefingPoint : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         MovePoint();
-        if (UIMissionBriefingMap.Instance.PointList == null) return;
 
         if (UIMissionBriefingMap.Instance.PointList.Count < 1) return;
-
         foreach(GameObject go in UIMissionBriefingMap.Instance.PointList)
         {
-            if (Vector3.Distance(this.transform.position, go.transform.position) < 5f)
+            if (Vector3.Distance(this.transform.position, go.transform.position) < 20f)
             {
                 if (Select != null) Select();
             }
@@ -44,33 +42,32 @@ public class UIMissionBriefingPoint : MonoBehaviour {
 
     private void MovePoint()
     {
-        m_RectWidth = UIMissionBriefingMap.Instance.RectWidth;
-        m_RectHeight = UIMissionBriefingMap.Instance.RectHeight;
-        float h = Input.GetAxis("StratagemHorizontal");
-        float v = Input.GetAxis("StratagemVertical");
-        this.transform.localPosition += new Vector3(h, v, 0) * 2f;
-        if (this.transform.localPosition.x > m_RectWidth * 0.5f)
+        float h = Input.GetAxis("DirectionHorizontal");
+        float v = Input.GetAxis("DirectionVertical");
+        this.transform.localPosition += new Vector3(h, v, 0) * 3f;
+
+        if (this.transform.localPosition.x > 350)
         {
             m_Pos = this.transform.localPosition;
-            m_Pos.x = m_RectWidth * 0.5f;
+            m_Pos.x = 350;
             this.transform.localPosition = m_Pos;
         }
-        else if (this.transform.localPosition.x < m_RectWidth * 0.5f * -1.0f)
+        else if (this.transform.localPosition.x < -350)
         {
             m_Pos = this.transform.localPosition;
-            m_Pos.x = m_RectWidth * 0.5f * -1.0f;
+            m_Pos.x = -350;
             this.transform.localPosition = m_Pos;
         }
-        if (this.transform.localPosition.y > m_RectHeight * 0.5f)
+        if (this.transform.localPosition.y > 250)
         {
             m_Pos = this.transform.localPosition;
-            m_Pos.y = m_RectHeight * 0.5f;
+            m_Pos.y = 250;
             this.transform.localPosition = m_Pos;
         }
-        else if (this.transform.localPosition.y < m_RectHeight * 0.5f * -1.0f)
+        else if (this.transform.localPosition.y < -250)
         {
             m_Pos = this.transform.localPosition;
-            m_Pos.y = m_RectHeight * 0.5f * -1.0f;
+            m_Pos.y = -250;
             this.transform.localPosition = m_Pos;
         }
     }

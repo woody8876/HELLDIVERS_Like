@@ -49,6 +49,7 @@ public class UIMissionBriefingMapPoint : MonoBehaviour {
         m_Image.color = m_Color;
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
+            //Spawn Player...
             Debug.Log("HAHAHA");
         }
     }

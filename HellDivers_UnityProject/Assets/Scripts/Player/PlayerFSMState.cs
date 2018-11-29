@@ -702,7 +702,7 @@ public class PlayerFSMRollState : PlayerFSMState
         AnimatorStateInfo info = data.m_PAC.Animator.GetCurrentAnimatorStateInfo(3);
         if (info.IsName("Roll"))
         {
-            if (info.normalizedTime > 0.8f)
+            if (info.normalizedTime >= 1.0f)
             {
                 data.m_Collider.enabled = true;
                 data.m_PlayerFSM.PerformPreviousTransition();
