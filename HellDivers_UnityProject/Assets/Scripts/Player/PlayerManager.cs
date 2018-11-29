@@ -76,6 +76,11 @@ public class PlayerManager
         return player;
     }
 
+    public void UnloadPlayerMap()
+    {
+        m_PlayerMap.Clear();
+    }
+
     public void SavePlayerInfo(int i)
     {
         PlayerInfo info = Players[i].info;

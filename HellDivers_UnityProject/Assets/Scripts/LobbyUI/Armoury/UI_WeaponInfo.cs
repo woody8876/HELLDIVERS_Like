@@ -22,14 +22,19 @@ public class UI_WeaponInfo : MonoBehaviour {
         SetUI(m_iCurrentID);
         Get_Power(out cur, out next, out max);
         m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_FireRate(out cur, out next, out max);
-        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max));
-        Get_Stability(out cur, out next, out max);
-        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max));
+
         Get_Magazine(out cur, out next, out max);
-        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max));
+        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max));
+
+        Get_FireRate(out cur, out next, out max);
+        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max));
+
         Get_Range(out cur, out next, out max);
+        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max));
+
+        Get_Stability(out cur, out next, out max);
         m_Stability.SetAbility(m_Stability.name, GetLength(cur, max), GetLength(next, max));
+
         Get_FireMode(out mode);
         m_FireMode.SetWord(m_FireMode.name, mode);
     }
