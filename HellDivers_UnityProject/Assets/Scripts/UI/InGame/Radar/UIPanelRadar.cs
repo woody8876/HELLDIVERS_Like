@@ -8,8 +8,9 @@ public class UIPanelRadar : MonoBehaviour {
     public delegate void UIRadarEventHolder();
     public event UIRadarEventHolder UpdatePoint;
 
-    #region Variable
     public static UIPanelRadar Instance { get; private set; }
+
+    #region Variable
     private GameObject m_GORadarPoint;
     public float RectWidth { get { return m_RectWidth; } }
     public float RectHeight { get { return m_RectHeight; } }

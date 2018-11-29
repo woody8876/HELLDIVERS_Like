@@ -1,22 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIMissionBriefingMapPoint : MonoBehaviour {
 
+    #region Variable
     private Vector3 m_Pos = new Vector3();
     private Vector3 m_Center = new Vector3();
     private Vector3 m_Dir = new Vector3();
+    private Image m_Image;
+    private Color m_OriColor;
+    private Color m_Color;
+    #endregion
+
     public GameObject CurrentTarget { get { return m_CurrentTarget; } }
     private GameObject m_CurrentTarget;
     private eMapPointType m_CurrentType;
-    [SerializeField] private UIMissionBriefingPoint m_Point;
+
     public void Init(GameObject target, eMapPointType type)
     {
+        m_Image = this.GetComponent<Image>();
+        m_OriColor = m_Image.color;
+        m_Color = m_Image.color;
+
         m_CurrentTarget = target;
         m_CurrentType = type;
         FindRadarCenter();
         CalculatePosition();
+        UIMissionBriefingPoint.Instance.Select += Selected;
+        UIMissionBriefingPoint.Instance.UnSelect += UnSelected;
     }
 	// Use this for initialization
 	void Start () {
@@ -25,11 +38,24 @@ public class UIMissionBriefingMapPoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Vector3.Distance(this.transform.position, m_Point.transform.position) < 10f)
-        {
-            Debug.Log("Close");
-        }
+
 	}
+
+    private void Selected()
+    {
+        m_Color.r = 192; 
+        m_Color.g = 192;
+        m_Color.b = 192;
+        m_Image.color = m_Color;
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Debug.Log("HAHAHA");
+        }
+    }
+    private void UnSelected()
+    {
+        m_Image.color = m_OriColor;
+    }
 
     private void FindRadarCenter()
     {

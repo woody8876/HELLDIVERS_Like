@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class UIMissionBriefingPoint : MonoBehaviour {
 
-    [SerializeField] private GameObject m_GO;
+    #region Event
+    public delegate void UIMissionBriefingPointHolder();
+    public event UIMissionBriefingPointHolder Select;
+    public event UIMissionBriefingPointHolder UnSelect;
+    #endregion
+
+    public static UIMissionBriefingPoint Instance { get; private set; }
+
     [SerializeField] private UIMissionBriefingMap m_Map;
     private RectTransform m_MapRect;
     private Vector3 m_Pos;
@@ -12,18 +19,27 @@ public class UIMissionBriefingPoint : MonoBehaviour {
     private float m_RectHeight;
     // Use this for initialization
     void Start () {
-        m_GO = Instantiate(m_GO);
-        m_GO.transform.position = new Vector3(366f, 54.6f, 337f);
+        if (Instance == null) Instance = this;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            UIMissionBriefingMap.Instance.AddPointPrefab(m_GO, eMapPointType.MISSIONTOWER);
-        }
         MovePoint();
+        if (UIMissionBriefingMap.Instance.PointList == null) return;
 
+        if (UIMissionBriefingMap.Instance.PointList.Count < 1) return;
+
+        foreach(GameObject go in UIMissionBriefingMap.Instance.PointList)
+        {
+            if (Vector3.Distance(this.transform.position, go.transform.position) < 5f)
+            {
+                if (Select != null) Select();
+            }
+            else
+            {
+                if (UnSelect != null) UnSelect();
+            } 
+        }
     }
 
     private void MovePoint()

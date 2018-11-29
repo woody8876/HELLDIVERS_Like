@@ -358,6 +358,7 @@ public class MobManager
                 break;
         }
     }
+
     public void AddTotalKill()
     {
         m_TotalTankKill++;

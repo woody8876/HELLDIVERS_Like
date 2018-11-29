@@ -6,6 +6,7 @@ public class UIMissionBriefingMap : MonoBehaviour {
 
     public static UIMissionBriefingMap Instance { get; private set; }
     
+    [SerializeField] private GameObject m_GOMapPoint;
     private RectTransform m_RectTransform;
     public float RectWidth { get { return m_RectWidth; } }
     public float RectHeight { get { return m_RectHeight; } }
@@ -17,7 +18,10 @@ public class UIMissionBriefingMap : MonoBehaviour {
     private float m_MapWidth = 544.0f;
     private float m_MapHeight = 720.0f;
 
-    [SerializeField] private GameObject m_GOMapPoint;
+    public List<GameObject> PointList { get { return m_PointList; } }
+    private List<GameObject> m_PointList = new List<GameObject>();
+
+
     // Use this for initialization
     void Start () {
         if (Instance == null) Instance = this;
@@ -42,5 +46,6 @@ public class UIMissionBriefingMap : MonoBehaviour {
         p = go.GetComponent<UIMissionBriefingMapPoint>();
         p.transform.SetParent(this.transform);
         p.Init(target, type);
+        m_PointList.Add(go);
     }
 }
