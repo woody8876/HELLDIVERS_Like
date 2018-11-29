@@ -8,6 +8,7 @@ namespace HELLDIVERS.UI.InGame
     public class UIInGameMain : MonoBehaviour
     {
         public static UIInGameMain Instance { get; private set; }
+        public float UIMissionCompleteTimeLenght { get { return m_PanelMissionCompleted.TimeLenght; } }
 
         [SerializeField] private UIPanelPlayerInfo m_PanelPlayerInfo;
         [SerializeField] private UIPanelStratagemAct m_PanelStratagemAct;

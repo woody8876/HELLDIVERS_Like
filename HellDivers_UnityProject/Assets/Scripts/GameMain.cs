@@ -143,7 +143,7 @@ public class GameMain : MonoBehaviour
         MusicManager.Instance.PlayMusic(eMusicSelection.MissionSuccess, 3);
         UIInGameMain.Instance.DrawMissionCompletedUI();
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(UIInGameMain.Instance.UIMissionCompleteTimeLenght);
 
         SceneController.Instance.ToReward();
     }

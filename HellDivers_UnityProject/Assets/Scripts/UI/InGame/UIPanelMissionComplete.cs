@@ -4,29 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using HELLDIVERS.UI;
 
-[RequireComponent(typeof(UITweenCanvasGroup))]
 public class UIPanelMissionComplete : MonoBehaviour
 {
-    private UITweenCanvasGroup m_PanelTweener;
-    [SerializeField] private UITweenCanvasGroup m_TitleTweener;
+    public float TimeLenght { get { return m_BackgroundTweener.TimeLenght + m_TitleDelay + m_TitleTweener.TimeLenght + m_OverlayDelay + m_OverlayTweener.TimeLenght; } }
 
-    private void Awake()
-    {
-        this.gameObject.SetActive(false);
-        m_PanelTweener = this.GetComponent<UITweenCanvasGroup>();
-    }
+    [SerializeField] private UITweenCanvasGroup m_BackgroundTweener;
+    [SerializeField] private float m_TitleDelay;
+    [SerializeField] private UITweenCanvasGroup m_TitleTweener;
+    [SerializeField] private float m_OverlayDelay;
+    [SerializeField] private UITweenCanvasGroup m_OverlayTweener;
 
     public void StartUI()
     {
+        this.gameObject.SetActive(true);
         StartCoroutine(OnStartUI());
     }
 
     private IEnumerator OnStartUI()
     {
-        yield return null;
-        m_PanelTweener.Play();
-        yield return new WaitForSeconds(m_PanelTweener.TimeLenght);
+        m_BackgroundTweener.Play();
+
+        yield return new WaitForSeconds(m_BackgroundTweener.TimeLenght * m_TitleDelay);
+
         m_TitleTweener.Play();
+
+        yield return new WaitForSeconds(m_TitleTweener.TimeLenght + m_OverlayDelay);
+
+        m_OverlayTweener.Play();
+
         yield break;
     }
 }
