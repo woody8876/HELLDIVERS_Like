@@ -29,13 +29,13 @@ namespace HELLDIVERS.UI.InGame
             switch (type)
             {
                 case eMissionType.Tower:
-                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionTower");
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "icon_Mission_01");
                     m_Description.text = "Activate Truth Transmitter";
                     break;
 
                 case eMissionType.KillMob:
-                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "MissionAssassinate");
-                    m_Description.text = "MissionAssassinate";
+                    m_Icon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.MissionIconFolder, "icon_Mission_02");
+                    m_Description.text = "Exterminate Enemys";
                     break;
             }
         }

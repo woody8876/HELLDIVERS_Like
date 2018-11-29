@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI
 {
+    public delegate void UIEventHolder();
+
     public static class UIHelper
     {
         public static string RankIconFolder { get { return Setting.RankIconFolder; } }

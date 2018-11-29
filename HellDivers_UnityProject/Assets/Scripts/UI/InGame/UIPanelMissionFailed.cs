@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using HELLDIVERS.UI.InGame;
+using HELLDIVERS.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIPanelMissionFailed : MonoBehaviour
@@ -15,12 +15,11 @@ public class UIPanelMissionFailed : MonoBehaviour
     [SerializeField] private float m_TargetAlpha = 0.5f;
     private CanvasGroup m_CanvasGroup;
 
-    private delegate void DoStateFunc();
-
-    private DoStateFunc DoState;
+    private UIEventHolder DoState;
 
     private void Awake()
     {
+        this.gameObject.SetActive(false);
         m_CanvasGroup = this.GetComponent<CanvasGroup>();
     }
 
