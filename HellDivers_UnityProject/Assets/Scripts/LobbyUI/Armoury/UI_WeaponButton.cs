@@ -20,7 +20,6 @@ public class UI_WeaponButton : MonoBehaviour {
     private Color m_NonSelectableColor = new Color(1, 1, 1, 0.286f);
     private Color m_tCostColor = new Color(1, 0.81f, 0.18f, 1);
     private Color m_tNotEnough = new Color(1, 0.18f, 0.18f, 1);
-    private string m_text = "Next Level Cost : ";
     private int mi_money;
     private bool mb_costing;
 
@@ -104,11 +103,10 @@ public class UI_WeaponButton : MonoBehaviour {
     #endregion
 
     #region Button Method
-    private bool CheckLevelUp()
+    public bool CheckLevelUp()
     {
         int id = weaponDisplay.Info.ID;
         int cost = GameData.Instance.WeaponInfoTable[id].Cost;
-        m_Cost.text = m_text + cost.ToString();
         m_Cost.color = m_tCostColor;
         int money = PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money;
         if (money < cost)

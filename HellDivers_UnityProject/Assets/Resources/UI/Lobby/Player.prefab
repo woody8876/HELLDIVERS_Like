@@ -1911,13 +1911,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec71528da0115bc4f82c3596fa1843b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_iType: 0
-  m_iCurrentID: 0
   m_WeaponName: {fileID: 114412117573305734}
   m_IWeaponTexture: {fileID: 114451155824471726}
   m_WeaponAbilities: {fileID: 1740527507125466}
   m_WeaponAbility: {fileID: 1337865797162270, guid: c163b241f717a8648a9da88458e6852d,
     type: 2}
+  m_Cost: {fileID: 114301887072482912}
+  m_iType: 0
+  m_iCurrentID: 0
+  m_tCost: 'Next Level Cost : '
 --- !u!114 &114816275175198532
 MonoBehaviour:
   m_ObjectHideFlags: 1
