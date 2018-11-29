@@ -60,7 +60,13 @@ public class InGamePlayerManager : MonoBehaviour
 
         foreach (KeyValuePair<Player, PlayerInfo> player in m_PlayerMap)
         {
-            player.Key.transform.position = spawnPos.position;
+            Vector3 position = spawnPos.position;
+            if (Physics.CheckSphere(spawnPos.position, 2.0f, 1 << LayerMask.NameToLayer("Player")))
+            {
+                position = Quaternion.Euler(0.0f, Random.Range(0.0f, 360.0f), 0.0f) * spawnPos.forward * 2.0f + position;
+            }
+
+            player.Key.transform.position = position;
             player.Key.gameObject.SetActive(true);
 
             if (GameMain.Instance.CameraFolloing.Targets.Count <= 0)
