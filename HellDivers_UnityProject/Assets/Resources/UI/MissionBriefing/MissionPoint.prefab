@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224179189963092920}
   - component: {fileID: 222882468145922896}
   - component: {fileID: 114208114749822284}
-  - component: {fileID: 114743154390943892}
+  - component: {fileID: 114100800982733946}
   m_Layer: 5
   m_Name: MissionPoint
   m_TagString: Untagged
@@ -29,6 +29,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114100800982733946
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1327004161480418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e8765a00d32a334fbb5c2d5b07b80a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Icon: {fileID: 114208114749822284}
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HighlightColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &114208114749822284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,19 +70,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114743154390943892
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1327004161480418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad118d94993c514ca3c34c2e6d0af6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-  m_HighLightColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!222 &222882468145922896
 CanvasRenderer:
   m_ObjectHideFlags: 1

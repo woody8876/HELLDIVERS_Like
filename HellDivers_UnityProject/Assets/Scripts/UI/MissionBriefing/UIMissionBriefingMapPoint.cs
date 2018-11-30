@@ -34,34 +34,34 @@ public class UIMissionBriefingMapPoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (UIMissionBriefing.Instance.Target == this.gameObject)
-        {
-            m_Image.color = m_HighLightColor;
-            return;
-        }
-        if (Vector3.Distance(this.transform.position, UIMissionBriefing.Instance.Concentric.transform.position) < 20f)
-        {
-            Selected();
-        }
-        else
-        {
-            UnSelected();
-        }
+        //if (UIMissionBriefing.Instance.Target == this.gameObject)
+        //{
+        //    m_Image.color = m_HighLightColor;
+        //    return;
+        //}
+        //if (Vector3.Distance(this.transform.position, UIMissionBriefing.Instance.Concentric.transform.position) < 20f)
+        //{
+        //    Selected();
+        //}
+        //else
+        //{
+        //    UnSelected();
+        //}
 	}
 
-    private void Selected()
-    {
-        m_Image.color = m_HighLightColor;
+    //private void Selected()
+    //{
+    //    m_Image.color = m_HighLightColor;
 
-        UIMissionBriefing.Instance.Map.SetHightLight(this);
-    }
+    //    UIMissionBriefing.Instance.Map.SetHightLight(this);
+    //}
 
-    private void UnSelected()
-    {
-        m_Image.color = m_NormalColor;
+    //private void UnSelected()
+    //{
+    //    m_Image.color = m_NormalColor;
 
-        UIMissionBriefing.Instance.Map.DeleteHighLight(this);
-    }
+    //    UIMissionBriefing.Instance.Map.DeleteHighLight(this);
+    //}
 
     private void FindRadarCenter()
     {

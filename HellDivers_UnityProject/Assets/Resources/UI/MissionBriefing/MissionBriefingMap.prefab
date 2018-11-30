@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 224331666982650158}
   - component: {fileID: 114623087332134110}
   m_Layer: 5
-  m_Name: Point
+  m_Name: Concentric
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 222501436875513524}
   - component: {fileID: 114944419572540696}
   m_Layer: 5
-  m_Name: Map
+  m_Name: MapRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -526,8 +526,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MapPointRoot: {fileID: 224342902069937020}
   m_Concentric: {fileID: 114623087332134110}
-  m_SpawnPointPrefab: {fileID: 0}
-  m_TowerPointPrefab: {fileID: 0}
+  m_SpawnPointPrefab: {fileID: 114516048795282732, guid: 6b092a131f9c62e44b2c7ae9b8ff3a45,
+    type: 2}
+  m_TowerPointPrefab: {fileID: 114100800982733946, guid: fca1c54aa044fa4429a8989cd8bc564f,
+    type: 2}
 --- !u!114 &114990710658359552
 MonoBehaviour:
   m_ObjectHideFlags: 1

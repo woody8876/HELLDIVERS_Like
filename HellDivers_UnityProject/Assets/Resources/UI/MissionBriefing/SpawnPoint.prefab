@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224179189963092920}
   - component: {fileID: 222882468145922896}
   - component: {fileID: 114208114749822284}
-  - component: {fileID: 114743154390943892}
+  - component: {fileID: 114516048795282732}
   m_Layer: 5
   m_Name: SpawnPoint
   m_TagString: Untagged
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114743154390943892
+--- !u!114 &114516048795282732
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -64,11 +64,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1327004161480418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad118d94993c514ca3c34c2e6d0af6d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e8765a00d32a334fbb5c2d5b07b80a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Icon: {fileID: 114208114749822284}
   m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-  m_HighLightColor: {r: 1, g: 0, b: 0, a: 1}
+  m_HighlightColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!222 &222882468145922896
 CanvasRenderer:
   m_ObjectHideFlags: 1

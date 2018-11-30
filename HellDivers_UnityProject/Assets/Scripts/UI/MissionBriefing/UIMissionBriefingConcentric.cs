@@ -23,8 +23,6 @@ public class UIMissionBriefingConcentric : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            //Update Mission....
-            UIMissionBriefing.Instance.Map.Select();
             UIMissionBriefing.Instance.ComfirmSpawnPosition();
         }
     }
