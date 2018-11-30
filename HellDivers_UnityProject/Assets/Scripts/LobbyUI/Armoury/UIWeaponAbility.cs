@@ -14,15 +14,15 @@ public class UIWeaponAbility : MonoBehaviour {
     [Header("== Set GameObject ==")]
     [SerializeField] GameObject m_Ability;
     [SerializeField] Text m_FireMode;
-    Vector2 vec = new Vector2();
+    Vector2 vec = new Vector2(0 , 35);
 
     public void SetAbility(string name, float currentWidth, float nextWidth)
     {
         m_Ability.SetActive(true);
         m_WeaponName.text = name;
-        vec.Set(currentWidth, 35);
+        vec.x = currentWidth;
         m_Current.sizeDelta = vec;
-        vec.Set(nextWidth, 35);
+        vec.x = nextWidth;
         m_LevelUP.sizeDelta = vec;
     }
 

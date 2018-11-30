@@ -8,7 +8,7 @@ public class UI_WeaponButton : MonoBehaviour {
     [SerializeField] UIWeaponDisplay weaponDisplay;
     [SerializeField] Image m_LevelUp;
     [SerializeField] Image m_Select;
-    
+    [SerializeField] Text m_Cost;
 
     public GameObject LevelUp { get { return m_LevelUp.gameObject; } }
     public GameObject Select  { get { return m_Select.gameObject; } }
@@ -18,7 +18,8 @@ public class UI_WeaponButton : MonoBehaviour {
     private Color m_HighLight = new Color(0.788f, 0.635f, 0.133f, 1.0f);
     private Color m_BGColor = new Color(1, 1, 1, 1);
     private Color m_NonSelectableColor = new Color(1, 1, 1, 0.286f);
-
+    private Color m_tCostColor = new Color(1, 0.81f, 0.18f, 1);
+    private Color m_tNotEnough = new Color(1, 0.18f, 0.18f, 1);
     private int mi_money;
     private bool mb_costing;
 
@@ -102,12 +103,18 @@ public class UI_WeaponButton : MonoBehaviour {
     #endregion
 
     #region Button Method
-    private bool CheckLevelUp()
+    public bool CheckLevelUp()
     {
         int id = weaponDisplay.Info.ID;
         int cost = GameData.Instance.WeaponInfoTable[id].Cost;
+        m_Cost.color = m_tCostColor;
         int money = PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money;
-        if (money < cost) return false;
+        if (money < cost)
+        {
+            m_Cost.color = m_tNotEnough;
+            SetNonSelectableBG(m_LevelUp);
+            return false;
+        }
         return true;
     }
 
@@ -149,6 +156,7 @@ public class UI_WeaponButton : MonoBehaviour {
             if (weaponDisplay.CurWeaponID == pList[pList.Count - 1] || !CheckLevelUp())
             {
                 SetRightNav();
+                SetNonSelectableBG(m_LevelUp);
             }   
         }
     }

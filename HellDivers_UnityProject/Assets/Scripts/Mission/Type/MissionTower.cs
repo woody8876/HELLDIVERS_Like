@@ -39,6 +39,7 @@ public class MissionTower : Mission, IInteractable
     private MissionTowerData m_Data;
     private float m_ActTimer;
     private float m_MobTimer;
+    private int m_CurrentPhase;
     private int m_CodeLenght;
     private GameObject m_TowerGo;
     private Animator m_Animator;
@@ -72,7 +73,7 @@ public class MissionTower : Mission, IInteractable
         m_Reward = data.Reward;
         m_Data = ScriptableObject.CreateInstance<MissionTowerData>();
         data.CopyTo(m_Data);
-        m_MobTimer = m_Data.MobSpawnTime;
+        m_Data.PhaseDatas.Sort();
         m_Codes = GenerateCode();
     }
 
@@ -146,7 +147,9 @@ public class MissionTower : Mission, IInteractable
         m_CodeMechine.StopCheckCodes();
         CurrentPlayer = null;
         m_Animator.SetTrigger("Stop");
-        m_MobTimer = m_Data.MobSpawnTime;
+        m_CurrentPhase = 0;
+        m_MobTimer = 0;
+        m_ActTimer = 0;
         DoState = null;
         if (OnStop != null) OnStop();
     }
@@ -179,20 +182,23 @@ public class MissionTower : Mission, IInteractable
         if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_Data.ActivateRadius || CurrentPlayer.IsDead)
         {
             StopCheckCodes();
+            return;
         }
 
         if (m_ActTimer < m_Data.ActivatingTime)
         {
             m_ActTimer += Time.fixedDeltaTime;
 
-            if (m_MobTimer < m_Data.MobSpawnTime)
+            if (m_CurrentPhase < m_Data.PhaseDatas.Count)
             {
                 m_MobTimer += Time.fixedDeltaTime;
-            }
-            else
-            {
-                MobManager.m_Instance.SpawnFish(m_Data.MobNum, this.transform, m_Data.MinRadius, m_Data.MaxRadius);
-                m_MobTimer = 0;
+
+                if (m_MobTimer >= m_Data.PhaseDatas[m_CurrentPhase].Time)
+                {
+                    PhaseData phase = m_Data.PhaseDatas[m_CurrentPhase];
+                    MobManager.m_Instance.SpawnMobs(phase.FishNum, phase.FishVariantNum, phase.PatrolNum, phase.TankNum, this.transform, m_Data.MinRadius, m_Data.MaxRadius);
+                    m_CurrentPhase++;
+                }
             }
 
             if (OnActivating != null) OnActivating();

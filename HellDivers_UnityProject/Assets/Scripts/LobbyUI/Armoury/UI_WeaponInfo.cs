@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class UI_WeaponInfo : MonoBehaviour {
 
     public Dictionary<int, List<int>> weapons = new Dictionary<int, List<int>>();
-    [SerializeField] int m_iType;
-    [SerializeField] int m_iCurrentID;
 
     public int ID { get { return m_iCurrentID; } }
 
@@ -22,16 +20,23 @@ public class UI_WeaponInfo : MonoBehaviour {
         SetUI(m_iCurrentID);
         Get_Power(out cur, out next, out max);
         m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max));
-        Get_FireRate(out cur, out next, out max);
-        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max));
-        Get_Stability(out cur, out next, out max);
-        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max));
+
         Get_Magazine(out cur, out next, out max);
-        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max));
+        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max));
+
+        Get_FireRate(out cur, out next, out max);
+        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max));
+
         Get_Range(out cur, out next, out max);
-        m_Stability.SetAbility(m_Stability.name, GetLength(cur, max), GetLength(next, max));
+        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max));
+
+        Get_Stability(out cur, out next, out max);
+        m_Stability.SetAbility(m_Stability.name, GetLength(max, cur), GetLength(max, next));
+
         Get_FireMode(out mode);
         m_FireMode.SetWord(m_FireMode.name, mode);
+
+        m_Cost.text = m_tCost + GameData.Instance.WeaponInfoTable[id].Cost.ToString();
     }
     
     private void Awake()
@@ -64,7 +69,8 @@ public class UI_WeaponInfo : MonoBehaviour {
         {
             max = GameData.Instance.WeaponInfoTable[MaxLevel].Damage;
             next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Damage;
-        }else { max = next = cur; }
+        }
+        else { max = next = cur; }
     }
     private void Get_FireRate(out float cur, out float next, out float max)
     {
@@ -75,20 +81,26 @@ public class UI_WeaponInfo : MonoBehaviour {
         {
             max = GameData.Instance.WeaponInfoTable[MaxLevel].FirePerMinute;
             next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].FirePerMinute;
-        } else { max = next = cur; }
+        }
+        else { max = next = cur; }
     }
     private void Get_Stability(out float cur, out float next, out float max)
     {
         List<int> pList = weapons[m_iType];
         int MaxLevel = pList[pList.Count - 1];
-        cur = GameData.Instance.WeaponInfoTable[m_iCurrentID].Max_Spread;
+        float curMin = GameData.Instance.WeaponInfoTable[m_iCurrentID].Min_Spread;
+        float curMax = GameData.Instance.WeaponInfoTable[m_iCurrentID].Max_Spread;
+        cur = curMax - curMin;
         if (m_iCurrentID != MaxLevel)
         {
-            max = GameData.Instance.WeaponInfoTable[MaxLevel].Max_Spread;
-            next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Max_Spread;
+            float maxMin = GameData.Instance.WeaponInfoTable[MaxLevel].Min_Spread;
+            float maxMax = GameData.Instance.WeaponInfoTable[MaxLevel].Max_Spread;
+            max = maxMax - maxMin;
+            float nextMin = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Min_Spread;
+            float nextMax = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Max_Spread;
+            next = nextMax - nextMin;
         }
         else { max = next = cur; }
-
     }
     private void Get_Magazine(out float cur, out float next, out float max)
     {
@@ -101,7 +113,6 @@ public class UI_WeaponInfo : MonoBehaviour {
             next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Max_Mags;
         }
         else { max = next = cur; }
-
     }
     private void Get_Range(out float cur, out float next, out float max)
     {
@@ -114,7 +125,6 @@ public class UI_WeaponInfo : MonoBehaviour {
             next = GameData.Instance.WeaponInfoTable[m_iCurrentID + 1].Range;
         }
         else { max = next = cur; }
-
     }
     private void Get_FireMode(out string mode)
     {
@@ -162,6 +172,7 @@ public class UI_WeaponInfo : MonoBehaviour {
 
     private float GetLength(float target, float max)
     {
+        if (max == 0 && target == 0) max = target = 1;
         float length = (target / max) * 200;
         return length;
     }
@@ -174,5 +185,10 @@ public class UI_WeaponInfo : MonoBehaviour {
     [SerializeField] Image m_IWeaponTexture;
     [SerializeField] GameObject m_WeaponAbilities;
     [SerializeField] GameObject m_WeaponAbility;
+    [SerializeField] Text m_Cost;
+    [Header("== Info ==")]
+    [SerializeField] int m_iType;
+    [SerializeField] int m_iCurrentID;
+    [SerializeField] string m_tCost = "Next Level Cost : ";
     # endregion SerializeField
 }

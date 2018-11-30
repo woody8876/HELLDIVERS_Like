@@ -13,6 +13,8 @@ namespace HELLDIVERS.UI
         [SerializeField] private float m_time = 1;
         [SerializeField] private AnimationCurve m_AnimaCurve;
 
+        public event UIEventHolder OnTweenFinished;
+
         private void Awake()
         {
             m_Canvas = this.GetComponent<CanvasGroup>();
@@ -36,6 +38,8 @@ namespace HELLDIVERS.UI
                 m_Canvas.alpha = m_AnimaCurve.Evaluate(currentTime);
                 yield return null;
             }
+
+            if (OnTweenFinished != null) OnTweenFinished();
         }
 
         private CanvasGroup m_Canvas;

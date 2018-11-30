@@ -145,35 +145,53 @@ public class Weapon : IWeaponBehaviour
     {
         string m_sWeapon = "Bullet_" + weaponInfo.Title;
         string m_sEffect = "Effect_" + weaponInfo.Title;
+        string m_sSound = "Sound_" + weaponInfo.Title;
+        string m_sForderEffect = "WeaponStorage/Effect";
+        string m_sForderBullet = "WeaponStorage/Bullet";
+        string m_sForderSound = "WeaponStorage/Sound";
+
         Object HitMobEffect;
         Object HitObsEffect;
         Object HitThrough;
+        Object sound_Empty;
+        Object sound_Reload;
         Object weapon;
         Object effect;
+        Object sound;
+
 
         if (ResourceManager.m_Instance != null)
         {
-            HitMobEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitMob", false);
-            HitObsEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitObs", false);
-            HitThrough = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", "HitThrough", false);
-            weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sWeapon, false);
-            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "WeaponStorage", m_sEffect, false);
+            HitMobEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderEffect, "HitMob", false);
+            HitObsEffect = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderEffect, "HitObs", false);
+            HitThrough = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderEffect, "HitThrough", false);
+            sound_Empty = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderSound, "Sound_Empty", false);
+            sound_Reload = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderSound, "Sound_Reload", false);
+            weapon = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderBullet, m_sWeapon, false);
+            effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderEffect, m_sEffect, false);
+            sound = ResourceManager.m_Instance.LoadData(typeof(GameObject), m_sForderSound, m_sSound, false);
         }
         else
         {
             Debug.LogWarning("No ResourceManager.");
-            HitMobEffect = Resources.Load("WeaponStorage/" + "HitMob");
-            HitObsEffect = Resources.Load("WeaponStorage/" + "HitObs");
-            HitThrough = Resources.Load("WeaponStorage/" + "HitThrough");
-            weapon = Resources.Load("WeaponStorage/" + m_sWeapon);
-            effect = Resources.Load("WeaponStorage/" + m_sEffect);
+            HitMobEffect = Resources.Load(m_sForderEffect + "/HitMob");
+            HitObsEffect = Resources.Load(m_sForderEffect + "/HitObs");
+            HitThrough = Resources.Load(m_sForderEffect + "/HitThrough");
+            sound_Empty = Resources.Load(m_sForderSound + "/" + "Sound_Empty");
+            sound_Reload = Resources.Load(m_sForderSound + "/" + "Sound_Reload");
+            weapon = Resources.Load(m_sForderBullet + "/" + m_sWeapon);
+            effect = Resources.Load(m_sForderEffect + "/" + m_sEffect);
+            sound = Resources.Load(m_sForderSound + "/" + m_sSound);
         }
         if (ObjectPool.m_Instance == null) ObjectPool.m_Instance.Init();
-        ObjectPool.m_Instance.InitGameObjects(HitMobEffect, activeAmmo, 10);
-        ObjectPool.m_Instance.InitGameObjects(HitObsEffect, activeAmmo * 5, 20);
-        ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo * 5, 30);
+        ObjectPool.m_Instance.InitGameObjects(HitMobEffect, activeAmmo * 2, 10);
+        ObjectPool.m_Instance.InitGameObjects(HitObsEffect, activeAmmo * 2, 20);
+        ObjectPool.m_Instance.InitGameObjects(HitThrough, activeAmmo * 2, 30);
         ObjectPool.m_Instance.InitGameObjects(weapon, activeAmmo, _weaponInfo.ID);
         ObjectPool.m_Instance.InitGameObjects(effect, activeAmmo, _weaponInfo.ID * 10 + 1);
+        ObjectPool.m_Instance.InitGameObjects(sound, activeAmmo, _weaponInfo.ID * 10 + 2);
+        ObjectPool.m_Instance.InitGameObjects(sound_Reload, 1, 998);
+        ObjectPool.m_Instance.InitGameObjects(sound_Empty, 1, 999);
     }
 
     public virtual void Shot(Transform t, float spread, Player player)

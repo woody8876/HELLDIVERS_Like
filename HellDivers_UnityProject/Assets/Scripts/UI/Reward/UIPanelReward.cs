@@ -13,6 +13,9 @@ namespace HELLDIVERS.UI
 
         [SerializeField] private TweenAlpha m_BlackCardTween;
         [SerializeField] private Text m_GameTime;
+        [SerializeField] private Transform m_PanelMissionReward;
+        [SerializeField] private UIMissionReward m_MissionRewardPrefab;
+        [SerializeField] private UIMissionRewardEXP m_MissionRewardExp;
         [SerializeField] private Transform m_PanelReward;
         [SerializeField] private UIPlayerReward m_PlayerRewardPrefab;
         [SerializeField] private Button m_BtnContinue;
@@ -24,11 +27,44 @@ namespace HELLDIVERS.UI
         // Use this for initialization
         private void Start()
         {
-            m_BlackCardTween.OnFinished += PrintGameTime;
+            m_MissionRewardMap = new Dictionary<eMissionType, UIMissionReward>();
             m_PlayerRewardMap = new Dictionary<int, UIPlayerReward>();
-            m_BlackCardTween.OnFinished += CreatePlayerRewardElement;
+            CreatePlayerRewardElement();
+            CreateMissionRewardElement();
+
+            m_BlackCardTween.OnFinished += StartDrawUI;
             m_BlackCardTween.PlayForward();
+
             m_BtnContinue.gameObject.SetActive(false);
+        }
+
+        private void StartDrawUI()
+        {
+            StartCoroutine(OnDarw());
+        }
+
+        private IEnumerator OnDarw()
+        {
+            if (m_MissionRewardMap.Count > 0)
+            {
+                float missionUITimeLenght = 0;
+                foreach (var missionUI in m_MissionRewardMap)
+                {
+                    missionUI.Value.DrawUI();
+                    missionUITimeLenght = missionUI.Value.CanvasTween.TimeLenght;
+                }
+                yield return new WaitForSeconds(missionUITimeLenght);
+
+                m_MissionRewardExp.DrawUI();
+                yield return new WaitForSeconds(m_MissionRewardExp.CanvasTween.TimeLenght);
+            }
+
+            PrintGameTime();
+
+            foreach (var playerUI in m_PlayerRewardMap)
+            {
+                playerUI.Value.DrawUI();
+            }
         }
 
         #endregion MonoBehaviour
@@ -74,6 +110,35 @@ namespace HELLDIVERS.UI
             }
         }
 
+        private void CreateMissionRewardElement()
+        {
+            if (InGameRewardManager.Instance == null || InGameRewardManager.Instance.MissionRewardMap.Count <= 0) return;
+
+            foreach (var record in InGameRewardManager.Instance.MissionRewardMap)
+            {
+                UIMissionReward missionReward = Instantiate(m_MissionRewardPrefab, m_PanelMissionReward);
+                missionReward.Initialize(record.Key);
+                missionReward.OnTweenFinished += AddMissionEXP;
+
+                m_MissionRewardMap.Add(record.Key, missionReward);
+            }
+        }
+
+        private void AddMissionEXP(eMissionType type)
+        {
+            if (InGameRewardManager.Instance == null) return;
+            if (InGameRewardManager.Instance.MissionRewardMap.ContainsKey(type) == false) return;
+
+            List<MissionReward> pList = InGameRewardManager.Instance.MissionRewardMap[type];
+            int totalExp = 0;
+            for (int i = 0; i < pList.Count; i++)
+            {
+                totalExp += pList[i].EXP;
+            }
+
+            m_MissionRewardExp.AddExp(totalExp);
+        }
+
         private void RefreshCountinueBtn()
         {
             m_DrawFinishedCount--;
@@ -94,6 +159,7 @@ namespace HELLDIVERS.UI
         #endregion Private Function
 
         private int m_DrawFinishedCount;
+        private Dictionary<eMissionType, UIMissionReward> m_MissionRewardMap;
         private Dictionary<int, UIPlayerReward> m_PlayerRewardMap;
     }
 }
