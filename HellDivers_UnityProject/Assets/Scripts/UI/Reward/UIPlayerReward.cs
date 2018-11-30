@@ -10,9 +10,7 @@ namespace HELLDIVERS.UI
         public PlayerInfo CurrentPlayerInfo { get { return currentPlayer; } }
         public PlayerRecord CurrentPlayerRecord { get { return currentRecord; } }
 
-        public delegate void UIPlayerRewardEventHolder();
-
-        public event UIPlayerRewardEventHolder OnDrawUIFinished;
+        public event UIEventHolder OnDrawUIFinished;
 
         private PlayerInfo currentPlayer;
         private PlayerRecord currentRecord;
@@ -46,8 +44,6 @@ namespace HELLDIVERS.UI
             CreateDetail("KILLS", currentRecord.NumOfKills);
             CreateDetail("SHOTS", currentRecord.Shots);
             CreateDetail("MONEY", currentRecord.Money + missionReward.Money);
-
-            DrawUI();
         }
 
         private void CreateDetail(string label, int number)
