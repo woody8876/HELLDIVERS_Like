@@ -9,6 +9,8 @@ public class InGameRewardManager : MonoBehaviour
 
     public float GameDurationTime { get { return m_GameDurationTime; } }
     public Dictionary<int, PlayerRecord> PlayerRewardMap { get { return m_RecordMap; } }
+    public Dictionary<eMissionType, List<MissionReward>> MissionRewardMap { get { return m_MissionRewardMap; } }
+
     private Dictionary<int, PlayerRecord> m_RecordMap;
     private Dictionary<eMissionType, List<MissionReward>> m_MissionRewardMap;
     private float m_GameDurationTime;

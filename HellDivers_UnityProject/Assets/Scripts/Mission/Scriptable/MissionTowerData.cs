@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,10 +12,9 @@ public class MissionTowerData : MissionData
     public float MinRadius { get { return m_MinRadius; } }
     public float MaxRadius { get { return m_MaxRadius; } }
     public float ActivatingTime { get { return m_ActivatingTime; } }
-    public float MobSpawnTime { get { return m_MobSpawnTime; } }
     public int CodeLenghtMin { get { return m_CodeLenghtMin; } }
     public int CodeLenghtMax { get { return m_CodeLenghtMax; } }
-    public int MobNum { get { return m_MobNum; } }
+    public List<PhaseData> PhaseDatas { get { return m_PhaseDatas; } }
 
     [SerializeField] private string m_Id = "MissionTower";
     [SerializeField] private float m_InteractRadius = 4;
@@ -22,10 +22,9 @@ public class MissionTowerData : MissionData
     [SerializeField] private float m_MinRadius = 20;
     [SerializeField] private float m_MaxRadius = 25;
     [SerializeField] private float m_ActivatingTime = 60;
-    [SerializeField] private float m_MobSpawnTime = 10;
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
-    [SerializeField] private int m_MobNum = 5;
+    [SerializeField] private List<PhaseData> m_PhaseDatas;
 
     public void CopyTo(MissionTowerData other)
     {
@@ -35,10 +34,9 @@ public class MissionTowerData : MissionData
         other.m_MinRadius = this.m_MinRadius;
         other.m_MaxRadius = this.m_MaxRadius;
         other.m_ActivatingTime = this.m_ActivatingTime;
-        other.m_MobSpawnTime = this.m_MobSpawnTime;
         other.m_CodeLenghtMin = this.m_CodeLenghtMin;
         other.m_CodeLenghtMax = this.m_CodeLenghtMax;
-        other.m_MobNum = this.m_MobNum;
+        other.m_PhaseDatas = this.m_PhaseDatas;
     }
 
     public MissionTowerData Clone()
@@ -46,5 +44,28 @@ public class MissionTowerData : MissionData
         MissionTowerData newData = CreateInstance<MissionTowerData>();
         this.CopyTo(newData);
         return newData;
+    }
+}
+
+[System.Serializable]
+public class PhaseData : IComparable<PhaseData>
+{
+    public float Time { get { return m_Time; } }
+    public int FishNum { get { return m_FishNum; } }
+    public int FishVariantNum { get { return m_FishVariantNum; } }
+    public int PatrolNum { get { return m_PatrolNum; } }
+    public int TankNum { get { return m_TankNum; } }
+
+    [SerializeField] private float m_Time;
+    [SerializeField] private int m_FishNum;
+    [SerializeField] private int m_FishVariantNum;
+    [SerializeField] private int m_PatrolNum;
+    [SerializeField] private int m_TankNum;
+
+    public int CompareTo(PhaseData other)
+    {
+        if (this.Time > other.Time) return 1;
+        else if (this.Time < other.Time) return -1;
+        else return 0;
     }
 }
