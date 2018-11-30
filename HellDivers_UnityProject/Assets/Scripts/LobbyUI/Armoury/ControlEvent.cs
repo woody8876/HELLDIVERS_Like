@@ -72,6 +72,7 @@ public class ControlEvent : MonoBehaviour {
         }
         else if (Input.GetButtonDown("Return") || Input.GetKeyDown(KeyCode.Backspace))
         {
+            PlayerManager.Instance.UnloadPlayerMap();
             SceneController.Instance.ToLauncher();
             timer = timeBetweenInputs;
         }

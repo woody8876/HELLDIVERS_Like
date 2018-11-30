@@ -266,6 +266,7 @@ public class UIWeaponList : MonoBehaviour {
             return;
         }
         SetInfo(go);
+        weaponDisplay.Button.CheckLevelUp();
     }
 
     private void DisSelectEvent(GameObject go)
