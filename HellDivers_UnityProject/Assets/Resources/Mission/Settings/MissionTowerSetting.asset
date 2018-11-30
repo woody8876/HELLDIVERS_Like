@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ActivateRadius: 15
   m_MinRadius: 20
   m_MaxRadius: 25
-  m_ActivatingTime: 60
+  m_ActivatingTime: 1
   m_CodeLenghtMin: 6
   m_CodeLenghtMax: 8
   m_PhaseDatas:
@@ -35,6 +35,11 @@ MonoBehaviour:
     m_FishVariantNum: 0
     m_PatrolNum: 2
     m_TankNum: 0
+  - m_Time: 15
+    m_FishNum: 10
+    m_FishVariantNum: 0
+    m_PatrolNum: 0
+    m_TankNum: 1
   - m_Time: 20
     m_FishNum: 10
     m_FishVariantNum: 0
@@ -58,10 +63,5 @@ MonoBehaviour:
   - m_Time: 50
     m_FishNum: 5
     m_FishVariantNum: 1
-    m_PatrolNum: 0
-    m_TankNum: 1
-  - m_Time: 15
-    m_FishNum: 10
-    m_FishVariantNum: 0
     m_PatrolNum: 0
     m_TankNum: 1

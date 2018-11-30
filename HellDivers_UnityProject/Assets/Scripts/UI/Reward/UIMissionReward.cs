@@ -7,14 +7,27 @@ using HELLDIVERS.UI;
 [RequireComponent(typeof(UITweenCanvasGroup))]
 public class UIMissionReward : MonoBehaviour
 {
+    public UITweenCanvasGroup CanvasTween { get { return m_CanvasTweener; } }
+
     [SerializeField] private Image m_Icon;
     [SerializeField] private Image m_CkeckMark;
     [SerializeField] private Text m_Description;
     private UITweenCanvasGroup m_CanvasTweener;
+    private eMissionType m_Type;
+
+    public delegate void MissionRewardEventHolder(eMissionType type);
+
+    public MissionRewardEventHolder OnTweenFinished;
 
     public void Initialize(eMissionType type)
     {
+        m_Type = type;
         SetupDisplay(type);
+    }
+
+    public void DrawUI()
+    {
+        this.gameObject.SetActive(true);
         m_CanvasTweener.Play();
     }
 
@@ -34,18 +47,14 @@ public class UIMissionReward : MonoBehaviour
         }
     }
 
+    private void OnCanvasTweenFinished()
+    {
+        if (OnTweenFinished != null) OnTweenFinished(m_Type);
+    }
+
     private void Awake()
     {
         m_CanvasTweener = this.GetComponent<UITweenCanvasGroup>();
-    }
-
-    // Use this for initialization
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        m_CanvasTweener.OnTweenFinished += OnCanvasTweenFinished;
     }
 }
