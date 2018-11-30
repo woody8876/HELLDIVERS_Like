@@ -1,42 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UIMissionBriefingPoint : MonoBehaviour {
-
-    #region Event
-    public delegate void UIMissionBriefingPointHolder();
-    public event UIMissionBriefingPointHolder Select;
-    public event UIMissionBriefingPointHolder UnSelect;
-    #endregion
-
-    public static UIMissionBriefingPoint Instance { get; private set; }
+public class UIMissionBriefingConcentric : MonoBehaviour {
 
     [SerializeField] private UIMissionBriefingMap m_Map;
+
+    private string m_OriIntroduction;
     private RectTransform m_MapRect;
     private Vector3 m_Pos;
     private float m_RectWidth;
     private float m_RectHeight;
     // Use this for initialization
     void Start () {
-        if (Instance == null) Instance = this;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        MovePoint();
+        MovePoint(); 
 
-        if (UIMissionBriefingMap.Instance.PointList.Count < 1) return;
-        foreach(GameObject go in UIMissionBriefingMap.Instance.PointList)
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            if (Vector3.Distance(this.transform.position, go.transform.position) < 20f)
-            {
-                if (Select != null) Select();
-            }
-            else
-            {
-                if (UnSelect != null) UnSelect();
-            } 
+            //Update Mission....
+            UIMissionBriefing.Instance.Map.Select();
+            UIMissionBriefing.Instance.ComfirmSpawnPosition();
         }
     }
 

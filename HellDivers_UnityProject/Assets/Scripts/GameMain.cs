@@ -63,6 +63,8 @@ public class GameMain : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        UIInGameMain.Instance.InitMissionUI();
+
         for (int i = 1; i < PlayerManager.Instance.Players.Count + 1; i++)
         {
             m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
@@ -71,7 +73,6 @@ public class GameMain : MonoBehaviour
         m_MissionManager.CreateTowerMissions(m_NumberOfTowers);
         m_MissionManager.CreateMission(eMissionType.KillMob);
 
-        GameStart();
     }
 
     // Update is called once per frame
@@ -85,11 +86,11 @@ public class GameMain : MonoBehaviour
     #region Game Control
 
     [ContextMenu("Mission Start")]
-    public void GameStart()
+    public void GameStart(Transform spawnPos)
     {
         m_GameStartTime = Time.realtimeSinceStartup;
 
-        m_PlayerManager.SpawnPlayers();
+        m_PlayerManager.SpawnPlayers(spawnPos);
         UIInGameMain.Instance.DrawGameUI();
 
         m_MobSpawner.SpawnPatrol(20);

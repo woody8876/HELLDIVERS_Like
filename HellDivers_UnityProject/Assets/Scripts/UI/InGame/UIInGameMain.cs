@@ -13,6 +13,7 @@ namespace HELLDIVERS.UI.InGame
         [SerializeField] private UIPanelPlayerInfo m_PanelPlayerInfo;
         [SerializeField] private UIPanelStratagemAct m_PanelStratagemAct;
         [SerializeField] private UIDynamicHpBar m_DynamicHpBar;
+        [SerializeField] private UIMissionBriefing m_PanelMissionBriefing;
         [SerializeField] private UIPanelMission m_PanelMissionInfo;
         [SerializeField] private UIDynamicMissionMsg m_DynamicMissionMsg;
         [SerializeField] private UIPanelMissionComplete m_PanelMissionCompleted;
@@ -25,6 +26,7 @@ namespace HELLDIVERS.UI.InGame
         {
             m_PanelPlayerInfo = Instantiate(m_PanelPlayerInfo, this.transform);
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform);
+            m_PanelMissionBriefing = Instantiate(m_PanelMissionBriefing, this.transform);
             m_PanelMissionInfo = Instantiate(m_PanelMissionInfo, this.transform);
             m_PanelMissionCompleted = Instantiate(m_PanelMissionCompleted, this.transform);
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform);
@@ -32,6 +34,11 @@ namespace HELLDIVERS.UI.InGame
             m_PanelMap = Instantiate(m_PanelMap, this.transform);
             m_PanelRadar.Init();
             m_PanelMap.Init();
+        }
+
+        public void InitMissionUI()
+        {
+            m_PanelMissionBriefing.Init(MapInfo.Instance);
         }
 
         private void Awake()
@@ -70,6 +77,7 @@ namespace HELLDIVERS.UI.InGame
 
         public void AddMapPoint(GameObject target, eMapPointType type)
         {
+            m_PanelMissionBriefing.AddPoint(target, type);
             m_PanelMap.AddPointPrefab(target, type);
         }
 
@@ -92,6 +100,11 @@ namespace HELLDIVERS.UI.InGame
         public void AddMissionInfo(Mission mission)
         {
             m_PanelMissionInfo.AddMissionInfo(mission);
+        }
+
+        public void DrawMissionBrefingUI()
+        {
+            m_PanelMissionBriefing.DrawUI();
         }
 
         public void DrawMissionCompletedUI()
