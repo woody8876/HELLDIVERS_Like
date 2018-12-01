@@ -165,6 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4055431989666834}
   - component: {fileID: 95723837059387922}
+  - component: {fileID: 114045247536240904}
   m_Layer: 0
   m_Name: Effect_TimeBomb
   m_TagString: Untagged
@@ -636,6 +637,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114045247536240904
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393086973796512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e836f388327674dbe1be21a66d8144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ID: 4104
 --- !u!198 &198035388142165454
 ParticleSystem:
   m_ObjectHideFlags: 1

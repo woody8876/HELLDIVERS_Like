@@ -35,9 +35,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4485754528743932}
-  - component: {fileID: 114031982102359718}
   - component: {fileID: 23026482712776586}
   - component: {fileID: 33716905457838754}
+  - component: {fileID: 114654150135106498}
   m_Layer: 0
   m_Name: Grenade_Mine
   m_TagString: Untagged
@@ -537,7 +537,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114031982102359718
+--- !u!114 &114654150135106498
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -545,11 +545,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1190223577448856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eedb3cb882f24244a96a7a0e113e43e, type: 3}
+  m_Script: {fileID: 11500000, guid: c398b2c5335c8e541968faec0af927e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Type: 2
-  m_ID: 4003
   m_fAngle: 30
 --- !u!198 &198051830720212916
 ParticleSystem:

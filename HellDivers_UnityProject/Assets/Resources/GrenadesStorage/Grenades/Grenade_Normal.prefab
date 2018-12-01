@@ -19,7 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4587496862083614}
-  - component: {fileID: 114989726683383646}
+  - component: {fileID: 114835546826953836}
+  - component: {fileID: 114776620783891012}
   m_Layer: 0
   m_Name: Grenade_Normal
   m_TagString: Untagged
@@ -300,7 +301,7 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &114989726683383646
+--- !u!114 &114776620783891012
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -314,3 +315,21 @@ MonoBehaviour:
   m_Type: 0
   m_ID: 4001
   m_fAngle: 30
+--- !u!114 &114835546826953836
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147661209361880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c26c45cac15bbc4d8f56babc46ad403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Type: 0
+  m_fAngle: 30
+  m_gEffect: {fileID: 0}
+  m_vForward: {x: 0, y: 0, z: 0}
+  m_bGround: 1
+  m_bCounting: 0
+  m_fDamageTime: 0
