@@ -61,8 +61,8 @@ public class UIPanelMap : MonoBehaviour {
     }
     void Start()
     {
-        m_RadarImage = m_PanelRadar.GetComponent<Image>();
-        m_RadarColor = m_RadarImage.GetComponent<Color>();
+        //m_RadarImage = m_PanelRadar.GetComponent<Image>();
+        //m_RadarColor = m_RadarImage.GetComponent<Color>();
     }
 
     // Update is called once per frame
