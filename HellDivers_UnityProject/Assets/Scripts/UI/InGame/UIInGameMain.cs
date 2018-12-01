@@ -27,6 +27,7 @@ namespace HELLDIVERS.UI.InGame
             m_PanelPlayerInfo = Instantiate(m_PanelPlayerInfo, this.transform);
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform);
             m_PanelMissionBriefing = Instantiate(m_PanelMissionBriefing, this.transform);
+            m_PanelMissionBriefing.Init(MapInfo.Instance);
             m_PanelMissionInfo = Instantiate(m_PanelMissionInfo, this.transform);
             m_PanelMissionCompleted = Instantiate(m_PanelMissionCompleted, this.transform);
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform);
@@ -35,12 +36,7 @@ namespace HELLDIVERS.UI.InGame
             m_PanelRadar.Init();
             m_PanelMap.Init();
         }
-
-        public void InitMissionUI()
-        {
-            m_PanelMissionBriefing.Init(MapInfo.Instance);
-        }
-
+        
         private void Awake()
         {
             if (Instance == null) Instance = this;

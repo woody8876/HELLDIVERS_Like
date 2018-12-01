@@ -74,8 +74,6 @@ public class UIPanelMap : MonoBehaviour {
         }
         else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M) || Input.GetButtonDown("Map")))
         {
-            m_PanelRadar.gameObject.SetActive(true);
-
             m_Timer = 0.0f;
             m_bDisplay = false;
         }
@@ -83,8 +81,6 @@ public class UIPanelMap : MonoBehaviour {
         {
             if (m_Color.a <= 1)
             {
-                m_PanelRadar.gameObject.SetActive(false);
-                
                 m_Color.a += Time.deltaTime * 5.0f;
                 m_Image.color = m_Color;
             }
@@ -92,8 +88,6 @@ public class UIPanelMap : MonoBehaviour {
             m_Timer += Time.deltaTime;
             if(m_Timer >= 5.0f)
             {
-                m_PanelRadar.gameObject.SetActive(true);
-
                 m_Timer = 0.0f;
                 m_bDisplay = false;
             }
