@@ -28,7 +28,7 @@ public class UIMissionReward : MonoBehaviour
     public void DrawUI()
     {
         this.gameObject.SetActive(true);
-        m_CanvasTweener.Play();
+        m_CanvasTweener.PlayForward();
     }
 
     private void SetupDisplay(eMissionType type)

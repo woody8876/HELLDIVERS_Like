@@ -22,15 +22,15 @@ public class UIPanelMissionComplete : MonoBehaviour
 
     private IEnumerator OnStartUI()
     {
-        m_BackgroundTweener.Play();
+        m_BackgroundTweener.PlayForward();
 
         yield return new WaitForSeconds(m_BackgroundTweener.TimeLenght * m_TitleDelay);
 
-        m_TitleTweener.Play();
+        m_TitleTweener.PlayForward();
 
         yield return new WaitForSeconds(m_TitleTweener.TimeLenght + m_OverlayDelay);
 
-        m_OverlayTweener.Play();
+        m_OverlayTweener.PlayForward();
 
         yield break;
     }
