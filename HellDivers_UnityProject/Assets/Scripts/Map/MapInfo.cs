@@ -14,21 +14,13 @@ public class MapInfo : MonoBehaviour
     [SerializeField] private List<Transform> m_TowerPos;
     [SerializeField] private List<Transform> m_MobPos;
 
-    public Transform GetRandomSpawnPos()
-    {
-        if (m_SpawnPos != null || m_SpawnPos.Count > 0)
-        {
-            int rand = Random.Range(0, m_SpawnPos.Count - 1);
-            return m_SpawnPos[rand];
-        }
-        return null;
-    }
-
-    private void Awake()
+    public void Init()
     {
         if (Instance == null) Instance = this;
-        else Destroy(this);
+        else Destroy(this.gameObject);
     }
+
+    #region AutoScan
 
     [ContextMenu("Auto Scan")]
     private void AutoScan()
@@ -58,4 +50,6 @@ public class MapInfo : MonoBehaviour
             }
         }
     }
+
+    #endregion AutoScan
 }
