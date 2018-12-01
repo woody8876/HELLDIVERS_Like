@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class UIMissionBriefingConcentric : MonoBehaviour {
 
+    #region Event
+    public delegate void ConcentricHolder();
+    public event ConcentricHolder OnClick;
+    #endregion
+
     [SerializeField] private UIMissionBriefingMap m_Map;
 
     private string m_OriIntroduction;
@@ -21,7 +26,7 @@ public class UIMissionBriefingConcentric : MonoBehaviour {
 	void Update () {
         MovePoint(); 
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButton("Submit"))
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButtonDown("Submit"))
         {
             UIMissionBriefing.Instance.ComfirmSpawnPosition();
         }

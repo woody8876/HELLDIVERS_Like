@@ -55,7 +55,7 @@ public class UIMissionBriefing : MonoBehaviour
 
     IEnumerator FadeOut()
     {
-        for (m_BackroundColor.a = 0.0f ; m_BackroundColor.a < 1; m_BackroundColor.a += Time.deltaTime * 0.05f)
+        for (m_BackroundColor.a = 0.0f ; m_BackroundColor.a < 1; m_BackroundColor.a += Time.deltaTime * 0.5f)
         {
             m_Backround.color = m_BackroundColor;
 

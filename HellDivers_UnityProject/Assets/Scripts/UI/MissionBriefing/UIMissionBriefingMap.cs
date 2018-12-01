@@ -59,7 +59,7 @@ public class UIMissionBriefingMap : MonoBehaviour
             case eMapPointType.MISSIONTOWER:
                 mapPoint = Instantiate(m_TowerPointPrefab, m_MapPointRoot);
                 //mapPoint.Init(target);
-                //m_PointList.Add(mapPoint);
+                m_PointList.Add(mapPoint);
                 break;
             case eMapPointType.SPAWNPOINT:
                 mapPoint = Instantiate(m_SpawnPointPrefab, m_MapPointRoot);
@@ -107,6 +107,7 @@ public class UIMissionBriefingMap : MonoBehaviour
     public bool ComfirmSpawnPosition()
     {
         if (m_Target == null) return false;
+        if (m_Target.Tower == null) return false;
         GameMain.Instance.GameStart(m_Target.Tower.transform);
         return true;
     }
