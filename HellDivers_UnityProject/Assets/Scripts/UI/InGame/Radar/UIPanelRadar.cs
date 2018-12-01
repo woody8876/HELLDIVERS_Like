@@ -25,7 +25,8 @@ public class UIPanelRadar : MonoBehaviour {
     private Image m_Image;
     private Color m_Color;
     private float m_Timer;
-    private bool bAdd = true;
+    private bool m_bAdd = true;
+    public bool m_bDisPlay = true;
     private int bPlyaersCount;
     private List<GameObject> m_PointList = new List<GameObject>();
 
@@ -53,9 +54,6 @@ public class UIPanelRadar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Blink();
-        CountTimer();
-
         #region Input
         
 
@@ -76,6 +74,23 @@ public class UIPanelRadar : MonoBehaviour {
             MobManager.m_Instance.SpawnMobs(0, 0, 0, 1);
         }
         #endregion
+
+        if (m_bDisPlay == false)
+        {
+            m_Color.a = 0.0f;
+            m_Image.color = m_Color;
+            return;
+        }
+        else
+        {
+            m_Color.a = 100/255f;
+            m_Image.color = m_Color;
+        }
+        
+
+        Blink();
+        CountTimer();
+
 
         List<Player> pList = InGamePlayerManager.Instance.Players;
         if (pList != null && pList.Count > 0)
@@ -159,19 +174,19 @@ public class UIPanelRadar : MonoBehaviour {
     }
     private void Blink()
     {
-        if (bAdd)
+        if (m_bAdd)
         {
             m_Color.b += Time.deltaTime * 0.1f;
             m_Color.g += Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.b > 0.35) bAdd = false;
+            if (m_Color.b > 0.35) m_bAdd = false;
         }
-        else if (bAdd == false)
+        else if (m_bAdd == false)
         {
             m_Color.b -= Time.deltaTime * 0.1f;
             m_Color.g -= Time.deltaTime * 0.1f;
             m_Image.color = m_Color;
-            if (m_Color.b <= 0.3) bAdd = true;
+            if (m_Color.b <= 0.3) m_bAdd = true;
         }
     }
 
@@ -186,5 +201,10 @@ public class UIPanelRadar : MonoBehaviour {
             }
             m_Timer = 0.0f;
         }
+    }
+
+    public void SetDisplay(bool bPlay)
+    {
+        m_bDisPlay = bPlay;
     }
 }
