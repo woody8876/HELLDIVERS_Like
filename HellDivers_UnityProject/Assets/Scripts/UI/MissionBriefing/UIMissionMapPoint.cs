@@ -9,13 +9,13 @@ public class UIMissionMapPoint : MonoBehaviour {
     [SerializeField] private Color m_NormalColor;
     [SerializeField] private Color m_HighlightColor;
 
-    public GameObject CurrentTarget { get { return m_CurrentTarget; } set { m_CurrentTarget = value; } }
+    public GameObject Tower { get { return m_Tower; } set { m_Tower = value; } }
 
-    private GameObject m_CurrentTarget;
+    private GameObject m_Tower;
 
     public void Init(GameObject target)
     {
-        m_CurrentTarget = target;
+        m_Tower = target;
     }
 
     private void Awake()

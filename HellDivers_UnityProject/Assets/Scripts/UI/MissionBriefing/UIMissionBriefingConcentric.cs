@@ -21,7 +21,7 @@ public class UIMissionBriefingConcentric : MonoBehaviour {
 	void Update () {
         MovePoint(); 
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButton("Submit"))
         {
             UIMissionBriefing.Instance.ComfirmSpawnPosition();
         }

@@ -40,13 +40,12 @@ public class UIMissionBriefingMap : MonoBehaviour
         {
             if(Vector3.Distance(mapPoint.transform.position, m_Concentric.transform.position) < 20f)
             {
-                mapPoint.Highlight();
                 m_Target = mapPoint;
-                Debug.Log("Close");
+                mapPoint.Highlight();
             }
             else
             {
-                if (mapPoint.CurrentTarget == mapPoint) mapPoint.CurrentTarget = null;
+                if (mapPoint == m_Target) m_Target = null;
                 mapPoint.Normal();
             }
         }
@@ -59,8 +58,8 @@ public class UIMissionBriefingMap : MonoBehaviour
         {
             case eMapPointType.MISSIONTOWER:
                 mapPoint = Instantiate(m_TowerPointPrefab, m_MapPointRoot);
-                mapPoint.Init(target);
-                m_PointList.Add(mapPoint);
+                //mapPoint.Init(target);
+                //m_PointList.Add(mapPoint);
                 break;
             case eMapPointType.SPAWNPOINT:
                 mapPoint = Instantiate(m_SpawnPointPrefab, m_MapPointRoot);
@@ -108,8 +107,7 @@ public class UIMissionBriefingMap : MonoBehaviour
     public bool ComfirmSpawnPosition()
     {
         if (m_Target == null) return false;
-        GameMain.Instance.GameStart(m_Target.CurrentTarget.transform);
-        Debug.Log("Spawn");
+        GameMain.Instance.GameStart(m_Target.Tower.transform);
         return true;
     }
 }
