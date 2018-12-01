@@ -25,10 +25,7 @@ public class MissionKillMob : Mission
         m_CurrentAmount = 0;
         m_bFinished = false;
 
-        if (MobManager.m_Instance != null)
-        {
-            MobManager.m_Instance.OnKill += CountMobBeKill;
-        }
+        if (MobManager.m_Instance != null) MobManager.m_Instance.OnKill += CountMobBeKill;
     }
 
     private void CountMobBeKill()
@@ -38,6 +35,8 @@ public class MissionKillMob : Mission
         if (m_CurrentAmount >= m_Data.KillAmount)
         {
             m_bFinished = true;
+            m_CurrentAmount = m_Data.KillAmount;
+            if (MobManager.m_Instance != null) MobManager.m_Instance.OnKill -= CountMobBeKill;
             CompleteMission();
         }
 
