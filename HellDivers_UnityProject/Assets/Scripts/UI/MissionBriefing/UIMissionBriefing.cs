@@ -49,6 +49,7 @@ public class UIMissionBriefing : MonoBehaviour
         //Debug.Log(m_BackroundColor.a);
         if (m_Map.ComfirmSpawnPosition())
         {
+            this.transform.SetAsLastSibling();
             StartCoroutine(FadeOut());
             m_Map.Concentric.OnClick -= ComfirmSpawnPosition;
         }
