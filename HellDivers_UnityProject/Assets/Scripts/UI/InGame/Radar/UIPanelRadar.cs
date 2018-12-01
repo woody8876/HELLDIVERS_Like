@@ -57,6 +57,8 @@ public class UIPanelRadar : MonoBehaviour {
         CountTimer();
 
         #region Input
+        
+
         if (Input.GetKeyDown(KeyCode.G))
         {
             MobManager.m_Instance.SpawnMobs(1, 0, 0, 0);
@@ -180,7 +182,7 @@ public class UIPanelRadar : MonoBehaviour {
         {
             if(m_PointList.Count > 0)
             {
-                UpdatePoint();
+                if(UpdatePoint != null) UpdatePoint();
             }
             m_Timer = 0.0f;
         }
