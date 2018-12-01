@@ -5,9 +5,6 @@ using HELLDIVERS.UI.InGame;
 
 public class GameMain : MonoBehaviour
 {
-    public PlayerInfo m_PlayerData1;// Test player info.
-    public PlayerInfo m_PlayerData2;// Test player info.
-
     #region Properties
 
     public static GameMain Instance { get; private set; }
@@ -29,6 +26,8 @@ public class GameMain : MonoBehaviour
     private CameraFollowing m_CameraFollowing;
     private float m_GameStartTime;
     private bool m_bMissionCompleted;
+
+    [SerializeField] private MapInfo m_MapInfo;
     [SerializeField] private uint m_NumberOfTowers = 1;
 
     #endregion Private Variable
@@ -51,6 +50,8 @@ public class GameMain : MonoBehaviour
         m_AssetManager.Init();
         m_ResourceManager.Init();
         m_ObjectPool.Init();
+        m_MapInfo = Instantiate(m_MapInfo);
+        m_MapInfo.Init();
         UIInGameMain.Instance.Init();
         m_ItemManager.Init();
         m_MissionManager.Init();
