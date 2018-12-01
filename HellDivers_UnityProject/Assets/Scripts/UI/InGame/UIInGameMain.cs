@@ -26,17 +26,17 @@ namespace HELLDIVERS.UI.InGame
         {
             m_PanelPlayerInfo = Instantiate(m_PanelPlayerInfo, this.transform);
             m_PanelStratagemAct = Instantiate(m_PanelStratagemAct, this.transform);
+            m_PanelRadar = Instantiate(m_PanelRadar, this.transform);
+            m_PanelMap = Instantiate(m_PanelMap, this.transform);
+            m_PanelRadar.Init();
+            m_PanelMap.Init();
             m_PanelMissionBriefing = Instantiate(m_PanelMissionBriefing, this.transform);
             m_PanelMissionBriefing.Init(MapInfo.Instance);
             m_PanelMissionInfo = Instantiate(m_PanelMissionInfo, this.transform);
             m_PanelMissionCompleted = Instantiate(m_PanelMissionCompleted, this.transform);
             m_PanelMissionFaild = Instantiate(m_PanelMissionFaild, this.transform);
-            m_PanelRadar = Instantiate(m_PanelRadar, this.transform);
-            m_PanelMap = Instantiate(m_PanelMap, this.transform);
-            m_PanelRadar.Init();
-            m_PanelMap.Init();
         }
-        
+
         private void Awake()
         {
             if (Instance == null) Instance = this;

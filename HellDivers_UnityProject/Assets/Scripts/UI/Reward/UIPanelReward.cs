@@ -90,7 +90,7 @@ namespace HELLDIVERS.UI
             string seconds = (gameTime % 60).ToString("00");
             m_GameTime.text = string.Format("Mission Time - {0}:{1}", minutes, seconds);
             UITweenCanvasGroup tween = m_GameTime.GetComponent<UITweenCanvasGroup>();
-            tween.Play();
+            tween.PlayForward();
         }
 
         private void CreatePlayerRewardElement()

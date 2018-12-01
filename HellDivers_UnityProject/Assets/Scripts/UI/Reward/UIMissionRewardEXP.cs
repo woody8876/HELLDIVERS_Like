@@ -24,7 +24,7 @@ namespace HELLDIVERS.UI
 
         public void DrawUI()
         {
-            m_CanvasTween.Play();
+            m_CanvasTween.PlayForward();
         }
 
         public void AddExp(int num)
