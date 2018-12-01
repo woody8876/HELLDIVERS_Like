@@ -28,7 +28,8 @@ public class UIMissionBriefingConcentric : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetButtonDown("Submit"))
         {
-            UIMissionBriefing.Instance.ComfirmSpawnPosition();
+            if (OnClick != null) OnClick();
+            //UIMissionBriefing.Instance.ComfirmSpawnPosition();
         }
     }
 

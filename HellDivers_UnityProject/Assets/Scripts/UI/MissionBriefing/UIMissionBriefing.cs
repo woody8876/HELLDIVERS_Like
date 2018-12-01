@@ -31,6 +31,7 @@ public class UIMissionBriefing : MonoBehaviour
             AddPoint(mapInfo.SpawnPos[i].gameObject, eMapPointType.SPAWNPOINT);
             Debug.Log("Creata SpawnPoint");
         }
+        m_Map.Concentric.OnClick += ComfirmSpawnPosition;
     }
 
     public void DrawUI()
@@ -43,14 +44,15 @@ public class UIMissionBriefing : MonoBehaviour
         m_Map.AddPointPrefab(target, type);
     }
 
-    public bool ComfirmSpawnPosition()
+    public void ComfirmSpawnPosition()
     {
         //Debug.Log(m_BackroundColor.a);
         if (m_Map.ComfirmSpawnPosition())
         {
             StartCoroutine(FadeOut());
+            m_Map.Concentric.OnClick -= ComfirmSpawnPosition;
         }
-        return true;
+        return;
     }
 
     IEnumerator FadeOut()

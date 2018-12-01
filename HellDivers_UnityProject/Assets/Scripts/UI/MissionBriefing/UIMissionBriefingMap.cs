@@ -12,6 +12,8 @@ public class UIMissionBriefingMap : MonoBehaviour
     [SerializeField] private UIMissionMapPoint m_SpawnPointPrefab;
     [SerializeField] private UIMissionMapPoint m_TowerPointPrefab;
 
+    public UIMissionBriefingConcentric Concentric { get { return m_Concentric; } }
+
     #region Variable
     private RectTransform m_RectTransform;
     private Vector3 m_WorldOrigin;
