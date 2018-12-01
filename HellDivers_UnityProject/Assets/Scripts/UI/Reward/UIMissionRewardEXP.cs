@@ -5,20 +5,20 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI
 {
-    [RequireComponent(typeof(UITweenCanvasGroup))]
+    [RequireComponent(typeof(UITweenCanvasAlpha))]
     public class UIMissionRewardEXP : MonoBehaviour
     {
-        public UITweenCanvasGroup CanvasTween { get { return m_CanvasTween; } }
+        public UITweenCanvasAlpha CanvasTween { get { return m_CanvasTween; } }
 
         [SerializeField] private Text m_EXPText;
-        private UITweenCanvasGroup m_CanvasTween;
+        private UITweenCanvasAlpha m_CanvasTween;
         private int m_iNumber;
         private int m_iCurrentNum;
         private int m_iEvulateRate;
 
         private void Awake()
         {
-            m_CanvasTween = this.GetComponent<UITweenCanvasGroup>();
+            m_CanvasTween = this.GetComponent<UITweenCanvasAlpha>();
             m_EXPText.text = string.Format("Exp {0}", m_iCurrentNum);
         }
 
