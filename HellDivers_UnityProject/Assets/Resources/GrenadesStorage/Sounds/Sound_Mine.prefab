@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 82112042984414782}
   - component: {fileID: 114047781922016794}
   m_Layer: 0
-  m_Name: Sound_Mine_Set
+  m_Name: Sound_Mine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,5 +132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d51ed3af3b0ba439175d4b561a2c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 13012
+  m_ID: 40032
+  b_PitchRandom: 1
   m_Audio: {fileID: 82112042984414782}
