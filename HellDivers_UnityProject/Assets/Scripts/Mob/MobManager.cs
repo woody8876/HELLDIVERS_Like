@@ -88,9 +88,9 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 1, 3002);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 1, 3003);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 1, 3004);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 20, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 20, 3003);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 20, 3004);
         m_TotalKill = 0;
         m_TotalFishKill = 0;
         m_TotalPatrolKill = 0;
@@ -324,8 +324,13 @@ public class MobManager
         }
     }
 
-    public void AddTotalKill()
+    public void Dead()
     {
         if (OnKill != null) OnKill();
+    }
+
+    public void AddTotalKill()
+    {
+        //if (OnKill != null) OnKill();
     }
 }

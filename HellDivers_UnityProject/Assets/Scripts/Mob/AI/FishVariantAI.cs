@@ -9,6 +9,11 @@ public class FishVariantAI : Character
     FSMSystem m_FSM;
     public MobInfo m_AIData;
     public eFSMStateID m_CurrentState;
+    public GameObject m_GODeadBlood;
+    public GameObject m_GOHurtBlood;
+    public BloodSpurt m_DeadBloodSpurt;
+    public BloodSpurt m_HurtBloodSpurt;
+
     private MobAnimationsController m_MobAnimator;
     private BoxCollider m_BodyCollider;
     private CapsuleCollider m_DamageCollider;
@@ -31,6 +36,10 @@ public class FishVariantAI : Character
         m_CurrentHp = m_MaxHp;
         m_BodyCollider.enabled = true;
         m_DamageCollider.enabled = true;
+        m_GODeadBlood = null;
+        m_GOHurtBlood = null;
+        m_DeadBloodSpurt = null;
+        m_HurtBloodSpurt = null;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
         if (OnSpawn != null) OnSpawn();
     }
@@ -168,9 +177,6 @@ public class FishVariantAI : Character
 
         if (IsDead) return false;
         CurrentHp -= damager.Damage;
-
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
-        BloodSpurt bloodSpurt = go.GetComponent<BloodSpurt>();
         
         if (m_CurrentHp <= 0)
         {
@@ -178,9 +184,9 @@ public class FishVariantAI : Character
             m_DamageCollider.enabled = false;
             StartCoroutine(Displacement(hitPoint, 0.2f));
 
-            go = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
-            bloodSpurt = go.GetComponent<BloodSpurt>();
-            bloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
+            m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
+            m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
+            m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             Death();
 
             damager.Damager.Record.NumOfKills++;
@@ -190,7 +196,9 @@ public class FishVariantAI : Character
         }
         else
         {
-            bloodSpurt.Init(m_AIData, hitPoint);
+            m_GOHurtBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
+            m_HurtBloodSpurt = m_GOHurtBlood.GetComponent<BloodSpurt>();
+            m_HurtBloodSpurt.Init(m_AIData, hitPoint);
             PerformGetHurt(hitPoint);
         }
         return true;

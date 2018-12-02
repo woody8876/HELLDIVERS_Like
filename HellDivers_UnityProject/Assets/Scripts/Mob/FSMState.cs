@@ -1292,7 +1292,6 @@ public class FSMDodgeState : FSMState
 
 public class FSMDeadState : FSMState
 {
-    bool bUnload = false;
     public FSMDeadState()
     {
         m_StateID = eFSMStateID.DeadStateID;
@@ -1301,7 +1300,7 @@ public class FSMDeadState : FSMState
 
     public override void DoBeforeEnter(MobInfo data)
     {
-        bUnload = false;
+        MobManager.m_Instance.Dead();
         data.navMeshAgent.enabled = false;
         data.m_AnimationController.SetAnimator(m_StateID);
     }
@@ -1313,16 +1312,7 @@ public class FSMDeadState : FSMState
 
     public override void Do(MobInfo data)
     {
-        if (bUnload) return;
 
-        AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
-        if (info.IsName("Dead"))
-        {
-            if (info.normalizedTime < 0.2f)
-            {
-                //data.m_Go.transform.position += data.m_Go.transform.forward * -3 * Time.deltaTime;
-            }
-        }
     }
 
     public override void CheckCondition(MobInfo data)
@@ -1330,7 +1320,6 @@ public class FSMDeadState : FSMState
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Dead"))
         {
-            if (info.normalizedTime >= 0.8f) bUnload = true;
             if (info.normalizedTime >= 1.0f)
             {
                 MobManager.m_Instance.UnloadMob(data.m_ID, data);
