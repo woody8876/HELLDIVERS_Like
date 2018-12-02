@@ -120,7 +120,7 @@ public class PlayerFSMStartState : PlayerFSMState
 
     public override void CheckCondition(PlayerController data)
     {
-        if(fTimer > 1.0f) data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
+        if(fTimer > 2.0f) data.m_PlayerFSM.PerformTransition(ePlayerFSMTrans.Go_Gun);
         //AnimatorStateInfo info = data.m_Animator.GetCurrentAnimatorStateInfo(0);
         //if (info.IsName("Standing"))
         //{

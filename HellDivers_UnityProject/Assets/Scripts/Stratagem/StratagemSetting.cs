@@ -11,4 +11,5 @@ public class StratagemSetting : ScriptableObject
     public float ScaleThorwForceRate;
     public GameObject DefaultDisplay;
     public GameObject DefaultResult;
+    public List<AudioClip> AudioClips;
 }
