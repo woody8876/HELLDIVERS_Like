@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using HELLDIVERS.UI;
+using HELLDIVERS.UI.InGame;
 
 public class UIMissionBriefing : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class UIMissionBriefing : MonoBehaviour
     {
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject != null)
         {
-            Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
+            //Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
         }
     }
 
@@ -56,6 +57,11 @@ public class UIMissionBriefing : MonoBehaviour
     public void AddPoint(GameObject target, eMapPointType type)
     {
         m_Map.AddPointPrefab(target, type);
+    }
+
+    public void MissionSelected()
+    {
+        m_MissionIntroduction.Selected();
     }
 
     public void ComfirmSpawnPosition()

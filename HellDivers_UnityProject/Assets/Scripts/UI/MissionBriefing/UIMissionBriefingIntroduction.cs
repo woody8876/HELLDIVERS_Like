@@ -13,6 +13,7 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     [SerializeField] private Text m_Introduction;
 
     private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap = new Dictionary<eMissionType, List<UIMissionInfo>>();
+    private Dictionary<eMissionType, string> m_MissionTextMap = new Dictionary<eMissionType, string>();
 
     public void AddMissionInfo(Mission mission)
     {
@@ -41,6 +42,7 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
                     UIMissionGroupInfo missionGroupUI = Instantiate(m_MissionGroupInfoPrefab, m_UIRoot);
                     missionGroupUI.Initialize(mission);
                     pList.Add(missionGroupUI);
+                    m_MissionTextMap.Add(mission.Type, "HAHA");
                 }
 
                 break;
@@ -49,9 +51,26 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
                 UIMissionCountInfo missionCountUI = Instantiate(m_MissionCountInfoPrefab, m_UIRoot);
                 missionCountUI.Initialize(mission);
                 pList.Add(missionCountUI);
+                m_MissionTextMap.Add(mission.Type, "BABA");
                 break;
         }
 
         if (m_MissionElementMap.Count == 1) EventSystem.current.SetSelectedGameObject(m_MissionElementMap[mission.Type][0].gameObject);
+    }
+
+    [ContextMenu("Test")]
+    public void Selected()
+    {
+        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
+        {
+            m_Introduction.text = "Tower";
+            Debug.Log("Group");
+        }
+        else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
+        {
+            m_Introduction.text = "Kill Mob";
+            Debug.Log("Count");
+        }
+
     }
 }
