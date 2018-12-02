@@ -9,13 +9,22 @@ public class UIMissionMapPoint : MonoBehaviour {
     [SerializeField] private Color m_NormalColor;
     [SerializeField] private Color m_HighlightColor;
 
-    public GameObject Tower { get { return m_Tower; } set { m_Tower = value; } }
+    public GameObject SpawnPoint { get { return m_SpawnPoint; } set { m_SpawnPoint = value; } }
 
-    private GameObject m_Tower;
+    private GameObject m_SpawnPoint;
 
-    public void Init(GameObject target)
+    public void Init(GameObject target, eMapPointType type)
     {
-        m_Tower = target;
+        switch (type)
+        {
+            case eMapPointType.SPAWNPOINT:
+                m_SpawnPoint = target;
+                break;
+            case eMapPointType.MISSIONTOWER:
+                UIMissionBriefing.Instance.MissionIntroduction.OnSelect += Selected;
+                UIMissionBriefing.Instance.MissionIntroduction.NotSelect += NotSelected;
+                break;
+        }
     }
 
     private void Awake()
@@ -29,6 +38,15 @@ public class UIMissionMapPoint : MonoBehaviour {
     }
 
     public void Normal()
+    {
+        m_Icon.color = m_NormalColor;
+    }
+
+    public void Selected()
+    {
+        m_Icon.color = m_HighlightColor;
+    }
+    public void NotSelected()
     {
         m_Icon.color = m_NormalColor;
     }

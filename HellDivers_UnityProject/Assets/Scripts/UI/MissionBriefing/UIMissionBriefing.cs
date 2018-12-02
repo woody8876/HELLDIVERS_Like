@@ -17,6 +17,7 @@ public class UIMissionBriefing : MonoBehaviour
     public static UIMissionBriefing Instance { get; private set; }
 
     public UIMissionBriefingMap Map { get { return m_Map; } }
+    public UIMissionBriefingIntroduction MissionIntroduction { get { return m_MissionIntroduction; } }
 
     private void Awake()
     {
@@ -38,10 +39,7 @@ public class UIMissionBriefing : MonoBehaviour
 
     private void Update()
     {
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject != null)
-        {
-            //Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
-        }
+        
     }
 
     public void DrawUI()

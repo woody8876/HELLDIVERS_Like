@@ -7,6 +7,12 @@ using HELLDIVERS.UI.InGame;
 
 public class UIMissionBriefingIntroduction : MonoBehaviour {
 
+    #region Event 
+    public delegate void MissionIntroductionHolder();
+    public event MissionIntroductionHolder OnSelect;
+    public event MissionIntroductionHolder NotSelect;
+    #endregion
+
     [SerializeField] private Transform m_UIRoot;
     [SerializeField] private UIMissionGroupInfo m_MissionGroupInfoPrefab;
     [SerializeField] private UIMissionCountInfo m_MissionCountInfoPrefab;
@@ -61,16 +67,32 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     [ContextMenu("Test")]
     public void Selected()
     {
+        //if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
+        //{
+        //    m_Introduction.text = "Tower";
+        //    Debug.Log("Group");
+        //}
+        //else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
+        //{
+        //    m_Introduction.text = "Kill Mob";
+        //    Debug.Log("Count");
+        //}
+    }
+
+    private void Update()
+    {
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
         {
             m_Introduction.text = "Tower";
-            Debug.Log("Group");
+            if (OnSelect != null) OnSelect();
         }
-        else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
+        else
+        {
+            if (NotSelect != null) NotSelect();
+        }
+        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
         {
             m_Introduction.text = "Kill Mob";
-            Debug.Log("Count");
         }
-
     }
 }
