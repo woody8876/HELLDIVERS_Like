@@ -114,7 +114,7 @@ public class Player : Character
         if (m_Data.Weapons.Count > 0) m_WeapoonController.AddMultiWeapons(m_Data.Weapons, m_Parts.LaunchPoint, this);
 
         // Setup grenades
-        if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint);
+        if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint, this);
     }
 
     #endregion Initializer
