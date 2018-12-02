@@ -14,7 +14,7 @@ public class GrenadesController : MonoBehaviour
     /// </summary>
     /// <param name="ids">Grenades' ID</param>
     /// <param name="t">Strat Position</param>
-    public void AddGrenades(List<int> ids, Transform startPos, Transform throwPos)
+    public void AddGrenades(List<int> ids, Transform startPos, Transform throwPos, Player player)
     {
         foreach (int id in ids)
         {
@@ -26,6 +26,7 @@ public class GrenadesController : MonoBehaviour
         CurrentID = GrenadeKeys[0];
         m_StarPos = startPos;
         m_ThrowPos = throwPos;
+        m_Player = player;
         }
 
     /// <summary>
@@ -99,16 +100,8 @@ public class GrenadesController : MonoBehaviour
             return m_bHolding;
         }
         else mCurBehaviors.grenadeInfo.Force += 5 * Time.fixedDeltaTime;
+        m_Grenade.transform.SetParent(m_StarPos);
         return true;
-    }
-
-    /// <summary>
-    /// Grenade's follow
-    /// </summary>
-    public void Following()
-    {
-        m_Grenade.transform.position = m_StarPos.position;
-        m_Grenade.transform.forward = m_StarPos.forward;
     }
 
     /// <summary>
@@ -119,7 +112,7 @@ public class GrenadesController : MonoBehaviour
         if (!m_bHolding) return;
         GrenadeCounter--;
         mCurBehaviors.Throw(ref m_Grenade, m_ThrowPos);
-        m_Grenade.GetComponent<Grenades>().SetInfo(mCurBehaviors.grenadeInfo);
+        m_Grenade.GetComponent<Grenades>().SetInfo(mCurBehaviors.grenadeInfo, m_Player);
         m_bHolding = false;
         
         if (OnCount != null) OnCount();
@@ -218,6 +211,7 @@ public class GrenadesController : MonoBehaviour
     private GameObject m_Grenade;
     private Transform m_StarPos;
     private Transform m_ThrowPos;
+    private Player m_Player;
     private bool m_bHolding;
 
     private string m_InputVertical = "StratagemVertical";

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grenades : MonoBehaviour{
+public class Grenades : MonoBehaviour, IDamager{
 
     [SerializeField] EGrenades m_Type;
     [SerializeField] int m_ID;
@@ -10,16 +10,24 @@ public class Grenades : MonoBehaviour{
     #region Private Field
     protected GrenadeInfo grenadeInfo;
     protected Vector3 m_vForward;
+    protected Player m_player;
     protected bool m_bGround = true;
     protected bool m_bCounting;
     protected float m_fDamageTime;
+
+    public Player Damager { get { return m_player; } }
+
+    public float Damage { get { return grenadeInfo.Damage; } }
+
     #endregion
 
-    public void SetInfo(GrenadeInfo info)
+    public void SetInfo(GrenadeInfo info, Player player)
     {
         grenadeInfo = info;
         m_bGround = false;
+        this.transform.SetParent(GameObject.Find("Grenades").transform);
         m_vForward = transform.forward;
+        m_player = player;
     }
 
     #region Private function
@@ -37,13 +45,13 @@ public class Grenades : MonoBehaviour{
         transform.Rotate(0, 30, 0);
     }
 
-    protected virtual void Damage(Vector3 pos)
+    protected virtual void DoDamage(Vector3 pos)
     {
         var enemies = Physics.OverlapSphere(pos, grenadeInfo.Range, 1<<LayerMask.NameToLayer("Enemies") | 1<< LayerMask.NameToLayer("Player"));
         foreach (var enemy in enemies)
         {
             IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
-            target.TakeDamage(grenadeInfo.Damage, enemy.transform.position);
+            target.TakeDamage(this, enemy.transform.position);
         }
     }
 
@@ -75,7 +83,7 @@ public class Grenades : MonoBehaviour{
         if (m_fDamageTime > grenadeInfo.Timer)
         {
             grenadeInfo.Force = 1;
-            Damage(this.transform.position);
+            DoDamage(this.transform.position);
             m_fDamageTime = 0;
             ObjectPool.m_Instance.UnLoadObjectToPool(grenadeInfo.ID, this.gameObject);
             m_bCounting = false;
