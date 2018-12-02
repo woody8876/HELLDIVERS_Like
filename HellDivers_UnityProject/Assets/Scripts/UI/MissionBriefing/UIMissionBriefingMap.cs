@@ -73,27 +73,6 @@ public class UIMissionBriefingMap : MonoBehaviour
         if (mapPoint != null) CalculatePosition(target.transform.position, ref mapPoint);
     }
 
-    //public bool Select()
-    //{
-    //    if (UIMissionBriefing.Instance.HightLight == null) return false;
-
-    //    UIMissionBriefing.Instance.Target = UIMissionBriefing.Instance.HightLight;
-    //    UIMissionBriefing.Instance.HightLight = null;
-    //    return true;
-    //}
-
-    //public void SetHightLight(UIMissionBriefingMapPoint mapPoint)
-    //{
-    //    UIMissionBriefing.Instance.HightLight = mapPoint;
-    //}
-    //public void DeleteHighLight(UIMissionBriefingMapPoint mapPoint)
-    //{
-    //    if (UIMissionBriefing.Instance.HightLight != mapPoint) return;
-
-    //    UIMissionBriefing.Instance.HightLight = null;
-    //}
-
-
     private void CalculatePosition(Vector3 target,ref UIMissionMapPoint mapPoint)
     {
         Vector3 m_Dir = target - m_WorldOrigin;
