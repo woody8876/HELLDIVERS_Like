@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SoundManager))]
 [RequireComponent(typeof(GrenadesController))]
 [RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(StratagemController))]
@@ -48,6 +49,11 @@ public class Player : Character
     public GrenadesController GrenadesController { get { return m_GrenadesController; } }
 
     /// <summary>
+    /// Player sound behavior controller.
+    /// </summary>
+    public SoundManager SoundManafer { get { return m_SoundManager; } }
+
+    /// <summary>
     /// Repersent of player body's transform.
     /// </summary>
     public PlayerParts Parts { get { return m_Parts; } }
@@ -65,6 +71,7 @@ public class Player : Character
     private StratagemController m_StratagemController;
     private WeaponController m_WeapoonController;
     private GrenadesController m_GrenadesController;
+    private SoundManager m_SoundManager;
 
     #endregion Private Variable
 
@@ -115,6 +122,16 @@ public class Player : Character
 
         // Setup grenades
         if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint, this);
+
+        // Setup sounds
+        List<AudioClip> audioList = new List<AudioClip>();
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn01") as AudioClip);
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn02") as AudioClip);
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn03") as AudioClip);
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death01") as AudioClip);
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death02") as AudioClip);
+        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death03") as AudioClip);
+        m_SoundManager.SetAudioClips(audioList);
     }
 
     #endregion Initializer
@@ -130,6 +147,7 @@ public class Player : Character
         m_WeapoonController = GetComponent<WeaponController>();
         m_StratagemController = GetComponent<StratagemController>();
         m_GrenadesController = GetComponent<GrenadesController>();
+        m_SoundManager = GetComponent<SoundManager>();
     }
 
     // Use this for initialization
@@ -249,6 +267,7 @@ public class Player : Character
             yield return new WaitUntil(() => m_Controller.bIsAlive);
         }
 
+        m_SoundManager.Play(UnityEngine.Random.Range(0, 3), 0.5f);
         GameMain.Instance.CameraFolloing.AddTarget(this.transform);
         m_bDead = false;
 
@@ -261,6 +280,8 @@ public class Player : Character
 
     private IEnumerator DoDeath()
     {
+        m_SoundManager.Play(UnityEngine.Random.Range(3, 6), 0.5f);
+
         if (m_Controller != null)
         {
             m_Controller.PerformPlayerDead();
