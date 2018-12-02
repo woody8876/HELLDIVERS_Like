@@ -50,6 +50,7 @@ public class AxisEvent : MonoBehaviour {
         }
         else if (Input.GetKeyDown(controller.Submit))
         {
+            if (audio == null) return;
             if (audio.isPlaying) { audio.Stop(); }
             audio.Play();
         }

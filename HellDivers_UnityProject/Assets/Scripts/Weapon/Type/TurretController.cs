@@ -92,11 +92,16 @@ public class TurretController : Character {
     {
         IDamageable target = m_CurrentTarget.GetComponent<IDamageable>();
         if (target.IsDead) m_CurrentTarget = null;
+        if (Physics.Linecast(m_GunPos.position, m_CurrentTarget.transform.position, 1 << LayerMask.NameToLayer("Obstacle")))
+        {
+            m_CurrentTarget = null;
+        }
     }
 
     public override void Death()
     {
+
         m_bDead = true;
-        Destroy(m_Base);
+        ObjectPool.m_Instance.UnLoadObjectToPool(1901, m_Base);
     }
 }

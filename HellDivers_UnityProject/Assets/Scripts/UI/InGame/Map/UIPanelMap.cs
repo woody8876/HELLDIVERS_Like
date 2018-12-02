@@ -58,10 +58,10 @@ public class UIPanelMap : MonoBehaviour {
         m_Color = m_Image.color;
         m_Color.a = 0;
         m_Image.color = m_Color;
+        m_RadarImage = m_PanelRadar.GetComponent<Image>();
     }
     void Start()
     {
-        //m_RadarImage = m_PanelRadar.GetComponent<Image>();
         //m_RadarColor = m_RadarImage.GetComponent<Color>();
     }
 
@@ -74,13 +74,16 @@ public class UIPanelMap : MonoBehaviour {
         }
         else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M) || Input.GetButtonDown("Map")))
         {
+            UIPanelRadar.Instance.SetDisplay(true);
             m_Timer = 0.0f;
             m_bDisplay = false;
         }
+
         if (m_bDisplay)
         {
             if (m_Color.a <= 1)
             {
+                UIPanelRadar.Instance.SetDisplay(false);
                 m_Color.a += Time.deltaTime * 5.0f;
                 m_Image.color = m_Color;
             }
@@ -88,6 +91,7 @@ public class UIPanelMap : MonoBehaviour {
             m_Timer += Time.deltaTime;
             if(m_Timer >= 5.0f)
             {
+                UIPanelRadar.Instance.SetDisplay(true);
                 m_Timer = 0.0f;
                 m_bDisplay = false;
             }

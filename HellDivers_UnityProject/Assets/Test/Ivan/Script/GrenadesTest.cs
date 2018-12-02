@@ -9,7 +9,7 @@ public class GrenadesTest : MonoBehaviour {
     List<int> grenades = new List<int>() { 4001, 4002, 4003, 4004 };
 	// Use this for initialization
 	void Start () {
-        grenadesController.AddGrenades(grenades, transform, transform);
+//        grenadesController.AddGrenades(grenades, transform, transform);
 	}
 	
 	// Update is called once per frame

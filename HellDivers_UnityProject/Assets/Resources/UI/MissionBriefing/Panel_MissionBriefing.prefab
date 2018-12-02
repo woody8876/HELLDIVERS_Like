@@ -89,6 +89,8 @@ GameObject:
   - component: {fileID: 222777644622062962}
   - component: {fileID: 114193214800065098}
   - component: {fileID: 114454172675400022}
+  - component: {fileID: 225899808046455246}
+  - component: {fileID: 114664029849593260}
   m_Layer: 5
   m_Name: Panel_MissionBriefing
   m_TagString: Untagged
@@ -256,6 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224291579750416522}
   - component: {fileID: 114540315155205916}
+  - component: {fileID: 114122256894410912}
   m_Layer: 5
   m_Name: MissionIntroduction
   m_TagString: Untagged
@@ -748,7 +751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &114009666492274890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -830,6 +833,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114122256894410912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1429358690778226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 439d6443973413641abcc1eb11a0fd3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114123566935301530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1261,10 +1275,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e6ea3ff7c1ab94a8b26dd344851761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PanelMap: {fileID: 224949928738574258}
+  m_UITweenCanvasAlpha: {fileID: 114664029849593260}
   m_Map: {fileID: 114945778302371354, guid: da2b65e025749584087cd369339a01dd, type: 2}
-  m_GOConcentric: {fileID: 1461063732707372, guid: c968a169c34e11046b9dbc4145b3c1b0,
-    type: 2}
+  m_UIIMissionBriefingIntroduction: {fileID: 114122256894410912}
+  m_PanelMap: {fileID: 224949928738574258}
   m_Backround: {fileID: 114198790745152660}
   m_BackroundColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114477880302002892
@@ -1299,7 +1313,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Mission1.....
+  m_Text: Guard the tower
 --- !u!114 &114485209833751678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1569,6 +1583,36 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Here is a snow day ! '
+--- !u!114 &114664029849593260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1095823240320686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf051c7360545140befbd8fc1c605c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_time: 1
+  m_AnimaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114664422193766254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2371,7 +2415,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 499, y: 200}
+  m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224229228423126284
 RectTransform:
@@ -2978,3 +3022,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!225 &225899808046455246
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1095823240320686}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
