@@ -8,11 +8,11 @@ public class UIPanelMissionComplete : MonoBehaviour
 {
     public float TimeLenght { get { return m_BackgroundTweener.TimeLenght + m_TitleDelay + m_TitleTweener.TimeLenght + m_OverlayDelay + m_OverlayTweener.TimeLenght; } }
 
-    [SerializeField] private UITweenCanvasGroup m_BackgroundTweener;
+    [SerializeField] private UITweenAlpha m_BackgroundTweener;
     [SerializeField] private float m_TitleDelay;
-    [SerializeField] private UITweenCanvasGroup m_TitleTweener;
+    [SerializeField] private UITweenAlpha m_TitleTweener;
     [SerializeField] private float m_OverlayDelay;
-    [SerializeField] private UITweenCanvasGroup m_OverlayTweener;
+    [SerializeField] private UITweenAlpha m_OverlayTweener;
 
     public void StartUI()
     {
@@ -24,7 +24,7 @@ public class UIPanelMissionComplete : MonoBehaviour
     {
         m_BackgroundTweener.PlayForward();
 
-        yield return new WaitForSeconds(m_BackgroundTweener.TimeLenght * m_TitleDelay);
+        yield return new WaitForSeconds(m_BackgroundTweener.TimeLenght + m_TitleDelay);
 
         m_TitleTweener.PlayForward();
 
@@ -32,6 +32,9 @@ public class UIPanelMissionComplete : MonoBehaviour
 
         m_OverlayTweener.PlayForward();
 
+        yield return new WaitForSeconds(m_OverlayTweener.TimeLenght);
+
+        this.gameObject.SetActive(false);
         yield break;
     }
 }

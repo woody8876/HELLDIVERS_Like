@@ -78,7 +78,7 @@ namespace HELLDIVERS.UI
 
             for (int i = 0; i < m_Details.Count; i++)
             {
-                UITweenCanvasGroup tween = m_Details[i].CanvasTween;
+                var tween = m_Details[i].CanvasTween;
                 tween.PlayForward();
                 yield return new WaitForSeconds(tween.TimeLenght);
                 m_Details[i].StartCountNum();
