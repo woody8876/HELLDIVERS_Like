@@ -46,7 +46,7 @@ public class GrenadeCreater : IGrenadesBehaviors {
         ObjectPool.m_Instance.InitGameObjects(grenade, _grenadeInfo.MaxCount, grenadeID);
         ObjectPool.m_Instance.InitGameObjects(effect, _grenadeInfo.MaxCount, grenadeID * 10 + 1);
         ObjectPool.m_Instance.InitGameObjects(sound, _grenadeInfo.MaxCount, grenadeID * 10 + 2);
-        if (soundExplosion != null) ObjectPool.m_Instance.InitGameObjects(sound, _grenadeInfo.MaxCount, grenadeID * 10 + 3);
+        if (soundExplosion != null) ObjectPool.m_Instance.InitGameObjects(soundExplosion, _grenadeInfo.MaxCount, grenadeID * 10 + 3);
     }
 
     public virtual void Throw(ref GameObject go, Transform t)
