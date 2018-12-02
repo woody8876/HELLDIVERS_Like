@@ -88,9 +88,9 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
         ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 300, 3002);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 300, 3003);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 300, 3004);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 1, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 1, 3003);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 1, 3004);
         m_TotalKill = 0;
         m_TotalFishKill = 0;
         m_TotalPatrolKill = 0;
@@ -112,45 +112,6 @@ public class MobManager
             m_PatrolCount++;
         }
     }
-
-    public void SpawnFish(int num, Transform center, float minRadius, float maxRadius)
-    {
-        Vector3 spawnTarget = center.forward;
-
-        for (int i = 0; i < num; i++)
-        {
-            for (int j = 0; j < 30; j++)
-            {
-                spawnTarget = Vector3.forward;
-                spawnTarget = Quaternion.AngleAxis(Random.Range(1f, 360f), Vector3.up) * spawnTarget;
-                spawnTarget *= Random.Range(25f, 35f);
-                spawnTarget += center.position;
-                if (Physics.Linecast(center.position, spawnTarget, 1 << LayerMask.NameToLayer("Obstcale")))
-                {
-                    continue;
-                }
-                else
-                {
-                    m_GOFish = ObjectPool.m_Instance.LoadGameObjectFromPool(3100);
-                    if (m_GOFish == null) return;
-                    m_GOFish.transform.position = spawnTarget;
-                    m_GOFish.SetActive(true);
-                    m_FishCount++;
-                    if (UIPanelRadar.Instance != null)
-                        UIPanelRadar.Instance.AddPointPrefab(m_GOFish, eMapPointType.FISH);
-                    break;
-                }
-            }
-        }
-        //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
-        //if (m_GOPatrol == null) return;
-        //m_GOPatrol.transform.position = spawnTarget;
-        //m_GOPatrol.SetActive(true);
-        //PatrolAI patrolAI = m_GOPatrol.GetComponent<PatrolAI>();
-        //patrolAI.m_bGoIdle = true;
-        //m_PatrolCount++;
-    }
-
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount)
     {
         List<Player> pList = InGamePlayerManager.Instance.Players;

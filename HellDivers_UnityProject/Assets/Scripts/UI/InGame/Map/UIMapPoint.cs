@@ -30,6 +30,11 @@ public class UIMapPoint : MonoBehaviour {
                 fish.OnDeath += HidePoint;
                 break;
             case eMapPointType.MISSIONTOWER:
+                m_Image = this.GetComponent<Image>();
+                m_Color.r = 1;
+                m_Color.g = 1;
+                m_Color.b = 1;
+                m_Image.color = m_Color;
                 MissionTower missionTower = target.GetComponent<MissionTower>();
                 missionTower.OnActive += CompletePoint;
                 UIPanelMap.Instance.DisplayPoint += ShowPoint;
@@ -92,7 +97,7 @@ public class UIMapPoint : MonoBehaviour {
     private void ShowPoint()
     {
         this.gameObject.SetActive(true);
-        m_Color.a = 0.7f;
+        m_Color.a = 0.8f;
         m_Image.color = m_Color;
         CalculatePosition();
     }
