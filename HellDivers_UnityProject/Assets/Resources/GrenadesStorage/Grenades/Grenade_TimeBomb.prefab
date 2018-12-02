@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4587496862083614}
   - component: {fileID: 114835476522363750}
-  - component: {fileID: 114557677835222092}
+  - component: {fileID: 114084143792487440}
   m_Layer: 0
   m_Name: Grenade_TimeBomb
   m_TagString: Untagged
@@ -445,7 +445,7 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &114557677835222092
+--- !u!114 &114084143792487440
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
