@@ -11,7 +11,7 @@ public class SceneController : MonoBehaviour
 
     private DelegateOnSceneLoad OnLoadFinished;
 
-    private void Awake()
+    public void Init()
     {
         if (Instance == null) Instance = this;
         else Destroy(this);

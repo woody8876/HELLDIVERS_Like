@@ -56,6 +56,7 @@ public class TurretController : Character {
             float nextDot = -1;
             for (int i = 0; i < targets.Length; i++)
             {
+                if (Physics.Linecast(m_GunPos.position, targets[i].transform.position)) continue;
                 Vector3 targetVec = targets[i].transform.position - this.transform.position;
                 Vector3 normalVec = targetVec.normalized;
                 float dot = Vector3.Dot(normalVec, this.transform.forward);
@@ -92,11 +93,16 @@ public class TurretController : Character {
     {
         IDamageable target = m_CurrentTarget.GetComponent<IDamageable>();
         if (target.IsDead) m_CurrentTarget = null;
+        if (Physics.Linecast(m_GunPos.position, m_CurrentTarget.transform.position, 1 << LayerMask.NameToLayer("Obstcale")))
+        {
+            m_CurrentTarget = null;
+        }
     }
 
     public override void Death()
     {
+
         m_bDead = true;
-        Destroy(m_Base);
+        ObjectPool.m_Instance.UnLoadObjectToPool(1901, m_Base);
     }
 }
