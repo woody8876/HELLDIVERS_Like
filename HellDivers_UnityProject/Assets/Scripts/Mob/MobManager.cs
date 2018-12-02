@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.AI;
 using HELLDIVERS.UI.InGame;
 
-
 public class MobManager
 {
     #region Events
+
     public delegate void MobEventKill();
+
     public event MobEventKill OnKill;
-    #endregion
+
+    #endregion Events
 
     static public MobManager m_Instance;
 
     #region Kill Count Variable
+
     private int m_TotalKill;
     private int m_TotalFishKill;
     private int m_TotalFishVariantKill;
@@ -28,7 +31,8 @@ public class MobManager
     public int TotalPatrolKill { get { return m_TotalPatrolKill; } }
     public int TotalTankKill { get { return m_TotalTankKill; } }
     //public int TotalTotalKill { get { return m_TotalTankKill; } }
-    #endregion
+
+    #endregion Kill Count Variable
 
     private int m_FishCount;
     private int m_FishVariantCount;
@@ -49,7 +53,6 @@ public class MobManager
     private GameObject m_GOGroundFissure;
     private GameObject m_GOFireBall;
     private GameObject m_GOFireBomb;
-
 
     //private Player m_Player;
     //private int count = 0;
@@ -74,7 +77,6 @@ public class MobManager
         m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
         m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
         m_GOBloodSpurtDead = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtDead") as GameObject;
-
 
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
@@ -139,7 +141,6 @@ public class MobManager
                     break;
                 }
             }
-            
         }
         //m_GOPatrol = ObjectPool.m_Instance.LoadGameObjectFromPool(3200);
         //if (m_GOPatrol == null) return;
@@ -334,7 +335,7 @@ public class MobManager
             }
         }
     }
-    
+
     public void UnloadMob(int ID, MobInfo data)
     {
         ObjectPool.m_Instance.UnLoadObjectToPool(ID, data.m_Go);
@@ -344,14 +345,17 @@ public class MobManager
                 AddTotalKill();
                 m_FishCount--;
                 break;
+
             case 3200:
                 AddTotalKill();
                 m_PatrolCount--;
                 break;
+
             case 3300:
                 AddTotalKill();
                 m_FishVariantCount--;
                 break;
+
             case 3400:
                 AddTotalKill();
                 m_TankCount--;
@@ -364,4 +368,3 @@ public class MobManager
         if (OnKill != null) OnKill();
     }
 }
-

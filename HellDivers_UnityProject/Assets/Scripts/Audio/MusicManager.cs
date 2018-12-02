@@ -12,6 +12,7 @@ public class MusicManager : MonoBehaviour
 {
     public static MusicManager Instance { get; private set; }
     public eMusicSelection CurrentSelection { get { return m_CurrentSelection; } }
+    public AudioSource Audio { get { return m_AudioSource; } }
 
     private AudioSource m_AudioSource;
     private BGMSetting m_Setting;
@@ -22,12 +23,12 @@ public class MusicManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(this);
         m_AudioSource = this.GetComponent<AudioSource>();
-        m_AudioSource.loop = true;
-        m_Setting = Resources.Load<BGMSetting>("BGMSetting");
     }
 
-    private void Start()
+    public void Init()
     {
+        m_AudioSource.loop = true;
+        m_Setting = Resources.Load<BGMSetting>("BGMSetting");
         PlayMusic(eMusicSelection.Theme, 2);
     }
 
