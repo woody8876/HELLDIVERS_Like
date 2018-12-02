@@ -35,14 +35,22 @@ public class UIMissionBriefing : MonoBehaviour
         m_Map.Concentric.OnClick += ComfirmSpawnPosition;
     }
 
+    private void Update()
+    {
+        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject != null)
+        {
+            Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
+        }
+    }
+
     public void DrawUI()
     {
         this.transform.SetAsLastSibling();
     }
 
-    public void AddMission(eMissionType type)
+    public void AddMission(Mission mission)
     {
-        m_MissionIntroduction.AddMissionType(type);
+        m_MissionIntroduction.AddMissionInfo(mission);
     }
 
     public void AddPoint(GameObject target, eMapPointType type)
@@ -56,6 +64,7 @@ public class UIMissionBriefing : MonoBehaviour
         {
             this.transform.SetAsLastSibling();
             m_UITweenCanvasAlpha.PlayBackward();
+            m_UITweenCanvasAlpha.OnTweenFinished += () => { Destroy(this.gameObject); };
             m_Map.Concentric.OnClick -= ComfirmSpawnPosition;
         }
         return;
