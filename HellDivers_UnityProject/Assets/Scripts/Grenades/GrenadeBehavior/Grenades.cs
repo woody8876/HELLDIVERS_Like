@@ -75,13 +75,20 @@ public class Grenades : MonoBehaviour, IDamager{
         m_fDamageTime += Time.fixedDeltaTime;
         if (m_fDamageTime <= Time.fixedDeltaTime)
         {
-            GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID + 100);
-            go.transform.position = transform.position;
-            go.transform.forward = transform.forward;
-            go.SetActive(true);
+            GameObject effect = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 1);
+            GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 2);
+            effect.transform.position = transform.position;
+            effect.transform.forward = transform.forward;
+            effect.SetActive(true);
+            sound.SetActive(true);
         }
         if (m_fDamageTime > grenadeInfo.Timer)
         {
+            if (grenadeInfo.ID == 4004)
+            {
+                GameObject soundExplosion = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 3);
+                soundExplosion.SetActive(true);
+            }
             grenadeInfo.Force = 1;
             DoDamage(this.transform.position);
             m_fDamageTime = 0;
