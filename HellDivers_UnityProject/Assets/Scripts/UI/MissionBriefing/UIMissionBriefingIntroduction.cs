@@ -83,7 +83,9 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     {
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
         {
-            m_Introduction.text = "Tower";
+            m_Introduction.text = "Guard the Tower missions require Helldivers to drop into a hazardous, " +
+                "arena-like area to exterminate as many of the enemies of democracy as possible before being allowed to extract.\n" +
+                "During a Guard the Tower, a time counter will appear at the middle of the tower.";
             if (OnSelect != null) OnSelect();
         }
         else
@@ -92,7 +94,7 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
         }
         if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
         {
-            m_Introduction.text = "Kill Mob";
+            m_Introduction.text = "Destroy the enemy as much as possible";
         }
     }
 }
