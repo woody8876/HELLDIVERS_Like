@@ -77,7 +77,7 @@ public class Grenades : MonoBehaviour, IDamager{
         {
             GameObject effect = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 1);
             GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 2);
-            effect.transform.position = transform.position;
+            effect.transform.position = sound.transform.position = transform.position;
             effect.transform.forward = transform.forward;
             effect.SetActive(true);
             sound.SetActive(true);

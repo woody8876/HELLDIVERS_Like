@@ -139,10 +139,11 @@ public class WeaponController : MonoBehaviour
         }
     }
 
-    public void LoadSound(int i)
+    public void LoadSound(int i, Transform t)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(i);
         if (go == null) return;
+        go.transform.position = t.position;
         go.SetActive(true);
     }
 
@@ -157,7 +158,7 @@ public class WeaponController : MonoBehaviour
     {
         if (CurrentWeaponInfo.Ammo <= 0 )
         {
-            LoadSound(999);
+            LoadSound(999, m_tGunPos);
             return false;
         }
         if (!m_bShooting) { return false; }
@@ -170,7 +171,7 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitCooling()
     {
         CurEffect.SetActive(true);
-        LoadSound(_CurrentWeapon * 10 + 2);
+        LoadSound(_CurrentWeapon * 10 + 2, m_tGunPos);
         yield return new WaitForSeconds(0.2f);
         CurBehaviors.Shot(m_tGunPos, m_fSpreadIncrease, m_player);
         if (OnFire != null) OnFire();
@@ -199,7 +200,7 @@ public class WeaponController : MonoBehaviour
     private IEnumerator WaitReloading()
     {
         if (OnReload != null) OnReload();
-        LoadSound(998);
+        LoadSound(998, m_tGunPos);
         yield return new WaitForSeconds(CurrentWeaponInfo.ReloadSpeed);
         CurBehaviors.Reload();
         if (OnReloadEnd != null) OnReloadEnd();

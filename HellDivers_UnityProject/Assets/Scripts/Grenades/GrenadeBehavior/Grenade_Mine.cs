@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Grenade_Mine : Grenades
 {
+    [SerializeField] Animator BombAnimator;
     bool bEnd = false;
+
 
     protected override void CountDown()
     {
@@ -15,15 +17,19 @@ public class Grenade_Mine : Grenades
             if (m_fDamageTime <= Time.fixedDeltaTime)
             {
                 this.GetComponent<MeshRenderer>().enabled = false;
-                this.GetComponentInChildren<Animator>().SetTrigger("startTrigger");
+                BombAnimator.SetTrigger("startTrigger");
+                GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 2);
             }
             if (Physics.SphereCast(transform.position - Vector3.up, 2, Vector3.up, out rh, 100, 1 << LayerMask.NameToLayer("Enemies") | 1 << LayerMask.NameToLayer("Player")) || m_fDamageTime > grenadeInfo.Timer)
             {
                 Debug.Log(rh.point);
-                this.GetComponentInChildren<Animator>().SetTrigger("endTrigger");
-                GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID + 100);
-                go.transform.position = this.transform.position;
-                go.transform.forward = this.transform.forward;
+                BombAnimator.SetTrigger("endTrigger");
+                GameObject effect = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 1);
+                GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 3);
+                effect.transform.position = sound.transform.position = this.transform.position;
+                effect.transform.forward = this.transform.forward;
+
+
                 m_fDamageTime = 0;
                 bEnd = true;
             }
