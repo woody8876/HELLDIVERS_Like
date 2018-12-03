@@ -70,7 +70,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4205979427496052}
-  - component: {fileID: 114085266135804072}
   - component: {fileID: 114524798646455456}
   m_Layer: 15
   m_Name: Grenade_Lightning
@@ -394,19 +393,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &114085266135804072
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1290052304348410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67c0d4c576ebb4242935e98d74fe66ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Type: 1
-  m_fAngle: 30
 --- !u!114 &114524798646455456
 MonoBehaviour:
   m_ObjectHideFlags: 1

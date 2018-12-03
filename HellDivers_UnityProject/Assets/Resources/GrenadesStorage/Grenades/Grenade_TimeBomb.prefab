@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4587496862083614}
-  - component: {fileID: 114835476522363750}
   - component: {fileID: 114084143792487440}
   m_Layer: 0
   m_Name: Grenade_TimeBomb
@@ -459,21 +458,3 @@ MonoBehaviour:
   m_Type: 3
   m_ID: 4004
   m_fAngle: 30
---- !u!114 &114835476522363750
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1147661209361880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f9da9056e9e7904c9c35422354facad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Type: 3
-  m_fAngle: 30
-  m_gEffect: {fileID: 0}
-  m_vForward: {x: 0, y: 0, z: 0}
-  m_bGround: 1
-  m_bCounting: 0
-  m_fDamageTime: 0
