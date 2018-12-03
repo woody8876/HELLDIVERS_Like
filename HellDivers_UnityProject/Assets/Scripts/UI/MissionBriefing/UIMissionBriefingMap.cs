@@ -60,12 +60,11 @@ public class UIMissionBriefingMap : MonoBehaviour
         {
             case eMapPointType.MISSIONTOWER:
                 mapPoint = Instantiate(m_TowerPointPrefab, m_MapPointRoot);
-                //mapPoint.Init(target);
-                m_PointList.Add(mapPoint);
+                mapPoint.Init(target, type);
                 break;
             case eMapPointType.SPAWNPOINT:
                 mapPoint = Instantiate(m_SpawnPointPrefab, m_MapPointRoot);
-                mapPoint.Init(target);
+                mapPoint.Init(target, type);
                 m_PointList.Add(mapPoint);
                 break;
         }
@@ -88,8 +87,8 @@ public class UIMissionBriefingMap : MonoBehaviour
     public bool ComfirmSpawnPosition()
     {
         if (m_Target == null) return false;
-        if (m_Target.Tower == null) return false;
-        GameMain.Instance.GameStart(m_Target.Tower.transform);
+        if (m_Target.SpawnPoint == null) return false;
+        GameMain.Instance.GameStart(m_Target.SpawnPoint.transform);
         return true;
     }
 }
