@@ -6,8 +6,8 @@ using UnityEngine;
 public class ClipHandler : MonoBehaviour {
 
     [SerializeField] int m_ID;
+    [SerializeField] bool b_PitchRandom = true;
     [SerializeField] AudioSource m_Audio;
-
     public void SetID (int i) { m_ID = i; }
 
     private void UnLoad() { ObjectPool.m_Instance.UnLoadObjectToPool(m_ID, this.gameObject); }
@@ -20,6 +20,7 @@ public class ClipHandler : MonoBehaviour {
 
     private void SetPitch()
     {
+        if (!b_PitchRandom) return;
         m_Audio.pitch = Random.Range(0.95f, 1.4f);
     }
 

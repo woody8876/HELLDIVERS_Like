@@ -112,16 +112,27 @@ public class UI_WeaponButton : MonoBehaviour {
     public bool CheckLevelUp()
     {
         int id = weaponDisplay.Info.ID;
+        int type = GameData.Instance.WeaponInfoTable[id].Type;
         int cost = GameData.Instance.WeaponInfoTable[id].Cost;
-        m_Cost.color = m_tCostColor;
         int money = PlayerManager.Instance.Players[weaponDisplay.SetPlayer.PlayerID].info.Money;
+        List<int> pList = weaponDisplay.Info.weapons[type];
         if (money < cost)
         {
             m_Cost.color = m_tNotEnough;
             SetNonSelectableBG(m_LevelUp);
             return false;
         }
-        return true;
+        else if(id == pList[pList.Count - 1])
+        {
+            SetNonSelectableBG(m_LevelUp);
+            return false;
+        }
+        else
+        {
+            m_Cost.color = m_tCostColor;
+            SetBG(m_LevelUp);
+            return true;
+        }
     }
 
     private void CostMoney()
@@ -149,25 +160,27 @@ public class UI_WeaponButton : MonoBehaviour {
 
     private void ClickLevelUp(int player)
     {
-        int type = GameData.Instance.WeaponInfoTable[weaponDisplay.CurWeaponID].Type;
-        List<int> pList = weaponDisplay.Info.weapons[type];
-        if (pList[pList.Count - 1] != weaponDisplay.CurWeaponID)
+        int id = weaponDisplay.CurWeaponID;
+        int type = GameData.Instance.WeaponInfoTable[id].Type;
+        PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref id);
+        weaponDisplay.SetCurID(id);
+        CostMoney();
+        m_Audio.Play();
+        weaponDisplay.WeaponList.LevelUp(id);
+        weaponDisplay.Info.SetWeaponInfo(id, type);
+        if (!CheckLevelUp())
         {
-            int id = weaponDisplay.CurWeaponID;
-            PlayerManager.Instance.Players[player].info.LevelUpWeapon(ref id);
-            weaponDisplay.SetCurID(id);
-            CostMoney();
-            m_Audio.Play();
-            weaponDisplay.WeaponList.LevelUp(id);
-            weaponDisplay.Info.SetWeaponInfo(id, type);
-            if (weaponDisplay.CurWeaponID == pList[pList.Count - 1] || !CheckLevelUp())
-            {
-                SetRightNav();
-                SetNonSelectableBG(m_LevelUp);
-            }   
+            SetRightNav();
+            SetNonSelectableBG(m_LevelUp);
         }
+        else StartCoroutine(HighLight());    
     }
 
+    IEnumerator HighLight()
+    {
+        yield return new WaitForSeconds(0.1f);
+        SetHighlightBG(m_LevelUp);
+    }
     private void ClickSelect(int player)
     {
         GameObject go = null;
