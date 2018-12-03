@@ -486,11 +486,18 @@ public class FSMAttackState : FSMState
         if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
+            data.m_SoundManager.PlayOnce(3900);
             count++;
         }
 
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 10, true) + SteeringBehaviours.GroupBehavior(data, 10, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
+
+        if(data.m_ID == 3400)
+        {
+            v = (SteeringBehaviours.GroupBehavior(data, 30, true) + SteeringBehaviours.GroupBehavior(data, 30, false)) * 2f * Time.deltaTime;
+            data.m_Go.transform.position += v;
+        }
 
         AnimatorStateInfo info = data.m_AnimationController.Animator.GetCurrentAnimatorStateInfo(0);
         if (info.IsName("Attack"))

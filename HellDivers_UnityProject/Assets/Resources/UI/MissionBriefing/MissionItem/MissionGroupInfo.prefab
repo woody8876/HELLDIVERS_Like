@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114644574871056256}
   - component: {fileID: 114666383950764148}
   - component: {fileID: 114914929335455386}
+  - component: {fileID: 114177412291752140}
   m_Layer: 5
   m_Name: MissionGroupInfo
   m_TagString: Untagged
@@ -115,6 +116,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114177412291752140
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1069357284959734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab3add40095f6941a0e5cb015fbc58a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Introduction: Tower Mission
 --- !u!114 &114179671529354728
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -286,7 +299,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.3019608, g: 0.3019608, b: 0.3019608, a: 1}
-    m_HighlightedColor: {r: 0.9862069, g: 1, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.7647059, b: 0, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
