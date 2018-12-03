@@ -100,7 +100,6 @@ public class GrenadesController : MonoBehaviour
             return m_bHolding;
         }
         else mCurBehaviors.grenadeInfo.Force += 5 * Time.fixedDeltaTime;
-        m_Grenade.transform.SetParent(m_StarPos);
         return true;
     }
 
@@ -147,7 +146,10 @@ public class GrenadesController : MonoBehaviour
         m_Grenade = m_dGrenades[CurrentID].LoadGrenade();
         if (m_Grenade == null) return false;
         m_bHolding = true;
+        m_Grenade.transform.position = m_StarPos.position;
+        m_Grenade.transform.forward = m_StarPos.forward;
         m_Grenade.transform.localScale *= 0.2f;
+        m_Grenade.transform.SetParent(m_StarPos);
         m_Grenade.SetActive(true);
         return true;
     }
