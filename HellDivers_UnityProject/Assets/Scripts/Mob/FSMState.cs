@@ -1182,7 +1182,7 @@ public class FSMCallArmyState : FSMState
         {
             if (info.normalizedTime > 0.5f)
             {
-                //MobManager.m_Instance.SpawnMobs(3, 0, 0, 1, data.m_Go.transform, 25, 30);
+                MobManager.m_Instance.SpawnMobs(3, 0, 0, 1, data.m_Go.transform, 25, 30);
                 count++;
             }
         }
@@ -1230,7 +1230,7 @@ public class FSMFleeState : FSMState
         data.m_GOEffectWarning = GO;
         m_Animator = GO.GetComponent<Animator>();
         m_Animator.SetTrigger("startTrigger");
-        data.m_SoundManager.PlayInWorld(3902, data.m_Go.transform.position, 0.5f);
+        data.m_SoundManager.PlayLoop(3902);
     }
 
     public override void DoBeforeLeave(MobInfo data)
@@ -1238,6 +1238,7 @@ public class FSMFleeState : FSMState
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
+        data.m_SoundManager.Stop();
         ObjectPool.m_Instance.UnLoadObjectToPool(3210, GO);
 
     }
