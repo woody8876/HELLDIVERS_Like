@@ -124,14 +124,8 @@ public class Player : Character
         if (m_Data.Grenades.Count > 0) m_GrenadesController.AddGrenades(data.Grenades, m_Parts.RightHand, m_Parts.LaunchPoint, this);
 
         // Setup sounds
-        List<AudioClip> audioList = new List<AudioClip>();
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn01") as AudioClip);
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn02") as AudioClip);
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Spawn03") as AudioClip);
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death01") as AudioClip);
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death02") as AudioClip);
-        audioList.Add(ResourceManager.m_Instance.LoadData(typeof(AudioClip), "Sounds/Player", "Death03") as AudioClip);
-        m_SoundManager.SetAudioClips(audioList);
+        SoundDataSetting soundData = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Player", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(soundData.SoundDatas);
     }
 
     #endregion Initializer
@@ -267,7 +261,8 @@ public class Player : Character
             yield return new WaitUntil(() => m_Controller.bIsAlive);
         }
 
-        m_SoundManager.Play(UnityEngine.Random.Range(0, 3), 0.5f);
+        int soundId = 1000 + UnityEngine.Random.Range(0, 3);
+        m_SoundManager.PlayOnce(soundId);
         GameMain.Instance.CameraFolloing.AddTarget(this.transform);
         m_bDead = false;
 
@@ -280,7 +275,8 @@ public class Player : Character
 
     private IEnumerator DoDeath()
     {
-        m_SoundManager.Play(UnityEngine.Random.Range(3, 6), 0.5f);
+        int soundId = 1000 + UnityEngine.Random.Range(3, 6);
+        m_SoundManager.PlayOnce(soundId);
 
         if (m_Controller != null)
         {

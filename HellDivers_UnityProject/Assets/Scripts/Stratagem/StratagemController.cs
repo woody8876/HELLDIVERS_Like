@@ -77,7 +77,6 @@ public class StratagemController : MonoBehaviour
     private Stratagem m_CurrentStratagem;
     private CheckCodesMechine m_CheckCodesMechine;
     private SoundManager m_SoundManager;
-    private StratagemSetting m_Setting;
 
     #endregion Private Variable
 
@@ -85,12 +84,13 @@ public class StratagemController : MonoBehaviour
 
     private void Awake()
     {
-        m_Setting = ResourceManager.m_Instance.LoadData(typeof(StratagemSetting), "Stratagems/Setting", "StratagemSetting") as StratagemSetting;
         m_SoundManager = this.GetComponent<SoundManager>();
-        m_SoundManager.SetAudioClips(m_Setting.AudioClips);
+        SoundDataSetting data = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/StratagemController", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(data.SoundDatas);
+
         m_CheckCodesMechine = this.GetComponent<CheckCodesMechine>();
         m_CheckCodesMechine.OnGetResult += GetReady;
-        m_CheckCodesMechine.OnChecking += () => { m_SoundManager.Play(1, 0.1f); };
+        m_CheckCodesMechine.OnChecking += () => { m_SoundManager.PlayOnce(2001); };
     }
 
     private void OnDestroy()
@@ -234,7 +234,7 @@ public class StratagemController : MonoBehaviour
     /// <returns>Was there are any stratagems in the contorller ?</returns>
     public bool StartCheckCodes()
     {
-        m_SoundManager.Play(0, 0.1f);
+        m_SoundManager.PlayOnce(2000);
         m_CheckCodesMechine.Clear();
         foreach (Stratagem s in m_Stratagems)
         {
@@ -262,8 +262,8 @@ public class StratagemController : MonoBehaviour
     private void GetReady()
     {
         if (m_CheckCodesMechine.Result == null) return;
-
         m_SoundManager.Stop();
+        m_SoundManager.PlayOnce(2002);
         m_CurrentStratagem = m_CheckCodesMechine.Result as Stratagem;
         m_CurrentStratagem.GetReady();
 
