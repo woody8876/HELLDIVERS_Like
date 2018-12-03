@@ -103,7 +103,7 @@ public class MobManager
 
         #region Mob Sound
         m_SoundTankDead = Resources.Load("Sounds/Mobs/Orc_00") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(m_SoundTankDead, 10, 3420);
+        //ObjectPool.m_Instance.InitGameObjects(m_SoundTankDead, 10, 3420);
         #endregion
         m_TotalKill = 0;
         m_TotalFishKill = 0;

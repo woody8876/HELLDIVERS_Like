@@ -19,6 +19,8 @@ public class FishAI : Character
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
+    private SoundManager m_SoundManager;
+
     #region Events
 
     public delegate void MobEventHolder();
@@ -50,7 +52,9 @@ public class FishAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3100].CopyTo(m_AIData);
-
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Fish", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -115,6 +119,7 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
+        m_SoundManager.PlayOnce(3120);
         if (m_bDead == false)
         {
             Timer += Time.deltaTime;

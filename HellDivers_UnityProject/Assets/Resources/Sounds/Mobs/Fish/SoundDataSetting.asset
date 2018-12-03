@@ -11,4 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede7f0d4920f77e428f8f618c82ddf5b, type: 3}
   m_Name: SoundDataSetting
   m_EditorClassIdentifier: 
-  m_SoundDatas: []
+  m_SoundDatas:
+  - Id: 3120
+    audioClip: {fileID: 8300000, guid: 0716b877cb3dd264aab72e0071fcb6ad, type: 3}
+    volumeScale: 1
