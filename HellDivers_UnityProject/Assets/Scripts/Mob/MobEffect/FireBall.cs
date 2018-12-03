@@ -11,12 +11,16 @@ public class FireBall : MonoBehaviour {
 
     public GameObject m_Effect;
     private Animator m_Animator;
+    private SoundManager m_SoundManager;
     // Use this for initialization
     private void OnEnable()
     {
         if (m_Animator == null) return;
         m_Timer = 0.0f;
         m_Animator.SetTrigger("startTrigger");
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Effect/FireBomb", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
     }
     void Start()
     {
@@ -48,6 +52,7 @@ public class FireBall : MonoBehaviour {
                 float Dist = (pList[i].transform.position - this.transform.position).magnitude;
                 if (Dist <= 2.0f)
                 {
+                    //m_SoundManager.PlayInWorld()
                     BulletDeath();
                     break;
                 }
