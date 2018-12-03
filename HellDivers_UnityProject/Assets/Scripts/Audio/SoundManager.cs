@@ -2,44 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class SoundData
+{
+    public int Id;
+    public AudioClip audioClip;
+    public float volumeScale = 1;
+}
+
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
     public AudioSource AudioSource { get { return m_Audio; } }
-    public Dictionary<int, AudioClip> AudioClips { get { return m_ClipsMap; } }
+    public Dictionary<int, SoundData> AudioClips { get { return m_ClipsMap; } }
 
     private AudioSource m_Audio;
-    private Dictionary<int, AudioClip> m_ClipsMap = new Dictionary<int, AudioClip>();
+    private Dictionary<int, SoundData> m_ClipsMap = new Dictionary<int, SoundData>();
 
     private void Awake()
     {
         m_Audio = this.GetComponent<AudioSource>();
     }
 
-    public void SetAudioClips(List<AudioClip> clips)
+    public void SetAudioClips(List<SoundData> datas)
     {
-        for (int i = 0; i < clips.Count; i++)
+        for (int i = 0; i < datas.Count; i++)
         {
-            SetAudioClip(i, clips[i]);
+            SetAudioClip(datas[i]);
         }
     }
 
-    public void SetAudioClip(int Id, AudioClip clip)
+    public void SetAudioClip(SoundData data)
     {
-        if (m_ClipsMap.ContainsKey(Id))
+        if (m_ClipsMap.ContainsKey(data.Id))
         {
-            m_ClipsMap[Id] = clip;
+            m_ClipsMap[data.Id] = data;
         }
         else
         {
-            m_ClipsMap.Add(Id, clip);
+            m_ClipsMap.Add(data.Id, data);
         }
     }
 
-    public void Play(int Id, float volumeScale = 1)
+    public void PlayOnce(int Id, float volumeScale = 1)
     {
         if (m_ClipsMap.ContainsKey(Id) == false) return;
-        m_Audio.PlayOneShot(m_ClipsMap[Id], volumeScale);
+        m_Audio.PlayOneShot(m_ClipsMap[Id].audioClip, volumeScale);
+    }
+
+    public void PlayOnce(int Id)
+    {
+        if (m_ClipsMap.ContainsKey(Id) == false) return;
+        PlayOnce(Id, m_ClipsMap[Id].volumeScale);
     }
 
     public void Stop()

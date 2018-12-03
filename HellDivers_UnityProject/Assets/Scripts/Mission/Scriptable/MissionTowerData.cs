@@ -15,6 +15,7 @@ public class MissionTowerData : MissionData
     public int CodeLenghtMin { get { return m_CodeLenghtMin; } }
     public int CodeLenghtMax { get { return m_CodeLenghtMax; } }
     public List<PhaseData> PhaseDatas { get { return m_PhaseDatas; } }
+    public List<AudioClip> AudioClips { get { return m_AudioClips; } }
 
     [SerializeField] private string m_Id = "MissionTower";
     [SerializeField] private float m_InteractRadius = 4;
@@ -25,6 +26,7 @@ public class MissionTowerData : MissionData
     [SerializeField] private int m_CodeLenghtMin = 6;
     [SerializeField] private int m_CodeLenghtMax = 8;
     [SerializeField] private List<PhaseData> m_PhaseDatas;
+    [SerializeField] private List<AudioClip> m_AudioClips;
 
     public void CopyTo(MissionTowerData other)
     {
@@ -37,6 +39,7 @@ public class MissionTowerData : MissionData
         other.m_CodeLenghtMin = this.m_CodeLenghtMin;
         other.m_CodeLenghtMax = this.m_CodeLenghtMax;
         other.m_PhaseDatas = this.m_PhaseDatas;
+        other.m_AudioClips = this.m_AudioClips;
     }
 
     public MissionTowerData Clone()
