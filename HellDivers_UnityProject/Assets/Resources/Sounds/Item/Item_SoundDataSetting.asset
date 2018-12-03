@@ -8,12 +8,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aafcb3553899b44599cf1517fdf6b55, type: 3}
-  m_Name: MissionKillMobSetting
+  m_Script: {fileID: 11500000, guid: ede7f0d4920f77e428f8f618c82ddf5b, type: 3}
+  m_Name: Item_SoundDataSetting
   m_EditorClassIdentifier: 
-  m_Priority: 1
-  m_Type: 1
-  m_Reward:
-    EXP: 500
-    Money: 500
-  m_KillAmout: 1
+  m_SoundDatas:
+  - Id: 0
+    audioClip: {fileID: 8300000, guid: 7b64ffbb50aedf240b939a99db12a6d0, type: 3}
+    volumeScale: 0.75

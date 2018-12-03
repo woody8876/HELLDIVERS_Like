@@ -77,7 +77,6 @@ namespace HELLDIVERS.UI
             {
                 m_CurrentRank = m_NextRank;
                 m_NextRank = GameData.Instance.RankTable[m_NextRank.Rank + 1];
-                m_SoundManager.PlayOnce(1);
                 if (OnRankUpdate != null) OnRankUpdate();
             }
         }
