@@ -182,10 +182,7 @@ public class TankAI : Character
     {
         if (IsDead) return false;
         CurrentHp -= damager.Damage;
-
-        GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(3002);
-        BloodSpurt bloodSpurt = go.GetComponent<BloodSpurt>();
-
+        
         if (m_CurrentHp <= 0)
         {
             m_BodyCollider.enabled = false;
@@ -203,7 +200,7 @@ public class TankAI : Character
         }
         else
         {
-            m_GOHurtBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3003);
+            m_GOHurtBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3002);
             m_HurtBloodSpurt = m_GOHurtBlood.GetComponent<BloodSpurt>();
             m_HurtBloodSpurt.Init(m_AIData, hitPoint);
             fShield += damager.Damage;

@@ -44,16 +44,19 @@ public class MobManager
     private GameObject m_GOFishVariant;
     private GameObject m_GOPatrol;
     private GameObject m_GOTank;
+
     private GameObject m_GOWarning;
-    private GameObject m_GOBullet;
     private GameObject m_GOSpwanEffect;
-    private GameObject m_GOBloodSpurtBig;
-    private GameObject m_GOBloodSpurtSmall;
-    private GameObject m_GOBloodSpurtDead;
+    private GameObject m_GOBullet;
     private GameObject m_GOGroundFissure;
     private GameObject m_GOFireBall;
     private GameObject m_GOFireBomb;
 
+    private GameObject m_GOBloodSpurtBig;
+    private GameObject m_GOBloodSpurtSmall;
+    private GameObject m_GOBloodSpurtDead;
+
+    private GameObject m_SoundTankDead;
     //private Player m_Player;
     //private int count = 0;
 
@@ -63,34 +66,45 @@ public class MobManager
         {
             m_Instance = this;
         }
-
+        #region Mob Prefab
         m_GOFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GOFishVariant = Resources.Load("Mobs/Fish2/Fish2") as GameObject;
         m_GOPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
         m_GOTank = Resources.Load("Mobs/Tank/Tank") as GameObject;
-        m_GOBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
-        m_GOGroundFissure = Resources.Load("Mobs/Tank/GroundFissure") as GameObject;
-        m_GOFireBall = Resources.Load("Mobs/Tank/FireBall") as GameObject;
-        m_GOFireBomb = Resources.Load("Mobs/Tank/FireBomb") as GameObject;
-        m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
-        m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
-        m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
-        m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
-        m_GOBloodSpurtDead = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtDead") as GameObject;
-
         ObjectPool.m_Instance.InitGameObjects(m_GOFish, 40, 3100);
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GOTank, 10, 3400);
+        #endregion
+
+        #region Mob Effect
+        m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
+        m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
+        m_GOBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
+        m_GOGroundFissure = Resources.Load("Mobs/Tank/GroundFissure") as GameObject;
+        m_GOFireBall = Resources.Load("Mobs/Tank/FireBall") as GameObject;
+        m_GOFireBomb = Resources.Load("Mobs/Tank/FireBomb") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
+        ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOGroundFissure, 10, 3401);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBall, 10, 3402);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBomb, 10, 3403);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
-        ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
-        ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
+        #endregion
+
+        #region Mob Blood
+        m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
+        m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
+        m_GOBloodSpurtDead = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtDead") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 20, 3002);
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 20, 3003);
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 20, 3004);
+        #endregion
+
+        #region Mob Sound
+        m_SoundTankDead = Resources.Load("Sounds/Mobs/Orc_00") as GameObject;
+        ObjectPool.m_Instance.InitGameObjects(m_SoundTankDead, 10, 3420);
+        #endregion
         m_TotalKill = 0;
         m_TotalFishKill = 0;
         m_TotalPatrolKill = 0;

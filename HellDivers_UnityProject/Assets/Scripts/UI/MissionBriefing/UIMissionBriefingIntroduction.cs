@@ -77,6 +77,7 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
         //    m_Introduction.text = "Kill Mob";
         //    Debug.Log("Count");
         //}
+        //m_Introduction.text = "Blablabla";
     }
 
     private void Update()

@@ -80,27 +80,32 @@ public class BloodSpurt : MonoBehaviour {
         m_Timer += Time.deltaTime;
         if (m_Timer > 2.0f)
         {
+            this.transform.parent = null;
             switch (m_MobInfo.m_ID)
             {
                 case 3100:
                     m_MobInfo.m_Go.GetComponent<FishAI>().OnDeath -= Release;
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3003, this.gameObject);
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3004, this.gameObject);
                     break;
                 case 3200:
                     m_MobInfo.m_Go.GetComponent<PatrolAI>().OnDeath -= Release;
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3003, this.gameObject);
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3004, this.gameObject);
                     break;
                 case 3300:
                     m_MobInfo.m_Go.GetComponent<FishVariantAI>().OnDeath -= Release;
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3003, this.gameObject);
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3004, this.gameObject);
                     break;
                 case 3400:
                     m_MobInfo.m_Go.GetComponent<TankAI>().OnDeath -= Release;
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
+                    ObjectPool.m_Instance.UnLoadObjectToPool(3004, this.gameObject);
                     break;
                 default:
                     break;
             }
-            this.transform.parent = null;
-            ObjectPool.m_Instance.UnLoadObjectToPool(3002, this.gameObject);
-            ObjectPool.m_Instance.UnLoadObjectToPool(3003, this.gameObject);
-            ObjectPool.m_Instance.UnLoadObjectToPool(3004, this.gameObject);
         }
     }
 }
