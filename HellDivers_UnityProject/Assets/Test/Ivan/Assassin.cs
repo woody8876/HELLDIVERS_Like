@@ -113,8 +113,7 @@ public class Assassin : Character {
 
     private void Explosion()
     {
-        //if(Physics.Raycast(transform.position, Vector3.down, 3, 1 << LayerMask.NameToLayer("Terrain")))
-        if(transform.position.y < 3)
+        if(Physics.Raycast(transform.position, Vector3.down, 10, 1 << LayerMask.NameToLayer("Terrain")))
         {
             //DoDamage(transform.position);
             Debug.Log("Boom");
