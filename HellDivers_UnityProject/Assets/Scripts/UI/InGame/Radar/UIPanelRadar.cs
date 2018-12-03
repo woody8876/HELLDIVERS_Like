@@ -54,26 +54,6 @@ public class UIPanelRadar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        #region Input
-        
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            MobManager.m_Instance.SpawnMobs(1, 0, 0, 0);
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            MobManager.m_Instance.SpawnMobs(0, 1, 0, 0);
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            MobManager.m_Instance.SpawnMobs(0, 0, 1, 0);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1);
-        }
-        #endregion
 
         if (m_bDisPlay == false)
         {
@@ -114,6 +94,26 @@ public class UIPanelRadar : MonoBehaviour {
             }
             bPlyaersCount = 0;
         }
+        #region Input
+        
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            MobManager.m_Instance.SpawnMobs(1, 0, 0, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 1, 0, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 0, 1, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1, pList[0].transform, 10.0f, 10.0f);
+        }
+        #endregion
     }
 
     public void AddPointPrefab(GameObject target, eMapPointType type)

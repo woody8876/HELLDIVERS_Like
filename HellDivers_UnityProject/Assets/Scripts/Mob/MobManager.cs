@@ -96,9 +96,9 @@ public class MobManager
         m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
         m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
         m_GOBloodSpurtDead = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtDead") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 10, 3002);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 20, 3003);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 20, 3004);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 200, 3002);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 200, 3003);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 200, 3004);
         #endregion
 
         #region Mob Sound

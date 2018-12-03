@@ -19,6 +19,8 @@ public class FishVariantAI : Character
     private CapsuleCollider m_DamageCollider;
     private float Timer = 2.0f;
 
+    private SoundManager m_SoundManager;
+
     #region Events
 
     public delegate void MobEventHolder();
@@ -47,7 +49,9 @@ public class FishVariantAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3300].CopyTo(m_AIData);
-
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/FishVariant", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -61,6 +65,7 @@ public class FishVariantAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(11.5f, 12.0f);
         m_AIData.navMeshAgent.enabled = false;
+        m_AIData.m_SoundManager = m_SoundManager;
 
         #region FSMMap
         FSMRespawnState m_RespawnState = new FSMRespawnState();
@@ -187,6 +192,7 @@ public class FishVariantAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
+            m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
 
             damager.Damager.Record.NumOfKills++;
