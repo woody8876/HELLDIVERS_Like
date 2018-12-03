@@ -12,6 +12,18 @@ MonoBehaviour:
   m_Name: SoundDataSetting
   m_EditorClassIdentifier: 
   m_SoundDatas:
-  - Id: 3120
-    audioClip: {fileID: 8300000, guid: 0716b877cb3dd264aab72e0071fcb6ad, type: 3}
+  - Id: 3900
+    audioClip: {fileID: 8300000, guid: 016bd36529f1d284682584e0175ec657, type: 3}
+    volumeScale: 1
+  - Id: 3901
+    audioClip: {fileID: 0}
+    volumeScale: 1
+  - Id: 3902
+    audioClip: {fileID: 0}
+    volumeScale: 1
+  - Id: 3903
+    audioClip: {fileID: 0}
+    volumeScale: 1
+  - Id: 3904
+    audioClip: {fileID: 8300000, guid: 699981f909141ee408a4ada9598e41fd, type: 3}
     volumeScale: 1

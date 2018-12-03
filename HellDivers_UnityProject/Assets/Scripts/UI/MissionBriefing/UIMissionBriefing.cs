@@ -59,7 +59,7 @@ public class UIMissionBriefing : MonoBehaviour
 
     public void MissionSelected()
     {
-        m_MissionIntroduction.Selected();
+        //m_MissionIntroduction.Selected();
     }
 
     public void ComfirmSpawnPosition()

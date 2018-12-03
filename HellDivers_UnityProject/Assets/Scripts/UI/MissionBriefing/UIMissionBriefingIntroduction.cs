@@ -18,8 +18,9 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     [SerializeField] private UIMissionCountInfo m_MissionCountInfoPrefab;
     [SerializeField] private Text m_Introduction;
 
+    private Button m_Button;
+
     private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap = new Dictionary<eMissionType, List<UIMissionInfo>>();
-    //private Dictionary<eMissionType, string> m_MissionTextMap = new Dictionary<eMissionType, string>();
 
     public void AddMissionInfo(Mission mission)
     {
@@ -46,18 +47,20 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
                 else
                 {
                     UIMissionGroupInfo missionGroupUI = Instantiate(m_MissionGroupInfoPrefab, m_UIRoot);
+                    missionGroupUI.GetComponent<UIMissionItem>().Init(mission.Type);
                     missionGroupUI.Initialize(mission);
+                    missionGroupUI.gameObject.SetActive(true);
                     pList.Add(missionGroupUI);
-                    //m_MissionTextMap.Add(mission.Type, "HAHA");
                 }
 
                 break;
 
             case eMissionType.KillMob:
                 UIMissionCountInfo missionCountUI = Instantiate(m_MissionCountInfoPrefab, m_UIRoot);
+                missionCountUI.GetComponent<UIMissionItem>().Init(mission.Type);
                 missionCountUI.Initialize(mission);
+                missionCountUI.gameObject.SetActive(true);
                 pList.Add(missionCountUI);
-                //m_MissionTextMap.Add(mission.Type, "BABA");
                 break;
         }
 
@@ -65,38 +68,16 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     }
 
     [ContextMenu("Test")]
-    public void Selected()
+    public void Selected(UIMissionItem item)
     {
-        //if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
-        //{
-        //    m_Introduction.text = "Tower";
-        //    Debug.Log("Group");
-        //}
-        //else if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
-        //{
-        //    m_Introduction.text = "Kill Mob";
-        //    Debug.Log("Count");
-        //}
-        //m_Introduction.text = "Blablabla";
-    }
-
-    private void Update()
-    {
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject == null) return;
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionGroupInfo(Clone)"))
+        if(item.m_bCouldSelect)
         {
-            m_Introduction.text = "Guard the Tower missions require Helldivers to drop into a hazardous, " +
-                "arena-like area to exterminate as many of the enemies of democracy as possible before being allowed to extract.\n" +
-                "During a Guard the Tower, a time counter will appear at the middle of the tower.";
             if (OnSelect != null) OnSelect();
         }
         else
         {
             if (NotSelect != null) NotSelect();
         }
-        if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name.Equals("MissionCountInfo(Clone)"))
-        {
-            m_Introduction.text = "Destroy the enemy as much as possible";
-        }
+        m_Introduction.text = item.m_Introduction;
     }
 }

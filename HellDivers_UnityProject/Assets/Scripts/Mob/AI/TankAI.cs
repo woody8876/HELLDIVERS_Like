@@ -20,6 +20,7 @@ public class TankAI : Character
     private float fShield = 0.0f;
     private float fHurtTime= 0.0f;
 
+    private SoundManager m_SoundManager;
 
     #region Events
 
@@ -51,6 +52,9 @@ public class TankAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3400].CopyTo(m_AIData);
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Tank", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
 
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
@@ -65,6 +69,7 @@ public class TankAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(4.5f, 5.0f);
         m_AIData.navMeshAgent.enabled = false;
+        m_AIData.m_SoundManager = m_SoundManager;
 
         FSMRespawnState m_RespawnState = new FSMRespawnState();
         FSMChaseToRemoteAttackState m_ChaseToRemoteAttackState = new FSMChaseToRemoteAttackState();
@@ -191,6 +196,8 @@ public class TankAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
+            m_SoundManager.PlayOnce(3904);
+
             Death();
 
             damager.Damager.Record.NumOfKills++;

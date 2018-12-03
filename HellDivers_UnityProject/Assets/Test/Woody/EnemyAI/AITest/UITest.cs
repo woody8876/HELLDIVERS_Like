@@ -6,20 +6,14 @@ using UnityEngine.UI;
 public class UITest : MonoBehaviour {
 
     [SerializeField] private Text m_Introduction;
+    Button m_Button;
     // Use this for initialization
     void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            m_Introduction.text = "Fuck off";
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            m_Introduction.text = "Fuck on";
-        }
+    public void Selected()
+    {
+        m_Button = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        m_Introduction.text = m_Button.name;
     }
 }

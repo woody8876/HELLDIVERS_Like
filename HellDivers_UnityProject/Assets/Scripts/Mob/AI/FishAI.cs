@@ -68,6 +68,7 @@ public class FishAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.speed = Random.Range(6.5f, 7.0f);
         m_AIData.navMeshAgent.enabled = false;
+        m_AIData.m_SoundManager = m_SoundManager;
 
         #region FSMMap
         FSMRespawnState m_RespawnState = new FSMRespawnState();
@@ -119,7 +120,6 @@ public class FishAI : Character
     // Update is called once per frame
     void Update()
     {
-        m_SoundManager.PlayOnce(3120);
         if (m_bDead == false)
         {
             Timer += Time.deltaTime;
@@ -193,6 +193,8 @@ public class FishAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
+
+            m_SoundManager.PlayOnce(3904);
             Death();
 
             damager.Damager.Record.NumOfKills++;
