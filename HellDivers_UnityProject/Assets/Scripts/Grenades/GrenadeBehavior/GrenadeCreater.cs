@@ -26,7 +26,7 @@ public class GrenadeCreater : IGrenadesBehaviors {
             grenade = ResourceManager.m_Instance.LoadData(typeof(GameObject), "GrenadesStorage/Grenades", m_sGrenade, false);
             effect = ResourceManager.m_Instance.LoadData(typeof(GameObject), "GrenadesStorage/Effects", m_sEffect, false);
             sound = ResourceManager.m_Instance.LoadData(typeof(GameObject), "GrenadesStorage/Sounds", m_sSound, false);
-            if (grenadeID == 4004 || grenadeID == 4005)
+            if (grenadeID == 4003 || grenadeID == 4004)
             {
                 soundExplosion = ResourceManager.m_Instance.LoadData(typeof(GameObject), "GrenadesStorage/Sounds", m_sSound_Explosion, false);
             }
