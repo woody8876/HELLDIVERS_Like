@@ -194,7 +194,7 @@ public class FishAI : Character
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
 
-            m_SoundManager.PlayOnce(3904);
+            m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
             Death();
 
             damager.Damager.Record.NumOfKills++;

@@ -35,6 +35,10 @@ public class TankAI : Character
     }
     private void OnEnable()
     {
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Tank", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
@@ -46,6 +50,7 @@ public class TankAI : Character
         m_DeadBloodSpurt = null;
         m_HurtBloodSpurt = null;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
+        m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
         if (OnSpawn != null) OnSpawn();
     }
     protected override void Start()
@@ -196,7 +201,7 @@ public class TankAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
-            m_SoundManager.PlayOnce(3904);
+            m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
 
             Death();
 
