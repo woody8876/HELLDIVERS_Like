@@ -362,7 +362,7 @@ public class Stratagem : MonoBehaviour
     {
         m_eState = eState.Activating;
 
-        m_SoundManager.PlayOnce(0, 0.25f);
+        m_SoundManager.PlayInWorld(0, this.transform.position);
 
         m_ActivationTimer = 0.0f;
         if (OnStartActivation != null) OnStartActivation();
@@ -383,7 +383,7 @@ public class Stratagem : MonoBehaviour
             return (currentAnima.IsName("End") && currentAnima.normalizedTime >= 1);
         });
 
-        m_SoundManager.PlayOnce(1, 0.25f);
+        m_SoundManager.PlayInWorld(1, this.transform.position);
         LoadResult();  // Load stratagem result from object pool.
 
         m_eState = eState.Idle;

@@ -90,7 +90,7 @@ public class StratagemController : MonoBehaviour
 
         m_CheckCodesMechine = this.GetComponent<CheckCodesMechine>();
         m_CheckCodesMechine.OnGetResult += GetReady;
-        m_CheckCodesMechine.OnChecking += () => { m_SoundManager.PlayOnce(2001); };
+        m_CheckCodesMechine.OnChecking += () => m_SoundManager.PlayInWorld(2001, this.transform.position);
     }
 
     private void OnDestroy()

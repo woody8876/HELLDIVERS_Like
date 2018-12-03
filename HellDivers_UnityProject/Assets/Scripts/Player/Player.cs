@@ -126,6 +126,9 @@ public class Player : Character
         // Setup sounds
         SoundDataSetting soundData = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Player", "SoundDataSetting") as SoundDataSetting;
         m_SoundManager.SetAudioClips(soundData.SoundDatas);
+        OnSpawnFinish += () => m_SoundManager.PlayInWorld(UnityEngine.Random.Range(1010, 1013), this.transform.position);
+        OnDeathBegin += () => m_SoundManager.PlayInWorld(UnityEngine.Random.Range(1020, 1023), this.transform.position);
+        OnDamaged += () => m_SoundManager.PlayInWorld(UnityEngine.Random.Range(1030, 1033), this.transform.position);
     }
 
     #endregion Initializer
@@ -261,8 +264,6 @@ public class Player : Character
             yield return new WaitUntil(() => m_Controller.bIsAlive);
         }
 
-        int soundId = 1000 + UnityEngine.Random.Range(0, 3);
-        m_SoundManager.PlayOnce(soundId);
         GameMain.Instance.CameraFolloing.AddTarget(this.transform);
         m_bDead = false;
 
@@ -275,9 +276,6 @@ public class Player : Character
 
     private IEnumerator DoDeath()
     {
-        int soundId = 1000 + UnityEngine.Random.Range(3, 6);
-        m_SoundManager.PlayOnce(soundId);
-
         if (m_Controller != null)
         {
             m_Controller.PerformPlayerDead();

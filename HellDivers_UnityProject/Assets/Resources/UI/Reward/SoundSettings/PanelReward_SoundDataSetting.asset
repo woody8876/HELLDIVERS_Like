@@ -9,12 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ede7f0d4920f77e428f8f618c82ddf5b, type: 3}
-  m_Name: SoundDataSetting
+  m_Name: PanelReward_SoundDataSetting
   m_EditorClassIdentifier: 
   m_SoundDatas:
   - Id: 0
-    audioClip: {fileID: 8300000, guid: 9205f0556a662314390bd04b47d5fec1, type: 3}
-    volumeScale: 0.5
-  - Id: 1
-    audioClip: {fileID: 8300000, guid: 8e72f6175078a424b8ed46dcf110aa8a, type: 3}
-    volumeScale: 0.5
+    audioClip: {fileID: 8300000, guid: 12cd6159497305d4b955d40657bc6240, type: 3}
+    volumeScale: 1
