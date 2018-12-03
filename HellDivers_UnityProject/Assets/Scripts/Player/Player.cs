@@ -51,7 +51,7 @@ public class Player : Character
     /// <summary>
     /// Player sound behavior controller.
     /// </summary>
-    public SoundManager SoundManafer { get { return m_SoundManager; } }
+    public SoundManager SoundManager { get { return m_SoundManager; } }
 
     /// <summary>
     /// Repersent of player body's transform.

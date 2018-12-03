@@ -50,7 +50,7 @@ namespace HELLDIVERS.UI
         {
             m_CanvasTween = this.GetComponent<UITweenCanvasAlpha>();
             m_SoundManager = this.GetComponent<SoundManager>();
-            SoundDataSetting soundData = Resources.Load("UI/Reward/SoundSettings/ExpBar_SoundDataSetting") as SoundDataSetting;
+            SoundDataSetting soundData = Resources.Load("Sounds/Reward/ExpBar_SoundDataSetting") as SoundDataSetting;
             m_SoundManager.SetAudioClips(soundData.SoundDatas);
         }
 
