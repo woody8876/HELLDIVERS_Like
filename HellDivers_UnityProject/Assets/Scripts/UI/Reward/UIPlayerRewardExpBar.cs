@@ -5,19 +5,23 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI
 {
+    [RequireComponent(typeof(SoundManager))]
     [RequireComponent(typeof(UITweenCanvasAlpha))]
     public class UIPlayerRewardExpBar : MonoBehaviour
     {
         public UITweenCanvasAlpha CanvasTween { get { return m_CanvasTween; } }
         public int CurrentRank { get { return m_CurrentRank.Rank; } }
 
-        public delegate void ExpBarEventHolder();
+        public event UIEventHolder OnEvluateStart;
 
-        public event ExpBarEventHolder OnRankUpdate;
+        public event UIEventHolder OnEvluateStop;
+
+        public event UIEventHolder OnRankUpdate;
 
         [SerializeField] private Text m_textExp;
         [SerializeField] private Image m_imgFill;
         private UITweenCanvasAlpha m_CanvasTween;
+        private SoundManager m_SoundManager;
         private int m_CurrentExp;
         private int m_TargetExp;
         private RankData m_CurrentRank;
@@ -38,16 +42,22 @@ namespace HELLDIVERS.UI
 
         public void DoEvaluate()
         {
+            if (OnEvluateStart != null) OnEvluateStart();
             StartCoroutine(EvaluateExpToTarget());
         }
 
         private void Awake()
         {
             m_CanvasTween = this.GetComponent<UITweenCanvasAlpha>();
+            m_SoundManager = this.GetComponent<SoundManager>();
+            SoundDataSetting soundData = Resources.Load("UI/Reward/SoundSettings/ExpBar_SoundDataSetting") as SoundDataSetting;
+            m_SoundManager.SetAudioClips(soundData.SoundDatas);
         }
 
         private IEnumerator EvaluateExpToTarget()
         {
+            m_SoundManager.PlayLoop(0);
+
             while (m_CurrentExp < m_TargetExp)
             {
                 RefreshRankData();
@@ -56,6 +66,9 @@ namespace HELLDIVERS.UI
                 if (m_CurrentExp > m_TargetExp) m_CurrentExp = m_TargetExp;
                 yield return null;
             }
+
+            m_SoundManager.Stop();
+            if (OnEvluateStop != null) OnEvluateStop();
         }
 
         private void RefreshRankData()
@@ -64,6 +77,7 @@ namespace HELLDIVERS.UI
             {
                 m_CurrentRank = m_NextRank;
                 m_NextRank = GameData.Instance.RankTable[m_NextRank.Rank + 1];
+                m_SoundManager.PlayOnce(1);
                 if (OnRankUpdate != null) OnRankUpdate();
             }
         }
