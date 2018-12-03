@@ -23,6 +23,11 @@ namespace HELLDIVERS.UI
         [SerializeField] private UIPlayerRewardDetail m_RewardDetailPrefab;
         private List<UIPlayerRewardDetail> m_Details = new List<UIPlayerRewardDetail>();
 
+        private void Awake()
+        {
+            m_Animator = this.GetComponent<Animator>();
+        }
+
         public void Initialize(PlayerInfo player, PlayerRecord record, MissionReward missionReward, int serialNumber = 1)
         {
             currentPlayer = player;
@@ -37,8 +42,8 @@ namespace HELLDIVERS.UI
             RefreshRankIcon(currentPlayer.Rank);
 
             m_ExpBar = Instantiate(m_ExpBar, this.transform);
-            m_ExpBar.OnRankUpdate += RefreshRankInfo;
             m_ExpBar.Initialize(currentPlayer.Exp, currentPlayer.Exp + record.Exp + missionReward.EXP, currentPlayer.Rank);
+            m_ExpBar.OnRankUpdate += RefreshRankInfo;
 
             CreateDetail("DEATH", currentRecord.TimesOfDeath);
             CreateDetail("KILLS", currentRecord.NumOfKills);
@@ -97,11 +102,6 @@ namespace HELLDIVERS.UI
         {
             string fileName = string.Format("icon_rank_{0}", rank.ToString("00"));
             m_RankIcon.sprite = ResourceManager.m_Instance.LoadSprite(typeof(Sprite), UIHelper.RankIconFolder, fileName);
-        }
-
-        private void Awake()
-        {
-            m_Animator = this.GetComponent<Animator>();
         }
 
         private void OnDestroy()

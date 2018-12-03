@@ -12,21 +12,33 @@ MonoBehaviour:
   m_Name: SoundDataSetting
   m_EditorClassIdentifier: 
   m_SoundDatas:
-  - Id: 1000
+  - Id: 1010
     audioClip: {fileID: 8300000, guid: 251ddfb9409c0d04e81db7b84b67168e, type: 3}
     volumeScale: 0.5
-  - Id: 1001
+  - Id: 1011
     audioClip: {fileID: 8300000, guid: 543bc088fc85f894c8c93c8b0f08bd09, type: 3}
     volumeScale: 0.5
-  - Id: 1002
+  - Id: 1012
     audioClip: {fileID: 8300000, guid: 6d6bdf8a7c1916a4e9175a5e95b51cfa, type: 3}
     volumeScale: 0.5
-  - Id: 1003
+  - Id: 1020
     audioClip: {fileID: 8300000, guid: 00ebee4f7a32f0346915a2327e9d8ecf, type: 3}
     volumeScale: 0.5
-  - Id: 1004
+  - Id: 1021
     audioClip: {fileID: 8300000, guid: f50c050daba72f841b12175fbfdd577e, type: 3}
     volumeScale: 0.5
-  - Id: 1005
+  - Id: 1022
+    audioClip: {fileID: 8300000, guid: b33411259828b4f4aa0d469f4205a270, type: 3}
+    volumeScale: 0.5
+  - Id: 1030
+    audioClip: {fileID: 8300000, guid: b33411259828b4f4aa0d469f4205a270, type: 3}
+    volumeScale: 0.5
+  - Id: 1031
+    audioClip: {fileID: 8300000, guid: b33411259828b4f4aa0d469f4205a270, type: 3}
+    volumeScale: 0.5
+  - Id: 1032
+    audioClip: {fileID: 8300000, guid: b33411259828b4f4aa0d469f4205a270, type: 3}
+    volumeScale: 0.5
+  - Id: 1033
     audioClip: {fileID: 8300000, guid: b33411259828b4f4aa0d469f4205a270, type: 3}
     volumeScale: 0.5

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace HELLDIVERS.UI
 {
+    [RequireComponent(typeof(SoundManager))]
     public class UIPanelReward : MonoBehaviour
     {
         #region SerializeField
@@ -18,16 +19,25 @@ namespace HELLDIVERS.UI
         [SerializeField] private Transform m_PanelReward;
         [SerializeField] private UIPlayerReward m_PlayerRewardPrefab;
         [SerializeField] private Button m_BtnContinue;
+        private SoundManager m_SoundManager;
 
         #endregion SerializeField
 
         #region MonoBehaviour
 
+        private void Awake()
+        {
+            m_SoundManager = GetComponent<SoundManager>();
+            SoundDataSetting soundData = Resources.Load("UI/Reward/SoundSettings/PanelReward_SoundDataSetting") as SoundDataSetting;
+            m_SoundManager.SetAudioClips(soundData.SoundDatas);
+
+            m_MissionRewardMap = new Dictionary<eMissionType, UIMissionReward>();
+            m_PlayerRewardMap = new Dictionary<int, UIPlayerReward>();
+        }
+
         // Use this for initialization
         private void Start()
         {
-            m_MissionRewardMap = new Dictionary<eMissionType, UIMissionReward>();
-            m_PlayerRewardMap = new Dictionary<int, UIPlayerReward>();
             CreatePlayerRewardElement();
             CreateMissionRewardElement();
 
@@ -72,6 +82,7 @@ namespace HELLDIVERS.UI
 
         public void ClickContinueBtn()
         {
+            m_SoundManager.PlayOnce(0);
             MusicManager.Instance.FadeOut(1);
             m_BlackCardTween.OnTweenFinished += SceneChangeToLobby;
             m_BlackCardTween.PlayForward();
