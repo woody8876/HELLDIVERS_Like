@@ -5,10 +5,16 @@ using UnityEngine.UI;
 
 public class UIPanelMap : MonoBehaviour {
 
-    [SerializeField] private UIPanelRadar m_PanelRadar;
-    [SerializeField] private UIMapPoint m_PointPrefab;
+    #region Event
+    public delegate void MapHolder();
+    public event MapHolder DisplayPoint;
+    public event MapHolder HidePoint;
+    #endregion
 
     public static UIPanelMap Instance { get; private set; }
+
+    [SerializeField] private UIPanelRadar m_PanelRadar;
+    [SerializeField] private UIMapPoint m_PointPrefab;
 
     #region Variable
     [SerializeField] private float m_MapRadius = 40.0f;
@@ -62,7 +68,7 @@ public class UIPanelMap : MonoBehaviour {
     }
     void Start()
     {
-        //m_RadarColor = m_RadarImage.GetComponent<Color>();
+        
     }
 
     // Update is called once per frame
@@ -74,6 +80,7 @@ public class UIPanelMap : MonoBehaviour {
         }
         else if (m_bDisplay && (Input.GetKeyDown(KeyCode.M) || Input.GetButtonDown("Map")))
         {
+            if (HidePoint != null) HidePoint();
             UIPanelRadar.Instance.SetDisplay(true);
             m_Timer = 0.0f;
             m_bDisplay = false;
@@ -81,16 +88,18 @@ public class UIPanelMap : MonoBehaviour {
 
         if (m_bDisplay)
         {
-            if (m_Color.a <= 1)
+            if (m_Color.a <= 0.5f)
             {
+                if(DisplayPoint != null) DisplayPoint();
                 UIPanelRadar.Instance.SetDisplay(false);
-                m_Color.a += Time.deltaTime * 5.0f;
+                m_Color.a += Time.deltaTime * 2.0f;
                 m_Image.color = m_Color;
             }
 
             m_Timer += Time.deltaTime;
             if(m_Timer >= 5.0f)
             {
+                if (HidePoint != null) HidePoint();
                 UIPanelRadar.Instance.SetDisplay(true);
                 m_Timer = 0.0f;
                 m_bDisplay = false;
@@ -98,8 +107,9 @@ public class UIPanelMap : MonoBehaviour {
         }
         else
         {
+            if (HidePoint != null) HidePoint();
             if (m_Color.a <= 0) return;
-            m_Color.a -= Time.deltaTime * 5.0f;
+            m_Color.a -= Time.deltaTime * 2.0f;
             m_Image.color = m_Color;
         }
     }
