@@ -50,7 +50,7 @@ namespace HELLDIVERS.UI
         {
             m_CanvasTween = this.GetComponent<UITweenCanvasAlpha>();
             m_SoundManager = this.GetComponent<SoundManager>();
-            SoundDataSetting soundData = Resources.Load("UI/Reward/SoundSettings/ExpBar_SoundDataSetting") as SoundDataSetting;
+            SoundDataSetting soundData = Resources.Load("Sounds/Reward/ExpBar_SoundDataSetting") as SoundDataSetting;
             m_SoundManager.SetAudioClips(soundData.SoundDatas);
         }
 
@@ -77,7 +77,6 @@ namespace HELLDIVERS.UI
             {
                 m_CurrentRank = m_NextRank;
                 m_NextRank = GameData.Instance.RankTable[m_NextRank.Rank + 1];
-                m_SoundManager.PlayOnce(1);
                 if (OnRankUpdate != null) OnRankUpdate();
             }
         }

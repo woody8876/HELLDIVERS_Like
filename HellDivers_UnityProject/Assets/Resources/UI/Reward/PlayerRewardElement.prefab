@@ -26,8 +26,8 @@ GameObject:
   - component: {fileID: 225305921371521528}
   - component: {fileID: 95190927157103266}
   - component: {fileID: 114783531515145806}
-  - component: {fileID: 82939241851352204}
-  - component: {fileID: 114617546461895964}
+  - component: {fileID: 82552306533634978}
+  - component: {fileID: 114092234627754560}
   m_Layer: 5
   m_Name: PlayerRewardElement
   m_TagString: Untagged
@@ -142,7 +142,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!82 &82939241851352204
+--- !u!82 &82552306533634978
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -239,6 +239,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114092234627754560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1083430953979522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93670a98476440c4d9578ab38a140c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114167194391273840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -403,17 +414,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114617546461895964
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1083430953979522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93670a98476440c4d9578ab38a140c0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114678925201836110
 MonoBehaviour:
   m_ObjectHideFlags: 1

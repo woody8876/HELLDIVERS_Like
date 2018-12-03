@@ -28,7 +28,7 @@ namespace HELLDIVERS.UI
         private void Awake()
         {
             m_SoundManager = GetComponent<SoundManager>();
-            SoundDataSetting soundData = Resources.Load("UI/Reward/SoundSettings/PanelReward_SoundDataSetting") as SoundDataSetting;
+            SoundDataSetting soundData = Resources.Load("Sounds/Reward/PanelReward_SoundDataSetting") as SoundDataSetting;
             m_SoundManager.SetAudioClips(soundData.SoundDatas);
 
             m_MissionRewardMap = new Dictionary<eMissionType, UIMissionReward>();
