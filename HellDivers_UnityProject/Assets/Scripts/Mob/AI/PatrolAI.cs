@@ -227,7 +227,7 @@ public class PatrolAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
-            m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
+            m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
 
             damager.Damager.Record.NumOfKills++;

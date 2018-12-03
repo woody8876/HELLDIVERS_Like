@@ -15,12 +15,12 @@ public class FireBall : MonoBehaviour {
     // Use this for initialization
     private void OnEnable()
     {
-        if (m_Animator == null) return;
-        m_Timer = 0.0f;
-        m_Animator.SetTrigger("startTrigger");
         m_SoundManager = this.GetComponent<SoundManager>();
         SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Effect/FireBomb", "SoundDataSetting") as SoundDataSetting;
         m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        if (m_Animator == null) return;
+        m_Timer = 0.0f;
+        m_Animator.SetTrigger("startTrigger");
     }
     void Start()
     {
@@ -52,7 +52,7 @@ public class FireBall : MonoBehaviour {
                 float Dist = (pList[i].transform.position - this.transform.position).magnitude;
                 if (Dist <= 2.0f)
                 {
-                    //m_SoundManager.PlayInWorld()
+                    m_SoundManager.PlayInWorld(1000, this.transform.position,0.5f);
                     BulletDeath();
                     break;
                 }
@@ -60,6 +60,7 @@ public class FireBall : MonoBehaviour {
         }
         if (Physics.Raycast(transform.position, transform.forward, out rh, m_NextPosDis, 1 << LayerMask.NameToLayer("Obstcale")))
         {
+            m_SoundManager.PlayInWorld(1000, this.transform.position, 0.5f);
             BulletDeath();
         }
     }
