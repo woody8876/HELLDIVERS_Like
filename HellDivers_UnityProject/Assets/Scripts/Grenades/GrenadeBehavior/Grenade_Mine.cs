@@ -19,6 +19,7 @@ public class Grenade_Mine : Grenades
                 this.GetComponent<MeshRenderer>().enabled = false;
                 BombAnimator.SetTrigger("startTrigger");
                 GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 2);
+                sound.SetActive(true);
             }
             if (Physics.SphereCast(transform.position - Vector3.up, 2, Vector3.up, out rh, 100, 1 << LayerMask.NameToLayer("Enemies") | 1 << LayerMask.NameToLayer("Player")) || m_fDamageTime > grenadeInfo.Timer)
             {
@@ -28,8 +29,9 @@ public class Grenade_Mine : Grenades
                 GameObject sound = ObjectPool.m_Instance.LoadGameObjectFromPool(grenadeInfo.ID * 10 + 3);
                 effect.transform.position = sound.transform.position = this.transform.position;
                 effect.transform.forward = this.transform.forward;
-
-
+                effect.SetActive(true);
+                sound.SetActive(true);
+                Debug.Log("load");
                 m_fDamageTime = 0;
                 bEnd = true;
             }
@@ -38,7 +40,7 @@ public class Grenade_Mine : Grenades
         {
             DoDamage(this.transform.position);
             m_fDamageTime = 0;
-            grenadeInfo.Force = 10;
+            grenadeInfo.Force = 1;
             ObjectPool.m_Instance.UnLoadObjectToPool(grenadeInfo.ID, this.gameObject);
             m_bCounting = false;
             bEnd = false;
