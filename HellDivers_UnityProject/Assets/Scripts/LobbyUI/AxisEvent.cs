@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class AxisEvent : MonoBehaviour {
 
-    [SerializeField] AudioSource audio;
+    [SerializeField] AudioSource m_Audio;
 
     bool b_Setting1;
     bool b_Setting2;
@@ -15,7 +15,7 @@ public class AxisEvent : MonoBehaviour {
         if (!PlayerManager.Instance.Players.ContainsKey(1) && m_controller == null) { return; }
         if (!b_Setting1) b_Setting1 = SetPlayer1();
         if (!b_Setting2) b_Setting2 = SetPlayer2();
-
+        
         if (timer < 0)
         {
             if (InputSetting(m_controller)) return;
@@ -80,9 +80,9 @@ public class AxisEvent : MonoBehaviour {
         }
         else if (Input.GetKeyDown(controller.Submit))
         {
-            if (audio == null) return true;
-            if (audio.isPlaying) { audio.Stop(); }
-            audio.Play();
+            if (m_Audio == null) return true;
+            if (m_Audio.isPlaying) { m_Audio.Stop(); }
+            m_Audio.Play();
             return true;
         }
         return false;

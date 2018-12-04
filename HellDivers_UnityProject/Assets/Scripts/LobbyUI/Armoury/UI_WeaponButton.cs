@@ -73,6 +73,7 @@ public class UI_WeaponButton : MonoBehaviour {
         weaponDisplay.SetPlayer.Control.AxisSubmit += ClickSelectButton;
         weaponDisplay.SetPlayer.Control.AxisLeft += SetLeftNav;
         weaponDisplay.SetPlayer.Control.AxisRight -= SetRightNav;
+        weaponDisplay.SetPlayer.Audio.PlaySelectSound(1);
     }
 
     private void OnLevelUpButton()
@@ -81,6 +82,7 @@ public class UI_WeaponButton : MonoBehaviour {
         weaponDisplay.SetPlayer.Control.AxisSubmit += ClickLevelUpButton;
         weaponDisplay.SetPlayer.Control.AxisLeft -= SetLeftNav;
         weaponDisplay.SetPlayer.Control.AxisRight += SetRightNav;
+        weaponDisplay.SetPlayer.Audio.PlaySelectSound(1);
     }
 
     private void DisSelectButton()
@@ -99,6 +101,7 @@ public class UI_WeaponButton : MonoBehaviour {
     {
         SetCancel(false);
         ClickSelect(weaponDisplay.SetPlayer.PlayerID);
+        weaponDisplay.SetPlayer.Audio.PlayClickSound(1);
     }
 
     private void ClickLevelUpButton()
