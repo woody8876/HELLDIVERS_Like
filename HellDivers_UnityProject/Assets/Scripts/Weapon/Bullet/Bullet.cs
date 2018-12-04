@@ -83,8 +83,7 @@ public class Bullet : MonoBehaviour, IDamager
                 target = go.GetComponent<IDamageable>();
                 if (m_Target != go)
                 {
-                    if (m_ID == 1901) target.TakeDamage(m_fDamage, rh2.point);
-                    else target.TakeDamage(this, rh2.point);                    
+                    target.TakeDamage(this, rh2.point);
                     m_Target = go;
                 }
                 if (GameData.Instance.WeaponInfoTable[m_ID].Type == 3 || GameData.Instance.WeaponInfoTable[m_ID].Type == 5)
