@@ -27,6 +27,9 @@ public class Main : MonoBehaviour
         m_DataManager.Init();
         m_MusicManager.Init();
         m_SceneController.Init();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Use this for initialization
@@ -37,6 +40,13 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked) ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = !Cursor.visible;
+        }
+#endif
     }
 
     [ContextMenu("Print Player Info")]
