@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace HELLDIVERS.UI
 {
+    [RequireComponent(typeof(SoundManager))]
     public class UIPlayerReward : MonoBehaviour
     {
         public PlayerInfo CurrentPlayerInfo { get { return currentPlayer; } }
@@ -15,6 +16,7 @@ namespace HELLDIVERS.UI
         private PlayerInfo currentPlayer;
         private PlayerRecord currentRecord;
         private Animator m_Animator;
+        private SoundManager m_SoundManager;
         [SerializeField] private Image m_Header;
         [SerializeField] private Image m_RankIcon;
         [SerializeField] private Text m_RankText;
@@ -26,6 +28,9 @@ namespace HELLDIVERS.UI
         private void Awake()
         {
             m_Animator = this.GetComponent<Animator>();
+            m_SoundManager = this.GetComponent<SoundManager>();
+            SoundDataSetting soundData = Resources.Load("Sounds/Reward/ExpBar_SoundDataSetting") as SoundDataSetting;
+            m_SoundManager.SetAudioClips(soundData.SoundDatas);
         }
 
         public void Initialize(PlayerInfo player, PlayerRecord record, MissionReward missionReward, int serialNumber = 1)
@@ -94,6 +99,7 @@ namespace HELLDIVERS.UI
 
         private void RefreshRankInfo()
         {
+            m_SoundManager.PlayOnce(1);
             RefreshRankIcon(m_ExpBar.CurrentRank);
             m_RankText.text = m_ExpBar.CurrentRank.ToString();
         }

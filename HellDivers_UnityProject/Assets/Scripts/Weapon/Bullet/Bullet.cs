@@ -150,6 +150,7 @@ public class Bullet : MonoBehaviour, IDamager
     private void PlayHitSound(int id)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        go.transform.position = transform.position;
         if (go == null) return;
         go.SetActive(true);
     }

@@ -19,19 +19,19 @@ public class UI_WeaponInfo : MonoBehaviour {
         m_iType = type; 
         SetUI(m_iCurrentID);
         Get_Power(out cur, out next, out max);
-        m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max), cur.ToString() + " dmg");
+        m_Power.SetAbility(m_Power.name, GetLength(cur, max), GetLength(next, max), cur.ToString(), "dmg");
 
         Get_Magazine(out cur, out next, out max);
-        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max), cur.ToString() + " mags");
+        m_Magazine.SetAbility(m_Magazine.name, GetLength(cur, max), GetLength(next, max), cur.ToString(), "mags");
 
         Get_FireRate(out cur, out next, out max);
-        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max), cur.ToString() + " RPM");
+        m_FireRate.SetAbility(m_FireRate.name, GetLength(cur, max), GetLength(next, max), cur.ToString(), "RPM");
 
         Get_Range(out cur, out next, out max);
-        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max), cur.ToString() + " m");
+        m_Range.SetAbility(m_Range.name, GetLength(cur, max), GetLength(next, max), cur.ToString(), "m");
 
         Get_Stability(out cur, out next, out max);
-        m_Stability.SetAbility(m_Stability.name, GetLength(max, cur), GetLength(max, next), cur.ToString() + " degree");
+        m_Stability.SetAbility(m_Stability.name, GetLength(max, cur), GetLength(max, next), cur.ToString(), "degree");
 
         Get_FireMode(out mode);
         m_FireMode.SetWord(m_FireMode.name, mode);
