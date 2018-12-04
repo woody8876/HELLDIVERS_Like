@@ -21,6 +21,8 @@ public class FishAI : Character
 
     private SoundManager m_SoundManager;
 
+    private Vector3 damagePoint;
+
     #region Events
 
     public delegate void MobEventHolder();
@@ -166,6 +168,7 @@ public class FishAI : Character
     {
         Vector3 dir = this.transform.position - point;
         dir.y = 0;
+        dir.Normalize();
         for (float i = 0; i < time; i += Time.deltaTime)
         {
             this.transform.position += dir * Time.deltaTime;
@@ -179,10 +182,12 @@ public class FishAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
-    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    public override bool TakeDamage(float damage, Vector3 hitPoint)
     {
+        damagePoint = hitPoint;
+
         if (IsDead) return false;
-        CurrentHp -= damager.Damage;
+        CurrentHp -= damage;
         
         if (m_CurrentHp <= 0)
         {
@@ -195,11 +200,6 @@ public class FishAI : Character
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
-
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
-            return true;
         }
         else
         {
@@ -210,6 +210,19 @@ public class FishAI : Character
         }
         return true;
     }
+    
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        if(TakeDamage(damager.Damage, hitPoint))
+        {
+            if (damager.Damager == null) return false;
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        return false;
+    }
 
     public override void Death()
     {
@@ -218,8 +231,8 @@ public class FishAI : Character
         if (OnDeath != null) OnDeath();
     }
 
-    //private void OnDrawGizmos()
-    //{
+    private void OnDrawGizmos()
+    {
     //    if (m_AIData == null || m_FSM == null)
     //    {
     //        return;
@@ -240,5 +253,5 @@ public class FishAI : Character
     //    //Gizmos.DrawWireSphere(m_AIData.m_vTarget, 0.5f);
 
     //    Gizmos.DrawWireSphere(this.transform.position, m_AIData.m_fAttackRange);
-    //}
+    }
 }
