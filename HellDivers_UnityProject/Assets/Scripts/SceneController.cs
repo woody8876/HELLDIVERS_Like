@@ -41,6 +41,12 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene("Reward");
     }
 
+    [ContextMenu("ToProducer")]
+    public void ToProducer()
+    {
+        SceneManager.LoadScene("Producer");
+    }
+
     private IEnumerator LoadScene(string scene)
     {
         AsyncOperation asyncLoading = SceneManager.LoadSceneAsync(scene);
