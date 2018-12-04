@@ -164,6 +164,7 @@ public class FishVariantAI : Character
     {
         Vector3 dir = this.transform.position - point;
         dir.y = 0;
+        dir.Normalize();
         for (float i = 0; i < time; i += Time.deltaTime)
         {
             this.transform.position += dir * Time.deltaTime;
@@ -177,12 +178,11 @@ public class FishVariantAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
-    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    public override bool TakeDamage(float damage, Vector3 hitPoint)
     {
-
         if (IsDead) return false;
-        CurrentHp -= damager.Damage;
-        
+        CurrentHp -= damage;
+
         if (m_CurrentHp <= 0)
         {
             m_BodyCollider.enabled = false;
@@ -194,11 +194,6 @@ public class FishVariantAI : Character
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
-
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
-            return true;
         }
         else
         {
@@ -208,6 +203,19 @@ public class FishVariantAI : Character
             PerformGetHurt(hitPoint);
         }
         return true;
+    }
+
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        if (TakeDamage(damager.Damage, hitPoint))
+        {
+            if (damager.Damager == null) return false;
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        return false;
     }
 
     public override void Death()
