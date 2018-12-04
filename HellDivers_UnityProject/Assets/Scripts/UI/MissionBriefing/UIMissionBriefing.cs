@@ -32,7 +32,6 @@ public class UIMissionBriefing : MonoBehaviour
         for (int i = 0; i < mapInfo.SpawnPos.Count; i++)
         {
             AddPoint(mapInfo.SpawnPos[i].gameObject, eMapPointType.SPAWNPOINT);
-            Debug.Log("Creata SpawnPoint");
         }
         m_Map.Concentric.OnClick += ComfirmSpawnPosition;
     }

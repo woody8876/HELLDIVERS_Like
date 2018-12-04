@@ -100,6 +100,10 @@ public class UIMapPoint : MonoBehaviour {
         m_Color.a = 0.8f;
         m_Image.color = m_Color;
         CalculatePosition();
+        if(m_CurrentType == eMapPointType.PLAYER)
+        {
+            this.transform.SetAsLastSibling();
+        }
     }
     private void ClosePoint()
     {

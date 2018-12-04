@@ -213,27 +213,22 @@ public class PatrolAI : Character
         m_FSM.PerformGlobalTransition(eFSMTransition.Go_Dead);
     }
 
-    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    public override bool TakeDamage(float damage, Vector3 hitPoint)
     {
         if (IsDead) return false;
-        CurrentHp -= damager.Damage;
+        CurrentHp -= damage;
 
         if (m_CurrentHp <= 0)
         {
             m_BobyCollider.enabled = false;
             m_DamageCollider.enabled = false;
-            StartCoroutine(Displacement(hitPoint, 2f));
+            StartCoroutine(Displacement(hitPoint, 0.2f));
 
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
             m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
-
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
-            return true;
         }
         else
         {
@@ -243,6 +238,19 @@ public class PatrolAI : Character
             PerformGetHurt(hitPoint);
         }
         return true;
+    }
+
+    public override bool TakeDamage(IDamager damager, Vector3 hitPoint)
+    {
+        if (TakeDamage(damager.Damage, hitPoint))
+        {
+            if (damager.Damager == null) return false;
+            damager.Damager.Record.NumOfKills++;
+            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            return true;
+        }
+        return false;
     }
     public override void Death()
     {
