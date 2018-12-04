@@ -140,6 +140,7 @@ public class Bullet : MonoBehaviour, IDamager
     private void PlayHitEffect(Vector3 face, Vector3 pos, int id)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
+        if (go == null) return;
         go.transform.forward = face;
         go.transform.position = pos;
         go.SetActive(true);
@@ -149,8 +150,8 @@ public class Bullet : MonoBehaviour, IDamager
     private void PlayHitSound(int id)
     {
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(id);
-        go.transform.position = transform.position;
         if (go == null) return;
+        go.transform.position = transform.position;
         go.SetActive(true);
     }
 
