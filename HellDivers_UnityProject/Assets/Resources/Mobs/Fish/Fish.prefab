@@ -1186,6 +1186,7 @@ MonoBehaviour:
     m_vTarget: {x: 0, y: 0, z: 0}
     m_AnimationController: {fileID: 0}
     m_MobAimLine: {fileID: 0}
+    m_SoundManager: {fileID: 0}
     m_Player: {fileID: 0}
   m_CurrentState: 0
   m_GODeadBlood: {fileID: 0}
@@ -1221,7 +1222,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1486330290884982}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 2
   m_Height: 4
