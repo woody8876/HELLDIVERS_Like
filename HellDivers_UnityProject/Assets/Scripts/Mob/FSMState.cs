@@ -288,6 +288,11 @@ public class FSMMoveToState : FSMState
         SteeringBehaviours.NavMove(data);
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
+        if(data.m_ID == 3400)
+        {
+            v = (SteeringBehaviours.GroupBehavior(data, 60, true) + SteeringBehaviours.GroupBehavior(data, 60, false)) * 2f * Time.deltaTime;
+            data.m_Go.transform.position += v;
+        }
     }
 
     public override void CheckCondition(MobInfo data)
@@ -333,6 +338,11 @@ public class FSMChaseState : FSMState
         SteeringBehaviours.NavMove(data);
         Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
+        if(data.m_ID == 3400)
+        {
+            v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+            data.m_Go.transform.position += v;
+        }
     }
 
     public override void CheckCondition(MobInfo data)
@@ -374,7 +384,7 @@ public class FSMChaseToRemoteAttackState : FSMState
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_Player.transform.position;
         SteeringBehaviours.NavMove(data);
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 60, true) + SteeringBehaviours.GroupBehavior(data, 60, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
     }
 
@@ -412,7 +422,7 @@ public class FSMChaseToMeleeAttackState : FSMState
         data.navMeshAgent.enabled = true;
         data.m_vTarget = data.m_Player.transform.position;
         SteeringBehaviours.NavMove(data);
-        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 20, true) + SteeringBehaviours.GroupBehavior(data, 20, false)) * 2f * Time.deltaTime;
+        Vector3 v = (SteeringBehaviours.GroupBehavior(data, 60, true) + SteeringBehaviours.GroupBehavior(data, 60, false)) * 2f * Time.deltaTime;
         data.m_Go.transform.position += v;
     }
 
@@ -499,7 +509,7 @@ public class FSMAttackState : FSMState
 
         if(data.m_ID == 3400)
         {
-            v = (SteeringBehaviours.GroupBehavior(data, 30, true) + SteeringBehaviours.GroupBehavior(data, 30, false)) * 2f * Time.deltaTime;
+            v = (SteeringBehaviours.GroupBehavior(data, 50, true) + SteeringBehaviours.GroupBehavior(data, 50, false)) * 2f * Time.deltaTime;
             data.m_Go.transform.position += v;
         }
 

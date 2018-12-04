@@ -175,7 +175,6 @@ public class GameMain : MonoBehaviour
         int fish = Random.Range(2, 4);
         int fishVariant = Random.Range(-1, 2);
         int patrol = Random.Range(0, 2);
-        int tank = Random.Range(-1, 2);
         m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, 0);
     }
 

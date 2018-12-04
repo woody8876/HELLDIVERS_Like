@@ -41,8 +41,7 @@ public class UIPanelMap : MonoBehaviour {
 
     private bool m_bDisplay = false;
     private float m_Timer = 0.0f;
-
-    private Image m_RadarImage;
+    
     private Color m_RadarColor;
 
     // Use this for initialization
@@ -64,7 +63,6 @@ public class UIPanelMap : MonoBehaviour {
         m_Color = m_Image.color;
         m_Color.a = 0;
         m_Image.color = m_Color;
-        m_RadarImage = m_PanelRadar.GetComponent<Image>();
     }
     void Start()
     {

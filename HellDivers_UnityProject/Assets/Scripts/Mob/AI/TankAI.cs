@@ -221,10 +221,12 @@ public class TankAI : Character
     {
         if (TakeDamage(damager.Damage, hitPoint))
         {
-            if (damager.Damager == null) return false;
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            if (damager.Damager != null && IsDead)
+            {
+                damager.Damager.Record.NumOfKills++;
+                damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+                damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            }
             return true;
         }
         return false;

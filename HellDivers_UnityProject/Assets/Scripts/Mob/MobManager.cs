@@ -99,8 +99,9 @@ public class MobManager
 
         m_TotalKill = 0;
         m_TotalFishKill = 0;
+        m_TotalFishVariantKill = 0;
         m_TotalPatrolKill = 0;
-        m_TotalKill = 0;
+        m_TotalTankKill = 0;
     }
 
     public void SpawnPatrol(int num)
@@ -347,12 +348,10 @@ public class MobManager
     public void StopAutoSpawn()
     {
         m_bAutoSpawn = false;
-        Debug.Log("StopAutoSpawn");
     }
 
     public void StartAutoSpawn()
     {
         m_bAutoSpawn = true;
-        Debug.Log("StartAutoSpawn");
     }
 }
