@@ -11,8 +11,8 @@ public class RespawnPackage : MonoBehaviour
         if (InGamePlayerManager.Instance == null) return;
 
         Vector3 spawnPos = this.transform.position;
-        Vector3 screenPos = Camera.main.ScreenToWorldPoint(this.transform.position);
-        if (screenPos.x <= 0 || screenPos.x > Camera.main.scaledPixelWidth || screenPos.y < 0 || screenPos.y > Camera.main.scaledPixelHeight)
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(this.transform.position);
+        if (screenPos.x < 0 || screenPos.x > Camera.main.scaledPixelWidth || screenPos.y < 0 || screenPos.y > Camera.main.scaledPixelHeight)
         {
             List<Player> pList = InGamePlayerManager.Instance.Players;
             for (int i = 0; i < pList.Count; i++)
