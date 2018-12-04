@@ -268,7 +268,7 @@ public class UIWeaponList : MonoBehaviour {
         }
         SetInfo(go);
         weaponDisplay.Button.CheckLevelUp();
-        weaponDisplay.SetPlayer.PlayAudio();
+        weaponDisplay.SetPlayer.Audio.PlaySelectSound(1);
     }
 
     private void DisSelectEvent(GameObject go)
@@ -285,6 +285,7 @@ public class UIWeaponList : MonoBehaviour {
         UnsubscribeAxisEvent();
         weaponDisplay.Button.SetCancel();
         weaponDisplay.Button.OnSelectButton();
+        weaponDisplay.SetPlayer.Audio.PlayClickSound(1);
     }
 
     public void Return()
