@@ -91,7 +91,7 @@ public class GameMain : MonoBehaviour
         UIInGameMain.Instance.DrawGameUI();
 
         m_MobSpawner.SpawnPatrol(20);
-        InvokeRepeating("SpawnMobs", 1.0f, 30.0f);
+        InvokeRepeating("SpawnMobs", 10.0f, 20.0f);
 
         m_MissionManager.StartAllMission();
 
@@ -172,11 +172,10 @@ public class GameMain : MonoBehaviour
 
     public void SpawnMobs()
     {
-        //int fish = Random.Range(2, 4);
-        //int fishVariant = Random.Range(-1, 2);
-        //int patrol = Random.Range(0, 2);
-        //int tank = Random.Range(-1, 2);
-        //m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        int fish = Random.Range(2, 4);
+        int fishVariant = Random.Range(-1, 2);
+        int patrol = Random.Range(0, 2);
+        m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, 0);
     }
 
     #endregion Game Control

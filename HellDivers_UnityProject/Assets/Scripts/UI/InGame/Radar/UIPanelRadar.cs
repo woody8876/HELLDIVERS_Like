@@ -111,7 +111,7 @@ public class UIPanelRadar : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1, pList[0].transform, 10.0f, 10.0f);
+            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1);
         }
         #endregion
     }

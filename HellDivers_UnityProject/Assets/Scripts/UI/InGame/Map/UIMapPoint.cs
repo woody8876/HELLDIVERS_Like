@@ -37,6 +37,8 @@ public class UIMapPoint : MonoBehaviour {
                 m_Image.color = m_Color;
                 MissionTower missionTower = target.GetComponent<MissionTower>();
                 missionTower.OnActive += CompletePoint;
+                missionTower.OnActivating += MobManager.m_Instance.StopAutoSpawn;
+                missionTower.OnActive += MobManager.m_Instance.StartAutoSpawn;
                 UIPanelMap.Instance.DisplayPoint += ShowPoint;
                 UIPanelMap.Instance.HidePoint += ClosePoint;
                 break;
@@ -82,6 +84,8 @@ public class UIMapPoint : MonoBehaviour {
             case eMapPointType.MISSIONTOWER:
                 MissionTower missionTower = m_CurrentTarget.GetComponent<MissionTower>();
                 missionTower.OnActive -= CompletePoint;
+                missionTower.OnActivating -= MobManager.m_Instance.StopAutoSpawn;
+                missionTower.OnActive -= MobManager.m_Instance.StartAutoSpawn;
                 UIPanelMap.Instance.DisplayPoint -= ShowPoint;
                 UIPanelMap.Instance.HidePoint -= ClosePoint;
                 break;
