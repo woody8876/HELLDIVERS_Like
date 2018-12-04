@@ -32,6 +32,9 @@ public class FishVariantAI : Character
     // Use this for initialization
     private void OnEnable()
     {
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/FishVariant", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
@@ -49,9 +52,7 @@ public class FishVariantAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3300].CopyTo(m_AIData);
-        m_SoundManager = this.GetComponent<SoundManager>();
-        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/FishVariant", "SoundDataSetting") as SoundDataSetting;
-        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 

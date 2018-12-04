@@ -353,6 +353,7 @@ public class FSMChaseState : FSMState
 
 public class FSMChaseToRemoteAttackState : FSMState
 {
+    float m_Timer;
     public FSMChaseToRemoteAttackState()
     {
         m_StateID = eFSMStateID.ChaseToRemoteAttackStateID;
@@ -486,7 +487,7 @@ public class FSMAttackState : FSMState
         if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
-            if(data.m_ID != 3004)
+            if(data.m_ID != 3400)
             {
                 data.m_SoundManager.PlayInWorld(3900, data.m_Go.transform.position, 0.5f);
             }

@@ -99,7 +99,7 @@ public class UIPanelRadar : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            MobManager.m_Instance.SpawnMobs(1, 0, 0, 0);
+            MobManager.m_Instance.SpawnMobs(1, 0, 0, 0, pList[0].transform, 5, 5);
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -111,7 +111,7 @@ public class UIPanelRadar : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1, pList[0].transform, 10.0f, 10.0f);
+            MobManager.m_Instance.SpawnMobs(0, 0, 0, 1, pList[0].transform, 25,25);
         }
         #endregion
     }
