@@ -486,7 +486,10 @@ public class FSMAttackState : FSMState
         if (Vector3.Angle(vDir, data.m_Go.transform.forward) <= 10.0f && count < 1)
         {
             data.m_AnimationController.SetAnimator(m_StateID);
-            data.m_SoundManager.PlayOnce(3900);
+            if(data.m_ID != 3004)
+            {
+                data.m_SoundManager.PlayInWorld(3900, data.m_Go.transform.position, 0.5f);
+            }
             count++;
         }
 
@@ -526,6 +529,7 @@ public class FSMAttackState : FSMState
                 pos.y += 0.2f;
                 groundFissure.transform.position = pos;
                 groundFissure.SetActive(true);
+                data.m_SoundManager.PlayInWorld(3900, data.m_Go.transform.position, 0.5f);
                 effectCount++;
             }
             if (info.normalizedTime > 0.5f && attackCount < 1)
@@ -537,7 +541,7 @@ public class FSMAttackState : FSMState
                     {
                         if (pList[i].IsDead) continue;
                         float Dist = (pList[i].transform.position - data.m_Go.transform.position).magnitude;
-                        if (Dist <= data.m_fAttackRange + 0.5f) DoDamage(data);
+                        if (Dist <= data.m_fAttackRange + 2f) DoDamage(data);
                     }
                 }
                 attackCount++;
@@ -615,6 +619,7 @@ public class FSMPatrolAttackState : FSMState
             if (m_fCurrentTime >= 1.0f)
             {
                 data.m_AnimationController.SetAnimator(m_StateID);
+                data.m_SoundManager.PlayInWorld(3900, data.m_Go.transform.position, 0.5f);
                 Count++;
                 m_fCurrentTime = 0;
             }
@@ -1162,6 +1167,7 @@ public class FSMCallArmyState : FSMState
     {
         count = 0;
         data.m_AnimationController.SetAnimator(m_StateID);
+        data.m_SoundManager.PlayInWorld(3901, data.m_Go.transform.position, 0.5f);
     }
 
     public override void DoBeforeLeave(MobInfo data)
@@ -1224,6 +1230,7 @@ public class FSMFleeState : FSMState
         data.m_GOEffectWarning = GO;
         m_Animator = GO.GetComponent<Animator>();
         m_Animator.SetTrigger("startTrigger");
+        data.m_SoundManager.PlayLoop(3902);
     }
 
     public override void DoBeforeLeave(MobInfo data)
@@ -1231,6 +1238,7 @@ public class FSMFleeState : FSMState
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
+        data.m_SoundManager.Stop();
         ObjectPool.m_Instance.UnLoadObjectToPool(3210, GO);
 
     }

@@ -8,6 +8,7 @@ public class PatrolAI : Character
 
     private FSMSystem m_FSM;
     public MobInfo m_AIData;
+    public eFSMStateID m_CurrentState;
     public GameObject m_GODeadBlood;
     public GameObject m_GOHurtBlood;
     public BloodSpurt m_DeadBloodSpurt;
@@ -19,8 +20,9 @@ public class PatrolAI : Character
     private MobAimLine m_MobAimLine;
     public bool m_bGoIdle = false;
 
-    public eFSMStateID m_CurrentState;
-    
+
+    private SoundManager m_SoundManager;
+
     #region Events
 
     public delegate void MobEventHolder();
@@ -57,7 +59,9 @@ public class PatrolAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3200].CopyTo(m_AIData);
-
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Patrol", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -72,6 +76,7 @@ public class PatrolAI : Character
         m_AIData.navMeshAgent = this.GetComponent<NavMeshAgent>();
         m_AIData.navMeshAgent.enabled = false;
         m_AIData.m_MobAimLine = m_MobAimLine;
+        m_AIData.m_SoundManager = m_SoundManager;
 
         #region FSMMap
 
@@ -222,6 +227,7 @@ public class PatrolAI : Character
             m_GODeadBlood = ObjectPool.m_Instance.LoadGameObjectFromPool(3004);
             m_DeadBloodSpurt = m_GODeadBlood.GetComponent<BloodSpurt>();
             m_DeadBloodSpurt.Init(m_AIData, this.transform.position + Vector3.up);
+            m_SoundManager.PlayInWorld(3904, this.transform.position, 0.5f);
             Death();
 
             damager.Damager.Record.NumOfKills++;
