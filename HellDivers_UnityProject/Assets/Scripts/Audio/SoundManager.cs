@@ -24,6 +24,11 @@ public class SoundManager : MonoBehaviour
         m_Audio = this.GetComponent<AudioSource>();
     }
 
+    private void OnEnable()
+    {
+        m_Audio.Stop();
+    }
+
     public void SetAudioClips(List<SoundData> datas)
     {
         for (int i = 0; i < datas.Count; i++)
