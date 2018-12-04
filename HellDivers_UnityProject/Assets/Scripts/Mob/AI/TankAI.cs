@@ -190,6 +190,9 @@ public class TankAI : Character
 
     public override bool TakeDamage(float damage, Vector3 hitPoint)
     {
+        if (IsDead) return false;
+        CurrentHp -= damage;
+
         if (m_CurrentHp <= 0)
         {
             m_BodyCollider.enabled = false;

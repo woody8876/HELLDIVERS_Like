@@ -164,6 +164,7 @@ public class FishVariantAI : Character
     {
         Vector3 dir = this.transform.position - point;
         dir.y = 0;
+        dir.Normalize();
         for (float i = 0; i < time; i += Time.deltaTime)
         {
             this.transform.position += dir * Time.deltaTime;
