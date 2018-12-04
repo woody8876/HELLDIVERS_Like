@@ -56,9 +56,9 @@ public class WelcomeButtonController : MonoBehaviour {
 
     private void SetPress()
     {
-        m_Press.onClick.AddListener(() => SetSelectGO(m_Continue));
-        m_Press.onClick.AddListener(() => Change(m_Press.gameObject, m_Menu));
         m_Press.onClick.AddListener(() => m_bSetting = true);
+        m_Press.onClick.AddListener(() => Change(m_Press.gameObject, m_Menu));
+        m_Press.onClick.AddListener(() => SetSelectGO(m_Continue));
     }
 
     private void SetStart()
@@ -78,7 +78,7 @@ public class WelcomeButtonController : MonoBehaviour {
     private void SetProduceer()
     {
         AddEvent(m_Producer);
-        m_Producer.onClick.AddListener(() => StartCoroutine(ChangeScene()));
+        m_Producer.onClick.AddListener(() => StartCoroutine(ChangeScene(false)));
     }
 
     private void SetExit()
