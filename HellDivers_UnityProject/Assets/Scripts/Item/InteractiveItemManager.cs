@@ -9,11 +9,8 @@ public class InteractiveItemManager
 
     public void Init()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            m_ItemMap = new Dictionary<string, List<IInteractable>>();
-        }
+        Instance = this;
+        m_ItemMap = new Dictionary<string, List<IInteractable>>();
     }
 
     public void AddItem(IInteractable item)

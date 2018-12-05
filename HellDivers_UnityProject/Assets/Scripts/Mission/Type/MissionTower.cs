@@ -221,6 +221,7 @@ public class MissionTower : Mission, IInteractable
             m_Animator.SetTrigger("Finish");
             m_SoundManager.PlayInWorld(1, this.transform.position);
             m_bFinished = true;
+            CompleteMission();
             InteractiveItemManager.Instance.RemoveItem(this);
 
             List<Player> pList = InGamePlayerManager.Instance.Players;
@@ -245,7 +246,6 @@ public class MissionTower : Mission, IInteractable
                 else return false;
             });
 
-        CompleteMission();
         yield break;
     }
 

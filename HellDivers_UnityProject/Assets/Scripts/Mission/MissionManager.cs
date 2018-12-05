@@ -15,7 +15,7 @@ public class MissionManager
 
     public void Init()
     {
-        if (Instance == null) Instance = this;
+        Instance = this;
 
         if (MapInfo.Instance.TowerPos != null && MapInfo.Instance.TowerPos.Count > 0)
         {

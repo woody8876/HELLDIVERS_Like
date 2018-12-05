@@ -20,9 +20,9 @@ public class GameMain : MonoBehaviour
     private ObjectPool m_ObjectPool = new ObjectPool();
     private InteractiveItemManager m_ItemManager = new InteractiveItemManager();
     private MissionManager m_MissionManager = new MissionManager();
+    private MobManager m_MobManager = new MobManager();
     private InGamePlayerManager m_PlayerManager;
     private InGameRewardManager m_RewardManager;
-    private MobManager m_MobManager = new MobManager();
     private CameraFollowing m_CameraFollowing;
     private float m_GameStartTime;
     private bool m_bMissionCompleted;
@@ -178,6 +178,7 @@ public class GameMain : MonoBehaviour
 
         yield return new WaitForSeconds(3);
 
+        m_MobManager.DestoryAllMobs();
         UIInGameMain.Instance.DrawMissionFailedUI();
 
         yield break;
