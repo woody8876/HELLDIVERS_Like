@@ -35,6 +35,7 @@ public class FishVariantAI : Character
         m_SoundManager = this.GetComponent<SoundManager>();
         SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/FishVariant", "SoundDataSetting") as SoundDataSetting;
         m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        MobManager.m_Instance.OnDestroyAll += Death;
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
@@ -47,6 +48,10 @@ public class FishVariantAI : Character
         m_HurtBloodSpurt = null;
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
         if (OnSpawn != null) OnSpawn();
+    }
+    public void OnDisable()
+    {
+        MobManager.m_Instance.OnDestroyAll -= Death;
     }
     protected override void Start()
     {

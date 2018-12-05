@@ -36,6 +36,7 @@ public class PatrolAI : Character
         m_SoundManager = this.GetComponent<SoundManager>();
         SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Patrol", "SoundDataSetting") as SoundDataSetting;
         m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        MobManager.m_Instance.OnDestroyAll += Death;
         if (m_FSM == null) return;
         m_bDead = false;
         m_bGoIdle = false;
@@ -48,7 +49,13 @@ public class PatrolAI : Character
         m_HurtBloodSpurt = null;
         m_FSM.PerformTransition(eFSMTransition.Go_WanderIdle);
     }
-        FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
+
+    public void OnDisable()
+    {
+        MobManager.m_Instance.OnDestroyAll -= Death;
+    }
+
+    FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
         FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
         FSMFleeState m_FleeState = new FSMFleeState();
