@@ -56,15 +56,16 @@ public class PatrolAI : Character
     }
 
     FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
-        FSMWanderState m_WanderState = new FSMWanderState();
-        FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
-        FSMFleeState m_FleeState = new FSMFleeState();
-        FSMChaseState m_Chasestate = new FSMChaseState();
-        FSMPatrolAttackState m_PatrolAttackstate = new FSMPatrolAttackState();
-        FSMIdleState m_IdleState = new FSMIdleState();
-        FSMDodgeState m_DodgeState = new FSMDodgeState();
-        FSMNoPlayerWanderIdleState m_FSMNoPlayerWanderIdleState = new FSMNoPlayerWanderIdleState();
-        FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
+    FSMWanderState m_WanderState = new FSMWanderState();
+    FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
+    FSMFleeState m_FleeState = new FSMFleeState();
+    FSMChaseState m_Chasestate = new FSMChaseState();
+    FSMPatrolAttackState m_PatrolAttackstate = new FSMPatrolAttackState();
+    FSMIdleState m_IdleState = new FSMIdleState();
+    FSMDodgeState m_DodgeState = new FSMDodgeState();
+    FSMNoPlayerWanderIdleState m_FSMNoPlayerWanderIdleState = new FSMNoPlayerWanderIdleState();
+    FSMNoPlayerWanderState m_FSMNoPlayerWander = new FSMNoPlayerWanderState();
+
     protected override void Start()
     {
         m_AIData = new MobInfo();
