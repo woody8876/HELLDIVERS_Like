@@ -12,11 +12,9 @@ public class AxisEvent : MonoBehaviour {
     bool b_Setting2;
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (PlayerManager.Instance == null) return;
-        if (!PlayerManager.Instance.Players.ContainsKey(1) || m_controller == null) return;
         if (!b_Setting1) b_Setting1 = SetPlayer1();
         if (!b_Setting2) b_Setting2 = SetPlayer2();
-        
+        if (m_controller == null && m_controller2 == null) return;
         if (timer < 0)
         {
             if (InputSetting(m_controller)) return;
@@ -38,8 +36,7 @@ public class AxisEvent : MonoBehaviour {
     {
         if (PlayerManager.Instance.Players.ContainsKey(1) && PlayerManager.Instance.Players.ContainsKey(2))
         {
-            m_controller2 = (m_controller == PlayerManager.Instance.Players[1].controllerSetting) ?
-                PlayerManager.Instance.Players[2].controllerSetting : PlayerManager.Instance.Players[1].controllerSetting;
+            m_controller2 = PlayerManager.Instance.Players[2].controllerSetting ;
             return true;
         }
         return false;
