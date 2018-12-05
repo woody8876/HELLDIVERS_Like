@@ -69,7 +69,9 @@ public class GameMain : MonoBehaviour
             m_PlayerManager.CreatePlayer(PlayerManager.Instance.Players[i].info, i);
         }
 
-        m_MissionManager.CreateTowerMissions(m_NumberOfTowers);
+        m_MissionManager.CreateTowerMissions(1, 0);
+        m_MissionManager.CreateTowerMissions(1, 1);
+        m_MissionManager.CreateTowerMissions(1, 2);
         m_MissionManager.CreateMission(eMissionType.KillMob);
     }
 

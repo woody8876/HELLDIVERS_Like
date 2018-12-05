@@ -50,7 +50,7 @@ public class MissionManager
         for (int i = 0; i < num; i++)
         {
             int index = Random.Range(0, m_TowerPositions.Count - 1);
-            CreateMission(eMissionType.Tower, m_TowerPositions[index]);
+            CreateMission(eMissionType.Tower, m_TowerPositions[index], level);
             m_TowerPositions.RemoveAt(index);
         }
     }

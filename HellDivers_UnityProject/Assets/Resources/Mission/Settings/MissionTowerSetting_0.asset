@@ -14,14 +14,14 @@ MonoBehaviour:
   m_Priority: 0
   m_Type: 0
   m_Reward:
-    EXP: 500
-    Money: 500
+    EXP: 250
+    Money: 1000
   m_Id: MissionTower
   m_InteractRadius: 4
   m_ActivateRadius: 15
   m_MinRadius: 20
   m_MaxRadius: 25
-  m_ActivatingTime: 60
+  m_ActivatingTime: 20
   m_CodeLenghtMin: 6
   m_CodeLenghtMax: 8
   m_PhaseDatas:
@@ -31,32 +31,22 @@ MonoBehaviour:
     m_PatrolNum: 0
     m_TankNum: 0
   - m_Time: 10
-    m_FishNum: 10
+    m_FishNum: 5
     m_FishVariantNum: 0
-    m_PatrolNum: 2
+    m_PatrolNum: 0
+    m_TankNum: 0
+  - m_Time: 12
+    m_FishNum: 0
+    m_FishVariantNum: 1
+    m_PatrolNum: 0
     m_TankNum: 0
   - m_Time: 15
     m_FishNum: 10
     m_FishVariantNum: 0
     m_PatrolNum: 0
-    m_TankNum: 1
-  - m_Time: 20
-    m_FishNum: 10
-    m_FishVariantNum: 0
-    m_PatrolNum: 0
     m_TankNum: 0
-  - m_Time: 30
-    m_FishNum: 5
-    m_FishVariantNum: 2
-    m_PatrolNum: 0
-    m_TankNum: 0
-  - m_Time: 40
-    m_FishNum: 5
-    m_FishVariantNum: 0
-    m_PatrolNum: 0
-    m_TankNum: 1
-  - m_Time: 50
-    m_FishNum: 10
+  - m_Time: 18
+    m_FishNum: 0
     m_FishVariantNum: 2
     m_PatrolNum: 0
     m_TankNum: 0
