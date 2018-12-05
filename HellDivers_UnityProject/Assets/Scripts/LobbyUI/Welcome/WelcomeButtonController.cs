@@ -33,7 +33,7 @@ public class WelcomeButtonController : MonoBehaviour {
         SetPress();
         SetStart();
         SetContinue();
-        SetProduceer();
+        SetCredits();
         SetExit();
         m_fTimer = 0.2f;
     }
@@ -75,7 +75,7 @@ public class WelcomeButtonController : MonoBehaviour {
         m_Continue.onClick.AddListener(() => StartCoroutine(ChangeScene()));
     }
 
-    private void SetProduceer()
+    private void SetCredits()
     {
         AddEvent(m_Producer);
         m_Producer.onClick.AddListener(() => StartCoroutine(ChangeScene(false)));
@@ -103,7 +103,7 @@ public class WelcomeButtonController : MonoBehaviour {
         CloseButton();
         yield return new WaitForSeconds(1.5f);
         if (toLobby) SceneController.Instance.ToLobby();
-        else SceneController.Instance.ToProducer();
+        else SceneController.Instance.ToCredits();
     }
 
     #endregion

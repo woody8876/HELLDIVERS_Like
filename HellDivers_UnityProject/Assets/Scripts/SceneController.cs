@@ -41,10 +41,10 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene("Reward");
     }
 
-    [ContextMenu("ToProducer")]
-    public void ToProducer()
+    [ContextMenu("ToCredits")]
+    public void ToCredits()
     {
-        SceneManager.LoadScene("Producer");
+        SceneManager.LoadScene("Credits");
     }
 
     private IEnumerator LoadScene(string scene)
