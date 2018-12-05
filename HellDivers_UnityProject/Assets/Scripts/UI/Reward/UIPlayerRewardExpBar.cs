@@ -32,7 +32,6 @@ namespace HELLDIVERS.UI
         {
             m_CurrentExp = startAmount;
             m_TargetExp = targetAmount;
-
             m_CurrentRank = GameData.Instance.RankTable[startrank];
             m_NextRank = GameData.Instance.RankTable[m_CurrentRank.Rank + 1];
 
@@ -63,9 +62,12 @@ namespace HELLDIVERS.UI
                 RefreshRankData();
                 RefreshBar();
                 m_CurrentExp += Mathf.FloorToInt(m_EvaluateAmount);
-                if (m_CurrentExp > m_TargetExp) m_CurrentExp = m_TargetExp;
+                if (m_CurrentExp > m_TargetExp) break;
                 yield return null;
             }
+            m_CurrentExp = m_TargetExp;
+            RefreshRankData();
+            RefreshBar();
 
             m_SoundManager.Stop();
             if (OnEvluateStop != null) OnEvluateStop();

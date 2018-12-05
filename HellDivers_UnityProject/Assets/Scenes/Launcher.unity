@@ -1233,7 +1233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7849f502bc95d4ca44e408ff989e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio: {fileID: 545567424}
+  m_Audio: {fileID: 545567424}
 --- !u!20 &729553371
 Camera:
   m_ObjectHideFlags: 0
@@ -2320,9 +2320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2910a2b8b85da44b9766184417e3a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonController: {fileID: 701337689}
-  axis: {fileID: 729553370}
-  audio: {fileID: 545567424}
+  m_ButtonController: {fileID: 701337689}
+  m_Axis: {fileID: 729553370}
+  m_Audio: {fileID: 545567424}
 --- !u!4 &1934863760
 Transform:
   m_ObjectHideFlags: 0

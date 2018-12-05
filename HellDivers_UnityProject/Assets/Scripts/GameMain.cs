@@ -118,6 +118,8 @@ public class GameMain : MonoBehaviour
     {
         m_bMissionCompleted = true;
         m_MobManager.DestoryAllMobs();
+
+        m_RewardManager.SetMissionResult(m_bMissionCompleted);
         m_RewardManager.SetGameDurationTime(GameTime);
 
         for (int i = 0; i < m_PlayerManager.Players.Count; i++)
@@ -152,6 +154,19 @@ public class GameMain : MonoBehaviour
     public void MissionFailed()
     {
         if (m_bMissionCompleted) return;
+
+        m_RewardManager.SetGameDurationTime(GameTime);
+
+        for (int i = 0; i < m_PlayerManager.Players.Count; i++)
+        {
+            Player player = m_PlayerManager.Players[i];
+            player.Record.Money = Mathf.RoundToInt(player.Record.Money * 0.5f);
+            player.Record.Exp = player.Record.Exp / 2;
+            m_RewardManager.SetReward(player.SerialNumber, player.Record);
+        }
+
+        m_RewardManager.SetMissionResult(m_bMissionCompleted);
+
         StartCoroutine(MissionFailedProgress());
     }
 
@@ -169,7 +184,7 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Abandon")]
     public void MissionAbandon()
     {
-        SceneController.Instance.ToLobby();
+        SceneController.Instance.ToReward();
     }
 
     public void SpawnMobs()

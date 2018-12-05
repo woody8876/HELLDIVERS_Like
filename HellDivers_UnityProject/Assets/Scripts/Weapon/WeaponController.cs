@@ -119,6 +119,7 @@ public class WeaponController : MonoBehaviour
         GameObject go = ObjectPool.m_Instance.LoadGameObjectFromPool(i * 10 + 1);
         go.GetComponent<EffectController>().SetID(i * 10 + 1);
         go.transform.parent = t;
+        go.transform.forward = t.forward;
         go.transform.localPosition = Vector3.zero;
         return go;
     }
