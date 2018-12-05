@@ -49,11 +49,44 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayLoop(int Id)
+    public void SetAudioClips(Dictionary<int, SoundData> datas)
     {
+        m_ClipsMap = datas;
+    }
+
+    public void PlayLoop(int Id, float volumeScale)
+    {
+        if (m_ClipsMap.ContainsKey(Id) == false) return;
         m_Audio.clip = m_ClipsMap[Id].audioClip;
+        m_Audio.volume = volumeScale;
         m_Audio.loop = true;
         m_Audio.Play();
+    }
+
+    public void PlayLoop(int Id)
+    {
+        if (m_ClipsMap.ContainsKey(Id) == false) return;
+        PlayLoop(Id, m_ClipsMap[Id].volumeScale);
+    }
+
+    public SoundManager PlayLoopInWorld(int Id, Vector3 pos, float volumeScale)
+    {
+        if (m_ClipsMap.ContainsKey(Id) == false) return null;
+        GameObject go = new GameObject();
+        go.transform.position = pos;
+        SoundManager soundManager = go.AddComponent<SoundManager>();
+        soundManager.SetAudioClips(m_ClipsMap);
+        soundManager.Audio.volume = volumeScale;
+        soundManager.Audio.spatialBlend = 1;
+        soundManager.Audio.dopplerLevel = 0;
+        soundManager.PlayLoop(Id);
+        return soundManager;
+    }
+
+    public SoundManager PlayLoopInWorld(int Id, Vector3 pos)
+    {
+        if (m_ClipsMap.ContainsKey(Id) == false) return null;
+        return PlayLoopInWorld(Id, pos, m_ClipsMap[Id].volumeScale);
     }
 
     public void PlayOnce(int Id, float volumeScale)
@@ -85,7 +118,8 @@ public class SoundManager : MonoBehaviour
 
     public void Stop()
     {
-        m_Audio.loop = false;
         m_Audio.Stop();
+        m_Audio.loop = false;
+        m_Audio.volume = 1;
     }
 }

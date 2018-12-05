@@ -15,11 +15,8 @@ public class UIMissionBriefingMap : MonoBehaviour
     public UIMissionBriefingConcentric Concentric { get { return m_Concentric; } }
 
     #region Variable
-    private RectTransform m_RectTransform;
     private Vector3 m_WorldOrigin;
     private UIMissionMapPoint m_Target;
-    private float m_RectWidth;
-    private float m_RectHeight;
     private float m_MapWidth = 544.0f;
     private float m_MapHeight = 720.0f;
 
@@ -31,9 +28,6 @@ public class UIMissionBriefingMap : MonoBehaviour
     {
         //m_WorldOrigin = MapInfo.Instance.MapOrigin.position;
         m_WorldOrigin = new Vector3(49.9f, 54.6f, 255.4f);
-        m_RectTransform = this.GetComponent<RectTransform>();
-        m_RectWidth = m_RectTransform.sizeDelta.x;
-        m_RectHeight = m_RectTransform.sizeDelta.y;
     }
 
     private void Update()

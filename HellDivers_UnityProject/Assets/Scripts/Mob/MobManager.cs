@@ -11,10 +11,12 @@ public class MobManager
     public delegate void MobEventKill();
 
     public event MobEventKill OnKill;
+    public event MobEventKill OnDestroyAll;
 
     #endregion Events
 
     static public MobManager m_Instance;
+    [SerializeField] private MissionTower m_MissionTower;
 
     #region Kill Count Variable
 
@@ -23,14 +25,12 @@ public class MobManager
     private int m_TotalFishVariantKill;
     private int m_TotalPatrolKill;
     private int m_TotalTankKill;
-    //private int m_TotalTankKill;
 
     public int TotalKill { get { return m_TotalKill; } }
     public int TotalFishKill { get { return m_TotalFishKill; } }
     public int TotalFishVariantKill { get { return m_TotalFishVariantKill; } }
     public int TotalPatrolKill { get { return m_TotalPatrolKill; } }
     public int TotalTankKill { get { return m_TotalTankKill; } }
-    //public int TotalTotalKill { get { return m_TotalTankKill; } }
 
     #endregion Kill Count Variable
 
@@ -38,7 +38,6 @@ public class MobManager
     private int m_FishVariantCount;
     private int m_PatrolCount;
     private int m_TankCount;
-    //private int m_TankCount;
 
     private GameObject m_GOFish;
     private GameObject m_GOFishVariant;
@@ -56,9 +55,7 @@ public class MobManager
     private GameObject m_GOBloodSpurtSmall;
     private GameObject m_GOBloodSpurtDead;
 
-    private GameObject m_SoundTankDead;
-    //private Player m_Player;
-    //private int count = 0;
+    private bool m_bAutoSpawn = true;
 
     public void Init()
     {
@@ -101,11 +98,11 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 200, 3004);
         #endregion
 
-        #region Mob Sound
-        #endregion
         m_TotalKill = 0;
         m_TotalFishKill = 0;
+        m_TotalFishVariantKill = 0;
         m_TotalPatrolKill = 0;
+        m_TotalTankKill = 0;
     }
 
     public void SpawnPatrol(int num)
@@ -124,8 +121,11 @@ public class MobManager
             m_PatrolCount++;
         }
     }
+
     public void SpawnMobs(int fishCount, int fishVariantCount, int patrolCount, int tankCount)
     {
+        if (m_bAutoSpawn == false) return;
+
         List<Player> pList = InGamePlayerManager.Instance.Players;
         Vector3 Center = new Vector3();
         Center.Set(0, 0, 0);
@@ -344,5 +344,20 @@ public class MobManager
     public void AddTotalKill()
     {
         //if (OnKill != null) OnKill();
+    }
+
+    public void StopAutoSpawn()
+    {
+        m_bAutoSpawn = false;
+    }
+
+    public void StartAutoSpawn()
+    {
+        m_bAutoSpawn = true;
+    }
+
+    public void DestoryAllMobs()
+    {
+        if (OnDestroyAll != null) OnDestroyAll();
     }
 }
