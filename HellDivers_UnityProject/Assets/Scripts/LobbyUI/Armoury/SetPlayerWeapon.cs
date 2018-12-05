@@ -190,6 +190,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tConfirm.text = "CORFIRM";
         SetColor(ref m_Confirm, m_HighLight);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID, false);
+        SubscriptAxisEvent();
     }
 
     private void SubmitConfirm()

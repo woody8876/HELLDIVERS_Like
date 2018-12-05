@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 82479380172663260}
   - component: {fileID: 114432544569236284}
   m_Layer: 0
-  m_Name: Sound_Turret
+  m_Name: Sound_LMGs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,10 +50,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1ea4794858795d4428d3e4179ef7d511, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 77cd2d83c8d17d6478e4462471a28c75, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
-  m_Pitch: 1
+  m_Pitch: 0.5
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d51ed3af3b0ba439175d4b561a2c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: 19012
+  m_ID: 12012
   b_PitchRandom: 1
-  b_PlayInWorld: 1
+  b_PlayInWorld: 0
   m_Audio: {fileID: 82479380172663260}
