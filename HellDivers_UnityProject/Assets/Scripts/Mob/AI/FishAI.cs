@@ -21,8 +21,6 @@ public class FishAI : Character
 
     private SoundManager m_SoundManager;
 
-    private Vector3 damagePoint;
-
     #region Events
 
     public delegate void MobEventHolder();
@@ -37,6 +35,10 @@ public class FishAI : Character
     }
     private void OnEnable()
     {
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Fish", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        MobManager.m_Instance.OnDestroyAll += Death;
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
@@ -50,13 +52,15 @@ public class FishAI : Character
         m_FSM.PerformTransition(eFSMTransition.Go_Respawn);
         if (OnSpawn != null) OnSpawn();
     }
+    public void OnDisable()
+    {
+        MobManager.m_Instance.OnDestroyAll -= Death;
+    }
     protected override void Start()
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3100].CopyTo(m_AIData);
-        m_SoundManager = this.GetComponent<SoundManager>();
-        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Fish", "SoundDataSetting") as SoundDataSetting;
-        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -184,8 +188,6 @@ public class FishAI : Character
 
     public override bool TakeDamage(float damage, Vector3 hitPoint)
     {
-        damagePoint = hitPoint;
-
         if (IsDead) return false;
         CurrentHp -= damage;
         
@@ -215,10 +217,12 @@ public class FishAI : Character
     {
         if(TakeDamage(damager.Damage, hitPoint))
         {
-            if (damager.Damager == null) return false;
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            if (damager.Damager != null && IsDead)
+            {
+                damager.Damager.Record.NumOfKills++;
+                damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+                damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            }
             return true;
         }
         return false;

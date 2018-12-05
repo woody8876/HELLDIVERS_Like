@@ -11,9 +11,13 @@ namespace HELLDIVERS.UI
     {
         #region SerializeField
 
+        [SerializeField] private Image m_Background;
+        [SerializeField] private Sprite m_MissionSuccess;
+        [SerializeField] private Sprite m_MissionFailed;
         [SerializeField] private UITweenImageAlpha m_BlackCardTween;
         [SerializeField] private Text m_GameTime;
         [SerializeField] private Transform m_PanelMissionReward;
+        [SerializeField] private UIMissionTitle m_MissionTitle;
         [SerializeField] private UIMissionReward m_MissionRewardPrefab;
         [SerializeField] private UIMissionRewardEXP m_MissionRewardExp;
         [SerializeField] private Transform m_PanelReward;
@@ -38,6 +42,9 @@ namespace HELLDIVERS.UI
         // Use this for initialization
         private void Start()
         {
+            m_MissionTitle.Initialize(InGameRewardManager.Instance.IsMissionSuccess);
+            m_Background.sprite = (InGameRewardManager.Instance.IsMissionSuccess) ? m_MissionSuccess : m_MissionFailed;
+
             CreatePlayerRewardElement();
             CreateMissionRewardElement();
 
@@ -54,6 +61,9 @@ namespace HELLDIVERS.UI
 
         private IEnumerator OnDarw()
         {
+            m_MissionTitle.CanavasTween.PlayForward();
+            yield return new WaitForSeconds(m_MissionTitle.CanavasTween.TimeLenght);
+
             if (m_MissionRewardMap.Count > 0)
             {
                 float missionUITimeLenght = 0;

@@ -39,6 +39,7 @@ public class TankAI : Character
         SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Tank", "SoundDataSetting") as SoundDataSetting;
         m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
         m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
+        MobManager.m_Instance.OnDestroyAll += Death;
         if (m_FSM == null) return;
         m_AIData.m_Go = this.gameObject;
         m_bDead = false;
@@ -53,6 +54,12 @@ public class TankAI : Character
         m_SoundManager.PlayInWorld(3904, this.transform.position, 1);
         if (OnSpawn != null) OnSpawn();
     }
+
+    public void OnDisable()
+    {
+        MobManager.m_Instance.OnDestroyAll -= Death;
+    }
+
     protected override void Start()
     {
         m_AIData = new MobInfo();
@@ -221,10 +228,12 @@ public class TankAI : Character
     {
         if (TakeDamage(damager.Damage, hitPoint))
         {
-            if (damager.Damager == null) return false;
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            if (damager.Damager != null && IsDead)
+            {
+                damager.Damager.Record.NumOfKills++;
+                damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+                damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            }
             return true;
         }
         return false;

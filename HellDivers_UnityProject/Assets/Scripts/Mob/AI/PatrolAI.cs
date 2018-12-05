@@ -33,6 +33,10 @@ public class PatrolAI : Character
     // Use this for initialization
     private void OnEnable()
     {
+        m_SoundManager = this.GetComponent<SoundManager>();
+        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Patrol", "SoundDataSetting") as SoundDataSetting;
+        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        MobManager.m_Instance.OnDestroyAll += Death;
         if (m_FSM == null) return;
         m_bDead = false;
         m_bGoIdle = false;
@@ -45,7 +49,13 @@ public class PatrolAI : Character
         m_HurtBloodSpurt = null;
         m_FSM.PerformTransition(eFSMTransition.Go_WanderIdle);
     }
-        FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
+
+    public void OnDisable()
+    {
+        MobManager.m_Instance.OnDestroyAll -= Death;
+    }
+
+    FSMWanderIdleState m_WanderIdleState = new FSMWanderIdleState();
         FSMWanderState m_WanderState = new FSMWanderState();
         FSMCallArmyState m_CallArmyState = new FSMCallArmyState();
         FSMFleeState m_FleeState = new FSMFleeState();
@@ -59,9 +69,7 @@ public class PatrolAI : Character
     {
         m_AIData = new MobInfo();
         GameData.Instance.MobInfoTable[3200].CopyTo(m_AIData);
-        m_SoundManager = this.GetComponent<SoundManager>();
-        SoundDataSetting Soundsetting = ResourceManager.m_Instance.LoadData(typeof(SoundDataSetting), "Sounds/Mobs/Patrol", "SoundDataSetting") as SoundDataSetting;
-        m_SoundManager.SetAudioClips(Soundsetting.SoundDatas);
+        
         m_MaxHp = m_AIData.m_fHp;
         base.Start();
 
@@ -179,6 +187,8 @@ public class PatrolAI : Character
         {
             m_FSM.DoState();
         }
+
+        if (Input.GetKeyDown(KeyCode.U)) Death();
     }
 
     public void PerformGetHurt(Vector3 point)
@@ -245,10 +255,12 @@ public class PatrolAI : Character
     {
         if (TakeDamage(damager.Damage, hitPoint))
         {
-            if (damager.Damager == null) return false;
-            damager.Damager.Record.NumOfKills++;
-            damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
-            damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            if (damager.Damager != null && IsDead)
+            {
+                damager.Damager.Record.NumOfKills++;
+                damager.Damager.Record.Exp += (int)m_AIData.m_Exp;
+                damager.Damager.Record.Money += (int)m_AIData.m_Money;
+            }
             return true;
         }
         return false;

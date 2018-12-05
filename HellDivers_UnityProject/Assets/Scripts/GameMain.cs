@@ -22,7 +22,7 @@ public class GameMain : MonoBehaviour
     private MissionManager m_MissionManager = new MissionManager();
     private InGamePlayerManager m_PlayerManager;
     private InGameRewardManager m_RewardManager;
-    private MobManager m_MobSpawner = new MobManager();
+    private MobManager m_MobManager = new MobManager();
     private CameraFollowing m_CameraFollowing;
     private float m_GameStartTime;
     private bool m_bMissionCompleted;
@@ -55,7 +55,7 @@ public class GameMain : MonoBehaviour
         UIInGameMain.Instance.Init();
         m_ItemManager.Init();
         m_MissionManager.Init();
-        m_MobSpawner.Init();
+        m_MobManager.Init();
         m_CameraFollowing = Camera.main.GetComponent<CameraFollowing>();
         m_PlayerManager = this.gameObject.AddComponent<InGamePlayerManager>();
         m_RewardManager = new GameObject("RewardManager").AddComponent<InGameRewardManager>();
@@ -90,8 +90,8 @@ public class GameMain : MonoBehaviour
         m_PlayerManager.SpawnPlayers(spawnPos);
         UIInGameMain.Instance.DrawGameUI();
 
-        m_MobSpawner.SpawnPatrol(20);
-        InvokeRepeating("SpawnMobs", 1.0f, 30.0f);
+        m_MobManager.SpawnPatrol(20);
+        InvokeRepeating("SpawnMobs", 10.0f, 20.0f);
 
         m_MissionManager.StartAllMission();
 
@@ -117,12 +117,16 @@ public class GameMain : MonoBehaviour
     public void MissionComplete()
     {
         m_bMissionCompleted = true;
+        m_MobManager.DestoryAllMobs();
+
+        m_RewardManager.SetMissionResult(m_bMissionCompleted);
         m_RewardManager.SetGameDurationTime(GameTime);
 
         for (int i = 0; i < m_PlayerManager.Players.Count; i++)
         {
             Player player = m_PlayerManager.Players[i];
             m_RewardManager.SetReward(player.SerialNumber, player.Record);
+            player.Victory();
         }
 
         foreach (var missionList in m_MissionManager.Missions)
@@ -150,6 +154,19 @@ public class GameMain : MonoBehaviour
     public void MissionFailed()
     {
         if (m_bMissionCompleted) return;
+
+        m_RewardManager.SetGameDurationTime(GameTime);
+
+        for (int i = 0; i < m_PlayerManager.Players.Count; i++)
+        {
+            Player player = m_PlayerManager.Players[i];
+            player.Record.Money = Mathf.RoundToInt(player.Record.Money * 0.5f);
+            player.Record.Exp = player.Record.Exp / 2;
+            m_RewardManager.SetReward(player.SerialNumber, player.Record);
+        }
+
+        m_RewardManager.SetMissionResult(m_bMissionCompleted);
+
         StartCoroutine(MissionFailedProgress());
     }
 
@@ -167,16 +184,15 @@ public class GameMain : MonoBehaviour
     [ContextMenu("Mission Abandon")]
     public void MissionAbandon()
     {
-        SceneController.Instance.ToLobby();
+        SceneController.Instance.ToReward();
     }
 
     public void SpawnMobs()
     {
-        //int fish = Random.Range(2, 4);
-        //int fishVariant = Random.Range(-1, 2);
-        //int patrol = Random.Range(0, 2);
-        //int tank = Random.Range(-1, 2);
-        //m_MobSpawner.SpawnMobs(fish, fishVariant, patrol, tank);
+        int fish = Random.Range(2, 4);
+        int fishVariant = Random.Range(-1, 2);
+        int patrol = Random.Range(0, 2);
+        m_MobManager.SpawnMobs(fish, fishVariant, patrol, 0);
     }
 
     #endregion Game Control
