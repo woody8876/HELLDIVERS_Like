@@ -83,9 +83,9 @@ public class MobManager
         m_GOGroundFissure = Resources.Load("Mobs/Tank/GroundFissure") as GameObject;
         m_GOFireBall = Resources.Load("Mobs/Tank/FireBall") as GameObject;
         m_GOFireBomb = Resources.Load("Mobs/Tank/FireBomb") as GameObject;
-        ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 30, 3001);
+        ObjectPool.m_Instance.InitGameObjects(m_GOSpwanEffect, 50, 3001);
         ObjectPool.m_Instance.InitGameObjects(m_GOWarning, 5, 3210);
-        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 40, 3201);
+        ObjectPool.m_Instance.InitGameObjects(m_GOBullet, 80, 3201);
         ObjectPool.m_Instance.InitGameObjects(m_GOGroundFissure, 10, 3401);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBall, 10, 3402);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBomb, 10, 3403);
