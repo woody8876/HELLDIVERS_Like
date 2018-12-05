@@ -14,9 +14,9 @@ public class Weapon_Laser : Weapon
         {
             go.transform.position = t.position;
             go.transform.forward = t.forward;
-            go.GetComponent<Bullet_Ray>().StartPos = t;
-            go.GetComponent<Bullet_Ray>().m_bActive = true;
-            go.GetComponent<Bullet_Ray>().m_BulletPlayer = player;
+            go.GetComponent<Bullet_Ray>().SetParent(t);
+            go.GetComponent<Bullet_Ray>().SetBool(true);
+            go.GetComponent<Bullet_Ray>().SetPlayer(player);
             go.transform.Rotate(0, Random.Range(-fCurSpread, fCurSpread), 0);
             go.SetActive(true);
             weaponInfo.Ammo--;

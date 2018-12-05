@@ -12,7 +12,8 @@ public class AxisEvent : MonoBehaviour {
     bool b_Setting2;
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!PlayerManager.Instance.Players.ContainsKey(1) && m_controller == null) { return; }
+        if (PlayerManager.Instance == null) return;
+        if (!PlayerManager.Instance.Players.ContainsKey(1) || m_controller == null) return;
         if (!b_Setting1) b_Setting1 = SetPlayer1();
         if (!b_Setting2) b_Setting2 = SetPlayer2();
         

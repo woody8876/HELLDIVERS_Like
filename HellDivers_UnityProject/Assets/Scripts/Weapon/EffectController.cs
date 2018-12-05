@@ -35,10 +35,10 @@ public class EffectController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (CheckState())
-        {
-            m_fTime += Time.fixedDeltaTime;
-        }
+        if (!CheckState()) return;
+
+        m_fTime += Time.fixedDeltaTime;
+
         if (m_fTime > 0.1f)
         {
             m_fTime = 0;
