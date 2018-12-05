@@ -28,7 +28,6 @@ public class GameMain : MonoBehaviour
     private bool m_bMissionCompleted;
 
     [SerializeField] private MapInfo m_MapInfo;
-    [SerializeField] private uint m_NumberOfTowers = 1;
 
     #endregion Private Variable
 
