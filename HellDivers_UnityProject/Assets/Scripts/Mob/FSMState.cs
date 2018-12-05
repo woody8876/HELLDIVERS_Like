@@ -1224,6 +1224,7 @@ public class FSMFleeState : FSMState
     Animator m_Animator;
     Vector3 vec;
     GameObject GO;
+    SoundManager sound;
     public FSMFleeState()
     {
         m_StateID = eFSMStateID.FleeStateID;
@@ -1241,7 +1242,8 @@ public class FSMFleeState : FSMState
         data.m_GOEffectWarning = GO;
         m_Animator = GO.GetComponent<Animator>();
         m_Animator.SetTrigger("startTrigger");
-        data.m_SoundManager.PlayLoop(3902);
+        sound = data.m_SoundManager.PlayLoopInWorld(3902,data.m_Go.transform.position);
+        sound.gameObject.transform.SetParent(data.m_Go.transform);
     }
 
     public override void DoBeforeLeave(MobInfo data)
@@ -1249,7 +1251,7 @@ public class FSMFleeState : FSMState
         data.navMeshAgent.speed *= 0.5f;
         data.m_AnimationController.SetAnimator(m_StateID, false);
         m_Animator.SetTrigger("endTrigger");
-        data.m_SoundManager.Stop();
+        GameObject.Destroy(sound.gameObject);
         ObjectPool.m_Instance.UnLoadObjectToPool(3210, GO);
 
     }
