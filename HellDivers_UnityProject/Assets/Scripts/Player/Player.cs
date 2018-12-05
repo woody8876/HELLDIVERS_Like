@@ -248,6 +248,12 @@ public class Player : Character
         InteractiveItemManager.Instance.OnInteractive(this);
     }
 
+    public void Victory()
+    {
+        if (IsDead) return;
+        m_Controller.PerformPlayerVictory();
+    }
+
     #endregion Public Function
 
     #region Private Function

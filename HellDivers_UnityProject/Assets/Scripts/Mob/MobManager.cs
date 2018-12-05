@@ -11,6 +11,7 @@ public class MobManager
     public delegate void MobEventKill();
 
     public event MobEventKill OnKill;
+    public event MobEventKill OnDestroyAll;
 
     #endregion Events
 
@@ -353,5 +354,10 @@ public class MobManager
     public void StartAutoSpawn()
     {
         m_bAutoSpawn = true;
+    }
+
+    public void DestoryAllMobs()
+    {
+        if (OnDestroyAll != null) OnDestroyAll();
     }
 }
