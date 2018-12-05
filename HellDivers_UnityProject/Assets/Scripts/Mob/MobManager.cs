@@ -11,6 +11,7 @@ public class MobManager
     public delegate void MobEventKill();
 
     public event MobEventKill OnKill;
+
     public event MobEventKill OnDestroyAll;
 
     #endregion Events
@@ -59,11 +60,10 @@ public class MobManager
 
     public void Init()
     {
-        if (m_Instance == null)
-        {
-            m_Instance = this;
-        }
+        m_Instance = this;
+
         #region Mob Prefab
+
         m_GOFish = Resources.Load("Mobs/Fish/Fish") as GameObject;
         m_GOFishVariant = Resources.Load("Mobs/Fish2/Fish2") as GameObject;
         m_GOPatrol = Resources.Load("Mobs/Patrol/Patrol") as GameObject;
@@ -72,9 +72,11 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOFishVariant, 10, 3300);
         ObjectPool.m_Instance.InitGameObjects(m_GOPatrol, 50, 3200);
         ObjectPool.m_Instance.InitGameObjects(m_GOTank, 10, 3400);
-        #endregion
+
+        #endregion Mob Prefab
 
         #region Mob Effect
+
         m_GOSpwanEffect = Resources.Load("Mobs/Effect/SpawnEffect") as GameObject;
         m_GOWarning = Resources.Load("Mobs/Effect/EnemyAlert") as GameObject;
         m_GOBullet = Resources.Load("Mobs/Patrol/PatrolBullet") as GameObject;
@@ -87,16 +89,19 @@ public class MobManager
         ObjectPool.m_Instance.InitGameObjects(m_GOGroundFissure, 10, 3401);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBall, 10, 3402);
         ObjectPool.m_Instance.InitGameObjects(m_GOFireBomb, 10, 3403);
-        #endregion
+
+        #endregion Mob Effect
 
         #region Mob Blood
+
         m_GOBloodSpurtBig = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtBig") as GameObject;
         m_GOBloodSpurtSmall = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtSmall") as GameObject;
         m_GOBloodSpurtDead = Resources.Load("Mobs/Effect/BloodGushFX/BloodSpurtDead") as GameObject;
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtBig, 200, 3002);
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtSmall, 200, 3003);
         ObjectPool.m_Instance.InitGameObjects(m_GOBloodSpurtDead, 200, 3004);
-        #endregion
+
+        #endregion Mob Blood
 
         m_TotalKill = 0;
         m_TotalFishKill = 0;
