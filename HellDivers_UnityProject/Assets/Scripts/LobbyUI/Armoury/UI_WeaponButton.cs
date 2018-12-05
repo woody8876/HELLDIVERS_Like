@@ -184,6 +184,7 @@ public class UI_WeaponButton : MonoBehaviour {
         yield return new WaitForSeconds(0.1f);
         SetHighlightBG(m_LevelUp);
     }
+
     private void ClickSelect(int player)
     {
         GameObject go = null;
