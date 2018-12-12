@@ -18,7 +18,7 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
     [SerializeField] private UIMissionCountInfo m_MissionCountInfoPrefab;
     [SerializeField] private Text m_Introduction;
 
-    private Button m_Button;
+    private UIMissionItem m_CurrentItem;
 
     private Dictionary<eMissionType, List<UIMissionInfo>> m_MissionElementMap = new Dictionary<eMissionType, List<UIMissionInfo>>();
 
@@ -67,15 +67,24 @@ public class UIMissionBriefingIntroduction : MonoBehaviour {
         if (m_MissionElementMap.Count == 1) EventSystem.current.SetSelectedGameObject(m_MissionElementMap[mission.Type][0].gameObject);
     }
 
+    private void Update()
+    {
+        if(m_CurrentItem.m_bCouldSelect == true)
+        {
+            if (OnSelect != null) OnSelect();
+        }
+    }
     [ContextMenu("Test")]
     public void Selected(UIMissionItem item)
     {
         if(item.m_bCouldSelect)
         {
+            m_CurrentItem = item;
             if (OnSelect != null) OnSelect();
         }
         else
         {
+            m_CurrentItem = item;
             if (NotSelect != null) NotSelect();
         }
         m_Introduction.text = item.m_Introduction;

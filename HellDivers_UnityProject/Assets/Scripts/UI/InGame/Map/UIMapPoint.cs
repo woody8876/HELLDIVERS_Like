@@ -31,10 +31,10 @@ public class UIMapPoint : MonoBehaviour {
                 break;
             case eMapPointType.MISSIONTOWER:
                 m_Image = this.GetComponent<Image>();
-                m_Color.r = 1;
-                m_Color.g = 1;
-                m_Color.b = 1;
-                m_Image.color = m_Color;
+                //m_Color.r = 0.2666f;
+                //m_Color.g = 0.843f;
+                //m_Color.b = 1;
+                m_Color = m_Image.color;
                 MissionTower missionTower = target.GetComponent<MissionTower>();
                 missionTower.OnActive += CompletePoint;
                 missionTower.OnActivating += MobManager.m_Instance.StopAutoSpawn;
@@ -133,9 +133,9 @@ public class UIMapPoint : MonoBehaviour {
     {
         m_Image = this.GetComponent<Image>();
         m_Color = m_Image.color;
-        m_Color.r = 192.0f / 255.0f;
-        m_Color.g = 192.0f / 255.0f;
-        m_Color.b = 192.0f / 255.0f;
+        m_Color.r = 0.5f;
+        m_Color.g = 0.5f;
+        m_Color.b = 0.5f;
         m_Image.color = m_Color;
     }
 
