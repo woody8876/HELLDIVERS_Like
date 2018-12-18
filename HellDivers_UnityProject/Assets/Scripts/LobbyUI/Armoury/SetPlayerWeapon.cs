@@ -116,9 +116,14 @@ public class SetPlayerWeapon : MonoBehaviour {
     {
         GameObject go = Instantiate(m_StratagemeUI, m_Stratagem.transform) as GameObject;
         LobbyUI_Stratagems uI = go.GetComponent<LobbyUI_Stratagems>();
-        int id =(!nothing)? PlayerManager.Instance.Players[player].info.Stratagems[serial] : 0 ;
-        go.name = id.ToString();
+        int count = PlayerManager.Instance.Players[player].info.Stratagems.Count;
+        int id = 0;
+        if (serial < count && !nothing)
+        {
+            id = PlayerManager.Instance.Players[player].info.Stratagems[serial];
+        }
         uI.SetStratagemUI(id, b);
+        go.name = id.ToString();
         m_Stratagems[serial] = go;
     }
 
@@ -190,6 +195,7 @@ public class SetPlayerWeapon : MonoBehaviour {
         m_tConfirm.text = "CORFIRM";
         SetColor(ref m_Confirm, m_HighLight);
         this.GetComponentInParent<PlayArmoury>().SetPlayerState(PlayerID, false);
+        SubscriptAxisEvent();
     }
 
     private void SubmitConfirm()

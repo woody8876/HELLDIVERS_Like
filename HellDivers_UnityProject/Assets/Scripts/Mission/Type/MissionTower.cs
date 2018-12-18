@@ -178,7 +178,9 @@ public class MissionTower : Mission, IInteractable
 
     private void CheckCodeState()
     {
-        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_Data.ActivateRadius)
+        if (Vector3.Distance(this.transform.position, CurrentPlayer.transform.position) > m_Data.ActivateRadius
+            || Input.GetKeyDown(CurrentPlayer.InputSettting.Cancel)
+            || CurrentPlayer.IsDead)
         {
             StopCheckCodes();
         }

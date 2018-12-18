@@ -274,9 +274,13 @@ public class UIWeaponList : MonoBehaviour {
     private void DisSelectEvent(GameObject go)
     {
         go.GetComponent<LobbyUI_Weapon>().SetBG();
-        m_LockPanel.SetActive(false);
+        if (m_currentCount > m_unlockWeaponCount - 1)
+        {
+            m_LockPanel.SetActive(false);
+        }
+
     }
-    
+
     private void OnClickEvent() 
     {
         if (m_currentCount > m_unlockWeaponCount - 1) return;

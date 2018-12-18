@@ -179,8 +179,7 @@ public class WeaponController : MonoBehaviour
         yield return new WaitForSeconds(CurrentWeaponInfo.FireRate);
         m_bShooting = true;
         m_fSpreadIncrease += CurrentWeaponInfo.Spread_Increase_per_shot;
-        if (_CurrentWeapon == 1601|| _CurrentWeapon == 1701)
-            CurEffect.GetComponent<Animator>().SetTrigger("endTrigger");
+        
         yield break;
     }
 
